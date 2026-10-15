@@ -52,7 +52,8 @@
     "build": "node scripts/build.mjs",
     "typecheck": "npm run build && tsc -p tsconfig.json",
     "test": "npm run build && node --test test/*.spec.ts",
-    "prepublishOnly": "npm run typecheck && npm test"
+    "prepublishOnly": "npm run typecheck && npm test",
+    "prepack": "npm run build"
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "0.99.0",
