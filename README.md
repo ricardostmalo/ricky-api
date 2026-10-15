@@ -1,12 +1,13 @@
 # Ricky API
 
-The OpenAPI 3.1 description of the [Ricky](https://getricky.ai) REST API, its changelog, and runnable examples.
+The OpenAPI 3.1 description of the [Ricky](https://getricky.ai) REST API, its guides, its changelog, the official SDKs and runnable examples.
 
-- **Guides and reference:** <https://getricky.ai/docs/api>
+- **Guides:** [`docs/en/`](docs/en) (English) and [`docs/es/`](docs/es) (español), also at <https://getricky.ai/docs/api>
+- **SDKs:** [`sdks/`](sdks), published as `getricky` on npm and PyPI
 - **Specification:** [`openapi.json`](openapi.json), also served at <https://getricky.ai/openapi.json>
 - **Changelog:** [`CHANGELOG.md`](CHANGELOG.md)
 
-This repository is generated from the code that serves the API. The specification is never edited by hand, and every response the API sends is tested against it.
+This repository is generated from the code that serves the API and updated on every release. The specification is never edited by hand, and every response the API sends is tested against it.
 
 ## At a glance
 

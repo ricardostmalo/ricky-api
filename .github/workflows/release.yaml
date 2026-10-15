@@ -1,0 +1,90 @@
+name: Release SDKs
+
+# Publishes each SDK whose version is not on its registry yet. npm and PyPI
+# trust this workflow through OpenID Connect (trusted publishing), so the
+# repository holds no registry token. The version moves when the SDK code
+# generated from openapi.json changes.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sdks/typescript/**'
+      - 'sdks/python/**'
+  workflow_dispatch:
+
+concurrency:
+  group: release-sdks
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  npm:
+    name: npm
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: sdks/typescript
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - name: Check the registry
+        id: version
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          if npm view "getricky@$version" version >/dev/null 2>&1; then
+            echo "getricky $version is already on npm."
+          else
+            echo 'publish=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Publish
+        if: steps.version.outputs.publish == 'true'
+        run: |
+          npm ci --no-audit --no-fund
+          npm publish --access public
+
+  pypi:
+    name: PyPI
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: sdks/python
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v10.0.1
+      - name: Check the registry
+        id: version
+        run: |
+          version="$(sed -n 's/^__version__ = "\(.*\)"$/\1/p' src/getricky/_version.py)"
+          status="$(curl -s -o /dev/null -w '%{http_code}' "https://pypi.org/pypi/getricky/$version/json")"
+          if [ "$status" = 200 ]; then
+            echo "getricky $version is already on PyPI."
+          else
+            echo 'publish=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Test and build
+        if: steps.version.outputs.publish == 'true'
+        run: |
+          uv run --python 3.13 --group test pytest -q
+          uv build
+      - name: Publish
+        if: steps.version.outputs.publish == 'true'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: sdks/python/dist
