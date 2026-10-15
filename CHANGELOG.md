@@ -11,11 +11,12 @@ This page records changes to the API. A breaking change only ships in a new path
 - **Immediate webhooks.** Ricky sends each event as soon as it happens, within seconds, and each retry at its time. Before, it sent them in passes every 15 minutes.
 - **New events.** `message.delivered`, `message.read`, `message.failed`, `contact.created` and `contact.updated`. Contact events carry `contact_id` in `data`. A webhook accepts up to 10 event types.
 - **History imports.** Messages a history import brings in no longer fire `message.*` events.
+- **Optional `Idempotency-Key`.** Writes no longer require the header. Without it the request runs; with it a retry does not repeat the effect. A value out of range gets `400 invalid_input`; the `missing_idempotency_key` code no longer exists.
 - **Organization keys.** A key keeps working when its creator leaves the organization. Only revocation and expiry end it.
 - **Sending files.** `POST /conversations/{conversation_id}/messages` accepts `type: "media"` with the public HTTPS URL of an image, a video, an audio file or a document. Ricky downloads it and sends it on WhatsApp or Instagram. See [Sending messages](https://getricky.ai/en/docs/api/sending-messages#6-send-a-file).
 - **Reading one message.** `GET /conversations/{conversation_id}/messages/{message_id}` answers one message as the list shows it, with `media.url` signed again.
-- **Creating tags.** `POST /tags` creates a contact tag. It requires `contacts:write` and `Idempotency-Key`. A name already in use gets `409 conflict`.
-- **Adding notes.** `POST /contacts/{contact_id}/notes` adds text at the end of a contact's notes and answers the contact. It requires `contacts:write` and `Idempotency-Key`.
+- **Creating tags.** `POST /tags` creates a contact tag. It requires `contacts:write`. A name already in use gets `409 conflict`.
+- **Adding notes.** `POST /contacts/{contact_id}/notes` adds text at the end of a contact's notes and answers the contact. It requires `contacts:write`.
 
 ## October 14, 2026
 

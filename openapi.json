@@ -294,7 +294,7 @@
             }
           },
           "400": {
-            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.\n\n`missing_idempotency_key`: A write without an `Idempotency-Key` header of 8 to 200 characters.",
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
             "content": {
               "application/json": {
                 "schema": {
@@ -557,7 +557,7 @@
             }
           },
           "400": {
-            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.\n\n`missing_idempotency_key`: A write without an `Idempotency-Key` header of 8 to 200 characters.",
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
             "content": {
               "application/json": {
                 "schema": {
@@ -716,7 +716,7 @@
             }
           },
           "400": {
-            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.\n\n`missing_idempotency_key`: A write without an `Idempotency-Key` header of 8 to 200 characters.",
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1111,7 +1111,7 @@
             }
           },
           "400": {
-            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.\n\n`missing_idempotency_key`: A write without an `Idempotency-Key` header of 8 to 200 characters.",
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1416,7 +1416,7 @@
             }
           },
           "400": {
-            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.\n\n`missing_idempotency_key`: A write without an `Idempotency-Key` header of 8 to 200 characters.",
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1585,7 +1585,7 @@
             }
           },
           "400": {
-            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.\n\n`missing_idempotency_key`: A write without an `Idempotency-Key` header of 8 to 200 characters.",
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1734,7 +1734,7 @@
             }
           },
           "400": {
-            "description": "`missing_idempotency_key`: A write without an `Idempotency-Key` header of 8 to 200 characters.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2008,7 +2008,7 @@
             }
           },
           "400": {
-            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.\n\n`missing_idempotency_key`: A write without an `Idempotency-Key` header of 8 to 200 characters.",
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2712,7 +2712,7 @@
             }
           },
           "400": {
-            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.\n\n`missing_idempotency_key`: A write without an `Idempotency-Key` header of 8 to 200 characters.",
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4011,7 +4011,6 @@
                 "enum": [
                   "invalid_input",
                   "invalid_json",
-                  "missing_idempotency_key",
                   "unauthorized",
                   "insufficient_scope",
                   "forbidden",
@@ -6964,8 +6963,8 @@
       "IdempotencyKey": {
         "name": "Idempotency-Key",
         "in": "header",
-        "required": true,
-        "description": "Unique per logical write, 8–200 characters. Retrying with the same key and body replays the first response.",
+        "required": false,
+        "description": "Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.",
         "schema": {
           "type": "string",
           "minLength": 8,

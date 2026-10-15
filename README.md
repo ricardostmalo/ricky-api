@@ -17,7 +17,7 @@ This repository is generated from the code that serves the API. The specificatio
 | Format | JSON, snake_case fields, UUID identifiers, ISO 8601 UTC timestamps |
 | Lists | `{ "data": [...], "next_cursor": "…" }`; pass `next_cursor` back as `cursor` |
 | Errors | `{ "error": { "code", "message", "param", "request_id" } }` with a stable `code` |
-| Writes | `Idempotency-Key` header; a retry with the same key replays the first response |
+| Writes | Optional `Idempotency-Key` header; a retry with the same key replays the first response |
 | Rate limit | 120 requests per minute per key, reported in `X-RateLimit-*` headers |
 | Webhooks | Signed with HMAC-SHA256; up to ten delivery attempts |
 
