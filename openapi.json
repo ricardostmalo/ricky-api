@@ -3232,6 +3232,268 @@
         }
       }
     },
+    "/webhooks/{webhook_id}/test": {
+      "post": {
+        "operationId": "testWebhook",
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Send a test event",
+        "description": "Sends one signed `webhook.test` event to the endpoint now and answers what it replied. It is not recorded as a delivery and is not retried.\n\nScope: `webhooks:manage`.",
+        "parameters": [
+          {
+            "name": "webhook_id",
+            "in": "path",
+            "required": true,
+            "description": "Webhook ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/WebhookTestResult"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/{webhook_id}/rotate-secret": {
+      "post": {
+        "operationId": "rotateWebhookSecret",
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Rotate the signing secret",
+        "description": "Returns a new `signing_secret`, the only time Ricky shows it. Until `expire_previous_after_hours` passes, every delivery carries two signatures in `X-Ricky-Signature`, new first, so you can deploy the new secret without missing events. The body is optional.\n\nScope: `webhooks:manage`.",
+        "parameters": [
+          {
+            "name": "webhook_id",
+            "in": "path",
+            "required": true,
+            "description": "Webhook ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RotateWebhookSecret"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CreatedWebhook"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/webhooks/{webhook_id}/deliveries": {
       "get": {
         "operationId": "listWebhookDeliveries",
@@ -3491,7 +3753,7 @@
       "post": {
         "operationId": "webhook_message_received",
         "summary": "message.received",
-        "description": "A contact sent a message.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "description": "A contact sent a message.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
         "parameters": [
           {
             "name": "X-Ricky-Delivery-Id",
@@ -3515,7 +3777,7 @@
             "name": "X-Ricky-Signature",
             "in": "header",
             "required": true,
-            "description": "`v1=` and the hex HMAC-SHA256.",
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
             "schema": {
               "type": "string"
             }
@@ -3542,7 +3804,7 @@
       "post": {
         "operationId": "webhook_message_sent",
         "summary": "message.sent",
-        "description": "The provider accepted a message from the organization.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "description": "The provider accepted a message from the organization.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
         "parameters": [
           {
             "name": "X-Ricky-Delivery-Id",
@@ -3566,7 +3828,7 @@
             "name": "X-Ricky-Signature",
             "in": "header",
             "required": true,
-            "description": "`v1=` and the hex HMAC-SHA256.",
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
             "schema": {
               "type": "string"
             }
@@ -3593,7 +3855,7 @@
       "post": {
         "operationId": "webhook_message_delivered",
         "summary": "message.delivered",
-        "description": "An outbound message reached the recipient device.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "description": "An outbound message reached the recipient device.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
         "parameters": [
           {
             "name": "X-Ricky-Delivery-Id",
@@ -3617,7 +3879,7 @@
             "name": "X-Ricky-Signature",
             "in": "header",
             "required": true,
-            "description": "`v1=` and the hex HMAC-SHA256.",
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
             "schema": {
               "type": "string"
             }
@@ -3644,7 +3906,7 @@
       "post": {
         "operationId": "webhook_message_read",
         "summary": "message.read",
-        "description": "The recipient read an outbound message.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "description": "The recipient read an outbound message.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
         "parameters": [
           {
             "name": "X-Ricky-Delivery-Id",
@@ -3668,7 +3930,7 @@
             "name": "X-Ricky-Signature",
             "in": "header",
             "required": true,
-            "description": "`v1=` and the hex HMAC-SHA256.",
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
             "schema": {
               "type": "string"
             }
@@ -3695,7 +3957,7 @@
       "post": {
         "operationId": "webhook_message_failed",
         "summary": "message.failed",
-        "description": "An outbound message failed for good; read the message for the reason.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "description": "An outbound message failed for good; read the message for the reason.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
         "parameters": [
           {
             "name": "X-Ricky-Delivery-Id",
@@ -3719,7 +3981,7 @@
             "name": "X-Ricky-Signature",
             "in": "header",
             "required": true,
-            "description": "`v1=` and the hex HMAC-SHA256.",
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
             "schema": {
               "type": "string"
             }
@@ -3746,7 +4008,7 @@
       "post": {
         "operationId": "webhook_conversation_opened",
         "summary": "conversation.opened",
-        "description": "A conversation was created or reopened.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "description": "A conversation was created or reopened.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
         "parameters": [
           {
             "name": "X-Ricky-Delivery-Id",
@@ -3770,7 +4032,7 @@
             "name": "X-Ricky-Signature",
             "in": "header",
             "required": true,
-            "description": "`v1=` and the hex HMAC-SHA256.",
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
             "schema": {
               "type": "string"
             }
@@ -3797,7 +4059,7 @@
       "post": {
         "operationId": "webhook_conversation_closed",
         "summary": "conversation.closed",
-        "description": "A conversation was closed.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "description": "A conversation was closed.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
         "parameters": [
           {
             "name": "X-Ricky-Delivery-Id",
@@ -3821,7 +4083,7 @@
             "name": "X-Ricky-Signature",
             "in": "header",
             "required": true,
-            "description": "`v1=` and the hex HMAC-SHA256.",
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
             "schema": {
               "type": "string"
             }
@@ -3848,7 +4110,7 @@
       "post": {
         "operationId": "webhook_conversation_assignment_changed",
         "summary": "conversation.assignment_changed",
-        "description": "A conversation was assigned, reassigned or unassigned.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "description": "A conversation was assigned, reassigned or unassigned.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
         "parameters": [
           {
             "name": "X-Ricky-Delivery-Id",
@@ -3872,7 +4134,7 @@
             "name": "X-Ricky-Signature",
             "in": "header",
             "required": true,
-            "description": "`v1=` and the hex HMAC-SHA256.",
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
             "schema": {
               "type": "string"
             }
@@ -3899,7 +4161,7 @@
       "post": {
         "operationId": "webhook_contact_created",
         "summary": "contact.created",
-        "description": "A contact was created, by a person, the API, an import or a first message.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "description": "A contact was created, by a person, the API, an import or a first message.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
         "parameters": [
           {
             "name": "X-Ricky-Delivery-Id",
@@ -3923,7 +4185,7 @@
             "name": "X-Ricky-Signature",
             "in": "header",
             "required": true,
-            "description": "`v1=` and the hex HMAC-SHA256.",
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
             "schema": {
               "type": "string"
             }
@@ -3950,7 +4212,7 @@
       "post": {
         "operationId": "webhook_contact_updated",
         "summary": "contact.updated",
-        "description": "A contact's fields, tags or custom values were saved.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "description": "A contact's fields, tags or custom values were saved.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
         "parameters": [
           {
             "name": "X-Ricky-Delivery-Id",
@@ -3974,7 +4236,58 @@
             "name": "X-Ricky-Signature",
             "in": "header",
             "required": true,
-            "description": "`v1=` and the hex HMAC-SHA256.",
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Received."
+          }
+        }
+      }
+    },
+    "webhook.test": {
+      "post": {
+        "operationId": "webhook_webhook_test",
+        "summary": "webhook.test",
+        "description": "Sent on demand by `POST /webhooks/{webhook_id}/test`; carries `webhook_id`.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "parameters": [
+          {
+            "name": "X-Ricky-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "description": "Delivery ID; equals the body `id`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Timestamp",
+            "in": "header",
+            "required": true,
+            "description": "Unix time of the attempt.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Signature",
+            "in": "header",
+            "required": true,
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
             "schema": {
               "type": "string"
             }
@@ -5687,7 +6000,8 @@
               "conversation.closed",
               "conversation.assignment_changed",
               "contact.created",
-              "contact.updated"
+              "contact.updated",
+              "webhook.test"
             ]
           },
           "occurred_at": {
@@ -5733,6 +6047,14 @@
                 "examples": [
                   "3f6c2b1e-8d4a-4b7e-9a51-2c7d8e9f0a1b"
                 ]
+              },
+              "webhook_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Webhook, for `webhook.test`.",
+                "examples": [
+                  "e1f2a3b4-c5d6-4e7f-8a9b-0c1d2e3f4a5b"
+                ]
               }
             }
           }
@@ -5745,6 +6067,57 @@
           "data"
         ],
         "description": "The JSON body Ricky posts to a webhook endpoint."
+      },
+      "WebhookTestResult": {
+        "type": "object",
+        "properties": {
+          "delivered": {
+            "type": "boolean",
+            "description": "True when the endpoint answered 2xx."
+          },
+          "response_status": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "HTTP status the endpoint answered; null if none.",
+            "examples": [
+              200
+            ]
+          },
+          "error": {
+            "description": "Why it failed: the HTTP status, a timeout or a refused destination.",
+            "examples": [
+              null
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "duration_ms": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "Time until the endpoint answered.",
+            "examples": [
+              184
+            ]
+          }
+        },
+        "required": [
+          "delivered",
+          "response_status",
+          "error",
+          "duration_ms"
+        ],
+        "description": "What the endpoint answered to a `webhook.test` event."
       },
       "CreateContact": {
         "type": "object",
@@ -6948,6 +7321,24 @@
               "message.received",
               "conversation.closed"
             ]
+          }
+        ]
+      },
+      "RotateWebhookSecret": {
+        "type": "object",
+        "properties": {
+          "expire_previous_after_hours": {
+            "default": 24,
+            "description": "How long deliveries keep the previous signature too, so you can deploy the new secret first. 0 ends the previous secret now.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 72
+          }
+        },
+        "additionalProperties": false,
+        "examples": [
+          {
+            "expire_previous_after_hours": 24
           }
         ]
       }

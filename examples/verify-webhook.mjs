@@ -17,8 +17,11 @@ export function verifyRickySignature({ body, signature, timestamp, secret, now =
   const expected = Buffer.from(
     `v1=${createHmac('sha256', secret).update(`${timestamp}.${body}`).digest('hex')}`,
   );
-  const received = Buffer.from(signature);
-  return expected.length === received.length && timingSafeEqual(expected, received);
+  // During a secret rotation the header carries two comma-separated signatures.
+  return signature.split(',').some((candidate) => {
+    const received = Buffer.from(candidate.trim());
+    return expected.length === received.length && timingSafeEqual(expected, received);
+  });
 }
 
 const seen = new Set(); // Use a durable store in production.

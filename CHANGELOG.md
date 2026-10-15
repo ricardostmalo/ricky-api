@@ -12,6 +12,7 @@ This page records changes to the API. A breaking change only ships in a new path
 - **New events.** `message.delivered`, `message.read`, `message.failed`, `contact.created` and `contact.updated`. Contact events carry `contact_id` in `data`. A webhook accepts up to 10 event types.
 - **History imports.** Messages a history import brings in no longer fire `message.*` events.
 - **Optional `Idempotency-Key`.** Writes no longer require the header. Without it the request runs; with it a retry does not repeat the effect. A value out of range gets `400 invalid_input`; the `missing_idempotency_key` code no longer exists.
+- **Webhook tools.** `POST /webhooks/{webhook_id}/test` sends a `webhook.test` event and returns what your endpoint answered. `POST /webhooks/{webhook_id}/rotate-secret` replaces the signing secret; for the window you choose, every delivery carries the new and the previous signature.
 - **Organization keys.** A key keeps working when its creator leaves the organization. Only revocation and expiry end it.
 - **Sending files.** `POST /conversations/{conversation_id}/messages` accepts `type: "media"` with the public HTTPS URL of an image, a video, an audio file or a document. Ricky downloads it and sends it on WhatsApp or Instagram. See [Sending messages](https://getricky.ai/en/docs/api/sending-messages#6-send-a-file).
 - **Reading one message.** `GET /conversations/{conversation_id}/messages/{message_id}` answers one message as the list shows it, with `media.url` signed again.

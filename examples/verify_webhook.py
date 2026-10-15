@@ -27,7 +27,8 @@ def verify_ricky_signature(
     if abs(int(current) - int(timestamp)) > TOLERANCE_SECONDS:
         return False
     digest = hmac.new(secret.encode(), timestamp.encode() + b"." + body, hashlib.sha256).hexdigest()
-    return hmac.compare_digest("v1=" + digest, signature)
+    # During a secret rotation the header carries two comma-separated signatures.
+    return any(hmac.compare_digest("v1=" + digest, candidate.strip()) for candidate in signature.split(","))
 
 
 SEEN = set()  # Use a durable store in production.
