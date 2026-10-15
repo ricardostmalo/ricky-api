@@ -1,0 +1,56 @@
+[build-system]
+requires = ["hatchling>=1.27"] # 1.27 reads SPDX license; newer ones need Python 3.10 to build
+build-backend = "hatchling.build"
+
+[project]
+name = "getricky"
+dynamic = ["version"]
+description = "Official Python SDK for the Ricky REST API"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.9"
+authors = [{ name = "Ricky", email = "ricardo@getricky.ai" }]
+keywords = ["ricky", "whatsapp", "instagram", "messenger", "crm", "conversations", "api", "sdk"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Typing :: Typed",
+]
+dependencies = ["httpx>=0.23,<1", "typing-extensions>=4.10"]
+
+[project.urls]
+Homepage = "https://getricky.ai/docs/api"
+Documentation = "https://getricky.ai/docs/api"
+Repository = "https://github.com/ricardostmalo/ricky-api"
+Issues = "https://github.com/ricardostmalo/ricky-api/issues"
+Changelog = "https://github.com/ricardostmalo/ricky-api/blob/main/CHANGELOG.md"
+
+[dependency-groups]
+test = [
+  "pytest==8.4.2; python_version < '3.10'",
+  "pytest==9.1.1; python_version >= '3.10'",
+  "respx==0.23.1",
+  "mypy==2.4.0; python_version >= '3.10'",
+]
+
+[tool.hatch.version]
+path = "src/getricky/_version.py"
+
+[tool.hatch.build.targets.sdist]
+include = ["src/getricky", "tests", "README.md", "LICENSE"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/getricky"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

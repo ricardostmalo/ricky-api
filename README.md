@@ -56,9 +56,38 @@ curl https://getricky.ai/api/v1/sends/$SEND_ID \
   -H "Authorization: Bearer $RICKY_API_KEY"
 ```
 
+## SDKs
+
+Official clients generated from this specification, in [`sdks/`](sdks). They will be published as `getricky` on npm and PyPI; until then, install them from this repository:
+
+```bash
+# Python 3.9 or later
+pip install "git+https://github.com/ricardostmalo/ricky-api#subdirectory=sdks/python"
+
+# TypeScript and JavaScript, Node.js 18 or later
+git clone https://github.com/ricardostmalo/ricky-api && cd ricky-api/sdks/typescript
+npm ci && npm pack   # then: npm install /path/to/getricky-0.1.0.tgz
+```
+
+```ts
+import { Ricky } from 'getricky';
+
+const ricky = new Ricky(process.env.RICKY_API_KEY);
+const { data: channels } = await ricky.listChannels();
+```
+
+```python
+from getricky import Ricky
+
+ricky = Ricky()  # reads RICKY_API_KEY
+channels = ricky.list_channels()["data"]
+```
+
+They add an `Idempotency-Key` to writes, retry rate limits and server errors, walk pages and verify webhooks. See [`sdks/typescript`](sdks/typescript) and [`sdks/python`](sdks/python), and [`sdks/README.md`](sdks/README.md) for how they are generated.
+
 ## Using the specification
 
-The file works with standard OpenAPI tooling, for example:
+The file also works with standard OpenAPI tooling, for example:
 
 - TypeScript types: `npx openapi-typescript openapi.json -o ricky-api.d.ts`
 - A client in another language: [OpenAPI Generator](https://openapi-generator.tech)
