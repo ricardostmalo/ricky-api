@@ -99,4 +99,6 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | La clave no tiene el permiso de la operación                          | `403 insufficient_scope` |
 | La clave superó 120 solicitudes en el minuto                          | `429 rate_limited`       |
 
+El **Registro de solicitudes** de **Configuración → API** muestra las solicitudes de tus claves de los últimos 30 días, con su estado, código de error, duración e ID de solicitud. No guarda cuerpos ni cabeceras, y no incluye solicitudes sin una clave válida.
+
 Consulta [Errores](./errors.md) y [Idempotencia, límites y reintentos](./idempotency-and-rate-limits.md).

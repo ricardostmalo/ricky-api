@@ -99,4 +99,6 @@ The table below is generated from the API contract: it is the exact list of oper
 | The key lacks the operation's scope                                   | `403 insufficient_scope` |
 | The key made more than 120 requests this minute                       | `429 rate_limited`       |
 
+The **Request log** in **Settings → API** shows your keys' requests from the last 30 days, with their status, error code, duration and request ID. It never stores bodies or headers, and requests without a valid key are not in it.
+
 See [Errors](./errors.md) and [Idempotency, rate limits and retries](./idempotency-and-rate-limits.md).
