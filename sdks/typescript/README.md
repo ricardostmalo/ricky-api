@@ -2,7 +2,7 @@
 
 The official TypeScript and JavaScript client for the [Ricky](https://getricky.ai) REST API: contacts, conversations, messages, templates and webhooks of one organization.
 
-- Guides and reference: <https://getricky.ai/docs/api>
+- Guides and reference: <https://getricky.ai/docs/api>, also in [the API repository](https://github.com/ricardostmalo/ricky-api/tree/main/docs) as Markdown
 - Source and OpenAPI description: <https://github.com/ricardostmalo/ricky-api>
 
 Node.js 18 or later, ES modules or CommonJS, with types included. No runtime dependencies: it uses the built-in `fetch`.

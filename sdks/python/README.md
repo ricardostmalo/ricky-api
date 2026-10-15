@@ -2,7 +2,7 @@
 
 The official Python client for the [Ricky](https://getricky.ai) REST API: contacts, conversations, messages, templates and webhooks of one organization.
 
-- Guides and reference: <https://getricky.ai/docs/api>
+- Guides and reference: <https://getricky.ai/docs/api>, also in [the API repository](https://github.com/ricardostmalo/ricky-api/tree/main/docs) as Markdown
 - Source and OpenAPI description: <https://github.com/ricardostmalo/ricky-api>
 
 Python 3.9 or later. Its only dependencies are `httpx` and `typing-extensions`.

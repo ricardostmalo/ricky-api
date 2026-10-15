@@ -111,6 +111,41 @@ curl "https://getricky.ai/api/v1/contacts?page_size=1" \
 
 `next_cursor` leads to the next page. See [Pagination](./pagination.md).
 
+## SDKs
+
+The official SDKs are published as `getricky` on npm and PyPI. They are generated from the OpenAPI document, so they cover every operation, and they add an `Idempotency-Key` to writes, retry rate limits and server errors, walk pages and verify webhooks. Their source and READMEs are in [`ricardostmalo/ricky-api`](https://github.com/ricardostmalo/ricky-api/tree/main/sdks).
+
+```bash
+npm install getricky   # Node.js 18 or later
+pip install getricky   # Python 3.9 or later
+```
+
+```ts title="TypeScript"
+import { Ricky } from 'getricky';
+
+const ricky = new Ricky(process.env.RICKY_API_KEY);
+
+const { data: channels } = await ricky.listChannels();
+const { data: send } = await ricky.startConversation({
+  body: { channel_id: channels[0].id, phone: '+50760001234', template: { id: '1234567890' } },
+});
+for await (const contact of ricky.paginate(ricky.listContacts)) console.log(contact.first_name);
+```
+
+```python title="Python"
+import os
+from getricky import Ricky
+
+ricky = Ricky(os.environ["RICKY_API_KEY"])
+
+channels = ricky.list_channels()["data"]
+send = ricky.start_conversation(
+    {"channel_id": channels[0]["id"], "phone": "+50760001234", "template": {"id": "1234567890"}}
+)["data"]
+for contact in ricky.paginate(ricky.list_contacts):
+    print(contact["first_name"])
+```
+
 ## Next steps
 
 - [Authentication](./authentication.md): Keys, scopes and expiry.
