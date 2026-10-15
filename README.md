@@ -58,15 +58,11 @@ curl https://getricky.ai/api/v1/sends/$SEND_ID \
 
 ## SDKs
 
-Official clients generated from this specification, in [`sdks/`](sdks). They will be published as `getricky` on npm and PyPI; until then, install them from this repository:
+Official clients generated from this specification, published as `getricky` (source in [`sdks/`](sdks)):
 
 ```bash
-# Python 3.9 or later
-pip install "git+https://github.com/ricardostmalo/ricky-api#subdirectory=sdks/python"
-
-# TypeScript and JavaScript, Node.js 18 or later
-git clone https://github.com/ricardostmalo/ricky-api && cd ricky-api/sdks/typescript
-npm ci && npm pack   # then: npm install /path/to/getricky-0.1.0.tgz
+npm install getricky   # TypeScript and JavaScript, Node.js 18 or later
+pip install getricky   # Python 3.9 or later
 ```
 
 ```ts

@@ -8,9 +8,6 @@ The official Python client for the [Ricky](https://getricky.ai) REST API: contac
 Python 3.9 or later. Its only dependencies are `httpx` and `typing-extensions`.
 
 ```bash
-# Until it is on PyPI:
-pip install "git+https://github.com/ricardostmalo/ricky-api#subdirectory=sdks/python"
-# Once published:
 pip install getricky
 ```
 

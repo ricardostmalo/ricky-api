@@ -8,8 +8,6 @@ The official TypeScript and JavaScript client for the [Ricky](https://getricky.a
 Node.js 18 or later, ES modules or CommonJS, with types included. No runtime dependencies: it uses the built-in `fetch`.
 
 ```bash
-# Until it is on npm: build it from sdks/typescript with `npm ci && npm pack`,
-# then `npm install ./getricky-0.1.0.tgz`.
 npm install getricky
 ```
 
