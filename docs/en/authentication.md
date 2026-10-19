@@ -58,8 +58,8 @@ Each operation requires one scope. A key without it gets `403 insufficient_scope
 | `members:read`        | Read the members of the organization.                                                                   |
 | `tags:read`           | Read contact tags.                                                                                      |
 | `webhooks:manage`     | Create, list and disable webhooks; read and retry their deliveries.                                     |
-| `workflows:read`      | Read workflows and their executions.                                                                    |
-| `workflows:write`     | Create, edit, activate, pause and delete workflows.                                                     |
+| `workflows:read`      | Read workflows, their executions, and appointment reminder previews and history.                        |
+| `workflows:write`     | Create, edit, activate, pause and delete workflows, and set a scheduled workflow's header file.         |
 | `reports:read`        | Read the numbers of the Reports pages.                                                                  |
 | `agents:read`         | Read agents and their configuration options.                                                            |
 | `agents:write`        | Create, update and archive agents.                                                                      |
@@ -68,7 +68,7 @@ Each operation requires one scope. A key without it gets `403 insufficient_scope
 | `tags:write`          | Create, edit and delete tags.                                                                           |
 | `quick_replies:read`  | Read quick replies.                                                                                     |
 | `quick_replies:write` | Create, update and delete quick replies.                                                                |
-| `broadcasts:read`     | Read broadcasts, their counts and each recipient's delivery status.                                     |
+| `broadcasts:read`     | Read broadcasts, their counts and each recipient's delivery status, and preview an audience.            |
 | `broadcasts:write`    | Create, schedule and cancel broadcasts.                                                                 |
 
 The table below is generated from the API contract: it is the exact list of operations and the scope each one requires.
@@ -110,6 +110,9 @@ The table below is generated from the API contract: it is the exact list of oper
 | [Activate a workflow](https://getricky.ai/en/docs/api/reference/workflows/activate-workflow) | `POST /workflows/{workflow_id}/activate` | `workflows:write` |
 | [Pause a workflow](https://getricky.ai/en/docs/api/reference/workflows/pause-workflow) | `POST /workflows/{workflow_id}/pause` | `workflows:write` |
 | [List executions](https://getricky.ai/en/docs/api/reference/workflows/list-workflow-executions) | `GET /workflows/{workflow_id}/executions` | `workflows:read` |
+| [Set the header file of a scheduled workflow](https://getricky.ai/en/docs/api/reference/workflows/upload-workflow-header-media) | `POST /workflows/{workflow_id}/header-media` | `workflows:write` |
+| [Preview appointment reminders](https://getricky.ai/en/docs/api/reference/workflows/preview-workflow-reminders) | `GET /workflows/{workflow_id}/reminders/preview` | `workflows:read` |
+| [Get appointment reminder history](https://getricky.ai/en/docs/api/reference/workflows/get-workflow-reminder-history) | `GET /workflows/{workflow_id}/reminders/history` | `workflows:read` |
 | [Get the live dashboard](https://getricky.ai/en/docs/api/reference/reports/get-dashboard-report) | `GET /reports/dashboard` | `reports:read` |
 | [Get the conversations report](https://getricky.ai/en/docs/api/reference/reports/get-conversations-report) | `GET /reports/conversations` | `reports:read` |
 | [Get the messages report](https://getricky.ai/en/docs/api/reference/reports/get-messages-report) | `GET /reports/messages` | `reports:read` |
@@ -172,6 +175,7 @@ The table below is generated from the API contract: it is the exact list of oper
 | [Resolve a handoff](https://getricky.ai/en/docs/api/reference/conversations/resolve-conversation-handoff) | `POST /conversations/{conversation_id}/handoff/resolve` | `conversations:write` |
 | [Mark a conversation unread](https://getricky.ai/en/docs/api/reference/conversations/mark-conversation-unread) | `DELETE /conversations/{conversation_id}/read` | `conversations:write` |
 | [Fetch a message's file](https://getricky.ai/en/docs/api/reference/messages/fetch-message-media) | `POST /conversations/{conversation_id}/messages/{message_id}/media` | `conversations:read` |
+| [Preview a broadcast audience](https://getricky.ai/en/docs/api/reference/broadcasts/preview-broadcast-audience) | `POST /broadcasts/preview` | `broadcasts:read` |
 
 ## Authentication responses
 

@@ -18,7 +18,7 @@ Ricky inicia cada ejecución por un evento. No hay una operación para iniciar u
 | `conversation` | `first_message_received` | Llega el primer mensaje del contacto en una conversación. |
 | `scheduled`    | `{ "kind": "daily" }`    | Cada día a una hora, con las citas o cumpleaños de Odoo.  |
 
-La API crea y edita workflows de conversación. Los workflows programados se crean en Ricky; la API los lee, les cambia el nombre, los activa, los pausa y los elimina.
+La API crea y edita workflows de conversación. Los workflows programados se crean en Ricky; la API los lee, les cambia el nombre, los activa, los pausa y los elimina, define su archivo de encabezado, y previsualiza y revisa los recordatorios de citas ([más abajo](#workflows-programados)).
 
 Un workflow de conversación puede tener `condition` para ejecutarse solo dentro o fuera del horario de atención.
 
@@ -123,6 +123,39 @@ curl "https://getricky.ai/api/v1/workflows/$WORKFLOW_ID/executions?page_size=20"
 ```
 
 Cada ejecución trae su `status`, sus `attempts` y `last_error`. El estado dice si Ricky ejecutó el workflow, no si cada mensaje llegó. Para eso, lee los mensajes de la conversación o suscríbete a `message.failed`. La lista se pagina con `next_cursor`, como en [Paginación](./pagination.md).
+
+## Workflows programados
+
+Un workflow programado envía una plantilla de WhatsApp cada día desde Odoo: recordatorios de citas o saludos de cumpleaños. Se configura en Ricky; con la API también puedes definir su archivo de encabezado y, en los recordatorios de citas, ver qué enviará y qué envió.
+
+### Archivo de encabezado
+
+Si la plantilla tiene un encabezado de imagen, video o documento, cada envío lleva el archivo que guardes:
+
+```bash
+curl -X POST https://getricky.ai/api/v1/workflows/$WORKFLOW_ID/header-media \
+  -H "Authorization: Bearer $RICKY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: encabezado-octubre" \
+  -d '{ "url": "https://example.com/recordatorio.jpg" }'
+```
+
+Ricky descarga `url` como con los [archivos que envías](./sending-messages.md): HTTPS público, sin redirecciones y con un `Content-Type` del tipo que admite el encabezado, dentro del límite de WhatsApp para ese tipo. El archivo nuevo reemplaza al anterior. La respuesta es el workflow, con `has_header_image: true`. Una plantilla sin encabezado de archivo recibe `422 rule_violation`; un archivo de otro tipo recibe `400 invalid_input` con `param: "url"`. Exige `workflows:write`.
+
+### Vista previa de recordatorios
+
+```bash
+curl "https://getricky.ai/api/v1/workflows/$WORKFLOW_ID/reminders/preview?date=2026-10-20" \
+  -H "Authorization: Bearer $RICKY_API_KEY"
+```
+
+Ricky lee Odoo en ese momento y responde cada cita que el workflow recordaría ese día: `excluded_because` dice por qué una no se envía (`state`, `name`, `branch`, `phone`), `message` es el texto que enviaría y `delivery` el envío ya registrado, si lo hay. `date` es el día en que corre el workflow, su próxima ejecución o después. `appointment_states=confirmed,pending` previsualiza otros estados de Odoo sin guardarlos. No envía nada. Necesita Odoo conectado; si no, `422 rule_violation`.
+
+### Historial de recordatorios
+
+`GET /workflows/{workflow_id}/reminders/history?date=2026-10-14` responde lo que el workflow revisó y envió un día pasado, según lo que Ricky registró: cada cita con su exclusión, el mensaje, cuándo se puso en cola y el `status` de su entrega. No lee Odoo.
+
+La vista previa y el historial son solo para workflows de recordatorios de citas; un workflow de cumpleaños recibe `422 rule_violation`. Ambos exigen `workflows:read`.
 
 ## Ejemplo: pedido listo con recordatorio
 

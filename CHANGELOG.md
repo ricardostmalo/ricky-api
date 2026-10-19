@@ -6,6 +6,13 @@ This page records changes to the API. A breaking change only ships in a new path
 
 ## October 19, 2026
 
+**WhatsApp media headers, variable mappings and number settings.** Compatible changes to v1.
+
+- **Media headers.** Templates take `IMAGE`, `VIDEO` and `DOCUMENT` headers. `POST /templates/media` and `POST /templates/media/complete` upload the sample Meta reviews and answer its `handle`. An edit that keeps a media header sends it again with a new `handle`. See [WhatsApp templates and numbers](https://getricky.ai/en/docs/api/whatsapp#image-video-and-document-headers).
+- **Variables from contact fields.** `GET` and `PUT /templates/{template_id}/field-mappings` read and replace the contact fields that fill a template's variables.
+- **Manage numbers.** `PATCH /whatsapp-numbers/{channel_id}` turns calls on or off. `PATCH /whatsapp-numbers/{channel_id}/business-profile` edits the business profile, `/profile-photo` sets the profile photo in three steps, `/display-name` asks Meta to review a new display name and `/refresh` reads the number from Meta. They require `conversations:write`.
+- **More on each number.** WhatsApp numbers also answer `name_status` and `business_profile`.
+
 **Inbox.** Compatible changes to v1.
 
 - **Inbox filters.** `GET /conversations` accepts `channel_id`, `tag_id`, `unread`, `pending_handoff`, `last_message_from`, `agent_id` and `unassigned`. Each conversation carries `unread` and `active_handoff`. See [Inbox](https://getricky.ai/en/docs/api/inbox).

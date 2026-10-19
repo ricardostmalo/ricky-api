@@ -3123,6 +3123,120 @@ class WorkflowExecution(TypedDict):
     """
 
 
+class MediaUpload(TypedDict):
+    """
+    Where to put the bytes of a file Ricky forwards to Meta.
+    """
+
+    upload_path: str
+    """
+    Where the bytes wait in Ricky; send it to the `complete` operation.
+    """
+    upload_url: str
+    """
+    Signed URL valid for two hours. `PUT` the file bytes to it with `Content-Type` set to `mime_type`, then call the `complete` operation. Ricky deletes the file once it completes, whether or not Meta takes it.
+    """
+
+
+class TemplateMedia(TypedDict):
+    """
+    A header sample Meta holds for a template review.
+    """
+
+    handle: str
+    """
+    Meta’s handle for the sample. Send it as `header.handle` of `POST /templates` or `PATCH /templates/{template_id}`.
+    """
+
+
+class TemplateFieldMappingsVariable(TypedDict):
+    component: Literal["header", "body", "button"]
+    """
+    Where the variable is.
+    """
+    key: str
+    """
+    The variable: its number or name, or the button position from `0` for a button.
+    """
+    name: Optional[str]
+    """
+    The variable as the template writes it, for example `{{1}}`; for a button, its text.
+    """
+
+
+class TemplateFieldMappingsMappingSource(TypedDict, closed=True):
+    """
+    The contact field whose value fills the variable.
+    """
+
+    kind: Literal["native"]
+    field: Literal["first_name", "last_name", "primary_phone", "primary_email", "company", "job_title", "birthday", "street_address", "city", "region", "postal_code", "country", "website_url", "linkedin_url", "lifecycle_stage", "lead_status", "source", "notes"]
+    """
+    A field every contact has.
+    """
+
+
+class TemplateFieldMappingsMappingSource1(TypedDict, closed=True):
+    """
+    The contact field whose value fills the variable.
+    """
+
+    kind: Literal["custom"]
+    field_id: str
+    """
+    A custom field, from `GET /contact-fields`.
+    """
+
+
+class TemplateFieldMappingsMapping(TypedDict):
+    component: Literal["header", "body", "button"]
+    """
+    Where the variable is.
+    """
+    key: str
+    """
+    The variable it fills.
+    """
+    source: Union[TemplateFieldMappingsMappingSource, TemplateFieldMappingsMappingSource1]
+    """
+    The contact field whose value fills the variable.
+    """
+
+
+class TemplateFieldMappings(TypedDict):
+    """
+    The contact fields that fill a template’s variables when Ricky sends it to a contact. They apply to the template’s name and language in its business account.
+    """
+
+    template_id: str
+    """
+    Template ID at Meta.
+    """
+    variables: List[TemplateFieldMappingsVariable]
+    """
+    Every variable a contact field can fill: those of the header and the body, and each copy-code button or link that ends in a variable.
+    """
+    mappings: List[TemplateFieldMappingsMapping]
+    """
+    The variables that have a contact field; the others are filled by hand.
+    """
+
+
+class DisplayNameRequest(TypedDict):
+    """
+    A display name change Meta is reviewing.
+    """
+
+    requested_display_name: str
+    """
+    The name sent to Meta for review.
+    """
+    status: Literal["pending_review"]
+    """
+    Meta reviews the name. When Meta approves it, the number’s `verified_name` and `name_status` change; `POST /whatsapp-numbers/{channel_id}/refresh` reads them.
+    """
+
+
 class TemplateValidationError(TypedDict):
     param: str
     """
@@ -3163,6 +3277,41 @@ class DeletedTemplate(TypedDict):
     Template ID at Meta.
     """
     deleted: Literal[True]
+
+
+class WhatsAppNumberBusinessProfile(TypedDict):
+    """
+    The business profile customers see on WhatsApp, as Ricky last read it from Meta.
+    """
+
+    about: Optional[str]
+    """
+    Short text under the business name.
+    """
+    description: Optional[str]
+    """
+    Description of the business.
+    """
+    address: Optional[str]
+    """
+    Address of the business.
+    """
+    email: Optional[str]
+    """
+    Contact email.
+    """
+    vertical: Optional[str]
+    """
+    Industry as Meta names it.
+    """
+    websites: List[str]
+    """
+    Website URLs.
+    """
+    profile_picture_url: Optional[str]
+    """
+    Link to the profile photo at Meta; it expires.
+    """
 
 
 class WhatsAppNumber(TypedDict):
@@ -3233,6 +3382,14 @@ class WhatsAppNumber(TypedDict):
     last_synced_at: Optional[str]
     """
     When Ricky last read its details from Meta.
+    """
+    name_status: Optional[str]
+    """
+    Review status of the display name at Meta, in lowercase: for example `approved`, `pending_review` or `declined`.
+    """
+    business_profile: WhatsAppNumberBusinessProfile
+    """
+    The business profile customers see on WhatsApp, as Ricky last read it from Meta.
     """
 
 
@@ -4955,9 +5112,175 @@ class UpdateWorkflow(TypedDict, closed=True):
     """
 
 
+class CreateTemplateMediaUpload(TypedDict, closed=True):
+    """
+    Begins the upload of a header sample. Ricky answers where to `PUT` the bytes.
+    """
+
+    channel_id: str
+    """
+    WhatsApp channel whose business account will use the sample.
+    """
+    mime_type: Literal["image/jpeg", "image/png", "video/mp4", "video/3gpp", "application/pdf"]
+    """
+    JPEG or PNG up to 5 MB for an `IMAGE` header, MP4 or 3GPP up to 16 MB for `VIDEO`, PDF up to 100 MB for `DOCUMENT`.
+    """
+    size_bytes: int
+    """
+    Exact size of the file you will upload.
+    """
+
+
+class CompleteTemplateMediaUpload(TypedDict, closed=True):
+    """
+    The upload to send to Meta, with the channel it began with.
+    """
+
+    channel_id: str
+    """
+    WhatsApp channel whose business account will use the sample.
+    """
+    upload_path: str
+    """
+    The `upload_path` the upload began with.
+    """
+
+
+class ReplaceTemplateFieldMappingsMappingSource(TypedDict, closed=True):
+    """
+    The contact field whose value fills the variable.
+    """
+
+    kind: Literal["native"]
+    field: Literal["first_name", "last_name", "primary_phone", "primary_email", "company", "job_title", "birthday", "street_address", "city", "region", "postal_code", "country", "website_url", "linkedin_url", "lifecycle_stage", "lead_status", "source", "notes"]
+    """
+    A field every contact has.
+    """
+
+
+class ReplaceTemplateFieldMappingsMappingSource1(TypedDict, closed=True):
+    """
+    The contact field whose value fills the variable.
+    """
+
+    kind: Literal["custom"]
+    field_id: str
+    """
+    A custom field, from `GET /contact-fields`.
+    """
+
+
+class ReplaceTemplateFieldMappingsMapping(TypedDict, closed=True):
+    component: Literal["header", "body", "button"]
+    """
+    Where the variable is: `header`, `body` or a `button`.
+    """
+    key: str
+    """
+    The variable: its number or name without braces, or the button position from `0` for a button.
+    """
+    source: Union[ReplaceTemplateFieldMappingsMappingSource, ReplaceTemplateFieldMappingsMappingSource1]
+    """
+    The contact field whose value fills the variable.
+    """
+
+
+class ReplaceTemplateFieldMappings(TypedDict, closed=True):
+    """
+    The contact fields that fill the template’s variables when Ricky sends it.
+    """
+
+    mappings: List[ReplaceTemplateFieldMappingsMapping]
+    """
+    Every mapping of the template; the ones not sent are removed. Send `[]` to remove all.
+    """
+
+
+class UpdateWhatsAppNumber(TypedDict, closed=True):
+    """
+    The settings of the number that Ricky changes at Meta.
+    """
+
+    calls_enabled: bool
+    """
+    Whether customers can call the number and reach the AI agent.
+    """
+
+
+UpdateWhatsAppBusinessProfileWebsite: TypeAlias = str
+
+
+class UpdateWhatsAppBusinessProfile(TypedDict, closed=True):
+    """
+    Only the fields you send change; Meta checks the values too.
+    """
+
+    about: NotRequired[str]
+    """
+    Short text under the business name, up to 139 characters.
+    """
+    description: NotRequired[str]
+    """
+    Description of the business, up to 512 characters.
+    """
+    address: NotRequired[str]
+    """
+    Address of the business, up to 256 characters.
+    """
+    email: NotRequired[str]
+    """
+    Contact email, up to 128 characters.
+    """
+    vertical: NotRequired[Literal["", "ALCOHOL", "APPAREL", "AUTO", "BEAUTY", "EDU", "ENTERTAIN", "EVENT_PLAN", "FINANCE", "GOVT", "GROCERY", "HEALTH", "HOTEL", "NONPROFIT", "ONLINE_GAMBLING", "OTC_DRUGS", "OTHER", "PHYSICAL_GAMBLING", "PROF_SERVICES", "RESTAURANT", "RETAIL", "TRAVEL"]]
+    """
+    Industry, in the values Meta accepts; `""` for none.
+    """
+    websites: NotRequired[List[UpdateWhatsAppBusinessProfileWebsite]]
+    """
+    Up to two website URLs; the list replaces the current one.
+    """
+
+
+class CreateProfilePhotoUpload(TypedDict, closed=True):
+    """
+    Begins the upload of a profile photo. Ricky answers where to `PUT` the bytes.
+    """
+
+    mime_type: Literal["image/jpeg", "image/png"]
+    """
+    JPEG or PNG, up to 5 MB.
+    """
+    size_bytes: int
+    """
+    Exact size of the file you will upload.
+    """
+
+
+class CompleteProfilePhotoUpload(TypedDict, closed=True):
+    """
+    The upload to set as the profile photo.
+    """
+
+    upload_path: str
+    """
+    The `upload_path` the upload began with.
+    """
+
+
+class RequestDisplayName(TypedDict, closed=True):
+    """
+    A new display name for Meta to review.
+    """
+
+    display_name: str
+    """
+    The business name to show on the number. Meta reviews it against its rules.
+    """
+
+
 class CreateTemplateHeaderText(TypedDict, closed=True):
     """
-    `TEXT` or `LOCATION`. Send `null` for no header.
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
     """
 
     type: Literal["TEXT"]
@@ -4971,9 +5294,45 @@ class CreateTemplateHeaderText(TypedDict, closed=True):
     """
 
 
+class CreateTemplateHeaderImage(TypedDict, closed=True):
+    """
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
+    """
+
+    type: Literal["IMAGE"]
+    handle: str
+    """
+    Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+    """
+
+
+class CreateTemplateHeaderVideo(TypedDict, closed=True):
+    """
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
+    """
+
+    type: Literal["VIDEO"]
+    handle: str
+    """
+    Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+    """
+
+
+class CreateTemplateHeaderDocument(TypedDict, closed=True):
+    """
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
+    """
+
+    type: Literal["DOCUMENT"]
+    handle: str
+    """
+    Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+    """
+
+
 class CreateTemplateHeaderLocation(TypedDict, closed=True):
     """
-    `TEXT` or `LOCATION`. Send `null` for no header.
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
     """
 
     type: Literal["LOCATION"]
@@ -5046,9 +5405,9 @@ class CreateTemplate(TypedDict, closed=True):
     """
     How variables are written: `{{first_name}}` or `{{1}}`. It cannot change later.
     """
-    header: NotRequired[Optional[Union[CreateTemplateHeaderText, CreateTemplateHeaderLocation]]]
+    header: NotRequired[Optional[Union[CreateTemplateHeaderText, CreateTemplateHeaderImage, CreateTemplateHeaderVideo, CreateTemplateHeaderDocument, CreateTemplateHeaderLocation]]]
     """
-    `TEXT` or `LOCATION`. Send `null` for no header.
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
     """
     body: CreateTemplateBody
     """
@@ -5066,7 +5425,7 @@ class CreateTemplate(TypedDict, closed=True):
 
 class ValidateTemplateHeaderText(TypedDict, closed=True):
     """
-    `TEXT` or `LOCATION`. Send `null` for no header.
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
     """
 
     type: Literal["TEXT"]
@@ -5080,9 +5439,45 @@ class ValidateTemplateHeaderText(TypedDict, closed=True):
     """
 
 
+class ValidateTemplateHeaderImage(TypedDict, closed=True):
+    """
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
+    """
+
+    type: Literal["IMAGE"]
+    handle: str
+    """
+    Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+    """
+
+
+class ValidateTemplateHeaderVideo(TypedDict, closed=True):
+    """
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
+    """
+
+    type: Literal["VIDEO"]
+    handle: str
+    """
+    Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+    """
+
+
+class ValidateTemplateHeaderDocument(TypedDict, closed=True):
+    """
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
+    """
+
+    type: Literal["DOCUMENT"]
+    handle: str
+    """
+    Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+    """
+
+
 class ValidateTemplateHeaderLocation(TypedDict, closed=True):
     """
-    `TEXT` or `LOCATION`. Send `null` for no header.
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
     """
 
     type: Literal["LOCATION"]
@@ -5155,9 +5550,9 @@ class ValidateTemplate(TypedDict, closed=True):
     """
     How variables are written: `{{first_name}}` or `{{1}}`. It cannot change later.
     """
-    header: NotRequired[Optional[Union[ValidateTemplateHeaderText, ValidateTemplateHeaderLocation]]]
+    header: NotRequired[Optional[Union[ValidateTemplateHeaderText, ValidateTemplateHeaderImage, ValidateTemplateHeaderVideo, ValidateTemplateHeaderDocument, ValidateTemplateHeaderLocation]]]
     """
-    `TEXT` or `LOCATION`. Send `null` for no header.
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
     """
     body: ValidateTemplateBody
     """
@@ -5175,7 +5570,7 @@ class ValidateTemplate(TypedDict, closed=True):
 
 class UpdateTemplateHeaderText(TypedDict, closed=True):
     """
-    `TEXT` or `LOCATION`. Send `null` for no header.
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
     """
 
     type: Literal["TEXT"]
@@ -5189,9 +5584,45 @@ class UpdateTemplateHeaderText(TypedDict, closed=True):
     """
 
 
+class UpdateTemplateHeaderImage(TypedDict, closed=True):
+    """
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
+    """
+
+    type: Literal["IMAGE"]
+    handle: str
+    """
+    Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+    """
+
+
+class UpdateTemplateHeaderVideo(TypedDict, closed=True):
+    """
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
+    """
+
+    type: Literal["VIDEO"]
+    handle: str
+    """
+    Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+    """
+
+
+class UpdateTemplateHeaderDocument(TypedDict, closed=True):
+    """
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
+    """
+
+    type: Literal["DOCUMENT"]
+    handle: str
+    """
+    Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+    """
+
+
 class UpdateTemplateHeaderLocation(TypedDict, closed=True):
     """
-    `TEXT` or `LOCATION`. Send `null` for no header.
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
     """
 
     type: Literal["LOCATION"]
@@ -5248,9 +5679,9 @@ class UpdateTemplate(TypedDict, closed=True):
     """
     `UTILITY` for updates on something the customer asked for; `MARKETING` otherwise.
     """
-    header: NotRequired[Optional[Union[UpdateTemplateHeaderText, UpdateTemplateHeaderLocation]]]
+    header: NotRequired[Optional[Union[UpdateTemplateHeaderText, UpdateTemplateHeaderImage, UpdateTemplateHeaderVideo, UpdateTemplateHeaderDocument, UpdateTemplateHeaderLocation]]]
     """
-    `TEXT` or `LOCATION`. Send `null` for no header.
+    `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
     """
     body: NotRequired[UpdateTemplateBody]
     """

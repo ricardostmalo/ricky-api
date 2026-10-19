@@ -23,6 +23,12 @@ Esta página registra los cambios de la API. Un cambio incompatible solo llega e
 * **Campos nuevos en `data`.** `broadcast_id`, `template_id`, `workflow_id`, `workflow_execution_id` y `knowledge_file_id`, cada uno solo en sus eventos.
 * **Más tipos de evento por webhook.** Un webhook acepta los 19 tipos de evento a la vez.
 
+**Audiencias de campañas y workflows programados.** Cambios compatibles con la v1.
+
+* **Campañas personalizadas.** `POST /broadcasts` acepta `mappings`, que llenan variables de la plantilla con los campos del contacto de cada destinatario y se guardan en la plantilla, como en el editor de campañas. Consulta [Campañas](./broadcasts.md).
+* **Vista previa de la audiencia.** `POST /broadcasts/preview` cuenta a cuántos números llega una audiencia sin crear la campaña. Exige `broadcasts:read`.
+* **Workflows programados.** `POST /workflows/{workflow_id}/header-media` define el archivo de encabezado de un workflow programado. `GET /workflows/{workflow_id}/reminders/preview` y `GET /workflows/{workflow_id}/reminders/history` muestran lo que un workflow de recordatorios de citas de Odoo enviará un día próximo y lo que envió un día pasado. Consulta [Workflows](./workflows.md#workflows-programados).
+
 **Campañas.** Cambios compatibles con la v1.
 
 * **Campañas.** `GET /broadcasts`, `POST /broadcasts` y `GET /broadcasts/{broadcast_id}` listan, crean y consultan campañas de WhatsApp con cuántos destinatarios hay en cada estado de entrega. Una campaña se envía ahora o en `scheduled_at`, hasta 7 días después, a un filtro de contactos, a contactos elegidos o a números. Consulta [Campañas](./broadcasts.md).

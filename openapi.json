@@ -11598,7 +11598,7 @@
           "WhatsApp"
         ],
         "summary": "Edit a template",
-        "description": "Changes the category or content of a template and sends it to Meta for review again. Meta allows it only for `APPROVED`, `REJECTED` and `PAUSED` templates, and limits how often an approved one can change; otherwise it answers `422 rule_violation`. Templates with a media header, or with buttons and components Ricky’s editor does not build, cannot be edited here.\n\nScope: `templates:write`.",
+        "description": "Changes the category or content of a template and sends it to Meta for review again. Meta allows it only for `APPROVED`, `REJECTED` and `PAUSED` templates, and limits how often an approved one can change; otherwise it answers `422 rule_violation`. An edit that keeps an image, video or document header sends `header` again with a new `handle`. Templates with buttons or components Ricky’s editor does not build cannot be edited here.\n\nScope: `templates:write`.",
         "parameters": [
           {
             "name": "template_id",
@@ -12241,6 +12241,1769 @@
           },
           "500": {
             "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateWhatsAppNumber",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "Update a WhatsApp number",
+        "description": "Turns calls to the number on or off at Meta. Ricky reads the number back from Meta and answers it as Meta confirms it.\n\nScope: `conversations:write`.",
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "path",
+            "required": true,
+            "description": "Channel ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWhatsAppNumber"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/WhatsAppNumber"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "`unavailable`: A dependency is temporarily unavailable. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templates/media": {
+      "post": {
+        "operationId": "createTemplateMediaUpload",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "Upload a header sample",
+        "description": "An image, video or document header needs a sample file Meta reviews. Uploading it takes three steps: this call answers an `upload_url`; `PUT` the bytes there; then `POST /templates/media/complete` answers the `handle` for `header.handle`.\n\nScope: `templates:write`.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTemplateMediaUpload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MediaUpload"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "`unavailable`: A dependency is temporarily unavailable. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templates/media/complete": {
+      "post": {
+        "operationId": "completeTemplateMediaUpload",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "Complete a header sample",
+        "description": "Checks the uploaded bytes against the type and size limits, sends them to Meta and answers Meta’s `handle`. Ricky deletes its copy either way, so a failed upload starts again with `POST /templates/media`.\n\nScope: `templates:write`.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompleteTemplateMediaUpload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TemplateMedia"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "`unavailable`: A dependency is temporarily unavailable. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templates/{template_id}/field-mappings": {
+      "get": {
+        "operationId": "getTemplateFieldMappings",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "Get the field mappings of a template",
+        "description": "The template’s variables, read live from Meta, and the contact field that fills each one when Ricky sends the template to a contact, as in broadcasts.\n\nScope: `templates:read`.",
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "description": "Template ID.",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{1,32}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TemplateFieldMappings"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`conflict`: The resource changed in a way that prevents the operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "replaceTemplateFieldMappings",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "Set the field mappings of a template",
+        "description": "Replaces every mapping of the template. Each one names a variable of `variables` and a contact field; a custom field must be the organization’s.\n\nScope: `templates:write`.",
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "description": "Template ID.",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{1,32}$"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplaceTemplateFieldMappings"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TemplateFieldMappings"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.\n\n`conflict`: The resource changed in a way that prevents the operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/whatsapp-numbers/{channel_id}/business-profile": {
+      "patch": {
+        "operationId": "updateWhatsAppBusinessProfile",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "Edit a business profile",
+        "description": "Changes the business profile customers see on the number at Meta, then answers the number with the profile Meta reads back.\n\nScope: `conversations:write`.",
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "path",
+            "required": true,
+            "description": "Channel ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWhatsAppBusinessProfile"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/WhatsAppNumber"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "`unavailable`: A dependency is temporarily unavailable. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/whatsapp-numbers/{channel_id}/profile-photo": {
+      "post": {
+        "operationId": "createProfilePhotoUpload",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "Upload a profile photo",
+        "description": "Begins a new profile photo in three steps: this call answers an `upload_url`; `PUT` the bytes there; then call `POST /whatsapp-numbers/{channel_id}/profile-photo/complete`.\n\nScope: `conversations:write`.",
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "path",
+            "required": true,
+            "description": "Channel ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProfilePhotoUpload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MediaUpload"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "`unavailable`: A dependency is temporarily unavailable. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/whatsapp-numbers/{channel_id}/profile-photo/complete": {
+      "post": {
+        "operationId": "completeProfilePhotoUpload",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "Complete a profile photo",
+        "description": "Checks the uploaded photo, sets it on the number at Meta and answers the number. Ricky deletes its copy either way.\n\nScope: `conversations:write`.",
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "path",
+            "required": true,
+            "description": "Channel ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompleteProfilePhotoUpload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/WhatsAppNumber"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "`unavailable`: A dependency is temporarily unavailable. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/whatsapp-numbers/{channel_id}/display-name": {
+      "post": {
+        "operationId": "requestWhatsAppDisplayName",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "Request a display name change",
+        "description": "Asks Meta to review a new display name for the number. The name changes only if Meta approves it; then `verified_name` and `name_status` change.\n\nScope: `conversations:write`.",
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "path",
+            "required": true,
+            "description": "Channel ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestDisplayName"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DisplayNameRequest"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "`unavailable`: A dependency is temporarily unavailable. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/whatsapp-numbers/{channel_id}/refresh": {
+      "post": {
+        "operationId": "refreshWhatsAppNumber",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "Refresh a WhatsApp number",
+        "description": "Reads the number’s status, quality, limit, display name and business profile from Meta now, stores them and answers the number.\n\nScope: `conversations:write`.",
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "path",
+            "required": true,
+            "description": "Channel ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/WhatsAppNumber"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "`unavailable`: A dependency is temporarily unavailable. Retry later.",
             "content": {
               "application/json": {
                 "schema": {
@@ -21736,6 +23499,236 @@
         ],
         "description": "One queued run of a workflow, or one template send of a scheduled workflow. Its status does not confirm each message's delivery."
       },
+      "MediaUpload": {
+        "type": "object",
+        "properties": {
+          "upload_path": {
+            "type": "string",
+            "description": "Where the bytes wait in Ricky; send it to the `complete` operation.",
+            "examples": [
+              "d9e0f1a2-b3c4-4d5e-8f6a-7b8c9d0e1f2a/template-samples/8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f/2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b/6f1e2d3c-4b5a-4968-8776-5a4b3c2d1e0f.jpg"
+            ]
+          },
+          "upload_url": {
+            "type": "string",
+            "description": "Signed URL valid for two hours. `PUT` the file bytes to it with `Content-Type` set to `mime_type`, then call the `complete` operation. Ricky deletes the file once it completes, whether or not Meta takes it.",
+            "examples": [
+              "https://storage.example.com/upload/sign/media/…?token=…"
+            ]
+          }
+        },
+        "required": [
+          "upload_path",
+          "upload_url"
+        ],
+        "description": "Where to put the bytes of a file Ricky forwards to Meta."
+      },
+      "TemplateMedia": {
+        "type": "object",
+        "properties": {
+          "handle": {
+            "type": "string",
+            "description": "Meta’s handle for the sample. Send it as `header.handle` of `POST /templates` or `PATCH /templates/{template_id}`.",
+            "examples": [
+              "4::aW1hZ2UvanBlZw==:ARZ…"
+            ]
+          }
+        },
+        "required": [
+          "handle"
+        ],
+        "description": "A header sample Meta holds for a template review."
+      },
+      "TemplateFieldMappings": {
+        "type": "object",
+        "properties": {
+          "template_id": {
+            "type": "string",
+            "description": "Template ID at Meta.",
+            "examples": [
+              "1234567890123456"
+            ]
+          },
+          "variables": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "component": {
+                  "type": "string",
+                  "enum": [
+                    "header",
+                    "body",
+                    "button"
+                  ],
+                  "description": "Where the variable is."
+                },
+                "key": {
+                  "type": "string",
+                  "description": "The variable: its number or name, or the button position from `0` for a button.",
+                  "examples": [
+                    "1"
+                  ]
+                },
+                "name": {
+                  "description": "The variable as the template writes it, for example `{{1}}`; for a button, its text.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "component",
+                "key",
+                "name"
+              ]
+            },
+            "description": "Every variable a contact field can fill: those of the header and the body, and each copy-code button or link that ends in a variable.",
+            "examples": [
+              [
+                {
+                  "component": "body",
+                  "key": "1",
+                  "name": "{{1}}"
+                }
+              ]
+            ]
+          },
+          "mappings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "component": {
+                  "type": "string",
+                  "enum": [
+                    "header",
+                    "body",
+                    "button"
+                  ],
+                  "description": "Where the variable is."
+                },
+                "key": {
+                  "type": "string",
+                  "description": "The variable it fills.",
+                  "examples": [
+                    "1"
+                  ]
+                },
+                "source": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "native"
+                        },
+                        "field": {
+                          "type": "string",
+                          "enum": [
+                            "first_name",
+                            "last_name",
+                            "primary_phone",
+                            "primary_email",
+                            "company",
+                            "job_title",
+                            "birthday",
+                            "street_address",
+                            "city",
+                            "region",
+                            "postal_code",
+                            "country",
+                            "website_url",
+                            "linkedin_url",
+                            "lifecycle_stage",
+                            "lead_status",
+                            "source",
+                            "notes"
+                          ],
+                          "description": "A field every contact has."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "field"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "custom"
+                        },
+                        "field_id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "A custom field, from `GET /contact-fields`."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "field_id"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "The contact field whose value fills the variable."
+                }
+              },
+              "required": [
+                "component",
+                "key",
+                "source"
+              ]
+            },
+            "description": "The variables that have a contact field; the others are filled by hand.",
+            "examples": [
+              [
+                {
+                  "component": "body",
+                  "key": "1",
+                  "source": {
+                    "kind": "native",
+                    "field": "first_name"
+                  }
+                }
+              ]
+            ]
+          }
+        },
+        "required": [
+          "template_id",
+          "variables",
+          "mappings"
+        ],
+        "description": "The contact fields that fill a template’s variables when Ricky sends it to a contact. They apply to the template’s name and language in its business account."
+      },
+      "DisplayNameRequest": {
+        "type": "object",
+        "properties": {
+          "requested_display_name": {
+            "type": "string",
+            "description": "The name sent to Meta for review.",
+            "examples": [
+              "Casa Nativa Óptica"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "const": "pending_review",
+            "description": "Meta reviews the name. When Meta approves it, the number’s `verified_name` and `name_status` change; `POST /whatsapp-numbers/{channel_id}/refresh` reads them."
+          }
+        },
+        "required": [
+          "requested_display_name",
+          "status"
+        ],
+        "description": "A display name change Meta is reviewing."
+      },
       "TemplateValidation": {
         "type": "object",
         "properties": {
@@ -21995,6 +23988,103 @@
             "examples": [
               "2026-10-14T15:30:00.000Z"
             ]
+          },
+          "name_status": {
+            "description": "Review status of the display name at Meta, in lowercase: for example `approved`, `pending_review` or `declined`.",
+            "examples": [
+              "approved"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "business_profile": {
+            "type": "object",
+            "properties": {
+              "about": {
+                "description": "Short text under the business name.",
+                "examples": [
+                  "Óptica en Panamá"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "description": {
+                "description": "Description of the business.",
+                "examples": [
+                  null
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "address": {
+                "description": "Address of the business.",
+                "examples": [
+                  null
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "email": {
+                "description": "Contact email.",
+                "examples": [
+                  null
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "vertical": {
+                "description": "Industry as Meta names it.",
+                "examples": [
+                  "RETAIL"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "websites": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Website URLs.",
+                "examples": [
+                  [
+                    "https://casanativa.example"
+                  ]
+                ]
+              },
+              "profile_picture_url": {
+                "description": "Link to the profile photo at Meta; it expires.",
+                "examples": [
+                  null
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "about",
+              "description",
+              "address",
+              "email",
+              "vertical",
+              "websites",
+              "profile_picture_url"
+            ],
+            "description": "The business profile customers see on WhatsApp, as Ricky last read it from Meta."
           }
         },
         "required": [
@@ -22013,7 +24103,9 @@
           "inbound_processing_enabled",
           "calls_enabled",
           "connected_at",
-          "last_synced_at"
+          "last_synced_at",
+          "name_status",
+          "business_profile"
         ],
         "description": "A WhatsApp number, with its status, quality and messaging limit at Meta."
       },
@@ -26137,6 +28229,364 @@
           }
         ]
       },
+      "CreateTemplateMediaUpload": {
+        "type": "object",
+        "properties": {
+          "channel_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "WhatsApp channel whose business account will use the sample."
+          },
+          "mime_type": {
+            "type": "string",
+            "enum": [
+              "image/jpeg",
+              "image/png",
+              "video/mp4",
+              "video/3gpp",
+              "application/pdf"
+            ],
+            "description": "JPEG or PNG up to 5 MB for an `IMAGE` header, MP4 or 3GPP up to 16 MB for `VIDEO`, PDF up to 100 MB for `DOCUMENT`."
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Exact size of the file you will upload."
+          }
+        },
+        "required": [
+          "channel_id",
+          "mime_type",
+          "size_bytes"
+        ],
+        "additionalProperties": false,
+        "description": "Begins the upload of a header sample. Ricky answers where to `PUT` the bytes.",
+        "examples": [
+          {
+            "channel_id": "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f",
+            "mime_type": "image/jpeg",
+            "size_bytes": 182044
+          }
+        ]
+      },
+      "CompleteTemplateMediaUpload": {
+        "type": "object",
+        "properties": {
+          "channel_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "WhatsApp channel whose business account will use the sample."
+          },
+          "upload_path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "description": "The `upload_path` the upload began with."
+          }
+        },
+        "required": [
+          "channel_id",
+          "upload_path"
+        ],
+        "additionalProperties": false,
+        "description": "The upload to send to Meta, with the channel it began with.",
+        "examples": [
+          {
+            "channel_id": "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f",
+            "upload_path": "d9e0f1a2-b3c4-4d5e-8f6a-7b8c9d0e1f2a/template-samples/8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f/2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b/6f1e2d3c-4b5a-4968-8776-5a4b3c2d1e0f.jpg"
+          }
+        ]
+      },
+      "ReplaceTemplateFieldMappings": {
+        "type": "object",
+        "properties": {
+          "mappings": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "component": {
+                  "type": "string",
+                  "enum": [
+                    "header",
+                    "body",
+                    "button"
+                  ],
+                  "description": "Where the variable is: `header`, `body` or a `button`."
+                },
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100,
+                  "description": "The variable: its number or name without braces, or the button position from `0` for a button."
+                },
+                "source": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "native"
+                        },
+                        "field": {
+                          "type": "string",
+                          "enum": [
+                            "first_name",
+                            "last_name",
+                            "primary_phone",
+                            "primary_email",
+                            "company",
+                            "job_title",
+                            "birthday",
+                            "street_address",
+                            "city",
+                            "region",
+                            "postal_code",
+                            "country",
+                            "website_url",
+                            "linkedin_url",
+                            "lifecycle_stage",
+                            "lead_status",
+                            "source",
+                            "notes"
+                          ],
+                          "description": "A field every contact has."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "field"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "custom"
+                        },
+                        "field_id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "A custom field, from `GET /contact-fields`."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "field_id"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "The contact field whose value fills the variable."
+                }
+              },
+              "required": [
+                "component",
+                "key",
+                "source"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Every mapping of the template; the ones not sent are removed. Send `[]` to remove all."
+          }
+        },
+        "required": [
+          "mappings"
+        ],
+        "additionalProperties": false,
+        "description": "The contact fields that fill the template’s variables when Ricky sends it.",
+        "examples": [
+          {
+            "mappings": [
+              {
+                "component": "body",
+                "key": "1",
+                "source": {
+                  "kind": "native",
+                  "field": "first_name"
+                }
+              },
+              {
+                "component": "body",
+                "key": "2",
+                "source": {
+                  "kind": "custom",
+                  "field_id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "UpdateWhatsAppNumber": {
+        "type": "object",
+        "properties": {
+          "calls_enabled": {
+            "type": "boolean",
+            "description": "Whether customers can call the number and reach the AI agent."
+          }
+        },
+        "required": [
+          "calls_enabled"
+        ],
+        "additionalProperties": false,
+        "description": "The settings of the number that Ricky changes at Meta.",
+        "examples": [
+          {
+            "calls_enabled": true
+          }
+        ]
+      },
+      "UpdateWhatsAppBusinessProfile": {
+        "type": "object",
+        "properties": {
+          "about": {
+            "type": "string",
+            "maxLength": 512,
+            "description": "Short text under the business name, up to 139 characters."
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 512,
+            "description": "Description of the business, up to 512 characters."
+          },
+          "address": {
+            "type": "string",
+            "maxLength": 512,
+            "description": "Address of the business, up to 256 characters."
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 512,
+            "description": "Contact email, up to 128 characters."
+          },
+          "vertical": {
+            "description": "Industry, in the values Meta accepts; `\"\"` for none.",
+            "type": "string",
+            "enum": [
+              "",
+              "ALCOHOL",
+              "APPAREL",
+              "AUTO",
+              "BEAUTY",
+              "EDU",
+              "ENTERTAIN",
+              "EVENT_PLAN",
+              "FINANCE",
+              "GOVT",
+              "GROCERY",
+              "HEALTH",
+              "HOTEL",
+              "NONPROFIT",
+              "ONLINE_GAMBLING",
+              "OTC_DRUGS",
+              "OTHER",
+              "PHYSICAL_GAMBLING",
+              "PROF_SERVICES",
+              "RESTAURANT",
+              "RETAIL",
+              "TRAVEL"
+            ]
+          },
+          "websites": {
+            "description": "Up to two website URLs; the list replaces the current one.",
+            "maxItems": 2,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 256
+            }
+          }
+        },
+        "additionalProperties": false,
+        "description": "Only the fields you send change; Meta checks the values too.",
+        "examples": [
+          {
+            "about": "Óptica en Panamá",
+            "websites": [
+              "https://casanativa.example"
+            ]
+          }
+        ]
+      },
+      "CreateProfilePhotoUpload": {
+        "type": "object",
+        "properties": {
+          "mime_type": {
+            "type": "string",
+            "enum": [
+              "image/jpeg",
+              "image/png"
+            ],
+            "description": "JPEG or PNG, up to 5 MB."
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Exact size of the file you will upload."
+          }
+        },
+        "required": [
+          "mime_type",
+          "size_bytes"
+        ],
+        "additionalProperties": false,
+        "description": "Begins the upload of a profile photo. Ricky answers where to `PUT` the bytes.",
+        "examples": [
+          {
+            "mime_type": "image/png",
+            "size_bytes": 96512
+          }
+        ]
+      },
+      "CompleteProfilePhotoUpload": {
+        "type": "object",
+        "properties": {
+          "upload_path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "description": "The `upload_path` the upload began with."
+          }
+        },
+        "required": [
+          "upload_path"
+        ],
+        "additionalProperties": false,
+        "description": "The upload to set as the profile photo.",
+        "examples": [
+          {
+            "upload_path": "d9e0f1a2-b3c4-4d5e-8f6a-7b8c9d0e1f2a/whatsapp-profile-photos/8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f/2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b/6f1e2d3c-4b5a-4968-8776-5a4b3c2d1e0f.png"
+          }
+        ]
+      },
+      "RequestDisplayName": {
+        "type": "object",
+        "properties": {
+          "display_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "The business name to show on the number. Meta reviews it against its rules."
+          }
+        },
+        "required": [
+          "display_name"
+        ],
+        "additionalProperties": false,
+        "description": "A new display name for Meta to review.",
+        "examples": [
+          {
+            "display_name": "Casa Nativa Óptica"
+          }
+        ]
+      },
       "CreateTemplate": {
         "type": "object",
         "properties": {
@@ -26174,7 +28624,7 @@
             ]
           },
           "header": {
-            "description": "`TEXT` or `LOCATION`. Send `null` for no header.",
+            "description": "`TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.",
             "anyOf": [
               {
                 "oneOf": [
@@ -26200,6 +28650,66 @@
                     "required": [
                       "type",
                       "text"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "IMAGE"
+                      },
+                      "handle": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096,
+                        "description": "Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file."
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "handle"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "VIDEO"
+                      },
+                      "handle": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096,
+                        "description": "Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file."
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "handle"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "DOCUMENT"
+                      },
+                      "handle": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096,
+                        "description": "Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file."
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "handle"
                     ],
                     "additionalProperties": false
                   },
@@ -26418,7 +28928,7 @@
             ]
           },
           "header": {
-            "description": "`TEXT` or `LOCATION`. Send `null` for no header.",
+            "description": "`TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.",
             "anyOf": [
               {
                 "oneOf": [
@@ -26444,6 +28954,66 @@
                     "required": [
                       "type",
                       "text"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "IMAGE"
+                      },
+                      "handle": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096,
+                        "description": "Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file."
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "handle"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "VIDEO"
+                      },
+                      "handle": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096,
+                        "description": "Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file."
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "handle"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "DOCUMENT"
+                      },
+                      "handle": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096,
+                        "description": "Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file."
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "handle"
                     ],
                     "additionalProperties": false
                   },
@@ -26636,7 +29206,7 @@
             "description": "`UTILITY` for updates on something the customer asked for; `MARKETING` otherwise."
           },
           "header": {
-            "description": "`TEXT` or `LOCATION`. Send `null` for no header.",
+            "description": "`TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.",
             "anyOf": [
               {
                 "oneOf": [
@@ -26662,6 +29232,66 @@
                     "required": [
                       "type",
                       "text"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "IMAGE"
+                      },
+                      "handle": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096,
+                        "description": "Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file."
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "handle"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "VIDEO"
+                      },
+                      "handle": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096,
+                        "description": "Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file."
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "handle"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "DOCUMENT"
+                      },
+                      "handle": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096,
+                        "description": "Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file."
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "handle"
                     ],
                     "additionalProperties": false
                   },

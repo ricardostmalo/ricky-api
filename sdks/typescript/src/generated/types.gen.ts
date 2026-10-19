@@ -2789,6 +2789,100 @@ export type WorkflowExecution = {
 };
 
 /**
+ * Where to put the bytes of a file Ricky forwards to Meta.
+ */
+export type MediaUpload = {
+    /**
+     * Where the bytes wait in Ricky; send it to the `complete` operation.
+     */
+    upload_path: string;
+    /**
+     * Signed URL valid for two hours. `PUT` the file bytes to it with `Content-Type` set to `mime_type`, then call the `complete` operation. Ricky deletes the file once it completes, whether or not Meta takes it.
+     */
+    upload_url: string;
+};
+
+/**
+ * A header sample Meta holds for a template review.
+ */
+export type TemplateMedia = {
+    /**
+     * Meta’s handle for the sample. Send it as `header.handle` of `POST /templates` or `PATCH /templates/{template_id}`.
+     */
+    handle: string;
+};
+
+/**
+ * The contact fields that fill a template’s variables when Ricky sends it to a contact. They apply to the template’s name and language in its business account.
+ */
+export type TemplateFieldMappings = {
+    /**
+     * Template ID at Meta.
+     */
+    template_id: string;
+    /**
+     * Every variable a contact field can fill: those of the header and the body, and each copy-code button or link that ends in a variable.
+     */
+    variables: Array<{
+        /**
+         * Where the variable is.
+         */
+        component: 'header' | 'body' | 'button';
+        /**
+         * The variable: its number or name, or the button position from `0` for a button.
+         */
+        key: string;
+        /**
+         * The variable as the template writes it, for example `{{1}}`; for a button, its text.
+         */
+        name: string | null;
+    }>;
+    /**
+     * The variables that have a contact field; the others are filled by hand.
+     */
+    mappings: Array<{
+        /**
+         * Where the variable is.
+         */
+        component: 'header' | 'body' | 'button';
+        /**
+         * The variable it fills.
+         */
+        key: string;
+        /**
+         * The contact field whose value fills the variable.
+         */
+        source: {
+            kind: 'native';
+            /**
+             * A field every contact has.
+             */
+            field: 'first_name' | 'last_name' | 'primary_phone' | 'primary_email' | 'company' | 'job_title' | 'birthday' | 'street_address' | 'city' | 'region' | 'postal_code' | 'country' | 'website_url' | 'linkedin_url' | 'lifecycle_stage' | 'lead_status' | 'source' | 'notes';
+        } | {
+            kind: 'custom';
+            /**
+             * A custom field, from `GET /contact-fields`.
+             */
+            field_id: string;
+        };
+    }>;
+};
+
+/**
+ * A display name change Meta is reviewing.
+ */
+export type DisplayNameRequest = {
+    /**
+     * The name sent to Meta for review.
+     */
+    requested_display_name: string;
+    /**
+     * Meta reviews the name. When Meta approves it, the number’s `verified_name` and `name_status` change; `POST /whatsapp-numbers/{channel_id}/refresh` reads them.
+     */
+    status: 'pending_review';
+};
+
+/**
  * The result of checking a template draft without submitting it.
  */
 export type TemplateValidation = {
@@ -2896,6 +2990,43 @@ export type WhatsAppNumber = {
      * When Ricky last read its details from Meta.
      */
     last_synced_at: string | null;
+    /**
+     * Review status of the display name at Meta, in lowercase: for example `approved`, `pending_review` or `declined`.
+     */
+    name_status: string | null;
+    /**
+     * The business profile customers see on WhatsApp, as Ricky last read it from Meta.
+     */
+    business_profile: {
+        /**
+         * Short text under the business name.
+         */
+        about: string | null;
+        /**
+         * Description of the business.
+         */
+        description: string | null;
+        /**
+         * Address of the business.
+         */
+        address: string | null;
+        /**
+         * Contact email.
+         */
+        email: string | null;
+        /**
+         * Industry as Meta names it.
+         */
+        vertical: string | null;
+        /**
+         * Website URLs.
+         */
+        websites: Array<string>;
+        /**
+         * Link to the profile photo at Meta; it expires.
+         */
+        profile_picture_url: string | null;
+    };
 };
 
 /**
@@ -4310,6 +4441,147 @@ export type UpdateWorkflow = {
 };
 
 /**
+ * Begins the upload of a header sample. Ricky answers where to `PUT` the bytes.
+ */
+export type CreateTemplateMediaUpload = {
+    /**
+     * WhatsApp channel whose business account will use the sample.
+     */
+    channel_id: string;
+    /**
+     * JPEG or PNG up to 5 MB for an `IMAGE` header, MP4 or 3GPP up to 16 MB for `VIDEO`, PDF up to 100 MB for `DOCUMENT`.
+     */
+    mime_type: 'image/jpeg' | 'image/png' | 'video/mp4' | 'video/3gpp' | 'application/pdf';
+    /**
+     * Exact size of the file you will upload.
+     */
+    size_bytes: number;
+};
+
+/**
+ * The upload to send to Meta, with the channel it began with.
+ */
+export type CompleteTemplateMediaUpload = {
+    /**
+     * WhatsApp channel whose business account will use the sample.
+     */
+    channel_id: string;
+    /**
+     * The `upload_path` the upload began with.
+     */
+    upload_path: string;
+};
+
+/**
+ * The contact fields that fill the template’s variables when Ricky sends it.
+ */
+export type ReplaceTemplateFieldMappings = {
+    /**
+     * Every mapping of the template; the ones not sent are removed. Send `[]` to remove all.
+     */
+    mappings: Array<{
+        /**
+         * Where the variable is: `header`, `body` or a `button`.
+         */
+        component: 'header' | 'body' | 'button';
+        /**
+         * The variable: its number or name without braces, or the button position from `0` for a button.
+         */
+        key: string;
+        /**
+         * The contact field whose value fills the variable.
+         */
+        source: {
+            kind: 'native';
+            /**
+             * A field every contact has.
+             */
+            field: 'first_name' | 'last_name' | 'primary_phone' | 'primary_email' | 'company' | 'job_title' | 'birthday' | 'street_address' | 'city' | 'region' | 'postal_code' | 'country' | 'website_url' | 'linkedin_url' | 'lifecycle_stage' | 'lead_status' | 'source' | 'notes';
+        } | {
+            kind: 'custom';
+            /**
+             * A custom field, from `GET /contact-fields`.
+             */
+            field_id: string;
+        };
+    }>;
+};
+
+/**
+ * The settings of the number that Ricky changes at Meta.
+ */
+export type UpdateWhatsAppNumber = {
+    /**
+     * Whether customers can call the number and reach the AI agent.
+     */
+    calls_enabled: boolean;
+};
+
+/**
+ * Only the fields you send change; Meta checks the values too.
+ */
+export type UpdateWhatsAppBusinessProfile = {
+    /**
+     * Short text under the business name, up to 139 characters.
+     */
+    about?: string;
+    /**
+     * Description of the business, up to 512 characters.
+     */
+    description?: string;
+    /**
+     * Address of the business, up to 256 characters.
+     */
+    address?: string;
+    /**
+     * Contact email, up to 128 characters.
+     */
+    email?: string;
+    /**
+     * Industry, in the values Meta accepts; `""` for none.
+     */
+    vertical?: '' | 'ALCOHOL' | 'APPAREL' | 'AUTO' | 'BEAUTY' | 'EDU' | 'ENTERTAIN' | 'EVENT_PLAN' | 'FINANCE' | 'GOVT' | 'GROCERY' | 'HEALTH' | 'HOTEL' | 'NONPROFIT' | 'ONLINE_GAMBLING' | 'OTC_DRUGS' | 'OTHER' | 'PHYSICAL_GAMBLING' | 'PROF_SERVICES' | 'RESTAURANT' | 'RETAIL' | 'TRAVEL';
+    /**
+     * Up to two website URLs; the list replaces the current one.
+     */
+    websites?: Array<string>;
+};
+
+/**
+ * Begins the upload of a profile photo. Ricky answers where to `PUT` the bytes.
+ */
+export type CreateProfilePhotoUpload = {
+    /**
+     * JPEG or PNG, up to 5 MB.
+     */
+    mime_type: 'image/jpeg' | 'image/png';
+    /**
+     * Exact size of the file you will upload.
+     */
+    size_bytes: number;
+};
+
+/**
+ * The upload to set as the profile photo.
+ */
+export type CompleteProfilePhotoUpload = {
+    /**
+     * The `upload_path` the upload began with.
+     */
+    upload_path: string;
+};
+
+/**
+ * A new display name for Meta to review.
+ */
+export type RequestDisplayName = {
+    /**
+     * The business name to show on the number. Meta reviews it against its rules.
+     */
+    display_name: string;
+};
+
+/**
  * A template draft. Ricky checks it as `POST /templates/validate` does, then submits it.
  */
 export type CreateTemplate = {
@@ -4334,7 +4606,7 @@ export type CreateTemplate = {
      */
     parameter_format?: 'NAMED' | 'POSITIONAL';
     /**
-     * `TEXT` or `LOCATION`. Send `null` for no header.
+     * `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
      */
     header?: {
         type: 'TEXT';
@@ -4346,6 +4618,24 @@ export type CreateTemplate = {
          * Example value of the header variable; required when it has one.
          */
         example?: string;
+    } | {
+        type: 'IMAGE';
+        /**
+         * Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+         */
+        handle: string;
+    } | {
+        type: 'VIDEO';
+        /**
+         * Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+         */
+        handle: string;
+    } | {
+        type: 'DOCUMENT';
+        /**
+         * Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+         */
+        handle: string;
     } | {
         type: 'LOCATION';
     } | null;
@@ -4420,7 +4710,7 @@ export type ValidateTemplate = {
      */
     parameter_format?: 'NAMED' | 'POSITIONAL';
     /**
-     * `TEXT` or `LOCATION`. Send `null` for no header.
+     * `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
      */
     header?: {
         type: 'TEXT';
@@ -4432,6 +4722,24 @@ export type ValidateTemplate = {
          * Example value of the header variable; required when it has one.
          */
         example?: string;
+    } | {
+        type: 'IMAGE';
+        /**
+         * Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+         */
+        handle: string;
+    } | {
+        type: 'VIDEO';
+        /**
+         * Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+         */
+        handle: string;
+    } | {
+        type: 'DOCUMENT';
+        /**
+         * Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+         */
+        handle: string;
     } | {
         type: 'LOCATION';
     } | null;
@@ -4490,7 +4798,7 @@ export type UpdateTemplate = {
      */
     category?: 'MARKETING' | 'UTILITY';
     /**
-     * `TEXT` or `LOCATION`. Send `null` for no header.
+     * `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`. Send `null` for no header.
      */
     header?: {
         type: 'TEXT';
@@ -4502,6 +4810,24 @@ export type UpdateTemplate = {
          * Example value of the header variable; required when it has one.
          */
         example?: string;
+    } | {
+        type: 'IMAGE';
+        /**
+         * Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+         */
+        handle: string;
+    } | {
+        type: 'VIDEO';
+        /**
+         * Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+         */
+        handle: string;
+    } | {
+        type: 'DOCUMENT';
+        /**
+         * Handle of the sample file, from `POST /templates/media/complete`. Messages sent with the template carry their own file.
+         */
+        handle: string;
     } | {
         type: 'LOCATION';
     } | null;
@@ -10109,6 +10435,814 @@ export type GetWhatsAppNumberResponses = {
 };
 
 export type GetWhatsAppNumberResponse = GetWhatsAppNumberResponses[keyof GetWhatsAppNumberResponses];
+
+export type UpdateWhatsAppNumberData = {
+    body: UpdateWhatsAppNumber;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Channel ID.
+         */
+        channel_id: string;
+    };
+    query?: never;
+    url: '/whatsapp-numbers/{channel_id}';
+};
+
+export type UpdateWhatsAppNumberErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+    /**
+     * `unavailable`: A dependency is temporarily unavailable. Retry later.
+     */
+    503: Error;
+};
+
+export type UpdateWhatsAppNumberError = UpdateWhatsAppNumberErrors[keyof UpdateWhatsAppNumberErrors];
+
+export type UpdateWhatsAppNumberResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: WhatsAppNumber;
+    };
+};
+
+export type UpdateWhatsAppNumberResponse = UpdateWhatsAppNumberResponses[keyof UpdateWhatsAppNumberResponses];
+
+export type CreateTemplateMediaUploadData = {
+    body: CreateTemplateMediaUpload;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/templates/media';
+};
+
+export type CreateTemplateMediaUploadErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+    /**
+     * `unavailable`: A dependency is temporarily unavailable. Retry later.
+     */
+    503: Error;
+};
+
+export type CreateTemplateMediaUploadError = CreateTemplateMediaUploadErrors[keyof CreateTemplateMediaUploadErrors];
+
+export type CreateTemplateMediaUploadResponses = {
+    /**
+     * Success.
+     */
+    201: {
+        data: MediaUpload;
+    };
+};
+
+export type CreateTemplateMediaUploadResponse = CreateTemplateMediaUploadResponses[keyof CreateTemplateMediaUploadResponses];
+
+export type CompleteTemplateMediaUploadData = {
+    body: CompleteTemplateMediaUpload;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/templates/media/complete';
+};
+
+export type CompleteTemplateMediaUploadErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+    /**
+     * `unavailable`: A dependency is temporarily unavailable. Retry later.
+     */
+    503: Error;
+};
+
+export type CompleteTemplateMediaUploadError = CompleteTemplateMediaUploadErrors[keyof CompleteTemplateMediaUploadErrors];
+
+export type CompleteTemplateMediaUploadResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: TemplateMedia;
+    };
+};
+
+export type CompleteTemplateMediaUploadResponse = CompleteTemplateMediaUploadResponses[keyof CompleteTemplateMediaUploadResponses];
+
+export type GetTemplateFieldMappingsData = {
+    body?: never;
+    path: {
+        /**
+         * Template ID.
+         */
+        template_id: string;
+    };
+    query?: never;
+    url: '/templates/{template_id}/field-mappings';
+};
+
+export type GetTemplateFieldMappingsErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type GetTemplateFieldMappingsError = GetTemplateFieldMappingsErrors[keyof GetTemplateFieldMappingsErrors];
+
+export type GetTemplateFieldMappingsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: TemplateFieldMappings;
+    };
+};
+
+export type GetTemplateFieldMappingsResponse = GetTemplateFieldMappingsResponses[keyof GetTemplateFieldMappingsResponses];
+
+export type ReplaceTemplateFieldMappingsData = {
+    body: ReplaceTemplateFieldMappings;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Template ID.
+         */
+        template_id: string;
+    };
+    query?: never;
+    url: '/templates/{template_id}/field-mappings';
+};
+
+export type ReplaceTemplateFieldMappingsErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type ReplaceTemplateFieldMappingsError = ReplaceTemplateFieldMappingsErrors[keyof ReplaceTemplateFieldMappingsErrors];
+
+export type ReplaceTemplateFieldMappingsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: TemplateFieldMappings;
+    };
+};
+
+export type ReplaceTemplateFieldMappingsResponse = ReplaceTemplateFieldMappingsResponses[keyof ReplaceTemplateFieldMappingsResponses];
+
+export type UpdateWhatsAppBusinessProfileData = {
+    body: UpdateWhatsAppBusinessProfile;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Channel ID.
+         */
+        channel_id: string;
+    };
+    query?: never;
+    url: '/whatsapp-numbers/{channel_id}/business-profile';
+};
+
+export type UpdateWhatsAppBusinessProfileErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+    /**
+     * `unavailable`: A dependency is temporarily unavailable. Retry later.
+     */
+    503: Error;
+};
+
+export type UpdateWhatsAppBusinessProfileError = UpdateWhatsAppBusinessProfileErrors[keyof UpdateWhatsAppBusinessProfileErrors];
+
+export type UpdateWhatsAppBusinessProfileResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: WhatsAppNumber;
+    };
+};
+
+export type UpdateWhatsAppBusinessProfileResponse = UpdateWhatsAppBusinessProfileResponses[keyof UpdateWhatsAppBusinessProfileResponses];
+
+export type CreateProfilePhotoUploadData = {
+    body: CreateProfilePhotoUpload;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Channel ID.
+         */
+        channel_id: string;
+    };
+    query?: never;
+    url: '/whatsapp-numbers/{channel_id}/profile-photo';
+};
+
+export type CreateProfilePhotoUploadErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+    /**
+     * `unavailable`: A dependency is temporarily unavailable. Retry later.
+     */
+    503: Error;
+};
+
+export type CreateProfilePhotoUploadError = CreateProfilePhotoUploadErrors[keyof CreateProfilePhotoUploadErrors];
+
+export type CreateProfilePhotoUploadResponses = {
+    /**
+     * Success.
+     */
+    201: {
+        data: MediaUpload;
+    };
+};
+
+export type CreateProfilePhotoUploadResponse = CreateProfilePhotoUploadResponses[keyof CreateProfilePhotoUploadResponses];
+
+export type CompleteProfilePhotoUploadData = {
+    body: CompleteProfilePhotoUpload;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Channel ID.
+         */
+        channel_id: string;
+    };
+    query?: never;
+    url: '/whatsapp-numbers/{channel_id}/profile-photo/complete';
+};
+
+export type CompleteProfilePhotoUploadErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+    /**
+     * `unavailable`: A dependency is temporarily unavailable. Retry later.
+     */
+    503: Error;
+};
+
+export type CompleteProfilePhotoUploadError = CompleteProfilePhotoUploadErrors[keyof CompleteProfilePhotoUploadErrors];
+
+export type CompleteProfilePhotoUploadResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: WhatsAppNumber;
+    };
+};
+
+export type CompleteProfilePhotoUploadResponse = CompleteProfilePhotoUploadResponses[keyof CompleteProfilePhotoUploadResponses];
+
+export type RequestWhatsAppDisplayNameData = {
+    body: RequestDisplayName;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Channel ID.
+         */
+        channel_id: string;
+    };
+    query?: never;
+    url: '/whatsapp-numbers/{channel_id}/display-name';
+};
+
+export type RequestWhatsAppDisplayNameErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+    /**
+     * `unavailable`: A dependency is temporarily unavailable. Retry later.
+     */
+    503: Error;
+};
+
+export type RequestWhatsAppDisplayNameError = RequestWhatsAppDisplayNameErrors[keyof RequestWhatsAppDisplayNameErrors];
+
+export type RequestWhatsAppDisplayNameResponses = {
+    /**
+     * Accepted.
+     */
+    202: {
+        data: DisplayNameRequest;
+    };
+};
+
+export type RequestWhatsAppDisplayNameResponse = RequestWhatsAppDisplayNameResponses[keyof RequestWhatsAppDisplayNameResponses];
+
+export type RefreshWhatsAppNumberData = {
+    body?: never;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Channel ID.
+         */
+        channel_id: string;
+    };
+    query?: never;
+    url: '/whatsapp-numbers/{channel_id}/refresh';
+};
+
+export type RefreshWhatsAppNumberErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+    /**
+     * `unavailable`: A dependency is temporarily unavailable. Retry later.
+     */
+    503: Error;
+};
+
+export type RefreshWhatsAppNumberError = RefreshWhatsAppNumberErrors[keyof RefreshWhatsAppNumberErrors];
+
+export type RefreshWhatsAppNumberResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: WhatsAppNumber;
+    };
+};
+
+export type RefreshWhatsAppNumberResponse = RefreshWhatsAppNumberResponses[keyof RefreshWhatsAppNumberResponses];
 
 export type ListBroadcastsData = {
     body?: never;

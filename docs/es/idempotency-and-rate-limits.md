@@ -23,6 +23,7 @@ Recomendamos enviarla en todo envío de mensajes. Estas operaciones la aceptan:
 | [Crear una etiqueta](https://getricky.ai/docs/api/reference/catalogs/create-tag) | `POST /tags` | `tags:write` o, en claves anteriores, `contacts:write` |
 | [Crear un workflow](https://getricky.ai/docs/api/reference/workflows/create-workflow) | `POST /workflows` | `workflows:write` |
 | [Actualizar un workflow](https://getricky.ai/docs/api/reference/workflows/update-workflow) | `PATCH /workflows/{workflow_id}` | `workflows:write` |
+| [Definir el archivo del encabezado de una automatización programada](https://getricky.ai/docs/api/reference/workflows/upload-workflow-header-media) | `POST /workflows/{workflow_id}/header-media` | `workflows:write` |
 | [Crear un agente](https://getricky.ai/docs/api/reference/agents/create-agent) | `POST /agents` | `agents:write` |
 | [Actualizar un agente](https://getricky.ai/docs/api/reference/agents/update-agent) | `PATCH /agents/{agent_id}` | `agents:write` |
 | [Definir el agente de IA de una conversación](https://getricky.ai/docs/api/reference/conversations/assign-conversation-agent) | `PATCH /conversations/{conversation_id}/agent` | `conversations:write` |

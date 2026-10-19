@@ -2,7 +2,7 @@
 
 import { client } from './client.gen.js';
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client/index.js';
-import type { ActivateWorkflowData, ActivateWorkflowErrors, ActivateWorkflowResponses, AddContactNoteData, AddContactNoteErrors, AddContactNoteResponses, ArchiveAgentData, ArchiveAgentErrors, ArchiveAgentResponses, AssignConversationAgentData, AssignConversationAgentErrors, AssignConversationAgentResponses, AssignConversationData, AssignConversationErrors, AssignConversationResponses, AssignConversationsData, AssignConversationsErrors, AssignConversationsResponses, CancelBroadcastData, CancelBroadcastErrors, CancelBroadcastResponses, ChangeContactsTagsData, ChangeContactsTagsErrors, ChangeContactsTagsResponses, ChangeConversationTagsData, ChangeConversationTagsErrors, ChangeConversationTagsResponses, CloseConversationData, CloseConversationErrors, CloseConversationResponses, CompleteKnowledgeFileData, CompleteKnowledgeFileErrors, CompleteKnowledgeFileResponses, CreateAgentData, CreateAgentErrors, CreateAgentResponses, CreateBroadcastData, CreateBroadcastErrors, CreateBroadcastResponses, CreateContactData, CreateContactErrors, CreateContactFieldData, CreateContactFieldErrors, CreateContactFieldResponses, CreateContactResponses, CreateKnowledgeContactData, CreateKnowledgeContactErrors, CreateKnowledgeContactResponses, CreateKnowledgeFileData, CreateKnowledgeFileErrors, CreateKnowledgeFileResponses, CreateKnowledgeLocationData, CreateKnowledgeLocationErrors, CreateKnowledgeLocationResponses, CreateQuickReplyData, CreateQuickReplyErrors, CreateQuickReplyResponses, CreateTagData, CreateTagErrors, CreateTagResponses, CreateTemplateData, CreateTemplateErrors, CreateTemplateResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, CreateWorkflowData, CreateWorkflowErrors, CreateWorkflowResponses, DeleteContactFieldData, DeleteContactFieldErrors, DeleteContactFieldResponses, DeleteKnowledgeContactData, DeleteKnowledgeContactErrors, DeleteKnowledgeContactResponses, DeleteKnowledgeFileData, DeleteKnowledgeFileErrors, DeleteKnowledgeFileResponses, DeleteKnowledgeLocationData, DeleteKnowledgeLocationErrors, DeleteKnowledgeLocationResponses, DeleteQuickReplyData, DeleteQuickReplyErrors, DeleteQuickReplyResponses, DeleteTagData, DeleteTagErrors, DeleteTagResponses, DeleteTemplateData, DeleteTemplateErrors, DeleteTemplateResponses, DeleteWorkflowData, DeleteWorkflowErrors, DeleteWorkflowResponses, DisableWebhookData, DisableWebhookErrors, DisableWebhookResponses, FetchMessageMediaData, FetchMessageMediaErrors, FetchMessageMediaResponses, GetAdsReportData, GetAdsReportErrors, GetAdsReportResponses, GetAgentData, GetAgentErrors, GetAgentOptionsData, GetAgentOptionsErrors, GetAgentOptionsResponses, GetAgentResponses, GetBroadcastData, GetBroadcastErrors, GetBroadcastResponses, GetBroadcastsReportData, GetBroadcastsReportErrors, GetBroadcastsReportResponses, GetContactData, GetContactErrors, GetContactResponses, GetConversationData, GetConversationErrors, GetConversationResponses, GetConversationsReportData, GetConversationsReportErrors, GetConversationsReportResponses, GetDashboardReportData, GetDashboardReportErrors, GetDashboardReportResponses, GetKnowledgeContactData, GetKnowledgeContactErrors, GetKnowledgeContactResponses, GetKnowledgeFileData, GetKnowledgeFileErrors, GetKnowledgeFileResponses, GetKnowledgeLocationData, GetKnowledgeLocationErrors, GetKnowledgeLocationResponses, GetMessageData, GetMessageErrors, GetMessageResponses, GetMessagesReportData, GetMessagesReportErrors, GetMessagesReportResponses, GetQuickReplyData, GetQuickReplyErrors, GetQuickReplyResponses, GetResolutionsReportData, GetResolutionsReportErrors, GetResolutionsReportResponses, GetResponsesReportData, GetResponsesReportErrors, GetResponsesReportResponses, GetSendData, GetSendErrors, GetSendResponses, GetTeamReportData, GetTeamReportErrors, GetTeamReportResponses, GetTemplateData, GetTemplateErrors, GetTemplateResponses, GetWhatsAppNumberData, GetWhatsAppNumberErrors, GetWhatsAppNumberResponses, GetWorkflowData, GetWorkflowErrors, GetWorkflowReminderHistoryData, GetWorkflowReminderHistoryErrors, GetWorkflowReminderHistoryResponses, GetWorkflowResponses, ListAgentsData, ListAgentsErrors, ListAgentsResponses, ListBroadcastRecipientsData, ListBroadcastRecipientsErrors, ListBroadcastRecipientsResponses, ListBroadcastsData, ListBroadcastsErrors, ListBroadcastsResponses, ListChannelsData, ListChannelsErrors, ListChannelsResponses, ListContactFieldsData, ListContactFieldsErrors, ListContactFieldsResponses, ListContactsData, ListContactsErrors, ListContactsResponses, ListConversationsData, ListConversationsErrors, ListConversationsResponses, ListKnowledgeContactsData, ListKnowledgeContactsErrors, ListKnowledgeContactsResponses, ListKnowledgeFilesData, ListKnowledgeFilesErrors, ListKnowledgeFilesResponses, ListKnowledgeLocationsData, ListKnowledgeLocationsErrors, ListKnowledgeLocationsResponses, ListMembersData, ListMembersErrors, ListMembersResponses, ListMessagesData, ListMessagesErrors, ListMessagesResponses, ListQuickRepliesData, ListQuickRepliesErrors, ListQuickRepliesResponses, ListTagsData, ListTagsErrors, ListTagsResponses, ListTemplatesData, ListTemplatesErrors, ListTemplatesResponses, ListWebhookDeliveriesData, ListWebhookDeliveriesErrors, ListWebhookDeliveriesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, ListWhatsAppNumbersData, ListWhatsAppNumbersErrors, ListWhatsAppNumbersResponses, ListWorkflowExecutionsData, ListWorkflowExecutionsErrors, ListWorkflowExecutionsResponses, ListWorkflowsData, ListWorkflowsErrors, ListWorkflowsResponses, MarkConversationReadData, MarkConversationReadErrors, MarkConversationReadResponses, MarkConversationUnreadData, MarkConversationUnreadErrors, MarkConversationUnreadResponses, PauseWorkflowData, PauseWorkflowErrors, PauseWorkflowResponses, PreviewBroadcastAudienceData, PreviewBroadcastAudienceErrors, PreviewBroadcastAudienceResponses, PreviewWorkflowRemindersData, PreviewWorkflowRemindersErrors, PreviewWorkflowRemindersResponses, ReopenConversationData, ReopenConversationErrors, ReopenConversationResponses, ResolveConversationHandoffData, ResolveConversationHandoffErrors, ResolveConversationHandoffResponses, RetryWebhookDeliveryData, RetryWebhookDeliveryErrors, RetryWebhookDeliveryResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SearchConversationsData, SearchConversationsErrors, SearchConversationsResponses, SearchMessagesData, SearchMessagesErrors, SearchMessagesResponses, SendMessageData, SendMessageErrors, SendMessageResponses, StartConversationData, StartConversationErrors, StartConversationResponses, TestWebhookData, TestWebhookErrors, TestWebhookResponses, UpdateAgentData, UpdateAgentErrors, UpdateAgentResponses, UpdateContactData, UpdateContactErrors, UpdateContactResponses, UpdateKnowledgeContactData, UpdateKnowledgeContactErrors, UpdateKnowledgeContactResponses, UpdateKnowledgeFileData, UpdateKnowledgeFileErrors, UpdateKnowledgeFileResponses, UpdateKnowledgeLocationData, UpdateKnowledgeLocationErrors, UpdateKnowledgeLocationResponses, UpdateQuickReplyData, UpdateQuickReplyErrors, UpdateQuickReplyResponses, UpdateTagData, UpdateTagErrors, UpdateTagResponses, UpdateTemplateData, UpdateTemplateErrors, UpdateTemplateResponses, UpdateWorkflowData, UpdateWorkflowErrors, UpdateWorkflowResponses, UploadWorkflowHeaderMediaData, UploadWorkflowHeaderMediaErrors, UploadWorkflowHeaderMediaResponses, ValidateTemplateData, ValidateTemplateErrors, ValidateTemplateResponses } from './types.gen.js';
+import type { ActivateWorkflowData, ActivateWorkflowErrors, ActivateWorkflowResponses, AddContactNoteData, AddContactNoteErrors, AddContactNoteResponses, ArchiveAgentData, ArchiveAgentErrors, ArchiveAgentResponses, AssignConversationAgentData, AssignConversationAgentErrors, AssignConversationAgentResponses, AssignConversationData, AssignConversationErrors, AssignConversationResponses, AssignConversationsData, AssignConversationsErrors, AssignConversationsResponses, CancelBroadcastData, CancelBroadcastErrors, CancelBroadcastResponses, ChangeContactsTagsData, ChangeContactsTagsErrors, ChangeContactsTagsResponses, ChangeConversationTagsData, ChangeConversationTagsErrors, ChangeConversationTagsResponses, CloseConversationData, CloseConversationErrors, CloseConversationResponses, CompleteKnowledgeFileData, CompleteKnowledgeFileErrors, CompleteKnowledgeFileResponses, CompleteProfilePhotoUploadData, CompleteProfilePhotoUploadErrors, CompleteProfilePhotoUploadResponses, CompleteTemplateMediaUploadData, CompleteTemplateMediaUploadErrors, CompleteTemplateMediaUploadResponses, CreateAgentData, CreateAgentErrors, CreateAgentResponses, CreateBroadcastData, CreateBroadcastErrors, CreateBroadcastResponses, CreateContactData, CreateContactErrors, CreateContactFieldData, CreateContactFieldErrors, CreateContactFieldResponses, CreateContactResponses, CreateKnowledgeContactData, CreateKnowledgeContactErrors, CreateKnowledgeContactResponses, CreateKnowledgeFileData, CreateKnowledgeFileErrors, CreateKnowledgeFileResponses, CreateKnowledgeLocationData, CreateKnowledgeLocationErrors, CreateKnowledgeLocationResponses, CreateProfilePhotoUploadData, CreateProfilePhotoUploadErrors, CreateProfilePhotoUploadResponses, CreateQuickReplyData, CreateQuickReplyErrors, CreateQuickReplyResponses, CreateTagData, CreateTagErrors, CreateTagResponses, CreateTemplateData, CreateTemplateErrors, CreateTemplateMediaUploadData, CreateTemplateMediaUploadErrors, CreateTemplateMediaUploadResponses, CreateTemplateResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, CreateWorkflowData, CreateWorkflowErrors, CreateWorkflowResponses, DeleteContactFieldData, DeleteContactFieldErrors, DeleteContactFieldResponses, DeleteKnowledgeContactData, DeleteKnowledgeContactErrors, DeleteKnowledgeContactResponses, DeleteKnowledgeFileData, DeleteKnowledgeFileErrors, DeleteKnowledgeFileResponses, DeleteKnowledgeLocationData, DeleteKnowledgeLocationErrors, DeleteKnowledgeLocationResponses, DeleteQuickReplyData, DeleteQuickReplyErrors, DeleteQuickReplyResponses, DeleteTagData, DeleteTagErrors, DeleteTagResponses, DeleteTemplateData, DeleteTemplateErrors, DeleteTemplateResponses, DeleteWorkflowData, DeleteWorkflowErrors, DeleteWorkflowResponses, DisableWebhookData, DisableWebhookErrors, DisableWebhookResponses, FetchMessageMediaData, FetchMessageMediaErrors, FetchMessageMediaResponses, GetAdsReportData, GetAdsReportErrors, GetAdsReportResponses, GetAgentData, GetAgentErrors, GetAgentOptionsData, GetAgentOptionsErrors, GetAgentOptionsResponses, GetAgentResponses, GetBroadcastData, GetBroadcastErrors, GetBroadcastResponses, GetBroadcastsReportData, GetBroadcastsReportErrors, GetBroadcastsReportResponses, GetContactData, GetContactErrors, GetContactResponses, GetConversationData, GetConversationErrors, GetConversationResponses, GetConversationsReportData, GetConversationsReportErrors, GetConversationsReportResponses, GetDashboardReportData, GetDashboardReportErrors, GetDashboardReportResponses, GetKnowledgeContactData, GetKnowledgeContactErrors, GetKnowledgeContactResponses, GetKnowledgeFileData, GetKnowledgeFileErrors, GetKnowledgeFileResponses, GetKnowledgeLocationData, GetKnowledgeLocationErrors, GetKnowledgeLocationResponses, GetMessageData, GetMessageErrors, GetMessageResponses, GetMessagesReportData, GetMessagesReportErrors, GetMessagesReportResponses, GetQuickReplyData, GetQuickReplyErrors, GetQuickReplyResponses, GetResolutionsReportData, GetResolutionsReportErrors, GetResolutionsReportResponses, GetResponsesReportData, GetResponsesReportErrors, GetResponsesReportResponses, GetSendData, GetSendErrors, GetSendResponses, GetTeamReportData, GetTeamReportErrors, GetTeamReportResponses, GetTemplateData, GetTemplateErrors, GetTemplateFieldMappingsData, GetTemplateFieldMappingsErrors, GetTemplateFieldMappingsResponses, GetTemplateResponses, GetWhatsAppNumberData, GetWhatsAppNumberErrors, GetWhatsAppNumberResponses, GetWorkflowData, GetWorkflowErrors, GetWorkflowReminderHistoryData, GetWorkflowReminderHistoryErrors, GetWorkflowReminderHistoryResponses, GetWorkflowResponses, ListAgentsData, ListAgentsErrors, ListAgentsResponses, ListBroadcastRecipientsData, ListBroadcastRecipientsErrors, ListBroadcastRecipientsResponses, ListBroadcastsData, ListBroadcastsErrors, ListBroadcastsResponses, ListChannelsData, ListChannelsErrors, ListChannelsResponses, ListContactFieldsData, ListContactFieldsErrors, ListContactFieldsResponses, ListContactsData, ListContactsErrors, ListContactsResponses, ListConversationsData, ListConversationsErrors, ListConversationsResponses, ListKnowledgeContactsData, ListKnowledgeContactsErrors, ListKnowledgeContactsResponses, ListKnowledgeFilesData, ListKnowledgeFilesErrors, ListKnowledgeFilesResponses, ListKnowledgeLocationsData, ListKnowledgeLocationsErrors, ListKnowledgeLocationsResponses, ListMembersData, ListMembersErrors, ListMembersResponses, ListMessagesData, ListMessagesErrors, ListMessagesResponses, ListQuickRepliesData, ListQuickRepliesErrors, ListQuickRepliesResponses, ListTagsData, ListTagsErrors, ListTagsResponses, ListTemplatesData, ListTemplatesErrors, ListTemplatesResponses, ListWebhookDeliveriesData, ListWebhookDeliveriesErrors, ListWebhookDeliveriesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, ListWhatsAppNumbersData, ListWhatsAppNumbersErrors, ListWhatsAppNumbersResponses, ListWorkflowExecutionsData, ListWorkflowExecutionsErrors, ListWorkflowExecutionsResponses, ListWorkflowsData, ListWorkflowsErrors, ListWorkflowsResponses, MarkConversationReadData, MarkConversationReadErrors, MarkConversationReadResponses, MarkConversationUnreadData, MarkConversationUnreadErrors, MarkConversationUnreadResponses, PauseWorkflowData, PauseWorkflowErrors, PauseWorkflowResponses, PreviewBroadcastAudienceData, PreviewBroadcastAudienceErrors, PreviewBroadcastAudienceResponses, PreviewWorkflowRemindersData, PreviewWorkflowRemindersErrors, PreviewWorkflowRemindersResponses, RefreshWhatsAppNumberData, RefreshWhatsAppNumberErrors, RefreshWhatsAppNumberResponses, ReopenConversationData, ReopenConversationErrors, ReopenConversationResponses, ReplaceTemplateFieldMappingsData, ReplaceTemplateFieldMappingsErrors, ReplaceTemplateFieldMappingsResponses, RequestWhatsAppDisplayNameData, RequestWhatsAppDisplayNameErrors, RequestWhatsAppDisplayNameResponses, ResolveConversationHandoffData, ResolveConversationHandoffErrors, ResolveConversationHandoffResponses, RetryWebhookDeliveryData, RetryWebhookDeliveryErrors, RetryWebhookDeliveryResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SearchConversationsData, SearchConversationsErrors, SearchConversationsResponses, SearchMessagesData, SearchMessagesErrors, SearchMessagesResponses, SendMessageData, SendMessageErrors, SendMessageResponses, StartConversationData, StartConversationErrors, StartConversationResponses, TestWebhookData, TestWebhookErrors, TestWebhookResponses, UpdateAgentData, UpdateAgentErrors, UpdateAgentResponses, UpdateContactData, UpdateContactErrors, UpdateContactResponses, UpdateKnowledgeContactData, UpdateKnowledgeContactErrors, UpdateKnowledgeContactResponses, UpdateKnowledgeFileData, UpdateKnowledgeFileErrors, UpdateKnowledgeFileResponses, UpdateKnowledgeLocationData, UpdateKnowledgeLocationErrors, UpdateKnowledgeLocationResponses, UpdateQuickReplyData, UpdateQuickReplyErrors, UpdateQuickReplyResponses, UpdateTagData, UpdateTagErrors, UpdateTagResponses, UpdateTemplateData, UpdateTemplateErrors, UpdateTemplateResponses, UpdateWhatsAppBusinessProfileData, UpdateWhatsAppBusinessProfileErrors, UpdateWhatsAppBusinessProfileResponses, UpdateWhatsAppNumberData, UpdateWhatsAppNumberErrors, UpdateWhatsAppNumberResponses, UpdateWorkflowData, UpdateWorkflowErrors, UpdateWorkflowResponses, UploadWorkflowHeaderMediaData, UploadWorkflowHeaderMediaErrors, UploadWorkflowHeaderMediaResponses, ValidateTemplateData, ValidateTemplateErrors, ValidateTemplateResponses } from './types.gen.js';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -1588,7 +1588,7 @@ export class RickyApi extends HeyApiClient {
     /**
      * Edit a template
      *
-     * Changes the category or content of a template and sends it to Meta for review again. Meta allows it only for `APPROVED`, `REJECTED` and `PAUSED` templates, and limits how often an approved one can change; otherwise it answers `422 rule_violation`. Templates with a media header, or with buttons and components Ricky’s editor does not build, cannot be edited here.
+     * Changes the category or content of a template and sends it to Meta for review again. Meta allows it only for `APPROVED`, `REJECTED` and `PAUSED` templates, and limits how often an approved one can change; otherwise it answers `422 rule_violation`. An edit that keeps an image, video or document header sends `header` again with a new `handle`. Templates with buttons or components Ricky’s editor does not build cannot be edited here.
      *
      * Scope: `templates:write`.
      */
@@ -1653,6 +1653,198 @@ export class RickyApi extends HeyApiClient {
             responseStyle: 'data',
             security: [{ scheme: 'bearer', type: 'http' }],
             url: '/whatsapp-numbers/{channel_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Update a WhatsApp number
+     *
+     * Turns calls to the number on or off at Meta. Ricky reads the number back from Meta and answers it as Meta confirms it.
+     *
+     * Scope: `conversations:write`.
+     */
+    public updateWhatsAppNumber<ThrowOnError extends boolean = true>(options: Options<UpdateWhatsAppNumberData, ThrowOnError>): RequestResult<UpdateWhatsAppNumberResponses, UpdateWhatsAppNumberErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).patch<UpdateWhatsAppNumberResponses, UpdateWhatsAppNumberErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/whatsapp-numbers/{channel_id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Upload a header sample
+     *
+     * An image, video or document header needs a sample file Meta reviews. Uploading it takes three steps: this call answers an `upload_url`; `PUT` the bytes there; then `POST /templates/media/complete` answers the `handle` for `header.handle`.
+     *
+     * Scope: `templates:write`.
+     */
+    public createTemplateMediaUpload<ThrowOnError extends boolean = true>(options: Options<CreateTemplateMediaUploadData, ThrowOnError>): RequestResult<CreateTemplateMediaUploadResponses, CreateTemplateMediaUploadErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<CreateTemplateMediaUploadResponses, CreateTemplateMediaUploadErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/templates/media',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Complete a header sample
+     *
+     * Checks the uploaded bytes against the type and size limits, sends them to Meta and answers Meta’s `handle`. Ricky deletes its copy either way, so a failed upload starts again with `POST /templates/media`.
+     *
+     * Scope: `templates:write`.
+     */
+    public completeTemplateMediaUpload<ThrowOnError extends boolean = true>(options: Options<CompleteTemplateMediaUploadData, ThrowOnError>): RequestResult<CompleteTemplateMediaUploadResponses, CompleteTemplateMediaUploadErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<CompleteTemplateMediaUploadResponses, CompleteTemplateMediaUploadErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/templates/media/complete',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Get the field mappings of a template
+     *
+     * The template’s variables, read live from Meta, and the contact field that fills each one when Ricky sends the template to a contact, as in broadcasts.
+     *
+     * Scope: `templates:read`.
+     */
+    public getTemplateFieldMappings<ThrowOnError extends boolean = true>(options: Options<GetTemplateFieldMappingsData, ThrowOnError>): RequestResult<GetTemplateFieldMappingsResponses, GetTemplateFieldMappingsErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).get<GetTemplateFieldMappingsResponses, GetTemplateFieldMappingsErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/templates/{template_id}/field-mappings',
+            ...options
+        });
+    }
+    
+    /**
+     * Set the field mappings of a template
+     *
+     * Replaces every mapping of the template. Each one names a variable of `variables` and a contact field; a custom field must be the organization’s.
+     *
+     * Scope: `templates:write`.
+     */
+    public replaceTemplateFieldMappings<ThrowOnError extends boolean = true>(options: Options<ReplaceTemplateFieldMappingsData, ThrowOnError>): RequestResult<ReplaceTemplateFieldMappingsResponses, ReplaceTemplateFieldMappingsErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).put<ReplaceTemplateFieldMappingsResponses, ReplaceTemplateFieldMappingsErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/templates/{template_id}/field-mappings',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Edit a business profile
+     *
+     * Changes the business profile customers see on the number at Meta, then answers the number with the profile Meta reads back.
+     *
+     * Scope: `conversations:write`.
+     */
+    public updateWhatsAppBusinessProfile<ThrowOnError extends boolean = true>(options: Options<UpdateWhatsAppBusinessProfileData, ThrowOnError>): RequestResult<UpdateWhatsAppBusinessProfileResponses, UpdateWhatsAppBusinessProfileErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).patch<UpdateWhatsAppBusinessProfileResponses, UpdateWhatsAppBusinessProfileErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/whatsapp-numbers/{channel_id}/business-profile',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Upload a profile photo
+     *
+     * Begins a new profile photo in three steps: this call answers an `upload_url`; `PUT` the bytes there; then call `POST /whatsapp-numbers/{channel_id}/profile-photo/complete`.
+     *
+     * Scope: `conversations:write`.
+     */
+    public createProfilePhotoUpload<ThrowOnError extends boolean = true>(options: Options<CreateProfilePhotoUploadData, ThrowOnError>): RequestResult<CreateProfilePhotoUploadResponses, CreateProfilePhotoUploadErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<CreateProfilePhotoUploadResponses, CreateProfilePhotoUploadErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/whatsapp-numbers/{channel_id}/profile-photo',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Complete a profile photo
+     *
+     * Checks the uploaded photo, sets it on the number at Meta and answers the number. Ricky deletes its copy either way.
+     *
+     * Scope: `conversations:write`.
+     */
+    public completeProfilePhotoUpload<ThrowOnError extends boolean = true>(options: Options<CompleteProfilePhotoUploadData, ThrowOnError>): RequestResult<CompleteProfilePhotoUploadResponses, CompleteProfilePhotoUploadErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<CompleteProfilePhotoUploadResponses, CompleteProfilePhotoUploadErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/whatsapp-numbers/{channel_id}/profile-photo/complete',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Request a display name change
+     *
+     * Asks Meta to review a new display name for the number. The name changes only if Meta approves it; then `verified_name` and `name_status` change.
+     *
+     * Scope: `conversations:write`.
+     */
+    public requestWhatsAppDisplayName<ThrowOnError extends boolean = true>(options: Options<RequestWhatsAppDisplayNameData, ThrowOnError>): RequestResult<RequestWhatsAppDisplayNameResponses, RequestWhatsAppDisplayNameErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<RequestWhatsAppDisplayNameResponses, RequestWhatsAppDisplayNameErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/whatsapp-numbers/{channel_id}/display-name',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Refresh a WhatsApp number
+     *
+     * Reads the number’s status, quality, limit, display name and business profile from Meta now, stores them and answers the number.
+     *
+     * Scope: `conversations:write`.
+     */
+    public refreshWhatsAppNumber<ThrowOnError extends boolean = true>(options: Options<RefreshWhatsAppNumberData, ThrowOnError>): RequestResult<RefreshWhatsAppNumberResponses, RefreshWhatsAppNumberErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<RefreshWhatsAppNumberResponses, RefreshWhatsAppNumberErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/whatsapp-numbers/{channel_id}/refresh',
             ...options
         });
     }

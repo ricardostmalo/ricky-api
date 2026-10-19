@@ -58,8 +58,8 @@ Cada operación exige un permiso (scope). Una clave sin ese permiso recibe `403 
 | `members:read`        | Leer los miembros de la organización.                                                                       |
 | `tags:read`           | Leer las etiquetas de contactos.                                                                            |
 | `webhooks:manage`     | Crear, listar y desactivar webhooks; consultar y reintentar sus entregas.                                   |
-| `workflows:read`      | Leer workflows y sus ejecuciones.                                                                           |
-| `workflows:write`     | Crear, editar, activar, pausar y eliminar workflows.                                                        |
+| `workflows:read`      | Leer workflows, sus ejecuciones y la vista previa y el historial de recordatorios de citas.                 |
+| `workflows:write`     | Crear, editar, activar, pausar y eliminar workflows, y definir el archivo de encabezado de uno programado.  |
 | `reports:read`        | Leer los números de las páginas de Reportes.                                                                |
 | `agents:read`         | Leer agentes y sus opciones de configuración.                                                               |
 | `agents:write`        | Crear, actualizar y archivar agentes.                                                                       |
@@ -68,7 +68,7 @@ Cada operación exige un permiso (scope). Una clave sin ese permiso recibe `403 
 | `tags:write`          | Crear, editar y borrar etiquetas.                                                                           |
 | `quick_replies:read`  | Leer respuestas rápidas.                                                                                    |
 | `quick_replies:write` | Crear, actualizar y borrar respuestas rápidas.                                                              |
-| `broadcasts:read`     | Leer campañas, sus conteos y el estado de entrega de cada destinatario.                                     |
+| `broadcasts:read`     | Leer campañas, sus conteos y el estado de entrega de cada destinatario, y previsualizar una audiencia.      |
 | `broadcasts:write`    | Crear, programar y cancelar campañas.                                                                       |
 
 La tabla siguiente sale del contrato de la API: es la lista exacta de operaciones y el permiso de cada una.
@@ -110,6 +110,9 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Activar un workflow](https://getricky.ai/docs/api/reference/workflows/activate-workflow) | `POST /workflows/{workflow_id}/activate` | `workflows:write` |
 | [Pausar un workflow](https://getricky.ai/docs/api/reference/workflows/pause-workflow) | `POST /workflows/{workflow_id}/pause` | `workflows:write` |
 | [Listar ejecuciones](https://getricky.ai/docs/api/reference/workflows/list-workflow-executions) | `GET /workflows/{workflow_id}/executions` | `workflows:read` |
+| [Definir el archivo del encabezado de una automatización programada](https://getricky.ai/docs/api/reference/workflows/upload-workflow-header-media) | `POST /workflows/{workflow_id}/header-media` | `workflows:write` |
+| [Previsualizar recordatorios de citas](https://getricky.ai/docs/api/reference/workflows/preview-workflow-reminders) | `GET /workflows/{workflow_id}/reminders/preview` | `workflows:read` |
+| [Consultar el historial de recordatorios de citas](https://getricky.ai/docs/api/reference/workflows/get-workflow-reminder-history) | `GET /workflows/{workflow_id}/reminders/history` | `workflows:read` |
 | [Consultar el panel en vivo](https://getricky.ai/docs/api/reference/reports/get-dashboard-report) | `GET /reports/dashboard` | `reports:read` |
 | [Consultar el reporte de conversaciones](https://getricky.ai/docs/api/reference/reports/get-conversations-report) | `GET /reports/conversations` | `reports:read` |
 | [Consultar el reporte de mensajes](https://getricky.ai/docs/api/reference/reports/get-messages-report) | `GET /reports/messages` | `reports:read` |
@@ -172,6 +175,7 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Resolver un traspaso](https://getricky.ai/docs/api/reference/conversations/resolve-conversation-handoff) | `POST /conversations/{conversation_id}/handoff/resolve` | `conversations:write` |
 | [Marcar una conversación como no leída](https://getricky.ai/docs/api/reference/conversations/mark-conversation-unread) | `DELETE /conversations/{conversation_id}/read` | `conversations:write` |
 | [Obtener el archivo de un mensaje](https://getricky.ai/docs/api/reference/messages/fetch-message-media) | `POST /conversations/{conversation_id}/messages/{message_id}/media` | `conversations:read` |
+| [Previsualizar la audiencia de una campaña](https://getricky.ai/docs/api/reference/broadcasts/preview-broadcast-audience) | `POST /broadcasts/preview` | `broadcasts:read` |
 
 ## Respuestas de autenticación
 

@@ -18,7 +18,7 @@ Ricky starts every execution from an event. There is no operation to start a wor
 | `conversation` | `first_message_received` | The contact's first message in a conversation arrives.        |
 | `scheduled`    | `{ "kind": "daily" }`    | Every day at a set time, with Odoo appointments or birthdays. |
 
-The API creates and edits conversation workflows. Scheduled workflows are created in Ricky; the API reads, renames, activates, pauses and deletes them.
+The API creates and edits conversation workflows. Scheduled workflows are created in Ricky; the API reads, renames, activates, pauses and deletes them, sets their header file, and previews and reviews appointment reminders ([below](#scheduled-workflows)).
 
 A conversation workflow can have a `condition` so it runs only inside or outside business hours.
 
@@ -123,6 +123,39 @@ curl "https://getricky.ai/api/v1/workflows/$WORKFLOW_ID/executions?page_size=20"
 ```
 
 Each execution has its `status`, `attempts` and `last_error`. The status tells whether Ricky ran the workflow, not whether each message arrived. For that, read the conversation's messages or subscribe to `message.failed`. The list pages with `next_cursor`, as in [Pagination](./pagination.md).
+
+## Scheduled workflows
+
+A scheduled workflow sends a WhatsApp template every day from Odoo: appointment reminders or birthday greetings. It is set up in Ricky; with the API you can also set its header file and, for appointment reminders, see what it will send and what it sent.
+
+### Header file
+
+When the template has an image, video or document header, every send carries the file you store:
+
+```bash
+curl -X POST https://getricky.ai/api/v1/workflows/$WORKFLOW_ID/header-media \
+  -H "Authorization: Bearer $RICKY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: header-october" \
+  -d '{ "url": "https://example.com/reminder.jpg" }'
+```
+
+Ricky downloads `url` as it does for [files you send](./sending-messages.md): public HTTPS, no redirects, and a `Content-Type` of the kind the header takes within WhatsApp's limit for it. The new file replaces the previous one. The answer is the workflow, with `has_header_image: true`. A template without a file header gets `422 rule_violation`; a file of another kind gets `400 invalid_input` with `param: "url"`. It requires `workflows:write`.
+
+### Reminder preview
+
+```bash
+curl "https://getricky.ai/api/v1/workflows/$WORKFLOW_ID/reminders/preview?date=2026-10-20" \
+  -H "Authorization: Bearer $RICKY_API_KEY"
+```
+
+Ricky reads Odoo now and answers each appointment the workflow would remind on that day: `excluded_because` says why one is not sent (`state`, `name`, `branch`, `phone`), `message` is the text it would send, and `delivery` the send already recorded, if any. `date` is the day the workflow runs, its next run or later. `appointment_states=confirmed,pending` previews other Odoo states without saving them. It sends nothing. It needs Odoo connected; otherwise `422 rule_violation`.
+
+### Reminder history
+
+`GET /workflows/{workflow_id}/reminders/history?date=2026-10-14` answers what the workflow checked and sent on a past day, from what Ricky recorded: each appointment with its exclusion, the message, when it was queued and its delivery `status`. It does not read Odoo.
+
+Preview and history are only for appointment reminder workflows; a birthday workflow gets `422 rule_violation`. Both require `workflows:read`.
 
 ## Example: order ready with a reminder
 

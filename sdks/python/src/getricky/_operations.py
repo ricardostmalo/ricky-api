@@ -20,6 +20,8 @@ from .types import (
     Channel,
     CloseConversation,
     CompleteKnowledgeFile,
+    CompleteProfilePhotoUpload,
+    CompleteTemplateMediaUpload,
     Contact,
     ContactField,
     ContactTagChange,
@@ -33,18 +35,22 @@ from .types import (
     CreateKnowledgeContact,
     CreateKnowledgeFile,
     CreateKnowledgeLocation,
+    CreateProfilePhotoUpload,
     CreateQuickReply,
     CreateTag,
     CreateTemplate,
+    CreateTemplateMediaUpload,
     CreateWebhook,
     CreateWorkflow,
     CreatedWebhook,
     DashboardReport,
     DeletedTemplate,
+    DisplayNameRequest,
     KnowledgeContact,
     KnowledgeFile,
     KnowledgeFileUpload,
     KnowledgeLocation,
+    MediaUpload,
     Member,
     Message,
     MessageSearchResult,
@@ -53,6 +59,8 @@ from .types import (
     QuickReply,
     ReminderHistory,
     ReminderPreview,
+    ReplaceTemplateFieldMappings,
+    RequestDisplayName,
     ResolutionsReport,
     ResolveHandoff,
     ResponsesReport,
@@ -63,6 +71,8 @@ from .types import (
     Tag,
     TeamReport,
     Template,
+    TemplateFieldMappings,
+    TemplateMedia,
     TemplateValidation,
     UpdateAgent,
     UpdateContact,
@@ -72,6 +82,8 @@ from .types import (
     UpdateQuickReply,
     UpdateTag,
     UpdateTemplate,
+    UpdateWhatsAppBusinessProfile,
+    UpdateWhatsAppNumber,
     UpdateWorkflow,
     UploadWorkflowHeaderMedia,
     ValidateTemplate,
@@ -1870,7 +1882,7 @@ class SyncOperations:
     ) -> Resource[Template]:
         """Edit a template.
 
-        Changes the category or content of a template and sends it to Meta for review again. Meta allows it only for `APPROVED`, `REJECTED` and `PAUSED` templates, and limits how often an approved one can change; otherwise it answers `422 rule_violation`. Templates with a media header, or with buttons and components Ricky’s editor does not build, cannot be edited here.
+        Changes the category or content of a template and sends it to Meta for review again. Meta allows it only for `APPROVED`, `REJECTED` and `PAUSED` templates, and limits how often an approved one can change; otherwise it answers `422 rule_violation`. An edit that keeps an image, video or document header sends `header` again with a new `handle`. Templates with buttons or components Ricky’s editor does not build cannot be edited here.
 
         Scope: `templates:write`.
 
@@ -1953,6 +1965,241 @@ class SyncOperations:
             "GET",
             "/whatsapp-numbers/{channel_id}",
             path_parameters={"channel_id": channel_id},
+        ))
+
+    def update_whats_app_number(
+        self,
+        channel_id: str,
+        body: UpdateWhatsAppNumber,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WhatsAppNumber]:
+        """Update a WhatsApp number.
+
+        Turns calls to the number on or off at Meta. Ricky reads the number back from Meta and answers it as Meta confirms it.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WhatsAppNumber], self._request(
+            "PATCH",
+            "/whatsapp-numbers/{channel_id}",
+            path_parameters={"channel_id": channel_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def create_template_media_upload(
+        self,
+        body: CreateTemplateMediaUpload,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[MediaUpload]:
+        """Upload a header sample.
+
+        An image, video or document header needs a sample file Meta reviews. Uploading it takes three steps: this call answers an `upload_url`; `PUT` the bytes there; then `POST /templates/media/complete` answers the `handle` for `header.handle`.
+
+        Scope: `templates:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[MediaUpload], self._request(
+            "POST",
+            "/templates/media",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def complete_template_media_upload(
+        self,
+        body: CompleteTemplateMediaUpload,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[TemplateMedia]:
+        """Complete a header sample.
+
+        Checks the uploaded bytes against the type and size limits, sends them to Meta and answers Meta’s `handle`. Ricky deletes its copy either way, so a failed upload starts again with `POST /templates/media`.
+
+        Scope: `templates:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[TemplateMedia], self._request(
+            "POST",
+            "/templates/media/complete",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def get_template_field_mappings(
+        self,
+        template_id: str,
+    ) -> Resource[TemplateFieldMappings]:
+        """Get the field mappings of a template.
+
+        The template’s variables, read live from Meta, and the contact field that fills each one when Ricky sends the template to a contact, as in broadcasts.
+
+        Scope: `templates:read`.
+        """
+        return cast(Resource[TemplateFieldMappings], self._request(
+            "GET",
+            "/templates/{template_id}/field-mappings",
+            path_parameters={"template_id": template_id},
+        ))
+
+    def replace_template_field_mappings(
+        self,
+        template_id: str,
+        body: ReplaceTemplateFieldMappings,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[TemplateFieldMappings]:
+        """Set the field mappings of a template.
+
+        Replaces every mapping of the template. Each one names a variable of `variables` and a contact field; a custom field must be the organization’s.
+
+        Scope: `templates:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[TemplateFieldMappings], self._request(
+            "PUT",
+            "/templates/{template_id}/field-mappings",
+            path_parameters={"template_id": template_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def update_whats_app_business_profile(
+        self,
+        channel_id: str,
+        body: UpdateWhatsAppBusinessProfile,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WhatsAppNumber]:
+        """Edit a business profile.
+
+        Changes the business profile customers see on the number at Meta, then answers the number with the profile Meta reads back.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WhatsAppNumber], self._request(
+            "PATCH",
+            "/whatsapp-numbers/{channel_id}/business-profile",
+            path_parameters={"channel_id": channel_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def create_profile_photo_upload(
+        self,
+        channel_id: str,
+        body: CreateProfilePhotoUpload,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[MediaUpload]:
+        """Upload a profile photo.
+
+        Begins a new profile photo in three steps: this call answers an `upload_url`; `PUT` the bytes there; then call `POST /whatsapp-numbers/{channel_id}/profile-photo/complete`.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[MediaUpload], self._request(
+            "POST",
+            "/whatsapp-numbers/{channel_id}/profile-photo",
+            path_parameters={"channel_id": channel_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def complete_profile_photo_upload(
+        self,
+        channel_id: str,
+        body: CompleteProfilePhotoUpload,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WhatsAppNumber]:
+        """Complete a profile photo.
+
+        Checks the uploaded photo, sets it on the number at Meta and answers the number. Ricky deletes its copy either way.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WhatsAppNumber], self._request(
+            "POST",
+            "/whatsapp-numbers/{channel_id}/profile-photo/complete",
+            path_parameters={"channel_id": channel_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def request_whats_app_display_name(
+        self,
+        channel_id: str,
+        body: RequestDisplayName,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[DisplayNameRequest]:
+        """Request a display name change.
+
+        Asks Meta to review a new display name for the number. The name changes only if Meta approves it; then `verified_name` and `name_status` change.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[DisplayNameRequest], self._request(
+            "POST",
+            "/whatsapp-numbers/{channel_id}/display-name",
+            path_parameters={"channel_id": channel_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def refresh_whats_app_number(
+        self,
+        channel_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WhatsAppNumber]:
+        """Refresh a WhatsApp number.
+
+        Reads the number’s status, quality, limit, display name and business profile from Meta now, stores them and answers the number.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WhatsAppNumber], self._request(
+            "POST",
+            "/whatsapp-numbers/{channel_id}/refresh",
+            path_parameters={"channel_id": channel_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
         ))
 
     def list_broadcasts(
@@ -3933,7 +4180,7 @@ class AsyncOperations:
     ) -> Resource[Template]:
         """Edit a template.
 
-        Changes the category or content of a template and sends it to Meta for review again. Meta allows it only for `APPROVED`, `REJECTED` and `PAUSED` templates, and limits how often an approved one can change; otherwise it answers `422 rule_violation`. Templates with a media header, or with buttons and components Ricky’s editor does not build, cannot be edited here.
+        Changes the category or content of a template and sends it to Meta for review again. Meta allows it only for `APPROVED`, `REJECTED` and `PAUSED` templates, and limits how often an approved one can change; otherwise it answers `422 rule_violation`. An edit that keeps an image, video or document header sends `header` again with a new `handle`. Templates with buttons or components Ricky’s editor does not build cannot be edited here.
 
         Scope: `templates:write`.
 
@@ -4016,6 +4263,241 @@ class AsyncOperations:
             "GET",
             "/whatsapp-numbers/{channel_id}",
             path_parameters={"channel_id": channel_id},
+        ))
+
+    async def update_whats_app_number(
+        self,
+        channel_id: str,
+        body: UpdateWhatsAppNumber,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WhatsAppNumber]:
+        """Update a WhatsApp number.
+
+        Turns calls to the number on or off at Meta. Ricky reads the number back from Meta and answers it as Meta confirms it.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WhatsAppNumber], await self._request(
+            "PATCH",
+            "/whatsapp-numbers/{channel_id}",
+            path_parameters={"channel_id": channel_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def create_template_media_upload(
+        self,
+        body: CreateTemplateMediaUpload,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[MediaUpload]:
+        """Upload a header sample.
+
+        An image, video or document header needs a sample file Meta reviews. Uploading it takes three steps: this call answers an `upload_url`; `PUT` the bytes there; then `POST /templates/media/complete` answers the `handle` for `header.handle`.
+
+        Scope: `templates:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[MediaUpload], await self._request(
+            "POST",
+            "/templates/media",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def complete_template_media_upload(
+        self,
+        body: CompleteTemplateMediaUpload,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[TemplateMedia]:
+        """Complete a header sample.
+
+        Checks the uploaded bytes against the type and size limits, sends them to Meta and answers Meta’s `handle`. Ricky deletes its copy either way, so a failed upload starts again with `POST /templates/media`.
+
+        Scope: `templates:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[TemplateMedia], await self._request(
+            "POST",
+            "/templates/media/complete",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def get_template_field_mappings(
+        self,
+        template_id: str,
+    ) -> Resource[TemplateFieldMappings]:
+        """Get the field mappings of a template.
+
+        The template’s variables, read live from Meta, and the contact field that fills each one when Ricky sends the template to a contact, as in broadcasts.
+
+        Scope: `templates:read`.
+        """
+        return cast(Resource[TemplateFieldMappings], await self._request(
+            "GET",
+            "/templates/{template_id}/field-mappings",
+            path_parameters={"template_id": template_id},
+        ))
+
+    async def replace_template_field_mappings(
+        self,
+        template_id: str,
+        body: ReplaceTemplateFieldMappings,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[TemplateFieldMappings]:
+        """Set the field mappings of a template.
+
+        Replaces every mapping of the template. Each one names a variable of `variables` and a contact field; a custom field must be the organization’s.
+
+        Scope: `templates:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[TemplateFieldMappings], await self._request(
+            "PUT",
+            "/templates/{template_id}/field-mappings",
+            path_parameters={"template_id": template_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def update_whats_app_business_profile(
+        self,
+        channel_id: str,
+        body: UpdateWhatsAppBusinessProfile,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WhatsAppNumber]:
+        """Edit a business profile.
+
+        Changes the business profile customers see on the number at Meta, then answers the number with the profile Meta reads back.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WhatsAppNumber], await self._request(
+            "PATCH",
+            "/whatsapp-numbers/{channel_id}/business-profile",
+            path_parameters={"channel_id": channel_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def create_profile_photo_upload(
+        self,
+        channel_id: str,
+        body: CreateProfilePhotoUpload,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[MediaUpload]:
+        """Upload a profile photo.
+
+        Begins a new profile photo in three steps: this call answers an `upload_url`; `PUT` the bytes there; then call `POST /whatsapp-numbers/{channel_id}/profile-photo/complete`.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[MediaUpload], await self._request(
+            "POST",
+            "/whatsapp-numbers/{channel_id}/profile-photo",
+            path_parameters={"channel_id": channel_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def complete_profile_photo_upload(
+        self,
+        channel_id: str,
+        body: CompleteProfilePhotoUpload,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WhatsAppNumber]:
+        """Complete a profile photo.
+
+        Checks the uploaded photo, sets it on the number at Meta and answers the number. Ricky deletes its copy either way.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WhatsAppNumber], await self._request(
+            "POST",
+            "/whatsapp-numbers/{channel_id}/profile-photo/complete",
+            path_parameters={"channel_id": channel_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def request_whats_app_display_name(
+        self,
+        channel_id: str,
+        body: RequestDisplayName,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[DisplayNameRequest]:
+        """Request a display name change.
+
+        Asks Meta to review a new display name for the number. The name changes only if Meta approves it; then `verified_name` and `name_status` change.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[DisplayNameRequest], await self._request(
+            "POST",
+            "/whatsapp-numbers/{channel_id}/display-name",
+            path_parameters={"channel_id": channel_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def refresh_whats_app_number(
+        self,
+        channel_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WhatsAppNumber]:
+        """Refresh a WhatsApp number.
+
+        Reads the number’s status, quality, limit, display name and business profile from Meta now, stores them and answers the number.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WhatsAppNumber], await self._request(
+            "POST",
+            "/whatsapp-numbers/{channel_id}/refresh",
+            path_parameters={"channel_id": channel_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
         ))
 
     async def list_broadcasts(

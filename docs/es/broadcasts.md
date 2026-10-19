@@ -4,12 +4,13 @@ URL: https://getricky.ai/docs/api/broadcasts
 
 > Envía una plantilla aprobada de WhatsApp a muchos números, ahora o a una hora fijada, y sigue cada entrega.
 
-Una campaña envía una plantilla aprobada de WhatsApp a muchos números, como **WhatsApp → Campañas** en Ricky. Leer exige el permiso `broadcasts:read`; crear y cancelar exigen `broadcasts:write`.
+Una campaña envía una plantilla aprobada de WhatsApp a muchos números, como **WhatsApp → Campañas** en Ricky. Leer y previsualizar una audiencia exigen el permiso `broadcasts:read`; crear y cancelar exigen `broadcasts:write`.
 
 | Operación                                   | Qué hace                                                       |
 | ------------------------------------------- | -------------------------------------------------------------- |
 | `GET /broadcasts`                           | Campañas de la más reciente a la más antigua, con sus conteos. |
 | `POST /broadcasts`                          | Crea una campaña que se envía ahora o en `scheduled_at`.       |
+| `POST /broadcasts/preview`                  | Cuenta a cuántos números llega una audiencia, sin crear nada.  |
 | `GET /broadcasts/{broadcast_id}`            | Una campaña con sus conteos de entrega.                        |
 | `POST /broadcasts/{broadcast_id}/cancel`    | Cancela una campaña programada antes de que empiece.           |
 | `GET /broadcasts/{broadcast_id}/recipients` | Cada número y el estado de su mensaje, con filtro por estado.  |
@@ -18,6 +19,17 @@ Una campaña envía una plantilla aprobada de WhatsApp a muchos números, como *
 
 `channel_id` es un canal de WhatsApp de `GET /channels`. `template.id` es una plantilla de `GET /templates` con estado `APPROVED`; `template.components` llena sus variables igual que al [enviar una plantilla](./sending-messages.md). Las variables que la plantilla asocia a campos de contacto en Ricky se llenan para cada contacto.
 
+Para llenar una variable con los datos de cada destinatario, envía `mappings`, como hace el editor de campañas en Ricky:
+
+```json
+"mappings": [
+  { "component": "body", "key": "1", "source": { "type": "contact", "field": "first_name" } },
+  { "component": "body", "key": "2", "source": { "type": "custom_field", "field_id": "3c9d…" } }
+]
+```
+
+`key` es el número o el nombre de la variable; para un botón de URL, el índice del botón. `source` es un campo del contacto (`first_name`, `company`, `city`, …) o un campo personalizado de `GET /contact-fields`. Ricky guarda las asociaciones en la plantilla y reemplaza las que tenía, así que las próximas campañas de esa plantilla también las usan. Omite `mappings` para mantener las guardadas; envía `[]` para borrarlas. Un destinatario sin contacto, o con el campo vacío, recibe el texto que enviaste en `template.components`. Un `field_id` de otra organización recibe `404 not_found` con `param: "mappings"`.
+
 ## 2. Elige la audiencia
 
 * `{ "type": "filter", "tag_id": "…", "lifecycle_stage": "customer", "query": "…" }`: todos los contactos que cumplen todos los filtros que envíes. Sin filtros, todos los contactos.
@@ -25,6 +37,17 @@ Una campaña envía una plantilla aprobada de WhatsApp a muchos números, como *
 * `{ "type": "phones", "phones": ["+50760001234"] }`: números con código de país, hasta 2.000.
 
 Ricky fija la lista de destinatarios al crear la campaña. Usa el teléfono de cada contacto, o su número de WhatsApp, omite los contactos sin número y envía una vez por número, hasta 5.000. Una audiencia sin ningún número recibe `422 rule_violation`.
+
+Para saber el tamaño antes de crearla, envía la misma `audience` a `POST /broadcasts/preview`:
+
+```bash
+curl https://getricky.ai/api/v1/broadcasts/preview \
+  -H "Authorization: Bearer $RICKY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "audience": { "type": "filter", "tag_id": "5a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d" } }'
+```
+
+Responde `{ "data": { "recipients": 118, "skipped": 3 } }`: los números a los que iría ahora y los contactos o números que quedan fuera por no tener un número de WhatsApp válido. No crea nada, y la lista puede cambiar antes de que crees la campaña.
 
 ## 3. Envía ahora o programa
 

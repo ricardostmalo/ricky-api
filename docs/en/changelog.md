@@ -23,6 +23,12 @@ This page records changes to the API. A breaking change only ships in a new path
 * **New `data` fields.** `broadcast_id`, `template_id`, `workflow_id`, `workflow_execution_id` and `knowledge_file_id`, each only on its events.
 * **More event types per webhook.** A webhook accepts all 19 event types at once.
 
+**Broadcast audiences and scheduled workflows.** Compatible changes to v1.
+
+* **Personalized broadcasts.** `POST /broadcasts` accepts `mappings`, which fill template variables from each recipient's contact fields and are saved on the template, as in the composer. See [Broadcasts](./broadcasts.md).
+* **Audience preview.** `POST /broadcasts/preview` counts the numbers an audience reaches without creating a broadcast. It requires `broadcasts:read`.
+* **Scheduled workflows.** `POST /workflows/{workflow_id}/header-media` sets the header file of a scheduled workflow. `GET /workflows/{workflow_id}/reminders/preview` and `GET /workflows/{workflow_id}/reminders/history` show what an Odoo appointment reminder workflow will send on a coming day and what it sent on a past one. See [Workflows](./workflows.md#scheduled-workflows).
+
 **Broadcasts.** Compatible changes to v1.
 
 * **Broadcasts.** `GET /broadcasts`, `POST /broadcasts` and `GET /broadcasts/{broadcast_id}` list, create and read WhatsApp broadcasts with how many recipients are in each delivery status. A broadcast sends now or at `scheduled_at`, up to 7 days ahead, to a contact filter, chosen contacts or phone numbers. See [Broadcasts](./broadcasts.md).
