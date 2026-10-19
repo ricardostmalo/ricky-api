@@ -356,6 +356,38 @@ class Channel(TypedDict):
     """
 
 
+class ConversationHandoff(TypedDict):
+    """
+    A request for a person to take over from the AI agent, not resolved yet.
+    """
+
+    id: str
+    """
+    Handoff ID.
+    """
+    status: Literal["requested", "assigned"]
+    """
+    `requested` until a member takes it; `assigned` once someone is responsible.
+    """
+    requested_by: Literal["agent", "operator"]
+    """
+    Whether the AI agent or a member asked for it.
+    """
+    reason: Literal["customer_requested", "low_confidence", "manual_takeover", "out_of_scope", "sensitive", "other"]
+    """
+    Why the conversation needs a person.
+    """
+    summary: str
+    """
+    What the person taking over needs to know.
+    """
+    assigned_user_id: Optional[str]
+    requested_at: str
+    """
+    When it was requested.
+    """
+
+
 class ConversationChannel(TypedDict):
     id: str
     """
@@ -417,6 +449,14 @@ class Conversation(TypedDict):
     last_activity_preview: Optional[str]
     """
     Text of the latest message.
+    """
+    unread: bool
+    """
+    Whether it has messages the team has not read.
+    """
+    active_handoff: Optional[ConversationHandoff]
+    """
+    The handoff to a person waiting to be resolved; null when there is none.
     """
 
 
@@ -1005,6 +1045,25 @@ class QuickReply(TypedDict):
     body: str
     """
     Text inserted into the message.
+    """
+
+
+class ConversationAssignmentResult(TypedDict):
+    """
+    What a bulk assignment did to one conversation.
+    """
+
+    conversation_id: str
+    """
+    Conversation ID.
+    """
+    assigned_user_id: str
+    """
+    Member it was to be assigned to.
+    """
+    status: Literal["assigned", "not_found", "failed"]
+    """
+    `assigned`; `not_found` when the organization has no such conversation; `failed` when Ricky could not save it, so retry that conversation.
     """
 
 
@@ -3067,6 +3126,39 @@ class AssignConversationAgent(TypedDict, closed=True):
     """
 
 
+class ResolveHandoff(TypedDict, closed=True):
+    """
+    How the handoff ends.
+    """
+
+    resolution: Literal["returned_to_ai", "stayed_with_human"]
+    """
+    `returned_to_ai` gives the conversation back to the AI agent that asked for the handoff and unassigns the member; `stayed_with_human` leaves it with the member.
+    """
+
+
+class AssignConversationsAssignment(TypedDict, closed=True):
+    conversation_id: str
+    """
+    Conversation to assign.
+    """
+    assigned_user_id: str
+    """
+    Member who becomes responsible for it.
+    """
+
+
+class AssignConversations(TypedDict, closed=True):
+    """
+    Makes members responsible for many conversations at once. Each member also becomes the contact's owner.
+    """
+
+    assignments: List[AssignConversationsAssignment]
+    """
+    Up to 100 conversations, each once, with the member for each.
+    """
+
+
 class CreateContact(TypedDict, closed=True):
     """
     A contact needs at least a name, a phone or an email.
@@ -3380,6 +3472,10 @@ class SendMessageText(TypedDict, closed=True):
     """
     Message text.
     """
+    reply_to_message_id: NotRequired[str]
+    """
+    Message of this conversation to quote, from `GET /conversations/{conversation_id}/messages`. WhatsApp only.
+    """
 
 
 class SendMessageTemplate(TypedDict, closed=True):
@@ -3398,6 +3494,10 @@ class SendMessageMedia(TypedDict, closed=True):
 
     type: Literal["media"]
     media: MediaMessage
+    reply_to_message_id: NotRequired[str]
+    """
+    Message of this conversation to quote, from `GET /conversations/{conversation_id}/messages`. WhatsApp only.
+    """
 
 
 SendMessage: TypeAlias = Union[SendMessageText, SendMessageTemplate, SendMessageMedia]

@@ -10,6 +10,7 @@ from .types import (
     AgentOptions,
     AssignConversation,
     AssignConversationAgent,
+    AssignConversations,
     Broadcast,
     BroadcastRecipient,
     BroadcastsReport,
@@ -22,6 +23,7 @@ from .types import (
     ContactField,
     ContactTagChange,
     Conversation,
+    ConversationAssignmentResult,
     ConversationsReport,
     CreateAgent,
     CreateBroadcast,
@@ -48,6 +50,7 @@ from .types import (
     MessagesReport,
     QuickReply,
     ResolutionsReport,
+    ResolveHandoff,
     ResponsesReport,
     RotateWebhookSecret,
     Send,
@@ -247,10 +250,17 @@ class SyncOperations:
         cursor: Optional[str] = None,
         status: Optional[Literal["all", "open", "closed"]] = None,
         assigned_user_id: Optional[str] = None,
+        agent_id: Optional[str] = None,
+        unassigned: Optional[Literal["true", "false"]] = None,
+        channel_id: Optional[str] = None,
+        tag_id: Optional[str] = None,
+        unread: Optional[Literal["true", "false"]] = None,
+        pending_handoff: Optional[Literal["true", "false"]] = None,
+        last_message_from: Optional[Literal["customer"]] = None,
     ) -> Page[Conversation]:
         """List conversations.
 
-        Latest activity first.
+        Latest activity first. The filters are the inbox's and combine with each other; send the same ones with `cursor`.
 
         Scope: `conversations:read`.
 
@@ -258,11 +268,18 @@ class SyncOperations:
             page_size: Items per page.
             cursor: `next_cursor` from the previous page. Use it unchanged.
             assigned_user_id: Only conversations assigned to this member.
+            agent_id: Only conversations this AI agent answers and no member is assigned to.
+            unassigned: `true`: only conversations with no member and no AI agent assigned.
+            channel_id: Only conversations on this channel, including earlier connections of the same number or account. See `GET /channels`.
+            tag_id: Only conversations whose contact has this tag.
+            unread: `true`: only conversations with messages the team has not read.
+            pending_handoff: `true`: only conversations with a handoff to a person not resolved yet.
+            last_message_from: `customer`: only conversations whose latest message came from the contact.
         """
         return cast(Page[Conversation], self._request(
             "GET",
             "/conversations",
-            query={"page_size": page_size, "cursor": cursor, "status": status, "assigned_user_id": assigned_user_id},
+            query={"page_size": page_size, "cursor": cursor, "status": status, "assigned_user_id": assigned_user_id, "agent_id": agent_id, "unassigned": unassigned, "channel_id": channel_id, "tag_id": tag_id, "unread": unread, "pending_handoff": pending_handoff, "last_message_from": last_message_from},
         ))
 
     def start_conversation(
@@ -1569,6 +1586,29 @@ class SyncOperations:
             idempotency_key=idempotency_key,
         ))
 
+    def mark_conversation_unread(
+        self,
+        conversation_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Conversation]:
+        """Mark a conversation unread.
+
+        Marks it unread for the whole team, as the inbox does. The contact sees nothing. Send no body.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Conversation], self._request(
+            "DELETE",
+            "/conversations/{conversation_id}/read",
+            path_parameters={"conversation_id": conversation_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
     def search_messages(
         self,
         *,
@@ -1949,6 +1989,71 @@ class SyncOperations:
             query={"page_size": page_size, "cursor": cursor, "status": status},
         ))
 
+    def assign_conversations(
+        self,
+        body: AssignConversations,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Page[ConversationAssignmentResult]:
+        """Assign many conversations.
+
+        Makes members responsible for up to 100 conversations, as assigning each one does, and answers one result per conversation, in order. Each member also becomes the contact's owner. A member outside the organization refuses the whole request before any conversation changes.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Page[ConversationAssignmentResult], self._request(
+            "POST",
+            "/conversations/assignments",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def resolve_conversation_handoff(
+        self,
+        conversation_id: str,
+        body: ResolveHandoff,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Conversation]:
+        """Resolve a handoff.
+
+        Ends the conversation's `active_handoff` as the inbox does: back to the AI agent that asked for it, or with the member. A conversation with no handoff waiting answers `422 rule_violation`, and so does `returned_to_ai` when no AI agent asked for it.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Conversation], self._request(
+            "POST",
+            "/conversations/{conversation_id}/handoff/resolve",
+            path_parameters={"conversation_id": conversation_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def fetch_message_media(
+        self,
+        conversation_id: str,
+        message_id: str,
+    ) -> Resource[Message]:
+        """Fetch a message's file.
+
+        Ricky stores the file of each message it receives in the background, and `media.url` is null until it has. This stores it now from the provider and answers the message with its `url`; a file already stored answers at once. A message without a received file, or whose file the provider says expired (it keeps them about 30 days), answers `422 rule_violation`; other provider failures answer `502 upstream_error`. Send no body.
+
+        Scope: `conversations:read`.
+        """
+        return cast(Resource[Message], self._request(
+            "POST",
+            "/conversations/{conversation_id}/messages/{message_id}/media",
+            path_parameters={"conversation_id": conversation_id, "message_id": message_id},
+        ))
+
 
 class AsyncOperations:
     """Every operation of the Ricky API, awaitable."""
@@ -2121,10 +2226,17 @@ class AsyncOperations:
         cursor: Optional[str] = None,
         status: Optional[Literal["all", "open", "closed"]] = None,
         assigned_user_id: Optional[str] = None,
+        agent_id: Optional[str] = None,
+        unassigned: Optional[Literal["true", "false"]] = None,
+        channel_id: Optional[str] = None,
+        tag_id: Optional[str] = None,
+        unread: Optional[Literal["true", "false"]] = None,
+        pending_handoff: Optional[Literal["true", "false"]] = None,
+        last_message_from: Optional[Literal["customer"]] = None,
     ) -> Page[Conversation]:
         """List conversations.
 
-        Latest activity first.
+        Latest activity first. The filters are the inbox's and combine with each other; send the same ones with `cursor`.
 
         Scope: `conversations:read`.
 
@@ -2132,11 +2244,18 @@ class AsyncOperations:
             page_size: Items per page.
             cursor: `next_cursor` from the previous page. Use it unchanged.
             assigned_user_id: Only conversations assigned to this member.
+            agent_id: Only conversations this AI agent answers and no member is assigned to.
+            unassigned: `true`: only conversations with no member and no AI agent assigned.
+            channel_id: Only conversations on this channel, including earlier connections of the same number or account. See `GET /channels`.
+            tag_id: Only conversations whose contact has this tag.
+            unread: `true`: only conversations with messages the team has not read.
+            pending_handoff: `true`: only conversations with a handoff to a person not resolved yet.
+            last_message_from: `customer`: only conversations whose latest message came from the contact.
         """
         return cast(Page[Conversation], await self._request(
             "GET",
             "/conversations",
-            query={"page_size": page_size, "cursor": cursor, "status": status, "assigned_user_id": assigned_user_id},
+            query={"page_size": page_size, "cursor": cursor, "status": status, "assigned_user_id": assigned_user_id, "agent_id": agent_id, "unassigned": unassigned, "channel_id": channel_id, "tag_id": tag_id, "unread": unread, "pending_handoff": pending_handoff, "last_message_from": last_message_from},
         ))
 
     async def start_conversation(
@@ -3443,6 +3562,29 @@ class AsyncOperations:
             idempotency_key=idempotency_key,
         ))
 
+    async def mark_conversation_unread(
+        self,
+        conversation_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Conversation]:
+        """Mark a conversation unread.
+
+        Marks it unread for the whole team, as the inbox does. The contact sees nothing. Send no body.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Conversation], await self._request(
+            "DELETE",
+            "/conversations/{conversation_id}/read",
+            path_parameters={"conversation_id": conversation_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
     async def search_messages(
         self,
         *,
@@ -3821,4 +3963,69 @@ class AsyncOperations:
             "/broadcasts/{broadcast_id}/recipients",
             path_parameters={"broadcast_id": broadcast_id},
             query={"page_size": page_size, "cursor": cursor, "status": status},
+        ))
+
+    async def assign_conversations(
+        self,
+        body: AssignConversations,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Page[ConversationAssignmentResult]:
+        """Assign many conversations.
+
+        Makes members responsible for up to 100 conversations, as assigning each one does, and answers one result per conversation, in order. Each member also becomes the contact's owner. A member outside the organization refuses the whole request before any conversation changes.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Page[ConversationAssignmentResult], await self._request(
+            "POST",
+            "/conversations/assignments",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def resolve_conversation_handoff(
+        self,
+        conversation_id: str,
+        body: ResolveHandoff,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Conversation]:
+        """Resolve a handoff.
+
+        Ends the conversation's `active_handoff` as the inbox does: back to the AI agent that asked for it, or with the member. A conversation with no handoff waiting answers `422 rule_violation`, and so does `returned_to_ai` when no AI agent asked for it.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Conversation], await self._request(
+            "POST",
+            "/conversations/{conversation_id}/handoff/resolve",
+            path_parameters={"conversation_id": conversation_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def fetch_message_media(
+        self,
+        conversation_id: str,
+        message_id: str,
+    ) -> Resource[Message]:
+        """Fetch a message's file.
+
+        Ricky stores the file of each message it receives in the background, and `media.url` is null until it has. This stores it now from the provider and answers the message with its `url`; a file already stored answers at once. A message without a received file, or whose file the provider says expired (it keeps them about 30 days), answers `422 rule_violation`; other provider failures answer `502 upstream_error`. Send no body.
+
+        Scope: `conversations:read`.
+        """
+        return cast(Resource[Message], await self._request(
+            "POST",
+            "/conversations/{conversation_id}/messages/{message_id}/media",
+            path_parameters={"conversation_id": conversation_id, "message_id": message_id},
         ))

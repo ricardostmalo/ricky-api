@@ -1075,7 +1075,7 @@
           "Conversations"
         ],
         "summary": "List conversations",
-        "description": "Latest activity first.\n\nScope: `conversations:read`.",
+        "description": "Latest activity first. The filters are the inbox's and combine with each other; send the same ones with `cursor`.\n\nScope: `conversations:read`.",
         "parameters": [
           {
             "name": "page_size",
@@ -1121,6 +1121,87 @@
             "schema": {
               "type": "string",
               "format": "uuid"
+            }
+          },
+          {
+            "name": "agent_id",
+            "in": "query",
+            "required": false,
+            "description": "Only conversations this AI agent answers and no member is assigned to.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "unassigned",
+            "in": "query",
+            "required": false,
+            "description": "`true`: only conversations with no member and no AI agent assigned.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          },
+          {
+            "name": "channel_id",
+            "in": "query",
+            "required": false,
+            "description": "Only conversations on this channel, including earlier connections of the same number or account. See `GET /channels`.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "tag_id",
+            "in": "query",
+            "required": false,
+            "description": "Only conversations whose contact has this tag.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "unread",
+            "in": "query",
+            "required": false,
+            "description": "`true`: only conversations with messages the team has not read.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          },
+          {
+            "name": "pending_handoff",
+            "in": "query",
+            "required": false,
+            "description": "`true`: only conversations with a handoff to a person not resolved yet.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          },
+          {
+            "name": "last_message_from",
+            "in": "query",
+            "required": false,
+            "description": "`customer`: only conversations whose latest message came from the contact.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "customer"
+              ]
             }
           }
         ],
@@ -9739,6 +9820,133 @@
             }
           }
         }
+      },
+      "delete": {
+        "operationId": "markConversationUnread",
+        "tags": [
+          "Conversations"
+        ],
+        "summary": "Mark a conversation unread",
+        "description": "Marks it unread for the whole team, as the inbox does. The contact sees nothing. Send no body.\n\nScope: `conversations:write`.",
+        "parameters": [
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "description": "Conversation ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Conversation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/messages/search": {
@@ -12275,6 +12483,471 @@
           }
         }
       }
+    },
+    "/conversations/assignments": {
+      "post": {
+        "operationId": "assignConversations",
+        "tags": [
+          "Conversations"
+        ],
+        "summary": "Assign many conversations",
+        "description": "Makes members responsible for up to 100 conversations, as assigning each one does, and answers one result per conversation, in order. Each member also becomes the contact's owner. A member outside the organization refuses the whole request before any conversation changes.\n\nScope: `conversations:write`.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignConversations"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "next_cursor"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ConversationAssignmentResult"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Pass as `cursor` for the next page; null on the last page."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/conversations/{conversation_id}/handoff/resolve": {
+      "post": {
+        "operationId": "resolveConversationHandoff",
+        "tags": [
+          "Conversations"
+        ],
+        "summary": "Resolve a handoff",
+        "description": "Ends the conversation's `active_handoff` as the inbox does: back to the AI agent that asked for it, or with the member. A conversation with no handoff waiting answers `422 rule_violation`, and so does `returned_to_ai` when no AI agent asked for it.\n\nScope: `conversations:write`.",
+        "parameters": [
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "description": "Conversation ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolveHandoff"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Conversation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/conversations/{conversation_id}/messages/{message_id}/media": {
+      "post": {
+        "operationId": "fetchMessageMedia",
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Fetch a message's file",
+        "description": "Ricky stores the file of each message it receives in the background, and `media.url` is null until it has. This stores it now from the provider and answers the message with its `url`; a file already stored answers at once. A message without a received file, or whose file the provider says expired (it keeps them about 30 days), answers `422 rule_violation`; other provider failures answer `502 upstream_error`. Send no body.\n\nScope: `conversations:read`.",
+        "parameters": [
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "description": "Conversation ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "message_id",
+            "in": "path",
+            "required": true,
+            "description": "Message ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "webhooks": {
@@ -13741,6 +14414,91 @@
         ],
         "description": "A connected messaging channel."
       },
+      "ConversationHandoff": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Handoff ID.",
+            "examples": [
+              "2e3f4a5b-6c7d-4e8f-9a0b-1c2d3e4f5a6b"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "requested",
+              "assigned"
+            ],
+            "description": "`requested` until a member takes it; `assigned` once someone is responsible."
+          },
+          "requested_by": {
+            "type": "string",
+            "enum": [
+              "agent",
+              "operator"
+            ],
+            "description": "Whether the AI agent or a member asked for it."
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "customer_requested",
+              "low_confidence",
+              "manual_takeover",
+              "out_of_scope",
+              "sensitive",
+              "other"
+            ],
+            "description": "Why the conversation needs a person.",
+            "examples": [
+              "customer_requested"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "description": "What the person taking over needs to know.",
+            "examples": [
+              "La clienta pide hablar con alguien sobre un reembolso."
+            ]
+          },
+          "assigned_user_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "description": "Member responsible for it.",
+                "examples": [
+                  "2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When it was requested.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "requested_by",
+          "reason",
+          "summary",
+          "assigned_user_id",
+          "requested_at"
+        ],
+        "description": "A request for a person to take over from the AI agent, not resolved yet."
+      },
       "Conversation": {
         "type": "object",
         "properties": {
@@ -13951,6 +14709,21 @@
               "string",
               "null"
             ]
+          },
+          "unread": {
+            "type": "boolean",
+            "description": "Whether it has messages the team has not read."
+          },
+          "active_handoff": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConversationHandoff"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The handoff to a person waiting to be resolved; null when there is none."
           }
         },
         "required": [
@@ -13965,7 +14738,9 @@
           "opened_at",
           "closed_at",
           "last_activity_at",
-          "last_activity_preview"
+          "last_activity_preview",
+          "unread",
+          "active_handoff"
         ],
         "description": "One contact talking to the organization on one channel."
       },
@@ -15512,6 +16287,42 @@
           "body"
         ],
         "description": "A saved answer operators insert into a message."
+      },
+      "ConversationAssignmentResult": {
+        "type": "object",
+        "properties": {
+          "conversation_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Conversation ID.",
+            "examples": [
+              "9b2e4c61-7a3f-4d18-b5c2-6e0f1a2b3c4d"
+            ]
+          },
+          "assigned_user_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Member it was to be assigned to.",
+            "examples": [
+              "2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "assigned",
+              "not_found",
+              "failed"
+            ],
+            "description": "`assigned`; `not_found` when the organization has no such conversation; `failed` when Ricky could not save it, so retry that conversation."
+          }
+        },
+        "required": [
+          "conversation_id",
+          "assigned_user_id",
+          "status"
+        ],
+        "description": "What a bulk assignment did to one conversation."
       },
       "KnowledgeLocation": {
         "type": "object",
@@ -19815,6 +20626,75 @@
           }
         ]
       },
+      "ResolveHandoff": {
+        "type": "object",
+        "properties": {
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "returned_to_ai",
+              "stayed_with_human"
+            ],
+            "description": "`returned_to_ai` gives the conversation back to the AI agent that asked for the handoff and unassigns the member; `stayed_with_human` leaves it with the member."
+          }
+        },
+        "required": [
+          "resolution"
+        ],
+        "additionalProperties": false,
+        "description": "How the handoff ends.",
+        "examples": [
+          {
+            "resolution": "returned_to_ai"
+          }
+        ]
+      },
+      "AssignConversations": {
+        "type": "object",
+        "properties": {
+          "assignments": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "conversation_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "Conversation to assign."
+                },
+                "assigned_user_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "Member who becomes responsible for it."
+                }
+              },
+              "required": [
+                "conversation_id",
+                "assigned_user_id"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Up to 100 conversations, each once, with the member for each."
+          }
+        },
+        "required": [
+          "assignments"
+        ],
+        "additionalProperties": false,
+        "description": "Makes members responsible for many conversations at once. Each member also becomes the contact's owner.",
+        "examples": [
+          {
+            "assignments": [
+              {
+                "conversation_id": "9b2e4c61-7a3f-4d18-b5c2-6e0f1a2b3c4d",
+                "assigned_user_id": "2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b"
+              }
+            ]
+          }
+        ]
+      },
       "CreateContact": {
         "type": "object",
         "properties": {
@@ -20754,6 +21634,11 @@
                 "minLength": 1,
                 "maxLength": 4096,
                 "description": "Message text."
+              },
+              "reply_to_message_id": {
+                "description": "Message of this conversation to quote, from `GET /conversations/{conversation_id}/messages`. WhatsApp only.",
+                "type": "string",
+                "format": "uuid"
               }
             },
             "required": [
@@ -20788,6 +21673,11 @@
               },
               "media": {
                 "$ref": "#/components/schemas/MediaMessage"
+              },
+              "reply_to_message_id": {
+                "description": "Message of this conversation to quote, from `GET /conversations/{conversation_id}/messages`. WhatsApp only.",
+                "type": "string",
+                "format": "uuid"
               }
             },
             "required": [

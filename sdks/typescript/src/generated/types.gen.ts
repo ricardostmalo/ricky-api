@@ -343,6 +343,37 @@ export type Channel = {
 };
 
 /**
+ * A request for a person to take over from the AI agent, not resolved yet.
+ */
+export type ConversationHandoff = {
+    /**
+     * Handoff ID.
+     */
+    id: string;
+    /**
+     * `requested` until a member takes it; `assigned` once someone is responsible.
+     */
+    status: 'requested' | 'assigned';
+    /**
+     * Whether the AI agent or a member asked for it.
+     */
+    requested_by: 'agent' | 'operator';
+    /**
+     * Why the conversation needs a person.
+     */
+    reason: 'customer_requested' | 'low_confidence' | 'manual_takeover' | 'out_of_scope' | 'sensitive' | 'other';
+    /**
+     * What the person taking over needs to know.
+     */
+    summary: string;
+    assigned_user_id: string | null;
+    /**
+     * When it was requested.
+     */
+    requested_at: string;
+};
+
+/**
  * One contact talking to the organization on one channel.
  */
 export type Conversation = {
@@ -399,6 +430,14 @@ export type Conversation = {
      * Text of the latest message.
      */
     last_activity_preview: string | null;
+    /**
+     * Whether it has messages the team has not read.
+     */
+    unread: boolean;
+    /**
+     * The handoff to a person waiting to be resolved; null when there is none.
+     */
+    active_handoff: ConversationHandoff | null;
 };
 
 /**
@@ -937,6 +976,24 @@ export type QuickReply = {
      * Text inserted into the message.
      */
     body: string;
+};
+
+/**
+ * What a bulk assignment did to one conversation.
+ */
+export type ConversationAssignmentResult = {
+    /**
+     * Conversation ID.
+     */
+    conversation_id: string;
+    /**
+     * Member it was to be assigned to.
+     */
+    assigned_user_id: string;
+    /**
+     * `assigned`; `not_found` when the organization has no such conversation; `failed` when Ricky could not save it, so retry that conversation.
+     */
+    status: 'assigned' | 'not_found' | 'failed';
 };
 
 /**
@@ -2739,6 +2796,35 @@ export type AssignConversationAgent = {
 };
 
 /**
+ * How the handoff ends.
+ */
+export type ResolveHandoff = {
+    /**
+     * `returned_to_ai` gives the conversation back to the AI agent that asked for the handoff and unassigns the member; `stayed_with_human` leaves it with the member.
+     */
+    resolution: 'returned_to_ai' | 'stayed_with_human';
+};
+
+/**
+ * Makes members responsible for many conversations at once. Each member also becomes the contact's owner.
+ */
+export type AssignConversations = {
+    /**
+     * Up to 100 conversations, each once, with the member for each.
+     */
+    assignments: Array<{
+        /**
+         * Conversation to assign.
+         */
+        conversation_id: string;
+        /**
+         * Member who becomes responsible for it.
+         */
+        assigned_user_id: string;
+    }>;
+};
+
+/**
  * A contact needs at least a name, a phone or an email.
  */
 export type CreateContact = {
@@ -3016,12 +3102,20 @@ export type SendMessage = {
      * Message text.
      */
     text: string;
+    /**
+     * Message of this conversation to quote, from `GET /conversations/{conversation_id}/messages`. WhatsApp only.
+     */
+    reply_to_message_id?: string;
 } | {
     type: 'template';
     template: TemplateMessage;
 } | {
     type: 'media';
     media: MediaMessage;
+    /**
+     * Message of this conversation to quote, from `GET /conversations/{conversation_id}/messages`. WhatsApp only.
+     */
+    reply_to_message_id?: string;
 };
 
 /**
@@ -4677,6 +4771,34 @@ export type ListConversationsData = {
          * Only conversations assigned to this member.
          */
         assigned_user_id?: string;
+        /**
+         * Only conversations this AI agent answers and no member is assigned to.
+         */
+        agent_id?: string;
+        /**
+         * `true`: only conversations with no member and no AI agent assigned.
+         */
+        unassigned?: 'true' | 'false';
+        /**
+         * Only conversations on this channel, including earlier connections of the same number or account. See `GET /channels`.
+         */
+        channel_id?: string;
+        /**
+         * Only conversations whose contact has this tag.
+         */
+        tag_id?: string;
+        /**
+         * `true`: only conversations with messages the team has not read.
+         */
+        unread?: 'true' | 'false';
+        /**
+         * `true`: only conversations with a handoff to a person not resolved yet.
+         */
+        pending_handoff?: 'true' | 'false';
+        /**
+         * `customer`: only conversations whose latest message came from the contact.
+         */
+        last_message_from?: 'customer';
     };
     url: '/conversations';
 };
@@ -8543,6 +8665,70 @@ export type ChangeConversationTagsResponses = {
 
 export type ChangeConversationTagsResponse = ChangeConversationTagsResponses[keyof ChangeConversationTagsResponses];
 
+export type MarkConversationUnreadData = {
+    body?: never;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Conversation ID.
+         */
+        conversation_id: string;
+    };
+    query?: never;
+    url: '/conversations/{conversation_id}/read';
+};
+
+export type MarkConversationUnreadErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type MarkConversationUnreadError = MarkConversationUnreadErrors[keyof MarkConversationUnreadErrors];
+
+export type MarkConversationUnreadResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Conversation;
+    };
+};
+
+export type MarkConversationUnreadResponse = MarkConversationUnreadResponses[keyof MarkConversationUnreadResponses];
+
 export type MarkConversationReadData = {
     body?: never;
     headers?: {
@@ -9774,6 +9960,217 @@ export type ListBroadcastRecipientsResponses = {
 };
 
 export type ListBroadcastRecipientsResponse = ListBroadcastRecipientsResponses[keyof ListBroadcastRecipientsResponses];
+
+export type AssignConversationsData = {
+    body: AssignConversations;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/conversations/assignments';
+};
+
+export type AssignConversationsErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type AssignConversationsError = AssignConversationsErrors[keyof AssignConversationsErrors];
+
+export type AssignConversationsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<ConversationAssignmentResult>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type AssignConversationsResponse = AssignConversationsResponses[keyof AssignConversationsResponses];
+
+export type ResolveConversationHandoffData = {
+    body: ResolveHandoff;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Conversation ID.
+         */
+        conversation_id: string;
+    };
+    query?: never;
+    url: '/conversations/{conversation_id}/handoff/resolve';
+};
+
+export type ResolveConversationHandoffErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ResolveConversationHandoffError = ResolveConversationHandoffErrors[keyof ResolveConversationHandoffErrors];
+
+export type ResolveConversationHandoffResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Conversation;
+    };
+};
+
+export type ResolveConversationHandoffResponse = ResolveConversationHandoffResponses[keyof ResolveConversationHandoffResponses];
+
+export type FetchMessageMediaData = {
+    body?: never;
+    path: {
+        /**
+         * Conversation ID.
+         */
+        conversation_id: string;
+        /**
+         * Message ID.
+         */
+        message_id: string;
+    };
+    query?: never;
+    url: '/conversations/{conversation_id}/messages/{message_id}/media';
+};
+
+export type FetchMessageMediaErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type FetchMessageMediaError = FetchMessageMediaErrors[keyof FetchMessageMediaErrors];
+
+export type FetchMessageMediaResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Message;
+    };
+};
+
+export type FetchMessageMediaResponse = FetchMessageMediaResponses[keyof FetchMessageMediaResponses];
 
 export type WebhookMessageReceivedWebhookPayload = WebhookEvent;
 

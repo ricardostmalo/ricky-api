@@ -3,6 +3,7 @@
 /** `METHOD /path/{template}` of every write that accepts an `Idempotency-Key` header. */
 export const idempotentOperations: ReadonlySet<string> = new Set([
     'DELETE /contact-fields/{field_id}',
+    'DELETE /conversations/{conversation_id}/read',
     'DELETE /quick-replies/{quick_reply_id}',
     'DELETE /tags/{tag_id}',
     'DELETE /templates/{template_id}',
@@ -26,7 +27,9 @@ export const idempotentOperations: ReadonlySet<string> = new Set([
     'POST /contacts/tags',
     'POST /contacts/{contact_id}/notes',
     'POST /conversations',
+    'POST /conversations/assignments',
     'POST /conversations/{conversation_id}/close',
+    'POST /conversations/{conversation_id}/handoff/resolve',
     'POST /conversations/{conversation_id}/messages',
     'POST /conversations/{conversation_id}/read',
     'POST /conversations/{conversation_id}/reopen',

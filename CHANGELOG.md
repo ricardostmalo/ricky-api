@@ -6,6 +6,15 @@ This page records changes to the API. A breaking change only ships in a new path
 
 ## October 19, 2026
 
+**Inbox.** Compatible changes to v1.
+
+- **Inbox filters.** `GET /conversations` accepts `channel_id`, `tag_id`, `unread`, `pending_handoff`, `last_message_from`, `agent_id` and `unassigned`. Each conversation carries `unread` and `active_handoff`. See [Inbox](https://getricky.ai/en/docs/api/inbox).
+- **Bulk assignment.** `POST /conversations/assignments` assigns up to 100 conversations and answers one result per conversation.
+- **Handoffs.** `POST /conversations/{conversation_id}/handoff/resolve` gives the conversation back to the AI agent or leaves it with the member.
+- **Unread.** `DELETE /conversations/{conversation_id}/read` marks a conversation unread.
+- **Quote a message.** `POST /conversations/{conversation_id}/messages` accepts `reply_to_message_id` on WhatsApp text and files.
+- **Received files.** `POST /conversations/{conversation_id}/messages/{message_id}/media` stores the file of a received message now and answers its `url`.
+
 **Broadcasts.** Compatible changes to v1.
 
 - **Broadcasts.** `GET /broadcasts`, `POST /broadcasts` and `GET /broadcasts/{broadcast_id}` list, create and read WhatsApp broadcasts with how many recipients are in each delivery status. A broadcast sends now or at `scheduled_at`, up to 7 days ahead, to a contact filter, chosen contacts or phone numbers. See [Broadcasts](https://getricky.ai/en/docs/api/broadcasts).

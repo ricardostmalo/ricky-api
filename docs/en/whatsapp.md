@@ -66,10 +66,10 @@ Meta allows edits only for `APPROVED`, `REJECTED` or `PAUSED` templates, and lim
 
 Each number carries what Ricky's WhatsApp settings show:
 
-| Field              | What it is                                                          |
-| ------------------ | ------------------------------------------------------------------- |
-| `status`           | The number's status at Meta, for example `CONNECTED`.               |
-| `messaging_health` | Whether Meta lets it send: `available`, `limited` or `blocked`.     |
-| `quality_rating`   | Quality at Meta: `GREEN`, `YELLOW`, `RED` or `UNKNOWN`.             |
-| `messaging_limit`  | Messaging limit at Meta, for example `TIER_1K` or `TIER_UNLIMITED`. |
-| `last_synced_at`   | When Ricky last read these details from Meta.                       |
+| Field              | What it is                                                                                           |
+| ------------------ | ---------------------------------------------------------------------------------------------------- |
+| `status`           | The number's status at Meta, for example `CONNECTED`.                                                |
+| `messaging_health` | Whether Meta lets it send: `available`, `limited` or `blocked`.                                      |
+| `quality_rating`   | Quality at Meta: `green`, `yellow`, `red`, `not_yet_determined` or `unknown`.                        |
+| `messaging_limit`  | Messaging limit at Meta, for example `TIER_1K` or `TIER_UNLIMITED`; `UNKNOWN` until Meta reports it. |
+| `last_synced_at`   | When Ricky last read these details from Meta.                                                        |

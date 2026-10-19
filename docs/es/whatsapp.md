@@ -66,10 +66,10 @@ Meta solo permite editar plantillas `APPROVED`, `REJECTED` o `PAUSED`, y limita 
 
 Cada número trae lo mismo que muestra la configuración de WhatsApp en Ricky:
 
-| Campo              | Qué es                                                                |
-| ------------------ | --------------------------------------------------------------------- |
-| `status`           | Estado del número en Meta, por ejemplo `CONNECTED`.                   |
-| `messaging_health` | Si Meta deja enviar: `available`, `limited` o `blocked`.              |
-| `quality_rating`   | Calidad en Meta: `GREEN`, `YELLOW`, `RED` o `UNKNOWN`.                |
-| `messaging_limit`  | Límite de mensajes en Meta, por ejemplo `TIER_1K` o `TIER_UNLIMITED`. |
-| `last_synced_at`   | Cuándo Ricky leyó estos datos de Meta por última vez.                 |
+| Campo              | Qué es                                                                                                     |
+| ------------------ | ---------------------------------------------------------------------------------------------------------- |
+| `status`           | Estado del número en Meta, por ejemplo `CONNECTED`.                                                        |
+| `messaging_health` | Si Meta deja enviar: `available`, `limited` o `blocked`.                                                   |
+| `quality_rating`   | Calidad en Meta: `green`, `yellow`, `red`, `not_yet_determined` o `unknown`.                               |
+| `messaging_limit`  | Límite de mensajes en Meta, por ejemplo `TIER_1K` o `TIER_UNLIMITED`; `UNKNOWN` hasta que Meta lo informe. |
+| `last_synced_at`   | Cuándo Ricky leyó estos datos de Meta por última vez.                                                      |
