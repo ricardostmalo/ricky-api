@@ -2,7 +2,7 @@
 
 import { client } from './client.gen.js';
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client/index.js';
-import type { ActivateWorkflowData, ActivateWorkflowErrors, ActivateWorkflowResponses, AddContactNoteData, AddContactNoteErrors, AddContactNoteResponses, ArchiveAgentData, ArchiveAgentErrors, ArchiveAgentResponses, AssignConversationAgentData, AssignConversationAgentErrors, AssignConversationAgentResponses, AssignConversationData, AssignConversationErrors, AssignConversationResponses, CloseConversationData, CloseConversationErrors, CloseConversationResponses, CompleteKnowledgeFileData, CompleteKnowledgeFileErrors, CompleteKnowledgeFileResponses, CreateAgentData, CreateAgentErrors, CreateAgentResponses, CreateContactData, CreateContactErrors, CreateContactResponses, CreateKnowledgeContactData, CreateKnowledgeContactErrors, CreateKnowledgeContactResponses, CreateKnowledgeFileData, CreateKnowledgeFileErrors, CreateKnowledgeFileResponses, CreateKnowledgeLocationData, CreateKnowledgeLocationErrors, CreateKnowledgeLocationResponses, CreateTagData, CreateTagErrors, CreateTagResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, CreateWorkflowData, CreateWorkflowErrors, CreateWorkflowResponses, DeleteKnowledgeContactData, DeleteKnowledgeContactErrors, DeleteKnowledgeContactResponses, DeleteKnowledgeFileData, DeleteKnowledgeFileErrors, DeleteKnowledgeFileResponses, DeleteKnowledgeLocationData, DeleteKnowledgeLocationErrors, DeleteKnowledgeLocationResponses, DeleteWorkflowData, DeleteWorkflowErrors, DeleteWorkflowResponses, DisableWebhookData, DisableWebhookErrors, DisableWebhookResponses, GetAdsReportData, GetAdsReportErrors, GetAdsReportResponses, GetAgentData, GetAgentErrors, GetAgentOptionsData, GetAgentOptionsErrors, GetAgentOptionsResponses, GetAgentResponses, GetBroadcastsReportData, GetBroadcastsReportErrors, GetBroadcastsReportResponses, GetContactData, GetContactErrors, GetContactResponses, GetConversationData, GetConversationErrors, GetConversationResponses, GetConversationsReportData, GetConversationsReportErrors, GetConversationsReportResponses, GetDashboardReportData, GetDashboardReportErrors, GetDashboardReportResponses, GetKnowledgeContactData, GetKnowledgeContactErrors, GetKnowledgeContactResponses, GetKnowledgeFileData, GetKnowledgeFileErrors, GetKnowledgeFileResponses, GetKnowledgeLocationData, GetKnowledgeLocationErrors, GetKnowledgeLocationResponses, GetMessageData, GetMessageErrors, GetMessageResponses, GetMessagesReportData, GetMessagesReportErrors, GetMessagesReportResponses, GetResolutionsReportData, GetResolutionsReportErrors, GetResolutionsReportResponses, GetResponsesReportData, GetResponsesReportErrors, GetResponsesReportResponses, GetSendData, GetSendErrors, GetSendResponses, GetTeamReportData, GetTeamReportErrors, GetTeamReportResponses, GetWorkflowData, GetWorkflowErrors, GetWorkflowResponses, ListAgentsData, ListAgentsErrors, ListAgentsResponses, ListChannelsData, ListChannelsErrors, ListChannelsResponses, ListContactFieldsData, ListContactFieldsErrors, ListContactFieldsResponses, ListContactsData, ListContactsErrors, ListContactsResponses, ListConversationsData, ListConversationsErrors, ListConversationsResponses, ListKnowledgeContactsData, ListKnowledgeContactsErrors, ListKnowledgeContactsResponses, ListKnowledgeFilesData, ListKnowledgeFilesErrors, ListKnowledgeFilesResponses, ListKnowledgeLocationsData, ListKnowledgeLocationsErrors, ListKnowledgeLocationsResponses, ListMembersData, ListMembersErrors, ListMembersResponses, ListMessagesData, ListMessagesErrors, ListMessagesResponses, ListTagsData, ListTagsErrors, ListTagsResponses, ListTemplatesData, ListTemplatesErrors, ListTemplatesResponses, ListWebhookDeliveriesData, ListWebhookDeliveriesErrors, ListWebhookDeliveriesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, ListWorkflowExecutionsData, ListWorkflowExecutionsErrors, ListWorkflowExecutionsResponses, ListWorkflowsData, ListWorkflowsErrors, ListWorkflowsResponses, PauseWorkflowData, PauseWorkflowErrors, PauseWorkflowResponses, ReopenConversationData, ReopenConversationErrors, ReopenConversationResponses, RetryWebhookDeliveryData, RetryWebhookDeliveryErrors, RetryWebhookDeliveryResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SendMessageData, SendMessageErrors, SendMessageResponses, StartConversationData, StartConversationErrors, StartConversationResponses, TestWebhookData, TestWebhookErrors, TestWebhookResponses, UpdateAgentData, UpdateAgentErrors, UpdateAgentResponses, UpdateContactData, UpdateContactErrors, UpdateContactResponses, UpdateKnowledgeContactData, UpdateKnowledgeContactErrors, UpdateKnowledgeContactResponses, UpdateKnowledgeFileData, UpdateKnowledgeFileErrors, UpdateKnowledgeFileResponses, UpdateKnowledgeLocationData, UpdateKnowledgeLocationErrors, UpdateKnowledgeLocationResponses, UpdateWorkflowData, UpdateWorkflowErrors, UpdateWorkflowResponses } from './types.gen.js';
+import type { ActivateWorkflowData, ActivateWorkflowErrors, ActivateWorkflowResponses, AddContactNoteData, AddContactNoteErrors, AddContactNoteResponses, ArchiveAgentData, ArchiveAgentErrors, ArchiveAgentResponses, AssignConversationAgentData, AssignConversationAgentErrors, AssignConversationAgentResponses, AssignConversationData, AssignConversationErrors, AssignConversationResponses, ChangeContactsTagsData, ChangeContactsTagsErrors, ChangeContactsTagsResponses, ChangeConversationTagsData, ChangeConversationTagsErrors, ChangeConversationTagsResponses, CloseConversationData, CloseConversationErrors, CloseConversationResponses, CompleteKnowledgeFileData, CompleteKnowledgeFileErrors, CompleteKnowledgeFileResponses, CreateAgentData, CreateAgentErrors, CreateAgentResponses, CreateContactData, CreateContactErrors, CreateContactFieldData, CreateContactFieldErrors, CreateContactFieldResponses, CreateContactResponses, CreateKnowledgeContactData, CreateKnowledgeContactErrors, CreateKnowledgeContactResponses, CreateKnowledgeFileData, CreateKnowledgeFileErrors, CreateKnowledgeFileResponses, CreateKnowledgeLocationData, CreateKnowledgeLocationErrors, CreateKnowledgeLocationResponses, CreateQuickReplyData, CreateQuickReplyErrors, CreateQuickReplyResponses, CreateTagData, CreateTagErrors, CreateTagResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, CreateWorkflowData, CreateWorkflowErrors, CreateWorkflowResponses, DeleteContactFieldData, DeleteContactFieldErrors, DeleteContactFieldResponses, DeleteKnowledgeContactData, DeleteKnowledgeContactErrors, DeleteKnowledgeContactResponses, DeleteKnowledgeFileData, DeleteKnowledgeFileErrors, DeleteKnowledgeFileResponses, DeleteKnowledgeLocationData, DeleteKnowledgeLocationErrors, DeleteKnowledgeLocationResponses, DeleteQuickReplyData, DeleteQuickReplyErrors, DeleteQuickReplyResponses, DeleteTagData, DeleteTagErrors, DeleteTagResponses, DeleteWorkflowData, DeleteWorkflowErrors, DeleteWorkflowResponses, DisableWebhookData, DisableWebhookErrors, DisableWebhookResponses, GetAdsReportData, GetAdsReportErrors, GetAdsReportResponses, GetAgentData, GetAgentErrors, GetAgentOptionsData, GetAgentOptionsErrors, GetAgentOptionsResponses, GetAgentResponses, GetBroadcastsReportData, GetBroadcastsReportErrors, GetBroadcastsReportResponses, GetContactData, GetContactErrors, GetContactResponses, GetConversationData, GetConversationErrors, GetConversationResponses, GetConversationsReportData, GetConversationsReportErrors, GetConversationsReportResponses, GetDashboardReportData, GetDashboardReportErrors, GetDashboardReportResponses, GetKnowledgeContactData, GetKnowledgeContactErrors, GetKnowledgeContactResponses, GetKnowledgeFileData, GetKnowledgeFileErrors, GetKnowledgeFileResponses, GetKnowledgeLocationData, GetKnowledgeLocationErrors, GetKnowledgeLocationResponses, GetMessageData, GetMessageErrors, GetMessageResponses, GetMessagesReportData, GetMessagesReportErrors, GetMessagesReportResponses, GetQuickReplyData, GetQuickReplyErrors, GetQuickReplyResponses, GetResolutionsReportData, GetResolutionsReportErrors, GetResolutionsReportResponses, GetResponsesReportData, GetResponsesReportErrors, GetResponsesReportResponses, GetSendData, GetSendErrors, GetSendResponses, GetTeamReportData, GetTeamReportErrors, GetTeamReportResponses, GetWorkflowData, GetWorkflowErrors, GetWorkflowResponses, ListAgentsData, ListAgentsErrors, ListAgentsResponses, ListChannelsData, ListChannelsErrors, ListChannelsResponses, ListContactFieldsData, ListContactFieldsErrors, ListContactFieldsResponses, ListContactsData, ListContactsErrors, ListContactsResponses, ListConversationsData, ListConversationsErrors, ListConversationsResponses, ListKnowledgeContactsData, ListKnowledgeContactsErrors, ListKnowledgeContactsResponses, ListKnowledgeFilesData, ListKnowledgeFilesErrors, ListKnowledgeFilesResponses, ListKnowledgeLocationsData, ListKnowledgeLocationsErrors, ListKnowledgeLocationsResponses, ListMembersData, ListMembersErrors, ListMembersResponses, ListMessagesData, ListMessagesErrors, ListMessagesResponses, ListQuickRepliesData, ListQuickRepliesErrors, ListQuickRepliesResponses, ListTagsData, ListTagsErrors, ListTagsResponses, ListTemplatesData, ListTemplatesErrors, ListTemplatesResponses, ListWebhookDeliveriesData, ListWebhookDeliveriesErrors, ListWebhookDeliveriesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, ListWorkflowExecutionsData, ListWorkflowExecutionsErrors, ListWorkflowExecutionsResponses, ListWorkflowsData, ListWorkflowsErrors, ListWorkflowsResponses, MarkConversationReadData, MarkConversationReadErrors, MarkConversationReadResponses, PauseWorkflowData, PauseWorkflowErrors, PauseWorkflowResponses, ReopenConversationData, ReopenConversationErrors, ReopenConversationResponses, RetryWebhookDeliveryData, RetryWebhookDeliveryErrors, RetryWebhookDeliveryResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SearchConversationsData, SearchConversationsErrors, SearchConversationsResponses, SearchMessagesData, SearchMessagesErrors, SearchMessagesResponses, SendMessageData, SendMessageErrors, SendMessageResponses, StartConversationData, StartConversationErrors, StartConversationResponses, TestWebhookData, TestWebhookErrors, TestWebhookResponses, UpdateAgentData, UpdateAgentErrors, UpdateAgentResponses, UpdateContactData, UpdateContactErrors, UpdateContactResponses, UpdateKnowledgeContactData, UpdateKnowledgeContactErrors, UpdateKnowledgeContactResponses, UpdateKnowledgeFileData, UpdateKnowledgeFileErrors, UpdateKnowledgeFileResponses, UpdateKnowledgeLocationData, UpdateKnowledgeLocationErrors, UpdateKnowledgeLocationResponses, UpdateQuickReplyData, UpdateQuickReplyErrors, UpdateQuickReplyResponses, UpdateTagData, UpdateTagErrors, UpdateTagResponses, UpdateWorkflowData, UpdateWorkflowErrors, UpdateWorkflowResponses } from './types.gen.js';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -162,6 +162,26 @@ export class RickyApi extends HeyApiClient {
             security: [{ scheme: 'bearer', type: 'http' }],
             url: '/contact-fields',
             ...options
+        });
+    }
+    
+    /**
+     * Create a contact field
+     *
+     * Adds a custom field to every contact, after the existing ones. A name already in use, in any case, answers `409 conflict`.
+     *
+     * Scope: `contacts:write`.
+     */
+    public createContactField<ThrowOnError extends boolean = true>(options: Options<CreateContactFieldData, ThrowOnError>): RequestResult<CreateContactFieldResponses, CreateContactFieldErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<CreateContactFieldResponses, CreateContactFieldErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/contact-fields',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
         });
     }
     
@@ -394,7 +414,7 @@ export class RickyApi extends HeyApiClient {
      *
      * Creates a contact tag. Apply it with `tag_ids` on a contact. A name already in use, in any case, answers `409 conflict`.
      *
-     * Scope: `contacts:write`.
+     * Scope: `tags:write` or, on older keys, `contacts:write`.
      */
     public createTag<ThrowOnError extends boolean = true>(options: Options<CreateTagData, ThrowOnError>): RequestResult<CreateTagResponses, CreateTagErrors, ThrowOnError, 'data'> {
         return (options.client ?? this.client).post<CreateTagResponses, CreateTagErrors, ThrowOnError, 'data'>({
@@ -1209,6 +1229,234 @@ export class RickyApi extends HeyApiClient {
             responseStyle: 'data',
             security: [{ scheme: 'bearer', type: 'http' }],
             url: '/knowledge/files/{file_id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Change tags on many contacts
+     *
+     * Adds and removes the same tags on up to 100 contacts and answers one result per contact, in order. A tag ID the organization does not have refuses the whole request before any contact changes.
+     *
+     * Scope: `contacts:write`.
+     */
+    public changeContactsTags<ThrowOnError extends boolean = true>(options: Options<ChangeContactsTagsData, ThrowOnError>): RequestResult<ChangeContactsTagsResponses, ChangeContactsTagsErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<ChangeContactsTagsResponses, ChangeContactsTagsErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/contacts/tags',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Delete a contact field
+     *
+     * Deletes the field and its value on every contact, and answers the field as it was. It cannot be undone.
+     *
+     * Scope: `contacts:write`.
+     */
+    public deleteContactField<ThrowOnError extends boolean = true>(options: Options<DeleteContactFieldData, ThrowOnError>): RequestResult<DeleteContactFieldResponses, DeleteContactFieldErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).delete<DeleteContactFieldResponses, DeleteContactFieldErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/contact-fields/{field_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Delete a tag
+     *
+     * Deletes the tag and removes it from every contact, and answers the tag as it was. It cannot be undone.
+     *
+     * Scope: `tags:write`.
+     */
+    public deleteTag<ThrowOnError extends boolean = true>(options: Options<DeleteTagData, ThrowOnError>): RequestResult<DeleteTagResponses, DeleteTagErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).delete<DeleteTagResponses, DeleteTagErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/tags/{tag_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Update a tag
+     *
+     * Renames or recolors a tag on every contact that has it. A name already in use, in any case, answers `409 conflict`.
+     *
+     * Scope: `tags:write`.
+     */
+    public updateTag<ThrowOnError extends boolean = true>(options: Options<UpdateTagData, ThrowOnError>): RequestResult<UpdateTagResponses, UpdateTagErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).patch<UpdateTagResponses, UpdateTagErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/tags/{tag_id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Search conversations
+     *
+     * Conversations whose contact or messages contain the text, latest activity first. Answers one page of at most `limit`; `next_cursor` is always null.
+     *
+     * Scope: `conversations:read`.
+     */
+    public searchConversations<ThrowOnError extends boolean = true>(options: Options<SearchConversationsData, ThrowOnError>): RequestResult<SearchConversationsResponses, SearchConversationsErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).get<SearchConversationsResponses, SearchConversationsErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/conversations/search',
+            ...options
+        });
+    }
+    
+    /**
+     * Change a conversation's tags
+     *
+     * Tags belong to the conversation's contact: this adds and removes tags on it and answers the contact.
+     *
+     * Scope: `contacts:write`.
+     */
+    public changeConversationTags<ThrowOnError extends boolean = true>(options: Options<ChangeConversationTagsData, ThrowOnError>): RequestResult<ChangeConversationTagsResponses, ChangeConversationTagsErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).patch<ChangeConversationTagsResponses, ChangeConversationTagsErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/conversations/{conversation_id}/tags',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Mark a conversation read
+     *
+     * Marks it read for the whole team through its latest message, as opening it in the inbox does. On WhatsApp the contact sees the read receipt. Send no body.
+     *
+     * Scope: `conversations:write`.
+     */
+    public markConversationRead<ThrowOnError extends boolean = true>(options: Options<MarkConversationReadData, ThrowOnError>): RequestResult<MarkConversationReadResponses, MarkConversationReadErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<MarkConversationReadResponses, MarkConversationReadErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/conversations/{conversation_id}/read',
+            ...options
+        });
+    }
+    
+    /**
+     * Search messages
+     *
+     * Messages of every conversation that contain the words, newest first. Answers one page of at most `limit`; `next_cursor` is always null.
+     *
+     * Scope: `conversations:read`.
+     */
+    public searchMessages<ThrowOnError extends boolean = true>(options: Options<SearchMessagesData, ThrowOnError>): RequestResult<SearchMessagesResponses, SearchMessagesErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).get<SearchMessagesResponses, SearchMessagesErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/messages/search',
+            ...options
+        });
+    }
+    
+    /**
+     * List quick replies
+     *
+     * Every quick reply of the organization, by title.
+     *
+     * Scope: `quick_replies:read`.
+     */
+    public listQuickReplies<ThrowOnError extends boolean = true>(options?: Options<ListQuickRepliesData, ThrowOnError>): RequestResult<ListQuickRepliesResponses, ListQuickRepliesErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<ListQuickRepliesResponses, ListQuickRepliesErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/quick-replies',
+            ...options
+        });
+    }
+    
+    /**
+     * Create a quick reply
+     *
+     * Saves an answer operators can insert in the inbox. A title already in use, in any case, answers `409 conflict`.
+     *
+     * Scope: `quick_replies:write`.
+     */
+    public createQuickReply<ThrowOnError extends boolean = true>(options: Options<CreateQuickReplyData, ThrowOnError>): RequestResult<CreateQuickReplyResponses, CreateQuickReplyErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<CreateQuickReplyResponses, CreateQuickReplyErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/quick-replies',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Delete a quick reply
+     *
+     * Deletes it and answers it as it was. It cannot be undone.
+     *
+     * Scope: `quick_replies:write`.
+     */
+    public deleteQuickReply<ThrowOnError extends boolean = true>(options: Options<DeleteQuickReplyData, ThrowOnError>): RequestResult<DeleteQuickReplyResponses, DeleteQuickReplyErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).delete<DeleteQuickReplyResponses, DeleteQuickReplyErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/quick-replies/{quick_reply_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Get a quick reply
+     *
+     * One quick reply.
+     *
+     * Scope: `quick_replies:read`.
+     */
+    public getQuickReply<ThrowOnError extends boolean = true>(options: Options<GetQuickReplyData, ThrowOnError>): RequestResult<GetQuickReplyResponses, GetQuickReplyErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).get<GetQuickReplyResponses, GetQuickReplyErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/quick-replies/{quick_reply_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Update a quick reply
+     *
+     * Changes only the fields in the body. A title already in use, in any case, answers `409 conflict`.
+     *
+     * Scope: `quick_replies:write`.
+     */
+    public updateQuickReply<ThrowOnError extends boolean = true>(options: Options<UpdateQuickReplyData, ThrowOnError>): RequestResult<UpdateQuickReplyResponses, UpdateQuickReplyErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).patch<UpdateQuickReplyResponses, UpdateQuickReplyErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/quick-replies/{quick_reply_id}',
             ...options,
             headers: {
                 'Content-Type': 'application/json',

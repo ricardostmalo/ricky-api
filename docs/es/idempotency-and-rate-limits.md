@@ -23,6 +23,16 @@ Recomendamos enviarla en todo envío de mensajes. Estas operaciones la aceptan:
 | [Crear una etiqueta](https://getricky.ai/docs/api/reference/catalogs/create-tag) | `POST /tags` | `contacts:write` |
 | [Crear un workflow](https://getricky.ai/docs/api/reference/workflows/create-workflow) | `POST /workflows` | `workflows:write` |
 | [Actualizar un workflow](https://getricky.ai/docs/api/reference/workflows/update-workflow) | `PATCH /workflows/{workflow_id}` | `workflows:write` |
+| [Crear un agente](https://getricky.ai/docs/api/reference/agents/create-agent) | `POST /agents` | `agents:write` |
+| [Actualizar un agente](https://getricky.ai/docs/api/reference/agents/update-agent) | `PATCH /agents/{agent_id}` | `agents:write` |
+| [Definir el agente de IA de una conversación](https://getricky.ai/docs/api/reference/conversations/assign-conversation-agent) | `PATCH /conversations/{conversation_id}/agent` | `conversations:write` |
+| [Crear una ubicación](https://getricky.ai/docs/api/reference/knowledge/create-knowledge-location) | `POST /knowledge/locations` | `knowledge:write` |
+| [Actualizar una ubicación](https://getricky.ai/docs/api/reference/knowledge/update-knowledge-location) | `PATCH /knowledge/locations/{location_id}` | `knowledge:write` |
+| [Crear un contacto del directorio](https://getricky.ai/docs/api/reference/knowledge/create-knowledge-contact) | `POST /knowledge/contacts` | `knowledge:write` |
+| [Actualizar un contacto del directorio](https://getricky.ai/docs/api/reference/knowledge/update-knowledge-contact) | `PATCH /knowledge/contacts/{knowledge_contact_id}` | `knowledge:write` |
+| [Subir un archivo](https://getricky.ai/docs/api/reference/knowledge/create-knowledge-file) | `POST /knowledge/files` | `knowledge:write` |
+| [Completar una carga](https://getricky.ai/docs/api/reference/knowledge/complete-knowledge-file) | `POST /knowledge/files/{file_id}/complete` | `knowledge:write` |
+| [Actualizar un archivo](https://getricky.ai/docs/api/reference/knowledge/update-knowledge-file) | `PATCH /knowledge/files/{file_id}` | `knowledge:write` |
 
 Crear o desactivar un webhook y reintentar una entrega no usan esta cabecera.
 

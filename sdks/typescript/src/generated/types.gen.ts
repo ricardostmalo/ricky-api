@@ -727,6 +727,284 @@ export type WebhookTestResult = {
 };
 
 /**
+ * What a tag change did to one contact.
+ */
+export type ContactTagChange = {
+    /**
+     * Contact ID.
+     */
+    contact_id: string;
+    /**
+     * `updated`; `not_found` when the organization has no such contact; `failed` when Ricky could not save it, so retry that contact.
+     */
+    status: 'updated' | 'not_found' | 'failed';
+    /**
+     * The contact's tags after the change; null unless `updated`.
+     */
+    tags: Array<Tag> | null;
+};
+
+/**
+ * A message whose text matches the search.
+ */
+export type MessageSearchResult = {
+    /**
+     * Message ID.
+     */
+    message_id: string;
+    /**
+     * Conversation ID.
+     */
+    conversation_id: string;
+    direction: 'inbound' | 'outbound';
+    /**
+     * Message type: `text`, `image`, `audio`, `template`, …
+     */
+    type: string;
+    /**
+     * The matching text: the message, or what Ricky derived from a voice note or file.
+     */
+    text: string;
+    contact: {
+        /**
+         * Contact name, or the name on the channel.
+         */
+        name: string | null;
+        /**
+         * Address on the channel.
+         */
+        external_id: string;
+    };
+    /**
+     * AI agent that wrote it; null otherwise.
+     */
+    agent_name: string | null;
+    /**
+     * When it was sent or received.
+     */
+    messaged_at: string;
+};
+
+/**
+ * A saved answer operators insert into a message.
+ */
+export type QuickReply = {
+    /**
+     * Quick reply ID.
+     */
+    id: string;
+    /**
+     * Name operators pick it by, unique in the organization regardless of case.
+     */
+    title: string;
+    /**
+     * Text inserted into the message.
+     */
+    body: string;
+};
+
+/**
+ * A branch or place the agents can send as a WhatsApp location.
+ */
+export type KnowledgeLocation = {
+    /**
+     * Location ID.
+     */
+    id: string;
+    /**
+     * Name customers know it by.
+     */
+    name: string;
+    /**
+     * Full address as customers read it.
+     */
+    address: string;
+    /**
+     * Latitude of the map pin.
+     */
+    latitude: number;
+    /**
+     * Longitude of the map pin.
+     */
+    longitude: number;
+    /**
+     * Street.
+     */
+    street: string | null;
+    /**
+     * City.
+     */
+    city: string | null;
+    /**
+     * State, province or region.
+     */
+    state: string | null;
+    /**
+     * Postal code.
+     */
+    postal_code: string | null;
+    /**
+     * Country.
+     */
+    country: string | null;
+    /**
+     * Country code, ISO 3166-1 alpha-2.
+     */
+    country_code: string | null;
+    /**
+     * Phone in E.164.
+     */
+    phone: string | null;
+    /**
+     * Email.
+     */
+    email: string | null;
+    /**
+     * Opening hours, as free text.
+     */
+    hours: string | null;
+};
+
+/**
+ * A contact card in the knowledge directory, which agents can send to customers.
+ */
+export type KnowledgeContact = {
+    /**
+     * Knowledge contact ID.
+     */
+    id: string;
+    /**
+     * Name shown on the contact card.
+     */
+    display_name: string;
+    /**
+     * First name.
+     */
+    first_name: string | null;
+    /**
+     * Last name.
+     */
+    last_name: string | null;
+    /**
+     * Name prefix, such as `Dr.`.
+     */
+    prefix: string | null;
+    /**
+     * Name suffix.
+     */
+    suffix: string | null;
+    /**
+     * Company.
+     */
+    company: string | null;
+    /**
+     * Department.
+     */
+    department: string | null;
+    /**
+     * Job title.
+     */
+    job_title: string | null;
+    /**
+     * When the agents should share it.
+     */
+    description: string | null;
+    /**
+     * Phone in E.164.
+     */
+    phone: string | null;
+    /**
+     * `CELL`, `WORK` or `HOME`.
+     */
+    phone_type: string | null;
+    /**
+     * Email.
+     */
+    email: string | null;
+    /**
+     * `WORK` or `PERSONAL`.
+     */
+    email_type: string | null;
+};
+
+/**
+ * A document or image the agents can consult or send.
+ */
+export type KnowledgeFile = {
+    /**
+     * File ID.
+     */
+    id: string;
+    /**
+     * Title the agents see.
+     */
+    title: string;
+    /**
+     * When the agents should use it; may be empty.
+     */
+    description: string;
+    /**
+     * Original file name.
+     */
+    filename: string;
+    /**
+     * File type.
+     */
+    mime_type: 'application/pdf' | 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' | 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' | 'image/jpeg' | 'image/png';
+    /**
+     * Size in bytes.
+     */
+    size_bytes: number;
+    /**
+     * `uploading` until `POST /knowledge/files/{file_id}/complete` reads it; then `ready`.
+     */
+    status: 'uploading' | 'ready' | 'failed';
+    /**
+     * Agents may read it to answer.
+     */
+    consult_enabled: boolean;
+    /**
+     * Agents may send the file itself to customers.
+     */
+    send_enabled: boolean;
+    /**
+     * Pages of a PDF; null otherwise.
+     */
+    page_count: number | null;
+    /**
+     * Start of the text Ricky read from it.
+     */
+    preview: string | null;
+    /**
+     * Why Ricky could not read useful content; null when it could.
+     */
+    extraction_error: string | null;
+    /**
+     * Signed download URL, valid for five minutes. Only `GET /knowledge/files/{file_id}` of a `ready` file carries it; null elsewhere.
+     */
+    download_url: string | null;
+    /**
+     * When the upload began.
+     */
+    created_at: string;
+    /**
+     * Last change.
+     */
+    updated_at: string;
+};
+
+/**
+ * A file waiting for its bytes, and where to put them.
+ */
+export type KnowledgeFileUpload = {
+    file: KnowledgeFile;
+    /**
+     * Signed URL valid for two hours. `PUT` the file bytes to it with `Content-Type` set to `mime_type`, then call `POST /knowledge/files/{file_id}/complete`.
+     */
+    upload_url: string;
+};
+
+/**
  * The days a report covers, in America/Panama time, and the period it is compared with.
  */
 export type ReportPeriod = {
@@ -2140,207 +2418,6 @@ export type WorkflowExecution = {
 };
 
 /**
- * A branch or place the agents can send as a WhatsApp location.
- */
-export type KnowledgeLocation = {
-    /**
-     * Location ID.
-     */
-    id: string;
-    /**
-     * Name customers know it by.
-     */
-    name: string;
-    /**
-     * Full address as customers read it.
-     */
-    address: string;
-    /**
-     * Latitude of the map pin.
-     */
-    latitude: number;
-    /**
-     * Longitude of the map pin.
-     */
-    longitude: number;
-    /**
-     * Street.
-     */
-    street: string | null;
-    /**
-     * City.
-     */
-    city: string | null;
-    /**
-     * State, province or region.
-     */
-    state: string | null;
-    /**
-     * Postal code.
-     */
-    postal_code: string | null;
-    /**
-     * Country.
-     */
-    country: string | null;
-    /**
-     * Country code, ISO 3166-1 alpha-2.
-     */
-    country_code: string | null;
-    /**
-     * Phone in E.164.
-     */
-    phone: string | null;
-    /**
-     * Email.
-     */
-    email: string | null;
-    /**
-     * Opening hours, as free text.
-     */
-    hours: string | null;
-};
-
-/**
- * A contact card in the knowledge directory, which agents can send to customers.
- */
-export type KnowledgeContact = {
-    /**
-     * Knowledge contact ID.
-     */
-    id: string;
-    /**
-     * Name shown on the contact card.
-     */
-    display_name: string;
-    /**
-     * First name.
-     */
-    first_name: string | null;
-    /**
-     * Last name.
-     */
-    last_name: string | null;
-    /**
-     * Name prefix, such as `Dr.`.
-     */
-    prefix: string | null;
-    /**
-     * Name suffix.
-     */
-    suffix: string | null;
-    /**
-     * Company.
-     */
-    company: string | null;
-    /**
-     * Department.
-     */
-    department: string | null;
-    /**
-     * Job title.
-     */
-    job_title: string | null;
-    /**
-     * When the agents should share it.
-     */
-    description: string | null;
-    /**
-     * Phone in E.164.
-     */
-    phone: string | null;
-    /**
-     * `CELL`, `WORK` or `HOME`.
-     */
-    phone_type: string | null;
-    /**
-     * Email.
-     */
-    email: string | null;
-    /**
-     * `WORK` or `PERSONAL`.
-     */
-    email_type: string | null;
-};
-
-/**
- * A document or image the agents can consult or send.
- */
-export type KnowledgeFile = {
-    /**
-     * File ID.
-     */
-    id: string;
-    /**
-     * Title the agents see.
-     */
-    title: string;
-    /**
-     * When the agents should use it; may be empty.
-     */
-    description: string;
-    /**
-     * Original file name.
-     */
-    filename: string;
-    /**
-     * File type.
-     */
-    mime_type: 'application/pdf' | 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' | 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' | 'image/jpeg' | 'image/png';
-    /**
-     * Size in bytes.
-     */
-    size_bytes: number;
-    /**
-     * `uploading` until `POST /knowledge/files/{file_id}/complete` reads it; then `ready`.
-     */
-    status: 'uploading' | 'ready' | 'failed';
-    /**
-     * Agents may read it to answer.
-     */
-    consult_enabled: boolean;
-    /**
-     * Agents may send the file itself to customers.
-     */
-    send_enabled: boolean;
-    /**
-     * Pages of a PDF; null otherwise.
-     */
-    page_count: number | null;
-    /**
-     * Start of the text Ricky read from it.
-     */
-    preview: string | null;
-    /**
-     * Why Ricky could not read useful content; null when it could.
-     */
-    extraction_error: string | null;
-    /**
-     * Signed download URL, valid for five minutes. Only `GET /knowledge/files/{file_id}` of a `ready` file carries it; null elsewhere.
-     */
-    download_url: string | null;
-    /**
-     * When the upload began.
-     */
-    created_at: string;
-    /**
-     * Last change.
-     */
-    updated_at: string;
-};
-
-/**
- * A file waiting for its bytes, and where to put them.
- */
-export type KnowledgeFileUpload = {
-    file: KnowledgeFile;
-    /**
-     * Signed URL valid for two hours. `PUT` the file bytes to it with `Content-Type` set to `mime_type`, then call `POST /knowledge/files/{file_id}/complete`.
-     */
-    upload_url: string;
-};
-
-/**
  * Only `name` is required; it does not connect the agent to any channel.
  */
 export type CreateAgent = {
@@ -2765,6 +2842,377 @@ export type RotateWebhookSecret = {
      * How long deliveries keep the previous signature too, so you can deploy the new secret first. 0 ends the previous secret now.
      */
     expire_previous_after_hours?: number;
+};
+
+/**
+ * Adds and removes the same tags on many contacts. Their other tags stay.
+ */
+export type ChangeContactsTags = {
+    /**
+     * Contacts to change, up to 100. Repeated IDs count once.
+     */
+    contact_ids: Array<string>;
+    /**
+     * Tags to add. See `GET /tags`.
+     */
+    add_tag_ids?: Array<string>;
+    /**
+     * Tags to remove.
+     */
+    remove_tag_ids?: Array<string>;
+};
+
+/**
+ * Adds and removes tags on the conversation's contact. Its other tags stay.
+ */
+export type ChangeConversationTags = {
+    /**
+     * Tags to add. See `GET /tags`.
+     */
+    add_tag_ids?: Array<string>;
+    /**
+     * Tags to remove.
+     */
+    remove_tag_ids?: Array<string>;
+};
+
+/**
+ * Only the fields you send change, on every contact that has the tag.
+ */
+export type UpdateTag = {
+    /**
+     * Display name, unique in the organization regardless of case.
+     */
+    name?: string;
+    /**
+     * Display color.
+     */
+    color?: 'gray' | 'red' | 'orange' | 'amber' | 'green' | 'teal' | 'blue' | 'indigo' | 'purple' | 'pink';
+};
+
+/**
+ * A custom contact field. Its ID keys `custom_values`.
+ */
+export type CreateContactField = {
+    /**
+     * Display name, unique in the organization regardless of case.
+     */
+    name: string;
+    /**
+     * Value type. It cannot change later.
+     */
+    type: 'text' | 'long_text' | 'number' | 'boolean' | 'date' | 'select' | 'multi_select';
+    /**
+     * Allowed values; required for `select` and `multi_select`, refused otherwise.
+     */
+    options?: Array<string>;
+};
+
+export type CreateQuickReply = {
+    /**
+     * Name operators pick it by, unique in the organization regardless of case.
+     */
+    title: string;
+    /**
+     * Text inserted into the message.
+     */
+    body: string;
+};
+
+/**
+ * Only the fields you send change.
+ */
+export type UpdateQuickReply = {
+    /**
+     * Name operators pick it by, unique in the organization regardless of case.
+     */
+    title?: string;
+    /**
+     * Text inserted into the message.
+     */
+    body?: string;
+};
+
+/**
+ * A location needs a name, an address and its coordinates.
+ */
+export type CreateKnowledgeLocation = {
+    /**
+     * Name customers know it by.
+     */
+    name: string;
+    /**
+     * Full address as customers read it.
+     */
+    address: string;
+    /**
+     * Latitude of the map pin, confirmed, not estimated.
+     */
+    latitude: number;
+    /**
+     * Longitude of the map pin, confirmed, not estimated.
+     */
+    longitude: number;
+    /**
+     * Street.
+     */
+    street?: string | null;
+    /**
+     * City.
+     */
+    city?: string | null;
+    /**
+     * State, province or region.
+     */
+    state?: string | null;
+    /**
+     * Postal code.
+     */
+    postal_code?: string | null;
+    /**
+     * Country.
+     */
+    country?: string | null;
+    /**
+     * Country code, ISO 3166-1 alpha-2.
+     */
+    country_code?: string | null;
+    /**
+     * Phone with country code, for example `+507 6000-1234`.
+     */
+    phone?: string | null;
+    /**
+     * Email.
+     */
+    email?: string | null;
+    /**
+     * Opening hours, as free text.
+     */
+    hours?: string | null;
+};
+
+/**
+ * Only the fields you send change. Send `null` to clear an optional one.
+ */
+export type UpdateKnowledgeLocation = {
+    /**
+     * Name customers know it by.
+     */
+    name?: string;
+    /**
+     * Full address as customers read it.
+     */
+    address?: string;
+    /**
+     * Latitude of the map pin, confirmed, not estimated.
+     */
+    latitude?: number;
+    /**
+     * Longitude of the map pin, confirmed, not estimated.
+     */
+    longitude?: number;
+    /**
+     * Street.
+     */
+    street?: string | null;
+    /**
+     * City.
+     */
+    city?: string | null;
+    /**
+     * State, province or region.
+     */
+    state?: string | null;
+    /**
+     * Postal code.
+     */
+    postal_code?: string | null;
+    /**
+     * Country.
+     */
+    country?: string | null;
+    /**
+     * Country code, ISO 3166-1 alpha-2.
+     */
+    country_code?: string | null;
+    /**
+     * Phone with country code, for example `+507 6000-1234`.
+     */
+    phone?: string | null;
+    /**
+     * Email.
+     */
+    email?: string | null;
+    /**
+     * Opening hours, as free text.
+     */
+    hours?: string | null;
+};
+
+/**
+ * A contact card needs a display name and a phone or an email.
+ */
+export type CreateKnowledgeContact = {
+    /**
+     * Name shown on the contact card.
+     */
+    display_name: string;
+    /**
+     * First name.
+     */
+    first_name?: string | null;
+    /**
+     * Last name.
+     */
+    last_name?: string | null;
+    /**
+     * Name prefix, such as `Dr.`.
+     */
+    prefix?: string | null;
+    /**
+     * Name suffix.
+     */
+    suffix?: string | null;
+    /**
+     * Company.
+     */
+    company?: string | null;
+    /**
+     * Department.
+     */
+    department?: string | null;
+    /**
+     * Job title.
+     */
+    job_title?: string | null;
+    /**
+     * When the agents should share it.
+     */
+    description?: string | null;
+    /**
+     * Phone with country code, for example `+507 6000-1234`.
+     */
+    phone?: string | null;
+    phone_type?: 'CELL' | 'WORK' | 'HOME' | null;
+    /**
+     * Email.
+     */
+    email?: string | null;
+    email_type?: 'WORK' | 'PERSONAL' | null;
+};
+
+/**
+ * Only the fields you send change. Send `null` to clear an optional one; the card keeps a phone or an email.
+ */
+export type UpdateKnowledgeContact = {
+    /**
+     * Name shown on the contact card.
+     */
+    display_name?: string;
+    /**
+     * First name.
+     */
+    first_name?: string | null;
+    /**
+     * Last name.
+     */
+    last_name?: string | null;
+    /**
+     * Name prefix, such as `Dr.`.
+     */
+    prefix?: string | null;
+    /**
+     * Name suffix.
+     */
+    suffix?: string | null;
+    /**
+     * Company.
+     */
+    company?: string | null;
+    /**
+     * Department.
+     */
+    department?: string | null;
+    /**
+     * Job title.
+     */
+    job_title?: string | null;
+    /**
+     * When the agents should share it.
+     */
+    description?: string | null;
+    /**
+     * Phone with country code, for example `+507 6000-1234`.
+     */
+    phone?: string | null;
+    phone_type?: 'CELL' | 'WORK' | 'HOME' | null;
+    /**
+     * Email.
+     */
+    email?: string | null;
+    email_type?: 'WORK' | 'PERSONAL' | null;
+};
+
+/**
+ * Begins an upload. Ricky answers where to `PUT` the bytes.
+ */
+export type CreateKnowledgeFile = {
+    /**
+     * Title the agents see.
+     */
+    title: string;
+    /**
+     * When the agents should use it.
+     */
+    description?: string;
+    /**
+     * File name, with its extension.
+     */
+    filename: string;
+    /**
+     * File type: PDF, Word or Excel up to 100 MB; JPEG or PNG up to 5 MB.
+     */
+    mime_type: 'application/pdf' | 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' | 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' | 'image/jpeg' | 'image/png';
+    /**
+     * Exact size of the file you will upload.
+     */
+    size_bytes: number;
+};
+
+/**
+ * The body is optional.
+ */
+export type CompleteKnowledgeFile = {
+    /**
+     * Agents may read it to answer. Ignored when Ricky reads no useful content.
+     */
+    consult_enabled?: boolean;
+    /**
+     * Agents may send the file itself.
+     */
+    send_enabled?: boolean;
+};
+
+/**
+ * Only the fields you send change. The file must be `ready`.
+ */
+export type UpdateKnowledgeFile = {
+    /**
+     * Title the agents see.
+     */
+    title?: string;
+    /**
+     * When the agents should use it.
+     */
+    description?: string;
+    /**
+     * Agents may read it to answer.
+     */
+    consult_enabled?: boolean;
+    /**
+     * Agents may send the file itself.
+     */
+    send_enabled?: boolean;
 };
 
 /**
@@ -3220,288 +3668,6 @@ export type UpdateWorkflow = {
 };
 
 /**
- * A location needs a name, an address and its coordinates.
- */
-export type CreateKnowledgeLocation = {
-    /**
-     * Name customers know it by.
-     */
-    name: string;
-    /**
-     * Full address as customers read it.
-     */
-    address: string;
-    /**
-     * Latitude of the map pin, confirmed, not estimated.
-     */
-    latitude: number;
-    /**
-     * Longitude of the map pin, confirmed, not estimated.
-     */
-    longitude: number;
-    /**
-     * Street.
-     */
-    street?: string | null;
-    /**
-     * City.
-     */
-    city?: string | null;
-    /**
-     * State, province or region.
-     */
-    state?: string | null;
-    /**
-     * Postal code.
-     */
-    postal_code?: string | null;
-    /**
-     * Country.
-     */
-    country?: string | null;
-    /**
-     * Country code, ISO 3166-1 alpha-2.
-     */
-    country_code?: string | null;
-    /**
-     * Phone with country code, for example `+507 6000-1234`.
-     */
-    phone?: string | null;
-    /**
-     * Email.
-     */
-    email?: string | null;
-    /**
-     * Opening hours, as free text.
-     */
-    hours?: string | null;
-};
-
-/**
- * Only the fields you send change. Send `null` to clear an optional one.
- */
-export type UpdateKnowledgeLocation = {
-    /**
-     * Name customers know it by.
-     */
-    name?: string;
-    /**
-     * Full address as customers read it.
-     */
-    address?: string;
-    /**
-     * Latitude of the map pin, confirmed, not estimated.
-     */
-    latitude?: number;
-    /**
-     * Longitude of the map pin, confirmed, not estimated.
-     */
-    longitude?: number;
-    /**
-     * Street.
-     */
-    street?: string | null;
-    /**
-     * City.
-     */
-    city?: string | null;
-    /**
-     * State, province or region.
-     */
-    state?: string | null;
-    /**
-     * Postal code.
-     */
-    postal_code?: string | null;
-    /**
-     * Country.
-     */
-    country?: string | null;
-    /**
-     * Country code, ISO 3166-1 alpha-2.
-     */
-    country_code?: string | null;
-    /**
-     * Phone with country code, for example `+507 6000-1234`.
-     */
-    phone?: string | null;
-    /**
-     * Email.
-     */
-    email?: string | null;
-    /**
-     * Opening hours, as free text.
-     */
-    hours?: string | null;
-};
-
-/**
- * A contact card needs a display name and a phone or an email.
- */
-export type CreateKnowledgeContact = {
-    /**
-     * Name shown on the contact card.
-     */
-    display_name: string;
-    /**
-     * First name.
-     */
-    first_name?: string | null;
-    /**
-     * Last name.
-     */
-    last_name?: string | null;
-    /**
-     * Name prefix, such as `Dr.`.
-     */
-    prefix?: string | null;
-    /**
-     * Name suffix.
-     */
-    suffix?: string | null;
-    /**
-     * Company.
-     */
-    company?: string | null;
-    /**
-     * Department.
-     */
-    department?: string | null;
-    /**
-     * Job title.
-     */
-    job_title?: string | null;
-    /**
-     * When the agents should share it.
-     */
-    description?: string | null;
-    /**
-     * Phone with country code, for example `+507 6000-1234`.
-     */
-    phone?: string | null;
-    phone_type?: 'CELL' | 'WORK' | 'HOME' | null;
-    /**
-     * Email.
-     */
-    email?: string | null;
-    email_type?: 'WORK' | 'PERSONAL' | null;
-};
-
-/**
- * Only the fields you send change. Send `null` to clear an optional one; the card keeps a phone or an email.
- */
-export type UpdateKnowledgeContact = {
-    /**
-     * Name shown on the contact card.
-     */
-    display_name?: string;
-    /**
-     * First name.
-     */
-    first_name?: string | null;
-    /**
-     * Last name.
-     */
-    last_name?: string | null;
-    /**
-     * Name prefix, such as `Dr.`.
-     */
-    prefix?: string | null;
-    /**
-     * Name suffix.
-     */
-    suffix?: string | null;
-    /**
-     * Company.
-     */
-    company?: string | null;
-    /**
-     * Department.
-     */
-    department?: string | null;
-    /**
-     * Job title.
-     */
-    job_title?: string | null;
-    /**
-     * When the agents should share it.
-     */
-    description?: string | null;
-    /**
-     * Phone with country code, for example `+507 6000-1234`.
-     */
-    phone?: string | null;
-    phone_type?: 'CELL' | 'WORK' | 'HOME' | null;
-    /**
-     * Email.
-     */
-    email?: string | null;
-    email_type?: 'WORK' | 'PERSONAL' | null;
-};
-
-/**
- * Begins an upload. Ricky answers where to `PUT` the bytes.
- */
-export type CreateKnowledgeFile = {
-    /**
-     * Title the agents see.
-     */
-    title: string;
-    /**
-     * When the agents should use it.
-     */
-    description?: string;
-    /**
-     * File name, with its extension.
-     */
-    filename: string;
-    /**
-     * File type: PDF, Word or Excel up to 100 MB; JPEG or PNG up to 5 MB.
-     */
-    mime_type: 'application/pdf' | 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' | 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' | 'image/jpeg' | 'image/png';
-    /**
-     * Exact size of the file you will upload.
-     */
-    size_bytes: number;
-};
-
-/**
- * The body is optional.
- */
-export type CompleteKnowledgeFile = {
-    /**
-     * Agents may read it to answer. Ignored when Ricky reads no useful content.
-     */
-    consult_enabled?: boolean;
-    /**
-     * Agents may send the file itself.
-     */
-    send_enabled?: boolean;
-};
-
-/**
- * Only the fields you send change. The file must be `ready`.
- */
-export type UpdateKnowledgeFile = {
-    /**
-     * Title the agents see.
-     */
-    title?: string;
-    /**
-     * When the agents should use it.
-     */
-    description?: string;
-    /**
-     * Agents may read it to answer.
-     */
-    consult_enabled?: boolean;
-    /**
-     * Agents may send the file itself.
-     */
-    send_enabled?: boolean;
-};
-
-/**
  * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
  */
 export type IdempotencyKey = string;
@@ -3893,6 +4059,73 @@ export type ListContactFieldsResponses = {
 };
 
 export type ListContactFieldsResponse = ListContactFieldsResponses[keyof ListContactFieldsResponses];
+
+export type CreateContactFieldData = {
+    body: CreateContactField;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/contact-fields';
+};
+
+export type CreateContactFieldErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type CreateContactFieldError = CreateContactFieldErrors[keyof CreateContactFieldErrors];
+
+export type CreateContactFieldResponses = {
+    /**
+     * Success.
+     */
+    201: {
+        data: ContactField;
+    };
+};
+
+export type CreateContactFieldResponse = CreateContactFieldResponses[keyof CreateContactFieldResponses];
 
 export type ListConversationsData = {
     body?: never;
@@ -7420,6 +7653,831 @@ export type UpdateKnowledgeFileResponses = {
 };
 
 export type UpdateKnowledgeFileResponse = UpdateKnowledgeFileResponses[keyof UpdateKnowledgeFileResponses];
+
+export type ChangeContactsTagsData = {
+    body: ChangeContactsTags;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/contacts/tags';
+};
+
+export type ChangeContactsTagsErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ChangeContactsTagsError = ChangeContactsTagsErrors[keyof ChangeContactsTagsErrors];
+
+export type ChangeContactsTagsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<ContactTagChange>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ChangeContactsTagsResponse = ChangeContactsTagsResponses[keyof ChangeContactsTagsResponses];
+
+export type DeleteContactFieldData = {
+    body?: never;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Field ID.
+         */
+        field_id: string;
+    };
+    query?: never;
+    url: '/contact-fields/{field_id}';
+};
+
+export type DeleteContactFieldErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type DeleteContactFieldError = DeleteContactFieldErrors[keyof DeleteContactFieldErrors];
+
+export type DeleteContactFieldResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: ContactField;
+    };
+};
+
+export type DeleteContactFieldResponse = DeleteContactFieldResponses[keyof DeleteContactFieldResponses];
+
+export type DeleteTagData = {
+    body?: never;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Tag ID.
+         */
+        tag_id: string;
+    };
+    query?: never;
+    url: '/tags/{tag_id}';
+};
+
+export type DeleteTagErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type DeleteTagError = DeleteTagErrors[keyof DeleteTagErrors];
+
+export type DeleteTagResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Tag;
+    };
+};
+
+export type DeleteTagResponse = DeleteTagResponses[keyof DeleteTagResponses];
+
+export type UpdateTagData = {
+    body: UpdateTag;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Tag ID.
+         */
+        tag_id: string;
+    };
+    query?: never;
+    url: '/tags/{tag_id}';
+};
+
+export type UpdateTagErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type UpdateTagError = UpdateTagErrors[keyof UpdateTagErrors];
+
+export type UpdateTagResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Tag;
+    };
+};
+
+export type UpdateTagResponse = UpdateTagResponses[keyof UpdateTagResponses];
+
+export type SearchConversationsData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * Text in the contact's name, phone, email or company, its name or handle on the channel, or the conversation's messages.
+         */
+        query: string;
+        /**
+         * Most results to return.
+         */
+        limit?: number;
+    };
+    url: '/conversations/search';
+};
+
+export type SearchConversationsErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type SearchConversationsError = SearchConversationsErrors[keyof SearchConversationsErrors];
+
+export type SearchConversationsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<Conversation>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type SearchConversationsResponse = SearchConversationsResponses[keyof SearchConversationsResponses];
+
+export type ChangeConversationTagsData = {
+    body: ChangeConversationTags;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Conversation ID.
+         */
+        conversation_id: string;
+    };
+    query?: never;
+    url: '/conversations/{conversation_id}/tags';
+};
+
+export type ChangeConversationTagsErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ChangeConversationTagsError = ChangeConversationTagsErrors[keyof ChangeConversationTagsErrors];
+
+export type ChangeConversationTagsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Contact;
+    };
+};
+
+export type ChangeConversationTagsResponse = ChangeConversationTagsResponses[keyof ChangeConversationTagsResponses];
+
+export type MarkConversationReadData = {
+    body?: never;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Conversation ID.
+         */
+        conversation_id: string;
+    };
+    query?: never;
+    url: '/conversations/{conversation_id}/read';
+};
+
+export type MarkConversationReadErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type MarkConversationReadError = MarkConversationReadErrors[keyof MarkConversationReadErrors];
+
+export type MarkConversationReadResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Conversation;
+    };
+};
+
+export type MarkConversationReadResponse = MarkConversationReadResponses[keyof MarkConversationReadResponses];
+
+export type SearchMessagesData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * Words in the message text, or text in what Ricky derived from a voice note or file.
+         */
+        query: string;
+        /**
+         * Most results to return.
+         */
+        limit?: number;
+    };
+    url: '/messages/search';
+};
+
+export type SearchMessagesErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type SearchMessagesError = SearchMessagesErrors[keyof SearchMessagesErrors];
+
+export type SearchMessagesResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<MessageSearchResult>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type SearchMessagesResponse = SearchMessagesResponses[keyof SearchMessagesResponses];
+
+export type ListQuickRepliesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/quick-replies';
+};
+
+export type ListQuickRepliesErrors = {
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListQuickRepliesError = ListQuickRepliesErrors[keyof ListQuickRepliesErrors];
+
+export type ListQuickRepliesResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<QuickReply>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListQuickRepliesResponse = ListQuickRepliesResponses[keyof ListQuickRepliesResponses];
+
+export type CreateQuickReplyData = {
+    body: CreateQuickReply;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/quick-replies';
+};
+
+export type CreateQuickReplyErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type CreateQuickReplyError = CreateQuickReplyErrors[keyof CreateQuickReplyErrors];
+
+export type CreateQuickReplyResponses = {
+    /**
+     * Success.
+     */
+    201: {
+        data: QuickReply;
+    };
+};
+
+export type CreateQuickReplyResponse = CreateQuickReplyResponses[keyof CreateQuickReplyResponses];
+
+export type DeleteQuickReplyData = {
+    body?: never;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Quick reply ID.
+         */
+        quick_reply_id: string;
+    };
+    query?: never;
+    url: '/quick-replies/{quick_reply_id}';
+};
+
+export type DeleteQuickReplyErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type DeleteQuickReplyError = DeleteQuickReplyErrors[keyof DeleteQuickReplyErrors];
+
+export type DeleteQuickReplyResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: QuickReply;
+    };
+};
+
+export type DeleteQuickReplyResponse = DeleteQuickReplyResponses[keyof DeleteQuickReplyResponses];
+
+export type GetQuickReplyData = {
+    body?: never;
+    path: {
+        /**
+         * Quick reply ID.
+         */
+        quick_reply_id: string;
+    };
+    query?: never;
+    url: '/quick-replies/{quick_reply_id}';
+};
+
+export type GetQuickReplyErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetQuickReplyError = GetQuickReplyErrors[keyof GetQuickReplyErrors];
+
+export type GetQuickReplyResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: QuickReply;
+    };
+};
+
+export type GetQuickReplyResponse = GetQuickReplyResponses[keyof GetQuickReplyResponses];
+
+export type UpdateQuickReplyData = {
+    body: UpdateQuickReply;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Quick reply ID.
+         */
+        quick_reply_id: string;
+    };
+    query?: never;
+    url: '/quick-replies/{quick_reply_id}';
+};
+
+export type UpdateQuickReplyErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type UpdateQuickReplyError = UpdateQuickReplyErrors[keyof UpdateQuickReplyErrors];
+
+export type UpdateQuickReplyResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: QuickReply;
+    };
+};
+
+export type UpdateQuickReplyResponse = UpdateQuickReplyResponses[keyof UpdateQuickReplyResponses];
 
 export type WebhookMessageReceivedWebhookPayload = WebhookEvent;
 

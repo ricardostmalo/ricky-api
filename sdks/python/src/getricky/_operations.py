@@ -11,18 +11,23 @@ from .types import (
     AssignConversation,
     AssignConversationAgent,
     BroadcastsReport,
+    ChangeContactsTags,
+    ChangeConversationTags,
     Channel,
     CloseConversation,
     CompleteKnowledgeFile,
     Contact,
     ContactField,
+    ContactTagChange,
     Conversation,
     ConversationsReport,
     CreateAgent,
     CreateContact,
+    CreateContactField,
     CreateKnowledgeContact,
     CreateKnowledgeFile,
     CreateKnowledgeLocation,
+    CreateQuickReply,
     CreateTag,
     CreateWebhook,
     CreateWorkflow,
@@ -34,7 +39,9 @@ from .types import (
     KnowledgeLocation,
     Member,
     Message,
+    MessageSearchResult,
     MessagesReport,
+    QuickReply,
     ResolutionsReport,
     ResponsesReport,
     RotateWebhookSecret,
@@ -49,6 +56,8 @@ from .types import (
     UpdateKnowledgeContact,
     UpdateKnowledgeFile,
     UpdateKnowledgeLocation,
+    UpdateQuickReply,
+    UpdateTag,
     UpdateWorkflow,
     Webhook,
     WebhookDelivery,
@@ -197,6 +206,29 @@ class SyncOperations:
         return cast(Page[ContactField], self._request(
             "GET",
             "/contact-fields",
+        ))
+
+    def create_contact_field(
+        self,
+        body: CreateContactField,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[ContactField]:
+        """Create a contact field.
+
+        Adds a custom field to every contact, after the existing ones. A name already in use, in any case, answers `409 conflict`.
+
+        Scope: `contacts:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[ContactField], self._request(
+            "POST",
+            "/contact-fields",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
         ))
 
     def list_conversations(
@@ -468,7 +500,7 @@ class SyncOperations:
 
         Creates a contact tag. Apply it with `tag_ids` on a contact. A name already in use, in any case, answers `409 conflict`.
 
-        Scope: `contacts:write`.
+        Scope: `tags:write` or, on older keys, `contacts:write`.
 
         Args:
             idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
@@ -1378,6 +1410,293 @@ class SyncOperations:
             path_parameters={"file_id": file_id},
         ))
 
+    def change_contacts_tags(
+        self,
+        body: ChangeContactsTags,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Page[ContactTagChange]:
+        """Change tags on many contacts.
+
+        Adds and removes the same tags on up to 100 contacts and answers one result per contact, in order. A tag ID the organization does not have refuses the whole request before any contact changes.
+
+        Scope: `contacts:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Page[ContactTagChange], self._request(
+            "POST",
+            "/contacts/tags",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def delete_contact_field(
+        self,
+        field_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[ContactField]:
+        """Delete a contact field.
+
+        Deletes the field and its value on every contact, and answers the field as it was. It cannot be undone.
+
+        Scope: `contacts:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[ContactField], self._request(
+            "DELETE",
+            "/contact-fields/{field_id}",
+            path_parameters={"field_id": field_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def update_tag(
+        self,
+        tag_id: str,
+        body: UpdateTag,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Tag]:
+        """Update a tag.
+
+        Renames or recolors a tag on every contact that has it. A name already in use, in any case, answers `409 conflict`.
+
+        Scope: `tags:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Tag], self._request(
+            "PATCH",
+            "/tags/{tag_id}",
+            path_parameters={"tag_id": tag_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def delete_tag(
+        self,
+        tag_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Tag]:
+        """Delete a tag.
+
+        Deletes the tag and removes it from every contact, and answers the tag as it was. It cannot be undone.
+
+        Scope: `tags:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Tag], self._request(
+            "DELETE",
+            "/tags/{tag_id}",
+            path_parameters={"tag_id": tag_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def search_conversations(
+        self,
+        *,
+        query: Optional[str] = None,
+        limit: Optional[int] = None,
+    ) -> Page[Conversation]:
+        """Search conversations.
+
+        Conversations whose contact or messages contain the text, latest activity first. Answers one page of at most `limit`; `next_cursor` is always null.
+
+        Scope: `conversations:read`.
+
+        Args:
+            query: Text in the contact's name, phone, email or company, its name or handle on the channel, or the conversation's messages.
+            limit: Most results to return.
+        """
+        return cast(Page[Conversation], self._request(
+            "GET",
+            "/conversations/search",
+            query={"query": query, "limit": limit},
+        ))
+
+    def change_conversation_tags(
+        self,
+        conversation_id: str,
+        body: ChangeConversationTags,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Contact]:
+        """Change a conversation's tags.
+
+        Tags belong to the conversation's contact: this adds and removes tags on it and answers the contact.
+
+        Scope: `contacts:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Contact], self._request(
+            "PATCH",
+            "/conversations/{conversation_id}/tags",
+            path_parameters={"conversation_id": conversation_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def mark_conversation_read(
+        self,
+        conversation_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Conversation]:
+        """Mark a conversation read.
+
+        Marks it read for the whole team through its latest message, as opening it in the inbox does. On WhatsApp the contact sees the read receipt. Send no body.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Conversation], self._request(
+            "POST",
+            "/conversations/{conversation_id}/read",
+            path_parameters={"conversation_id": conversation_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def search_messages(
+        self,
+        *,
+        query: Optional[str] = None,
+        limit: Optional[int] = None,
+    ) -> Page[MessageSearchResult]:
+        """Search messages.
+
+        Messages of every conversation that contain the words, newest first. Answers one page of at most `limit`; `next_cursor` is always null.
+
+        Scope: `conversations:read`.
+
+        Args:
+            query: Words in the message text, or text in what Ricky derived from a voice note or file.
+            limit: Most results to return.
+        """
+        return cast(Page[MessageSearchResult], self._request(
+            "GET",
+            "/messages/search",
+            query={"query": query, "limit": limit},
+        ))
+
+    def list_quick_replies(
+        self,
+    ) -> Page[QuickReply]:
+        """List quick replies.
+
+        Every quick reply of the organization, by title.
+
+        Scope: `quick_replies:read`.
+        """
+        return cast(Page[QuickReply], self._request(
+            "GET",
+            "/quick-replies",
+        ))
+
+    def create_quick_reply(
+        self,
+        body: CreateQuickReply,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[QuickReply]:
+        """Create a quick reply.
+
+        Saves an answer operators can insert in the inbox. A title already in use, in any case, answers `409 conflict`.
+
+        Scope: `quick_replies:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[QuickReply], self._request(
+            "POST",
+            "/quick-replies",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def get_quick_reply(
+        self,
+        quick_reply_id: str,
+    ) -> Resource[QuickReply]:
+        """Get a quick reply.
+
+        One quick reply.
+
+        Scope: `quick_replies:read`.
+        """
+        return cast(Resource[QuickReply], self._request(
+            "GET",
+            "/quick-replies/{quick_reply_id}",
+            path_parameters={"quick_reply_id": quick_reply_id},
+        ))
+
+    def update_quick_reply(
+        self,
+        quick_reply_id: str,
+        body: UpdateQuickReply,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[QuickReply]:
+        """Update a quick reply.
+
+        Changes only the fields in the body. A title already in use, in any case, answers `409 conflict`.
+
+        Scope: `quick_replies:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[QuickReply], self._request(
+            "PATCH",
+            "/quick-replies/{quick_reply_id}",
+            path_parameters={"quick_reply_id": quick_reply_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def delete_quick_reply(
+        self,
+        quick_reply_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[QuickReply]:
+        """Delete a quick reply.
+
+        Deletes it and answers it as it was. It cannot be undone.
+
+        Scope: `quick_replies:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[QuickReply], self._request(
+            "DELETE",
+            "/quick-replies/{quick_reply_id}",
+            path_parameters={"quick_reply_id": quick_reply_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
 
 class AsyncOperations:
     """Every operation of the Ricky API, awaitable."""
@@ -1518,6 +1837,29 @@ class AsyncOperations:
         return cast(Page[ContactField], await self._request(
             "GET",
             "/contact-fields",
+        ))
+
+    async def create_contact_field(
+        self,
+        body: CreateContactField,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[ContactField]:
+        """Create a contact field.
+
+        Adds a custom field to every contact, after the existing ones. A name already in use, in any case, answers `409 conflict`.
+
+        Scope: `contacts:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[ContactField], await self._request(
+            "POST",
+            "/contact-fields",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
         ))
 
     async def list_conversations(
@@ -1789,7 +2131,7 @@ class AsyncOperations:
 
         Creates a contact tag. Apply it with `tag_ids` on a contact. A name already in use, in any case, answers `409 conflict`.
 
-        Scope: `contacts:write`.
+        Scope: `tags:write` or, on older keys, `contacts:write`.
 
         Args:
             idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
@@ -2697,4 +3039,291 @@ class AsyncOperations:
             "DELETE",
             "/knowledge/files/{file_id}",
             path_parameters={"file_id": file_id},
+        ))
+
+    async def change_contacts_tags(
+        self,
+        body: ChangeContactsTags,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Page[ContactTagChange]:
+        """Change tags on many contacts.
+
+        Adds and removes the same tags on up to 100 contacts and answers one result per contact, in order. A tag ID the organization does not have refuses the whole request before any contact changes.
+
+        Scope: `contacts:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Page[ContactTagChange], await self._request(
+            "POST",
+            "/contacts/tags",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def delete_contact_field(
+        self,
+        field_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[ContactField]:
+        """Delete a contact field.
+
+        Deletes the field and its value on every contact, and answers the field as it was. It cannot be undone.
+
+        Scope: `contacts:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[ContactField], await self._request(
+            "DELETE",
+            "/contact-fields/{field_id}",
+            path_parameters={"field_id": field_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def update_tag(
+        self,
+        tag_id: str,
+        body: UpdateTag,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Tag]:
+        """Update a tag.
+
+        Renames or recolors a tag on every contact that has it. A name already in use, in any case, answers `409 conflict`.
+
+        Scope: `tags:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Tag], await self._request(
+            "PATCH",
+            "/tags/{tag_id}",
+            path_parameters={"tag_id": tag_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def delete_tag(
+        self,
+        tag_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Tag]:
+        """Delete a tag.
+
+        Deletes the tag and removes it from every contact, and answers the tag as it was. It cannot be undone.
+
+        Scope: `tags:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Tag], await self._request(
+            "DELETE",
+            "/tags/{tag_id}",
+            path_parameters={"tag_id": tag_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def search_conversations(
+        self,
+        *,
+        query: Optional[str] = None,
+        limit: Optional[int] = None,
+    ) -> Page[Conversation]:
+        """Search conversations.
+
+        Conversations whose contact or messages contain the text, latest activity first. Answers one page of at most `limit`; `next_cursor` is always null.
+
+        Scope: `conversations:read`.
+
+        Args:
+            query: Text in the contact's name, phone, email or company, its name or handle on the channel, or the conversation's messages.
+            limit: Most results to return.
+        """
+        return cast(Page[Conversation], await self._request(
+            "GET",
+            "/conversations/search",
+            query={"query": query, "limit": limit},
+        ))
+
+    async def change_conversation_tags(
+        self,
+        conversation_id: str,
+        body: ChangeConversationTags,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Contact]:
+        """Change a conversation's tags.
+
+        Tags belong to the conversation's contact: this adds and removes tags on it and answers the contact.
+
+        Scope: `contacts:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Contact], await self._request(
+            "PATCH",
+            "/conversations/{conversation_id}/tags",
+            path_parameters={"conversation_id": conversation_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def mark_conversation_read(
+        self,
+        conversation_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Conversation]:
+        """Mark a conversation read.
+
+        Marks it read for the whole team through its latest message, as opening it in the inbox does. On WhatsApp the contact sees the read receipt. Send no body.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Conversation], await self._request(
+            "POST",
+            "/conversations/{conversation_id}/read",
+            path_parameters={"conversation_id": conversation_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def search_messages(
+        self,
+        *,
+        query: Optional[str] = None,
+        limit: Optional[int] = None,
+    ) -> Page[MessageSearchResult]:
+        """Search messages.
+
+        Messages of every conversation that contain the words, newest first. Answers one page of at most `limit`; `next_cursor` is always null.
+
+        Scope: `conversations:read`.
+
+        Args:
+            query: Words in the message text, or text in what Ricky derived from a voice note or file.
+            limit: Most results to return.
+        """
+        return cast(Page[MessageSearchResult], await self._request(
+            "GET",
+            "/messages/search",
+            query={"query": query, "limit": limit},
+        ))
+
+    async def list_quick_replies(
+        self,
+    ) -> Page[QuickReply]:
+        """List quick replies.
+
+        Every quick reply of the organization, by title.
+
+        Scope: `quick_replies:read`.
+        """
+        return cast(Page[QuickReply], await self._request(
+            "GET",
+            "/quick-replies",
+        ))
+
+    async def create_quick_reply(
+        self,
+        body: CreateQuickReply,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[QuickReply]:
+        """Create a quick reply.
+
+        Saves an answer operators can insert in the inbox. A title already in use, in any case, answers `409 conflict`.
+
+        Scope: `quick_replies:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[QuickReply], await self._request(
+            "POST",
+            "/quick-replies",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def get_quick_reply(
+        self,
+        quick_reply_id: str,
+    ) -> Resource[QuickReply]:
+        """Get a quick reply.
+
+        One quick reply.
+
+        Scope: `quick_replies:read`.
+        """
+        return cast(Resource[QuickReply], await self._request(
+            "GET",
+            "/quick-replies/{quick_reply_id}",
+            path_parameters={"quick_reply_id": quick_reply_id},
+        ))
+
+    async def update_quick_reply(
+        self,
+        quick_reply_id: str,
+        body: UpdateQuickReply,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[QuickReply]:
+        """Update a quick reply.
+
+        Changes only the fields in the body. A title already in use, in any case, answers `409 conflict`.
+
+        Scope: `quick_replies:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[QuickReply], await self._request(
+            "PATCH",
+            "/quick-replies/{quick_reply_id}",
+            path_parameters={"quick_reply_id": quick_reply_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def delete_quick_reply(
+        self,
+        quick_reply_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[QuickReply]:
+        """Delete a quick reply.
+
+        Deletes it and answers it as it was. It cannot be undone.
+
+        Scope: `quick_replies:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[QuickReply], await self._request(
+            "DELETE",
+            "/quick-replies/{quick_reply_id}",
+            path_parameters={"quick_reply_id": quick_reply_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
         ))

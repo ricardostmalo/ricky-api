@@ -758,6 +758,293 @@ class WebhookTestResult(TypedDict):
     """
 
 
+class ContactTagChange(TypedDict):
+    """
+    What a tag change did to one contact.
+    """
+
+    contact_id: str
+    """
+    Contact ID.
+    """
+    status: Literal["updated", "not_found", "failed"]
+    """
+    `updated`; `not_found` when the organization has no such contact; `failed` when Ricky could not save it, so retry that contact.
+    """
+    tags: Optional[List[Tag]]
+    """
+    The contact's tags after the change; null unless `updated`.
+    """
+
+
+class MessageSearchResultContact(TypedDict):
+    name: Optional[str]
+    """
+    Contact name, or the name on the channel.
+    """
+    external_id: str
+    """
+    Address on the channel.
+    """
+
+
+class MessageSearchResult(TypedDict):
+    """
+    A message whose text matches the search.
+    """
+
+    message_id: str
+    """
+    Message ID.
+    """
+    conversation_id: str
+    """
+    Conversation ID.
+    """
+    direction: Literal["inbound", "outbound"]
+    type: str
+    """
+    Message type: `text`, `image`, `audio`, `template`, …
+    """
+    text: str
+    """
+    The matching text: the message, or what Ricky derived from a voice note or file.
+    """
+    contact: MessageSearchResultContact
+    agent_name: Optional[str]
+    """
+    AI agent that wrote it; null otherwise.
+    """
+    messaged_at: str
+    """
+    When it was sent or received.
+    """
+
+
+class QuickReply(TypedDict):
+    """
+    A saved answer operators insert into a message.
+    """
+
+    id: str
+    """
+    Quick reply ID.
+    """
+    title: str
+    """
+    Name operators pick it by, unique in the organization regardless of case.
+    """
+    body: str
+    """
+    Text inserted into the message.
+    """
+
+
+class KnowledgeLocation(TypedDict):
+    """
+    A branch or place the agents can send as a WhatsApp location.
+    """
+
+    id: str
+    """
+    Location ID.
+    """
+    name: str
+    """
+    Name customers know it by.
+    """
+    address: str
+    """
+    Full address as customers read it.
+    """
+    latitude: float
+    """
+    Latitude of the map pin.
+    """
+    longitude: float
+    """
+    Longitude of the map pin.
+    """
+    street: Optional[str]
+    """
+    Street.
+    """
+    city: Optional[str]
+    """
+    City.
+    """
+    state: Optional[str]
+    """
+    State, province or region.
+    """
+    postal_code: Optional[str]
+    """
+    Postal code.
+    """
+    country: Optional[str]
+    """
+    Country.
+    """
+    country_code: Optional[str]
+    """
+    Country code, ISO 3166-1 alpha-2.
+    """
+    phone: Optional[str]
+    """
+    Phone in E.164.
+    """
+    email: Optional[str]
+    """
+    Email.
+    """
+    hours: Optional[str]
+    """
+    Opening hours, as free text.
+    """
+
+
+class KnowledgeContact(TypedDict):
+    """
+    A contact card in the knowledge directory, which agents can send to customers.
+    """
+
+    id: str
+    """
+    Knowledge contact ID.
+    """
+    display_name: str
+    """
+    Name shown on the contact card.
+    """
+    first_name: Optional[str]
+    """
+    First name.
+    """
+    last_name: Optional[str]
+    """
+    Last name.
+    """
+    prefix: Optional[str]
+    """
+    Name prefix, such as `Dr.`.
+    """
+    suffix: Optional[str]
+    """
+    Name suffix.
+    """
+    company: Optional[str]
+    """
+    Company.
+    """
+    department: Optional[str]
+    """
+    Department.
+    """
+    job_title: Optional[str]
+    """
+    Job title.
+    """
+    description: Optional[str]
+    """
+    When the agents should share it.
+    """
+    phone: Optional[str]
+    """
+    Phone in E.164.
+    """
+    phone_type: Optional[str]
+    """
+    `CELL`, `WORK` or `HOME`.
+    """
+    email: Optional[str]
+    """
+    Email.
+    """
+    email_type: Optional[str]
+    """
+    `WORK` or `PERSONAL`.
+    """
+
+
+class KnowledgeFile(TypedDict):
+    """
+    A document or image the agents can consult or send.
+    """
+
+    id: str
+    """
+    File ID.
+    """
+    title: str
+    """
+    Title the agents see.
+    """
+    description: str
+    """
+    When the agents should use it; may be empty.
+    """
+    filename: str
+    """
+    Original file name.
+    """
+    mime_type: Literal["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "image/jpeg", "image/png"]
+    """
+    File type.
+    """
+    size_bytes: int
+    """
+    Size in bytes.
+    """
+    status: Literal["uploading", "ready", "failed"]
+    """
+    `uploading` until `POST /knowledge/files/{file_id}/complete` reads it; then `ready`.
+    """
+    consult_enabled: bool
+    """
+    Agents may read it to answer.
+    """
+    send_enabled: bool
+    """
+    Agents may send the file itself to customers.
+    """
+    page_count: Optional[int]
+    """
+    Pages of a PDF; null otherwise.
+    """
+    preview: Optional[str]
+    """
+    Start of the text Ricky read from it.
+    """
+    extraction_error: Optional[str]
+    """
+    Why Ricky could not read useful content; null when it could.
+    """
+    download_url: Optional[str]
+    """
+    Signed download URL, valid for five minutes. Only `GET /knowledge/files/{file_id}` of a `ready` file carries it; null elsewhere.
+    """
+    created_at: str
+    """
+    When the upload began.
+    """
+    updated_at: str
+    """
+    Last change.
+    """
+
+
+class KnowledgeFileUpload(TypedDict):
+    """
+    A file waiting for its bytes, and where to put them.
+    """
+
+    file: KnowledgeFile
+    upload_url: str
+    """
+    Signed URL valid for two hours. `PUT` the file bytes to it with `Content-Type` set to `mime_type`, then call `POST /knowledge/files/{file_id}/complete`.
+    """
+
+
 ReportPeriod = TypedDict(
     "ReportPeriod",
     {
@@ -2416,211 +2703,6 @@ class WorkflowExecution(TypedDict):
     """
 
 
-class KnowledgeLocation(TypedDict):
-    """
-    A branch or place the agents can send as a WhatsApp location.
-    """
-
-    id: str
-    """
-    Location ID.
-    """
-    name: str
-    """
-    Name customers know it by.
-    """
-    address: str
-    """
-    Full address as customers read it.
-    """
-    latitude: float
-    """
-    Latitude of the map pin.
-    """
-    longitude: float
-    """
-    Longitude of the map pin.
-    """
-    street: Optional[str]
-    """
-    Street.
-    """
-    city: Optional[str]
-    """
-    City.
-    """
-    state: Optional[str]
-    """
-    State, province or region.
-    """
-    postal_code: Optional[str]
-    """
-    Postal code.
-    """
-    country: Optional[str]
-    """
-    Country.
-    """
-    country_code: Optional[str]
-    """
-    Country code, ISO 3166-1 alpha-2.
-    """
-    phone: Optional[str]
-    """
-    Phone in E.164.
-    """
-    email: Optional[str]
-    """
-    Email.
-    """
-    hours: Optional[str]
-    """
-    Opening hours, as free text.
-    """
-
-
-class KnowledgeContact(TypedDict):
-    """
-    A contact card in the knowledge directory, which agents can send to customers.
-    """
-
-    id: str
-    """
-    Knowledge contact ID.
-    """
-    display_name: str
-    """
-    Name shown on the contact card.
-    """
-    first_name: Optional[str]
-    """
-    First name.
-    """
-    last_name: Optional[str]
-    """
-    Last name.
-    """
-    prefix: Optional[str]
-    """
-    Name prefix, such as `Dr.`.
-    """
-    suffix: Optional[str]
-    """
-    Name suffix.
-    """
-    company: Optional[str]
-    """
-    Company.
-    """
-    department: Optional[str]
-    """
-    Department.
-    """
-    job_title: Optional[str]
-    """
-    Job title.
-    """
-    description: Optional[str]
-    """
-    When the agents should share it.
-    """
-    phone: Optional[str]
-    """
-    Phone in E.164.
-    """
-    phone_type: Optional[str]
-    """
-    `CELL`, `WORK` or `HOME`.
-    """
-    email: Optional[str]
-    """
-    Email.
-    """
-    email_type: Optional[str]
-    """
-    `WORK` or `PERSONAL`.
-    """
-
-
-class KnowledgeFile(TypedDict):
-    """
-    A document or image the agents can consult or send.
-    """
-
-    id: str
-    """
-    File ID.
-    """
-    title: str
-    """
-    Title the agents see.
-    """
-    description: str
-    """
-    When the agents should use it; may be empty.
-    """
-    filename: str
-    """
-    Original file name.
-    """
-    mime_type: Literal["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "image/jpeg", "image/png"]
-    """
-    File type.
-    """
-    size_bytes: int
-    """
-    Size in bytes.
-    """
-    status: Literal["uploading", "ready", "failed"]
-    """
-    `uploading` until `POST /knowledge/files/{file_id}/complete` reads it; then `ready`.
-    """
-    consult_enabled: bool
-    """
-    Agents may read it to answer.
-    """
-    send_enabled: bool
-    """
-    Agents may send the file itself to customers.
-    """
-    page_count: Optional[int]
-    """
-    Pages of a PDF; null otherwise.
-    """
-    preview: Optional[str]
-    """
-    Start of the text Ricky read from it.
-    """
-    extraction_error: Optional[str]
-    """
-    Why Ricky could not read useful content; null when it could.
-    """
-    download_url: Optional[str]
-    """
-    Signed download URL, valid for five minutes. Only `GET /knowledge/files/{file_id}` of a `ready` file carries it; null elsewhere.
-    """
-    created_at: str
-    """
-    When the upload began.
-    """
-    updated_at: str
-    """
-    Last change.
-    """
-
-
-class KnowledgeFileUpload(TypedDict):
-    """
-    A file waiting for its bytes, and where to put them.
-    """
-
-    file: KnowledgeFile
-    upload_url: str
-    """
-    Signed URL valid for two hours. `PUT` the file bytes to it with `Content-Type` set to `mime_type`, then call `POST /knowledge/files/{file_id}/complete`.
-    """
-
-
 CreateAgentCapability: TypeAlias = str
 
 
@@ -3107,6 +3189,392 @@ class RotateWebhookSecret(TypedDict, closed=True):
     expire_previous_after_hours: NotRequired[int]
     """
     How long deliveries keep the previous signature too, so you can deploy the new secret first. 0 ends the previous secret now.
+    """
+
+
+class ChangeContactsTags(TypedDict, closed=True):
+    """
+    Adds and removes the same tags on many contacts. Their other tags stay.
+    """
+
+    contact_ids: List[str]
+    """
+    Contacts to change, up to 100. Repeated IDs count once.
+    """
+    add_tag_ids: NotRequired[List[str]]
+    """
+    Tags to add. See `GET /tags`.
+    """
+    remove_tag_ids: NotRequired[List[str]]
+    """
+    Tags to remove.
+    """
+
+
+class ChangeConversationTags(TypedDict, closed=True):
+    """
+    Adds and removes tags on the conversation's contact. Its other tags stay.
+    """
+
+    add_tag_ids: NotRequired[List[str]]
+    """
+    Tags to add. See `GET /tags`.
+    """
+    remove_tag_ids: NotRequired[List[str]]
+    """
+    Tags to remove.
+    """
+
+
+class UpdateTag(TypedDict, closed=True):
+    """
+    Only the fields you send change, on every contact that has the tag.
+    """
+
+    name: NotRequired[str]
+    """
+    Display name, unique in the organization regardless of case.
+    """
+    color: NotRequired[Literal["gray", "red", "orange", "amber", "green", "teal", "blue", "indigo", "purple", "pink"]]
+    """
+    Display color.
+    """
+
+
+CreateContactFieldOption: TypeAlias = str
+
+
+class CreateContactField(TypedDict, closed=True):
+    """
+    A custom contact field. Its ID keys `custom_values`.
+    """
+
+    name: str
+    """
+    Display name, unique in the organization regardless of case.
+    """
+    type: Literal["text", "long_text", "number", "boolean", "date", "select", "multi_select"]
+    """
+    Value type. It cannot change later.
+    """
+    options: NotRequired[List[CreateContactFieldOption]]
+    """
+    Allowed values; required for `select` and `multi_select`, refused otherwise.
+    """
+
+
+class CreateQuickReply(TypedDict, closed=True):
+    title: str
+    """
+    Name operators pick it by, unique in the organization regardless of case.
+    """
+    body: str
+    """
+    Text inserted into the message.
+    """
+
+
+class UpdateQuickReply(TypedDict, closed=True):
+    """
+    Only the fields you send change.
+    """
+
+    title: NotRequired[str]
+    """
+    Name operators pick it by, unique in the organization regardless of case.
+    """
+    body: NotRequired[str]
+    """
+    Text inserted into the message.
+    """
+
+
+class CreateKnowledgeLocation(TypedDict, closed=True):
+    """
+    A location needs a name, an address and its coordinates.
+    """
+
+    name: str
+    """
+    Name customers know it by.
+    """
+    address: str
+    """
+    Full address as customers read it.
+    """
+    latitude: float
+    """
+    Latitude of the map pin, confirmed, not estimated.
+    """
+    longitude: float
+    """
+    Longitude of the map pin, confirmed, not estimated.
+    """
+    street: NotRequired[Optional[str]]
+    """
+    Street.
+    """
+    city: NotRequired[Optional[str]]
+    """
+    City.
+    """
+    state: NotRequired[Optional[str]]
+    """
+    State, province or region.
+    """
+    postal_code: NotRequired[Optional[str]]
+    """
+    Postal code.
+    """
+    country: NotRequired[Optional[str]]
+    """
+    Country.
+    """
+    country_code: NotRequired[Optional[str]]
+    """
+    Country code, ISO 3166-1 alpha-2.
+    """
+    phone: NotRequired[Optional[str]]
+    """
+    Phone with country code, for example `+507 6000-1234`.
+    """
+    email: NotRequired[Optional[str]]
+    """
+    Email.
+    """
+    hours: NotRequired[Optional[str]]
+    """
+    Opening hours, as free text.
+    """
+
+
+class UpdateKnowledgeLocation(TypedDict, closed=True):
+    """
+    Only the fields you send change. Send `null` to clear an optional one.
+    """
+
+    name: NotRequired[str]
+    """
+    Name customers know it by.
+    """
+    address: NotRequired[str]
+    """
+    Full address as customers read it.
+    """
+    latitude: NotRequired[float]
+    """
+    Latitude of the map pin, confirmed, not estimated.
+    """
+    longitude: NotRequired[float]
+    """
+    Longitude of the map pin, confirmed, not estimated.
+    """
+    street: NotRequired[Optional[str]]
+    """
+    Street.
+    """
+    city: NotRequired[Optional[str]]
+    """
+    City.
+    """
+    state: NotRequired[Optional[str]]
+    """
+    State, province or region.
+    """
+    postal_code: NotRequired[Optional[str]]
+    """
+    Postal code.
+    """
+    country: NotRequired[Optional[str]]
+    """
+    Country.
+    """
+    country_code: NotRequired[Optional[str]]
+    """
+    Country code, ISO 3166-1 alpha-2.
+    """
+    phone: NotRequired[Optional[str]]
+    """
+    Phone with country code, for example `+507 6000-1234`.
+    """
+    email: NotRequired[Optional[str]]
+    """
+    Email.
+    """
+    hours: NotRequired[Optional[str]]
+    """
+    Opening hours, as free text.
+    """
+
+
+class CreateKnowledgeContact(TypedDict, closed=True):
+    """
+    A contact card needs a display name and a phone or an email.
+    """
+
+    display_name: str
+    """
+    Name shown on the contact card.
+    """
+    first_name: NotRequired[Optional[str]]
+    """
+    First name.
+    """
+    last_name: NotRequired[Optional[str]]
+    """
+    Last name.
+    """
+    prefix: NotRequired[Optional[str]]
+    """
+    Name prefix, such as `Dr.`.
+    """
+    suffix: NotRequired[Optional[str]]
+    """
+    Name suffix.
+    """
+    company: NotRequired[Optional[str]]
+    """
+    Company.
+    """
+    department: NotRequired[Optional[str]]
+    """
+    Department.
+    """
+    job_title: NotRequired[Optional[str]]
+    """
+    Job title.
+    """
+    description: NotRequired[Optional[str]]
+    """
+    When the agents should share it.
+    """
+    phone: NotRequired[Optional[str]]
+    """
+    Phone with country code, for example `+507 6000-1234`.
+    """
+    phone_type: NotRequired[Optional[Literal["CELL", "WORK", "HOME"]]]
+    email: NotRequired[Optional[str]]
+    """
+    Email.
+    """
+    email_type: NotRequired[Optional[Literal["WORK", "PERSONAL"]]]
+
+
+class UpdateKnowledgeContact(TypedDict, closed=True):
+    """
+    Only the fields you send change. Send `null` to clear an optional one; the card keeps a phone or an email.
+    """
+
+    display_name: NotRequired[str]
+    """
+    Name shown on the contact card.
+    """
+    first_name: NotRequired[Optional[str]]
+    """
+    First name.
+    """
+    last_name: NotRequired[Optional[str]]
+    """
+    Last name.
+    """
+    prefix: NotRequired[Optional[str]]
+    """
+    Name prefix, such as `Dr.`.
+    """
+    suffix: NotRequired[Optional[str]]
+    """
+    Name suffix.
+    """
+    company: NotRequired[Optional[str]]
+    """
+    Company.
+    """
+    department: NotRequired[Optional[str]]
+    """
+    Department.
+    """
+    job_title: NotRequired[Optional[str]]
+    """
+    Job title.
+    """
+    description: NotRequired[Optional[str]]
+    """
+    When the agents should share it.
+    """
+    phone: NotRequired[Optional[str]]
+    """
+    Phone with country code, for example `+507 6000-1234`.
+    """
+    phone_type: NotRequired[Optional[Literal["CELL", "WORK", "HOME"]]]
+    email: NotRequired[Optional[str]]
+    """
+    Email.
+    """
+    email_type: NotRequired[Optional[Literal["WORK", "PERSONAL"]]]
+
+
+class CreateKnowledgeFile(TypedDict, closed=True):
+    """
+    Begins an upload. Ricky answers where to `PUT` the bytes.
+    """
+
+    title: str
+    """
+    Title the agents see.
+    """
+    description: NotRequired[str]
+    """
+    When the agents should use it.
+    """
+    filename: str
+    """
+    File name, with its extension.
+    """
+    mime_type: Literal["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "image/jpeg", "image/png"]
+    """
+    File type: PDF, Word or Excel up to 100 MB; JPEG or PNG up to 5 MB.
+    """
+    size_bytes: int
+    """
+    Exact size of the file you will upload.
+    """
+
+
+class CompleteKnowledgeFile(TypedDict, closed=True):
+    """
+    The body is optional.
+    """
+
+    consult_enabled: NotRequired[bool]
+    """
+    Agents may read it to answer. Ignored when Ricky reads no useful content.
+    """
+    send_enabled: NotRequired[bool]
+    """
+    Agents may send the file itself.
+    """
+
+
+class UpdateKnowledgeFile(TypedDict, closed=True):
+    """
+    Only the fields you send change. The file must be `ready`.
+    """
+
+    title: NotRequired[str]
+    """
+    Title the agents see.
+    """
+    description: NotRequired[str]
+    """
+    When the agents should use it.
+    """
+    consult_enabled: NotRequired[bool]
+    """
+    Agents may read it to answer.
+    """
+    send_enabled: NotRequired[bool]
+    """
+    Agents may send the file itself.
     """
 
 
@@ -3723,293 +4191,4 @@ class UpdateWorkflow(TypedDict, closed=True):
     definition: NotRequired[UpdateWorkflowDefinition]
     """
     Replaces the whole definition.
-    """
-
-
-class CreateKnowledgeLocation(TypedDict, closed=True):
-    """
-    A location needs a name, an address and its coordinates.
-    """
-
-    name: str
-    """
-    Name customers know it by.
-    """
-    address: str
-    """
-    Full address as customers read it.
-    """
-    latitude: float
-    """
-    Latitude of the map pin, confirmed, not estimated.
-    """
-    longitude: float
-    """
-    Longitude of the map pin, confirmed, not estimated.
-    """
-    street: NotRequired[Optional[str]]
-    """
-    Street.
-    """
-    city: NotRequired[Optional[str]]
-    """
-    City.
-    """
-    state: NotRequired[Optional[str]]
-    """
-    State, province or region.
-    """
-    postal_code: NotRequired[Optional[str]]
-    """
-    Postal code.
-    """
-    country: NotRequired[Optional[str]]
-    """
-    Country.
-    """
-    country_code: NotRequired[Optional[str]]
-    """
-    Country code, ISO 3166-1 alpha-2.
-    """
-    phone: NotRequired[Optional[str]]
-    """
-    Phone with country code, for example `+507 6000-1234`.
-    """
-    email: NotRequired[Optional[str]]
-    """
-    Email.
-    """
-    hours: NotRequired[Optional[str]]
-    """
-    Opening hours, as free text.
-    """
-
-
-class UpdateKnowledgeLocation(TypedDict, closed=True):
-    """
-    Only the fields you send change. Send `null` to clear an optional one.
-    """
-
-    name: NotRequired[str]
-    """
-    Name customers know it by.
-    """
-    address: NotRequired[str]
-    """
-    Full address as customers read it.
-    """
-    latitude: NotRequired[float]
-    """
-    Latitude of the map pin, confirmed, not estimated.
-    """
-    longitude: NotRequired[float]
-    """
-    Longitude of the map pin, confirmed, not estimated.
-    """
-    street: NotRequired[Optional[str]]
-    """
-    Street.
-    """
-    city: NotRequired[Optional[str]]
-    """
-    City.
-    """
-    state: NotRequired[Optional[str]]
-    """
-    State, province or region.
-    """
-    postal_code: NotRequired[Optional[str]]
-    """
-    Postal code.
-    """
-    country: NotRequired[Optional[str]]
-    """
-    Country.
-    """
-    country_code: NotRequired[Optional[str]]
-    """
-    Country code, ISO 3166-1 alpha-2.
-    """
-    phone: NotRequired[Optional[str]]
-    """
-    Phone with country code, for example `+507 6000-1234`.
-    """
-    email: NotRequired[Optional[str]]
-    """
-    Email.
-    """
-    hours: NotRequired[Optional[str]]
-    """
-    Opening hours, as free text.
-    """
-
-
-class CreateKnowledgeContact(TypedDict, closed=True):
-    """
-    A contact card needs a display name and a phone or an email.
-    """
-
-    display_name: str
-    """
-    Name shown on the contact card.
-    """
-    first_name: NotRequired[Optional[str]]
-    """
-    First name.
-    """
-    last_name: NotRequired[Optional[str]]
-    """
-    Last name.
-    """
-    prefix: NotRequired[Optional[str]]
-    """
-    Name prefix, such as `Dr.`.
-    """
-    suffix: NotRequired[Optional[str]]
-    """
-    Name suffix.
-    """
-    company: NotRequired[Optional[str]]
-    """
-    Company.
-    """
-    department: NotRequired[Optional[str]]
-    """
-    Department.
-    """
-    job_title: NotRequired[Optional[str]]
-    """
-    Job title.
-    """
-    description: NotRequired[Optional[str]]
-    """
-    When the agents should share it.
-    """
-    phone: NotRequired[Optional[str]]
-    """
-    Phone with country code, for example `+507 6000-1234`.
-    """
-    phone_type: NotRequired[Optional[Literal["CELL", "WORK", "HOME"]]]
-    email: NotRequired[Optional[str]]
-    """
-    Email.
-    """
-    email_type: NotRequired[Optional[Literal["WORK", "PERSONAL"]]]
-
-
-class UpdateKnowledgeContact(TypedDict, closed=True):
-    """
-    Only the fields you send change. Send `null` to clear an optional one; the card keeps a phone or an email.
-    """
-
-    display_name: NotRequired[str]
-    """
-    Name shown on the contact card.
-    """
-    first_name: NotRequired[Optional[str]]
-    """
-    First name.
-    """
-    last_name: NotRequired[Optional[str]]
-    """
-    Last name.
-    """
-    prefix: NotRequired[Optional[str]]
-    """
-    Name prefix, such as `Dr.`.
-    """
-    suffix: NotRequired[Optional[str]]
-    """
-    Name suffix.
-    """
-    company: NotRequired[Optional[str]]
-    """
-    Company.
-    """
-    department: NotRequired[Optional[str]]
-    """
-    Department.
-    """
-    job_title: NotRequired[Optional[str]]
-    """
-    Job title.
-    """
-    description: NotRequired[Optional[str]]
-    """
-    When the agents should share it.
-    """
-    phone: NotRequired[Optional[str]]
-    """
-    Phone with country code, for example `+507 6000-1234`.
-    """
-    phone_type: NotRequired[Optional[Literal["CELL", "WORK", "HOME"]]]
-    email: NotRequired[Optional[str]]
-    """
-    Email.
-    """
-    email_type: NotRequired[Optional[Literal["WORK", "PERSONAL"]]]
-
-
-class CreateKnowledgeFile(TypedDict, closed=True):
-    """
-    Begins an upload. Ricky answers where to `PUT` the bytes.
-    """
-
-    title: str
-    """
-    Title the agents see.
-    """
-    description: NotRequired[str]
-    """
-    When the agents should use it.
-    """
-    filename: str
-    """
-    File name, with its extension.
-    """
-    mime_type: Literal["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "image/jpeg", "image/png"]
-    """
-    File type: PDF, Word or Excel up to 100 MB; JPEG or PNG up to 5 MB.
-    """
-    size_bytes: int
-    """
-    Exact size of the file you will upload.
-    """
-
-
-class CompleteKnowledgeFile(TypedDict, closed=True):
-    """
-    The body is optional.
-    """
-
-    consult_enabled: NotRequired[bool]
-    """
-    Agents may read it to answer. Ignored when Ricky reads no useful content.
-    """
-    send_enabled: NotRequired[bool]
-    """
-    Agents may send the file itself.
-    """
-
-
-class UpdateKnowledgeFile(TypedDict, closed=True):
-    """
-    Only the fields you send change. The file must be `ready`.
-    """
-
-    title: NotRequired[str]
-    """
-    Title the agents see.
-    """
-    description: NotRequired[str]
-    """
-    When the agents should use it.
-    """
-    consult_enabled: NotRequired[bool]
-    """
-    Agents may read it to answer.
-    """
-    send_enabled: NotRequired[bool]
-    """
-    Agents may send the file itself.
     """

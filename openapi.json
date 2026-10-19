@@ -42,6 +42,10 @@
       "description": "Channels, members, tags and templates to reference by ID."
     },
     {
+      "name": "Quick replies",
+      "description": "Saved answers operators insert into a message."
+    },
+    {
       "name": "Webhooks",
       "description": "Subscriptions Ricky posts events to, and their deliveries."
     },
@@ -888,6 +892,143 @@
           },
           "403": {
             "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createContactField",
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Create a contact field",
+        "description": "Adds a custom field to every contact, after the existing ones. A name already in use, in any case, answers `409 conflict`.\n\nScope: `contacts:write`.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContactField"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ContactField"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.\n\n`conflict`: The resource changed in a way that prevents the operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2678,7 +2819,7 @@
           "Catalogs"
         ],
         "summary": "Create a tag",
-        "description": "Creates a contact tag. Apply it with `tag_ids` on a contact. A name already in use, in any case, answers `409 conflict`.\n\nScope: `contacts:write`.",
+        "description": "Creates a contact tag. Apply it with `tag_ids` on a contact. A name already in use, in any case, answers `409 conflict`.\n\nScope: `tags:write` or, on older keys, `contacts:write`.",
         "parameters": [
           {
             "$ref": "#/components/parameters/IdempotencyKey"
@@ -8713,6 +8854,1751 @@
           }
         }
       }
+    },
+    "/contacts/tags": {
+      "post": {
+        "operationId": "changeContactsTags",
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Change tags on many contacts",
+        "description": "Adds and removes the same tags on up to 100 contacts and answers one result per contact, in order. A tag ID the organization does not have refuses the whole request before any contact changes.\n\nScope: `contacts:write`.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeContactsTags"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "next_cursor"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ContactTagChange"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Pass as `cursor` for the next page; null on the last page."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contact-fields/{field_id}": {
+      "delete": {
+        "operationId": "deleteContactField",
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Delete a contact field",
+        "description": "Deletes the field and its value on every contact, and answers the field as it was. It cannot be undone.\n\nScope: `contacts:write`.",
+        "parameters": [
+          {
+            "name": "field_id",
+            "in": "path",
+            "required": true,
+            "description": "Field ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ContactField"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tags/{tag_id}": {
+      "patch": {
+        "operationId": "updateTag",
+        "tags": [
+          "Catalogs"
+        ],
+        "summary": "Update a tag",
+        "description": "Renames or recolors a tag on every contact that has it. A name already in use, in any case, answers `409 conflict`.\n\nScope: `tags:write`.",
+        "parameters": [
+          {
+            "name": "tag_id",
+            "in": "path",
+            "required": true,
+            "description": "Tag ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTag"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Tag"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.\n\n`conflict`: The resource changed in a way that prevents the operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteTag",
+        "tags": [
+          "Catalogs"
+        ],
+        "summary": "Delete a tag",
+        "description": "Deletes the tag and removes it from every contact, and answers the tag as it was. It cannot be undone.\n\nScope: `tags:write`.",
+        "parameters": [
+          {
+            "name": "tag_id",
+            "in": "path",
+            "required": true,
+            "description": "Tag ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Tag"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/conversations/search": {
+      "get": {
+        "operationId": "searchConversations",
+        "tags": [
+          "Conversations"
+        ],
+        "summary": "Search conversations",
+        "description": "Conversations whose contact or messages contain the text, latest activity first. Answers one page of at most `limit`; `next_cursor` is always null.\n\nScope: `conversations:read`.",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "description": "Text in the contact's name, phone, email or company, its name or handle on the channel, or the conversation's messages.",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Most results to return.",
+            "schema": {
+              "default": 10,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "next_cursor"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Conversation"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Pass as `cursor` for the next page; null on the last page."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/conversations/{conversation_id}/tags": {
+      "patch": {
+        "operationId": "changeConversationTags",
+        "tags": [
+          "Conversations"
+        ],
+        "summary": "Change a conversation's tags",
+        "description": "Tags belong to the conversation's contact: this adds and removes tags on it and answers the contact.\n\nScope: `contacts:write`.",
+        "parameters": [
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "description": "Conversation ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeConversationTags"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Contact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/conversations/{conversation_id}/read": {
+      "post": {
+        "operationId": "markConversationRead",
+        "tags": [
+          "Conversations"
+        ],
+        "summary": "Mark a conversation read",
+        "description": "Marks it read for the whole team through its latest message, as opening it in the inbox does. On WhatsApp the contact sees the read receipt. Send no body.\n\nScope: `conversations:write`.",
+        "parameters": [
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "description": "Conversation ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Conversation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/messages/search": {
+      "get": {
+        "operationId": "searchMessages",
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Search messages",
+        "description": "Messages of every conversation that contain the words, newest first. Answers one page of at most `limit`; `next_cursor` is always null.\n\nScope: `conversations:read`.",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "description": "Words in the message text, or text in what Ricky derived from a voice note or file.",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Most results to return.",
+            "schema": {
+              "default": 10,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 30
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "next_cursor"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/MessageSearchResult"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Pass as `cursor` for the next page; null on the last page."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quick-replies": {
+      "get": {
+        "operationId": "listQuickReplies",
+        "tags": [
+          "Quick replies"
+        ],
+        "summary": "List quick replies",
+        "description": "Every quick reply of the organization, by title.\n\nScope: `quick_replies:read`.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "next_cursor"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/QuickReply"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Pass as `cursor` for the next page; null on the last page."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createQuickReply",
+        "tags": [
+          "Quick replies"
+        ],
+        "summary": "Create a quick reply",
+        "description": "Saves an answer operators can insert in the inbox. A title already in use, in any case, answers `409 conflict`.\n\nScope: `quick_replies:write`.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateQuickReply"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/QuickReply"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.\n\n`conflict`: The resource changed in a way that prevents the operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quick-replies/{quick_reply_id}": {
+      "get": {
+        "operationId": "getQuickReply",
+        "tags": [
+          "Quick replies"
+        ],
+        "summary": "Get a quick reply",
+        "description": "One quick reply.\n\nScope: `quick_replies:read`.",
+        "parameters": [
+          {
+            "name": "quick_reply_id",
+            "in": "path",
+            "required": true,
+            "description": "Quick reply ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/QuickReply"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateQuickReply",
+        "tags": [
+          "Quick replies"
+        ],
+        "summary": "Update a quick reply",
+        "description": "Changes only the fields in the body. A title already in use, in any case, answers `409 conflict`.\n\nScope: `quick_replies:write`.",
+        "parameters": [
+          {
+            "name": "quick_reply_id",
+            "in": "path",
+            "required": true,
+            "description": "Quick reply ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateQuickReply"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/QuickReply"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.\n\n`conflict`: The resource changed in a way that prevents the operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteQuickReply",
+        "tags": [
+          "Quick replies"
+        ],
+        "summary": "Delete a quick reply",
+        "description": "Deletes it and answers it as it was. It cannot be undone.\n\nScope: `quick_replies:write`.",
+        "parameters": [
+          {
+            "name": "quick_reply_id",
+            "in": "path",
+            "required": true,
+            "description": "Quick reply ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/QuickReply"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "webhooks": {
@@ -11344,6 +13230,657 @@
           "duration_ms"
         ],
         "description": "What the endpoint answered to a `webhook.test` event."
+      },
+      "ContactTagChange": {
+        "type": "object",
+        "properties": {
+          "contact_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Contact ID.",
+            "examples": [
+              "3f6c2b1e-8d4a-4b7e-9a51-2c7d8e9f0a1b"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "updated",
+              "not_found",
+              "failed"
+            ],
+            "description": "`updated`; `not_found` when the organization has no such contact; `failed` when Ricky could not save it, so retry that contact."
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Tag"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The contact's tags after the change; null unless `updated`."
+          }
+        },
+        "required": [
+          "contact_id",
+          "status",
+          "tags"
+        ],
+        "description": "What a tag change did to one contact."
+      },
+      "MessageSearchResult": {
+        "type": "object",
+        "properties": {
+          "message_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Message ID.",
+            "examples": [
+              "c41d7e2a-5b6f-4a89-8c3d-0e1f2a3b4c5d"
+            ]
+          },
+          "conversation_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Conversation ID.",
+            "examples": [
+              "9b2e4c61-7a3f-4d18-b5c2-6e0f1a2b3c4d"
+            ]
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "inbound",
+              "outbound"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "Message type: `text`, `image`, `audio`, `template`, …",
+            "examples": [
+              "text"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "description": "The matching text: the message, or what Ricky derived from a voice note or file.",
+            "examples": [
+              "¿Ya están mis lentes?"
+            ]
+          },
+          "contact": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "Contact name, or the name on the channel.",
+                "examples": [
+                  "Ana Pérez"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "external_id": {
+                "type": "string",
+                "description": "Address on the channel.",
+                "examples": [
+                  "50760001234"
+                ]
+              }
+            },
+            "required": [
+              "name",
+              "external_id"
+            ]
+          },
+          "agent_name": {
+            "description": "AI agent that wrote it; null otherwise.",
+            "examples": [
+              null
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "messaged_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When it was sent or received.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "message_id",
+          "conversation_id",
+          "direction",
+          "type",
+          "text",
+          "contact",
+          "agent_name",
+          "messaged_at"
+        ],
+        "description": "A message whose text matches the search."
+      },
+      "QuickReply": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Quick reply ID.",
+            "examples": [
+              "0f1e2d3c-4b5a-4968-8776-a5b4c3d2e1f0"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "description": "Name operators pick it by, unique in the organization regardless of case.",
+            "examples": [
+              "Horario"
+            ]
+          },
+          "body": {
+            "type": "string",
+            "description": "Text inserted into the message.",
+            "examples": [
+              "Abrimos de lunes a sábado, de 9:00 a. m. a 6:00 p. m."
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "body"
+        ],
+        "description": "A saved answer operators insert into a message."
+      },
+      "KnowledgeLocation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Location ID.",
+            "examples": [
+              "c3d4e5f6-a7b8-4c9d-8e0f-1a2b3c4d5e6f"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "Name customers know it by.",
+            "examples": [
+              "Casa Nativa Albrook"
+            ]
+          },
+          "address": {
+            "type": "string",
+            "description": "Full address as customers read it.",
+            "examples": [
+              "Albrook Mall, local 214, Panamá"
+            ]
+          },
+          "latitude": {
+            "type": "number",
+            "description": "Latitude of the map pin.",
+            "examples": [
+              8.9733
+            ]
+          },
+          "longitude": {
+            "type": "number",
+            "description": "Longitude of the map pin.",
+            "examples": [
+              -79.5511
+            ]
+          },
+          "street": {
+            "description": "Street.",
+            "examples": [
+              "Albrook Mall, local 214"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "city": {
+            "description": "City.",
+            "examples": [
+              "Panamá"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "state": {
+            "description": "State, province or region.",
+            "examples": [
+              "Panamá"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "postal_code": {
+            "description": "Postal code.",
+            "examples": [
+              null
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "country": {
+            "description": "Country.",
+            "examples": [
+              "Panamá"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "country_code": {
+            "description": "Country code, ISO 3166-1 alpha-2.",
+            "examples": [
+              "PA"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "phone": {
+            "description": "Phone in E.164.",
+            "examples": [
+              "+50760000000"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "email": {
+            "description": "Email.",
+            "examples": [
+              "albrook@example.com"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hours": {
+            "description": "Opening hours, as free text.",
+            "examples": [
+              "Lunes a sábado, 10:00 a 20:00"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "address",
+          "latitude",
+          "longitude",
+          "street",
+          "city",
+          "state",
+          "postal_code",
+          "country",
+          "country_code",
+          "phone",
+          "email",
+          "hours"
+        ],
+        "description": "A branch or place the agents can send as a WhatsApp location."
+      },
+      "KnowledgeContact": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Knowledge contact ID.",
+            "examples": [
+              "a7b8c9d0-e1f2-4a3b-8c4d-5e6f7a8b9c0d"
+            ]
+          },
+          "display_name": {
+            "type": "string",
+            "description": "Name shown on the contact card.",
+            "examples": [
+              "Ventas Casa Nativa"
+            ]
+          },
+          "first_name": {
+            "description": "First name.",
+            "examples": [
+              "Valeria"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "last_name": {
+            "description": "Last name.",
+            "examples": [
+              "Ruiz"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "prefix": {
+            "description": "Name prefix, such as `Dr.`.",
+            "examples": [
+              null
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "suffix": {
+            "description": "Name suffix.",
+            "examples": [
+              null
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "company": {
+            "description": "Company.",
+            "examples": [
+              "Casa Nativa"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "department": {
+            "description": "Department.",
+            "examples": [
+              "Ventas"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "job_title": {
+            "description": "Job title.",
+            "examples": [
+              "Gerente de ventas"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "description": "When the agents should share it.",
+            "examples": [
+              "Pedidos al por mayor."
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "phone": {
+            "description": "Phone in E.164.",
+            "examples": [
+              "+50760001111"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "phone_type": {
+            "description": "`CELL`, `WORK` or `HOME`.",
+            "examples": [
+              "WORK"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "email": {
+            "description": "Email.",
+            "examples": [
+              "ventas@example.com"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "email_type": {
+            "description": "`WORK` or `PERSONAL`.",
+            "examples": [
+              "WORK"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "display_name",
+          "first_name",
+          "last_name",
+          "prefix",
+          "suffix",
+          "company",
+          "department",
+          "job_title",
+          "description",
+          "phone",
+          "phone_type",
+          "email",
+          "email_type"
+        ],
+        "description": "A contact card in the knowledge directory, which agents can send to customers."
+      },
+      "KnowledgeFile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "File ID.",
+            "examples": [
+              "f1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "description": "Title the agents see.",
+            "examples": [
+              "Catálogo de lentes 2026"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "description": "When the agents should use it; may be empty.",
+            "examples": [
+              "Precios y modelos vigentes."
+            ]
+          },
+          "filename": {
+            "type": "string",
+            "description": "Original file name.",
+            "examples": [
+              "catalogo-2026.pdf"
+            ]
+          },
+          "mime_type": {
+            "type": "string",
+            "enum": [
+              "application/pdf",
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              "image/jpeg",
+              "image/png"
+            ],
+            "description": "File type."
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "Size in bytes.",
+            "examples": [
+              482133
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "uploading",
+              "ready",
+              "failed"
+            ],
+            "description": "`uploading` until `POST /knowledge/files/{file_id}/complete` reads it; then `ready`."
+          },
+          "consult_enabled": {
+            "type": "boolean",
+            "description": "Agents may read it to answer."
+          },
+          "send_enabled": {
+            "type": "boolean",
+            "description": "Agents may send the file itself to customers."
+          },
+          "page_count": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Pages of a PDF; null otherwise.",
+            "examples": [
+              12
+            ]
+          },
+          "preview": {
+            "description": "Start of the text Ricky read from it.",
+            "examples": [
+              "Catálogo 2026. Lentes de sol…"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "extraction_error": {
+            "description": "Why Ricky could not read useful content; null when it could.",
+            "examples": [
+              null
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "download_url": {
+            "description": "Signed download URL, valid for five minutes. Only `GET /knowledge/files/{file_id}` of a `ready` file carries it; null elsewhere.",
+            "examples": [
+              null
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When the upload began.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "Last change.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "filename",
+          "mime_type",
+          "size_bytes",
+          "status",
+          "consult_enabled",
+          "send_enabled",
+          "page_count",
+          "preview",
+          "extraction_error",
+          "download_url",
+          "created_at",
+          "updated_at"
+        ],
+        "description": "A document or image the agents can consult or send."
+      },
+      "KnowledgeFileUpload": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "$ref": "#/components/schemas/KnowledgeFile"
+          },
+          "upload_url": {
+            "type": "string",
+            "description": "Signed URL valid for two hours. `PUT` the file bytes to it with `Content-Type` set to `mime_type`, then call `POST /knowledge/files/{file_id}/complete`.",
+            "examples": [
+              "https://storage.example.com/upload/sign/media/d9e0f1a2-b3c4-4d5e-8f6a-7b8c9d0e1f2a/knowledge/f1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c.pdf?token=…"
+            ]
+          }
+        },
+        "required": [
+          "file",
+          "upload_url"
+        ],
+        "description": "A file waiting for its bytes, and where to put them."
       },
       "ReportPeriod": {
         "type": "object",
@@ -14712,484 +17249,6 @@
         ],
         "description": "One queued run of a workflow, or one template send of a scheduled workflow. Its status does not confirm each message's delivery."
       },
-      "KnowledgeLocation": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Location ID.",
-            "examples": [
-              "c3d4e5f6-a7b8-4c9d-8e0f-1a2b3c4d5e6f"
-            ]
-          },
-          "name": {
-            "type": "string",
-            "description": "Name customers know it by.",
-            "examples": [
-              "Casa Nativa Albrook"
-            ]
-          },
-          "address": {
-            "type": "string",
-            "description": "Full address as customers read it.",
-            "examples": [
-              "Albrook Mall, local 214, Panamá"
-            ]
-          },
-          "latitude": {
-            "type": "number",
-            "description": "Latitude of the map pin.",
-            "examples": [
-              8.9733
-            ]
-          },
-          "longitude": {
-            "type": "number",
-            "description": "Longitude of the map pin.",
-            "examples": [
-              -79.5511
-            ]
-          },
-          "street": {
-            "description": "Street.",
-            "examples": [
-              "Albrook Mall, local 214"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "city": {
-            "description": "City.",
-            "examples": [
-              "Panamá"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "state": {
-            "description": "State, province or region.",
-            "examples": [
-              "Panamá"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "postal_code": {
-            "description": "Postal code.",
-            "examples": [
-              null
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "country": {
-            "description": "Country.",
-            "examples": [
-              "Panamá"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "country_code": {
-            "description": "Country code, ISO 3166-1 alpha-2.",
-            "examples": [
-              "PA"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "phone": {
-            "description": "Phone in E.164.",
-            "examples": [
-              "+50760000000"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "email": {
-            "description": "Email.",
-            "examples": [
-              "albrook@example.com"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "hours": {
-            "description": "Opening hours, as free text.",
-            "examples": [
-              "Lunes a sábado, 10:00 a 20:00"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        },
-        "required": [
-          "id",
-          "name",
-          "address",
-          "latitude",
-          "longitude",
-          "street",
-          "city",
-          "state",
-          "postal_code",
-          "country",
-          "country_code",
-          "phone",
-          "email",
-          "hours"
-        ],
-        "description": "A branch or place the agents can send as a WhatsApp location."
-      },
-      "KnowledgeContact": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Knowledge contact ID.",
-            "examples": [
-              "a7b8c9d0-e1f2-4a3b-8c4d-5e6f7a8b9c0d"
-            ]
-          },
-          "display_name": {
-            "type": "string",
-            "description": "Name shown on the contact card.",
-            "examples": [
-              "Ventas Casa Nativa"
-            ]
-          },
-          "first_name": {
-            "description": "First name.",
-            "examples": [
-              "Valeria"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "last_name": {
-            "description": "Last name.",
-            "examples": [
-              "Ruiz"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "prefix": {
-            "description": "Name prefix, such as `Dr.`.",
-            "examples": [
-              null
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "suffix": {
-            "description": "Name suffix.",
-            "examples": [
-              null
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "company": {
-            "description": "Company.",
-            "examples": [
-              "Casa Nativa"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "department": {
-            "description": "Department.",
-            "examples": [
-              "Ventas"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "job_title": {
-            "description": "Job title.",
-            "examples": [
-              "Gerente de ventas"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "description": {
-            "description": "When the agents should share it.",
-            "examples": [
-              "Pedidos al por mayor."
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "phone": {
-            "description": "Phone in E.164.",
-            "examples": [
-              "+50760001111"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "phone_type": {
-            "description": "`CELL`, `WORK` or `HOME`.",
-            "examples": [
-              "WORK"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "email": {
-            "description": "Email.",
-            "examples": [
-              "ventas@example.com"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "email_type": {
-            "description": "`WORK` or `PERSONAL`.",
-            "examples": [
-              "WORK"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        },
-        "required": [
-          "id",
-          "display_name",
-          "first_name",
-          "last_name",
-          "prefix",
-          "suffix",
-          "company",
-          "department",
-          "job_title",
-          "description",
-          "phone",
-          "phone_type",
-          "email",
-          "email_type"
-        ],
-        "description": "A contact card in the knowledge directory, which agents can send to customers."
-      },
-      "KnowledgeFile": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "File ID.",
-            "examples": [
-              "f1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c"
-            ]
-          },
-          "title": {
-            "type": "string",
-            "description": "Title the agents see.",
-            "examples": [
-              "Catálogo de lentes 2026"
-            ]
-          },
-          "description": {
-            "type": "string",
-            "description": "When the agents should use it; may be empty.",
-            "examples": [
-              "Precios y modelos vigentes."
-            ]
-          },
-          "filename": {
-            "type": "string",
-            "description": "Original file name.",
-            "examples": [
-              "catalogo-2026.pdf"
-            ]
-          },
-          "mime_type": {
-            "type": "string",
-            "enum": [
-              "application/pdf",
-              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-              "image/jpeg",
-              "image/png"
-            ],
-            "description": "File type."
-          },
-          "size_bytes": {
-            "type": "integer",
-            "minimum": -9007199254740991,
-            "maximum": 9007199254740991,
-            "description": "Size in bytes.",
-            "examples": [
-              482133
-            ]
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "uploading",
-              "ready",
-              "failed"
-            ],
-            "description": "`uploading` until `POST /knowledge/files/{file_id}/complete` reads it; then `ready`."
-          },
-          "consult_enabled": {
-            "type": "boolean",
-            "description": "Agents may read it to answer."
-          },
-          "send_enabled": {
-            "type": "boolean",
-            "description": "Agents may send the file itself to customers."
-          },
-          "page_count": {
-            "anyOf": [
-              {
-                "type": "integer",
-                "minimum": -9007199254740991,
-                "maximum": 9007199254740991
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Pages of a PDF; null otherwise.",
-            "examples": [
-              12
-            ]
-          },
-          "preview": {
-            "description": "Start of the text Ricky read from it.",
-            "examples": [
-              "Catálogo 2026. Lentes de sol…"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "extraction_error": {
-            "description": "Why Ricky could not read useful content; null when it could.",
-            "examples": [
-              null
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "download_url": {
-            "description": "Signed download URL, valid for five minutes. Only `GET /knowledge/files/{file_id}` of a `ready` file carries it; null elsewhere.",
-            "examples": [
-              null
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
-            "description": "When the upload began.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
-            "description": "Last change.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          }
-        },
-        "required": [
-          "id",
-          "title",
-          "description",
-          "filename",
-          "mime_type",
-          "size_bytes",
-          "status",
-          "consult_enabled",
-          "send_enabled",
-          "page_count",
-          "preview",
-          "extraction_error",
-          "download_url",
-          "created_at",
-          "updated_at"
-        ],
-        "description": "A document or image the agents can consult or send."
-      },
-      "KnowledgeFileUpload": {
-        "type": "object",
-        "properties": {
-          "file": {
-            "$ref": "#/components/schemas/KnowledgeFile"
-          },
-          "upload_url": {
-            "type": "string",
-            "description": "Signed URL valid for two hours. `PUT` the file bytes to it with `Content-Type` set to `mime_type`, then call `POST /knowledge/files/{file_id}/complete`.",
-            "examples": [
-              "https://storage.example.com/upload/sign/media/d9e0f1a2-b3c4-4d5e-8f6a-7b8c9d0e1f2a/knowledge/f1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c.pdf?token=…"
-            ]
-          }
-        },
-        "required": [
-          "file",
-          "upload_url"
-        ],
-        "description": "A file waiting for its bytes, and where to put them."
-      },
       "CreateAgent": {
         "type": "object",
         "properties": {
@@ -16589,6 +18648,986 @@
           }
         ]
       },
+      "ChangeContactsTags": {
+        "type": "object",
+        "properties": {
+          "contact_ids": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Contacts to change, up to 100. Repeated IDs count once."
+          },
+          "add_tag_ids": {
+            "default": [],
+            "description": "Tags to add. See `GET /tags`.",
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "remove_tag_ids": {
+            "default": [],
+            "description": "Tags to remove.",
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "required": [
+          "contact_ids"
+        ],
+        "additionalProperties": false,
+        "description": "Adds and removes the same tags on many contacts. Their other tags stay.",
+        "examples": [
+          {
+            "contact_ids": [
+              "3f6c2b1e-8d4a-4b7e-9a51-2c7d8e9f0a1b"
+            ],
+            "add_tag_ids": [
+              "5c6d7e8f-9a0b-4c1d-8e2f-3a4b5c6d7e8f"
+            ]
+          }
+        ]
+      },
+      "ChangeConversationTags": {
+        "type": "object",
+        "properties": {
+          "add_tag_ids": {
+            "default": [],
+            "description": "Tags to add. See `GET /tags`.",
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "remove_tag_ids": {
+            "default": [],
+            "description": "Tags to remove.",
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "additionalProperties": false,
+        "description": "Adds and removes tags on the conversation's contact. Its other tags stay.",
+        "examples": [
+          {
+            "add_tag_ids": [
+              "5c6d7e8f-9a0b-4c1d-8e2f-3a4b5c6d7e8f"
+            ],
+            "remove_tag_ids": []
+          }
+        ]
+      },
+      "UpdateTag": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Display name, unique in the organization regardless of case.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "color": {
+            "description": "Display color.",
+            "type": "string",
+            "enum": [
+              "gray",
+              "red",
+              "orange",
+              "amber",
+              "green",
+              "teal",
+              "blue",
+              "indigo",
+              "purple",
+              "pink"
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "description": "Only the fields you send change, on every contact that has the tag.",
+        "examples": [
+          {
+            "name": "Cliente VIP",
+            "color": "purple"
+          }
+        ]
+      },
+      "CreateContactField": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60,
+            "description": "Display name, unique in the organization regardless of case."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "long_text",
+              "number",
+              "boolean",
+              "date",
+              "select",
+              "multi_select"
+            ],
+            "description": "Value type. It cannot change later."
+          },
+          "options": {
+            "description": "Allowed values; required for `select` and `multi_select`, refused otherwise.",
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          }
+        },
+        "required": [
+          "name",
+          "type"
+        ],
+        "additionalProperties": false,
+        "description": "A custom contact field. Its ID keys `custom_values`.",
+        "examples": [
+          {
+            "name": "Sucursal",
+            "type": "select",
+            "options": [
+              "Albrook Mall",
+              "Multiplaza"
+            ]
+          }
+        ]
+      },
+      "CreateQuickReply": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Name operators pick it by, unique in the organization regardless of case."
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096,
+            "description": "Text inserted into the message."
+          }
+        },
+        "required": [
+          "title",
+          "body"
+        ],
+        "additionalProperties": false,
+        "examples": [
+          {
+            "title": "Horario",
+            "body": "Abrimos de lunes a sábado, de 9:00 a. m. a 6:00 p. m."
+          }
+        ]
+      },
+      "UpdateQuickReply": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Name operators pick it by, unique in the organization regardless of case."
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096,
+            "description": "Text inserted into the message."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Only the fields you send change.",
+        "examples": [
+          {
+            "body": "Abrimos de lunes a domingo, de 9:00 a. m. a 8:00 p. m."
+          }
+        ]
+      },
+      "CreateKnowledgeLocation": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Name customers know it by."
+          },
+          "address": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "Full address as customers read it."
+          },
+          "latitude": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90,
+            "description": "Latitude of the map pin, confirmed, not estimated."
+          },
+          "longitude": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180,
+            "description": "Longitude of the map pin, confirmed, not estimated."
+          },
+          "street": {
+            "description": "Street.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "city": {
+            "description": "City.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "description": "State, province or region.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "postal_code": {
+            "description": "Postal code.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "country": {
+            "description": "Country.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "country_code": {
+            "description": "Country code, ISO 3166-1 alpha-2.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phone": {
+            "description": "Phone with country code, for example `+507 6000-1234`.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "email": {
+            "description": "Email.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 320,
+                "format": "email",
+                "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "hours": {
+            "description": "Opening hours, as free text.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "address",
+          "latitude",
+          "longitude"
+        ],
+        "additionalProperties": false,
+        "description": "A location needs a name, an address and its coordinates.",
+        "examples": [
+          {
+            "name": "Casa Nativa Albrook",
+            "address": "Albrook Mall, local 214, Panamá",
+            "latitude": 8.9733,
+            "longitude": -79.5511,
+            "phone": "+507 6000-0000",
+            "hours": "Lunes a sábado, 10:00 a 20:00"
+          }
+        ]
+      },
+      "UpdateKnowledgeLocation": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Name customers know it by."
+          },
+          "address": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "Full address as customers read it."
+          },
+          "latitude": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90,
+            "description": "Latitude of the map pin, confirmed, not estimated."
+          },
+          "longitude": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180,
+            "description": "Longitude of the map pin, confirmed, not estimated."
+          },
+          "street": {
+            "description": "Street.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "city": {
+            "description": "City.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "description": "State, province or region.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "postal_code": {
+            "description": "Postal code.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "country": {
+            "description": "Country.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "country_code": {
+            "description": "Country code, ISO 3166-1 alpha-2.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phone": {
+            "description": "Phone with country code, for example `+507 6000-1234`.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "email": {
+            "description": "Email.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 320,
+                "format": "email",
+                "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "hours": {
+            "description": "Opening hours, as free text.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "description": "Only the fields you send change. Send `null` to clear an optional one.",
+        "examples": [
+          {
+            "hours": "Todos los días, 9:00 a 21:00"
+          }
+        ]
+      },
+      "CreateKnowledgeContact": {
+        "type": "object",
+        "properties": {
+          "display_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Name shown on the contact card."
+          },
+          "first_name": {
+            "description": "First name.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "last_name": {
+            "description": "Last name.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "prefix": {
+            "description": "Name prefix, such as `Dr.`.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 50
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "suffix": {
+            "description": "Name suffix.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 50
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "company": {
+            "description": "Company.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "department": {
+            "description": "Department.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "job_title": {
+            "description": "Job title.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "description": {
+            "description": "When the agents should share it.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phone": {
+            "description": "Phone with country code, for example `+507 6000-1234`.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phone_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "CELL",
+                  "WORK",
+                  "HOME"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "email": {
+            "description": "Email.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 320,
+                "format": "email",
+                "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "email_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "WORK",
+                  "PERSONAL"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "display_name"
+        ],
+        "additionalProperties": false,
+        "description": "A contact card needs a display name and a phone or an email.",
+        "examples": [
+          {
+            "display_name": "Ventas Casa Nativa",
+            "department": "Ventas",
+            "phone": "+507 6000-1111",
+            "phone_type": "WORK",
+            "email": "ventas@example.com"
+          }
+        ]
+      },
+      "UpdateKnowledgeContact": {
+        "type": "object",
+        "properties": {
+          "display_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Name shown on the contact card."
+          },
+          "first_name": {
+            "description": "First name.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "last_name": {
+            "description": "Last name.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "prefix": {
+            "description": "Name prefix, such as `Dr.`.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 50
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "suffix": {
+            "description": "Name suffix.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 50
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "company": {
+            "description": "Company.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "department": {
+            "description": "Department.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "job_title": {
+            "description": "Job title.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "description": {
+            "description": "When the agents should share it.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phone": {
+            "description": "Phone with country code, for example `+507 6000-1234`.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phone_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "CELL",
+                  "WORK",
+                  "HOME"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "email": {
+            "description": "Email.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 320,
+                "format": "email",
+                "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "email_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "WORK",
+                  "PERSONAL"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "description": "Only the fields you send change. Send `null` to clear an optional one; the card keeps a phone or an email.",
+        "examples": [
+          {
+            "job_title": "Gerente de ventas"
+          }
+        ]
+      },
+      "CreateKnowledgeFile": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "description": "Title the agents see."
+          },
+          "description": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000,
+            "description": "When the agents should use it."
+          },
+          "filename": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "File name, with its extension."
+          },
+          "mime_type": {
+            "type": "string",
+            "enum": [
+              "application/pdf",
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              "image/jpeg",
+              "image/png"
+            ],
+            "description": "File type: PDF, Word or Excel up to 100 MB; JPEG or PNG up to 5 MB."
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Exact size of the file you will upload."
+          }
+        },
+        "required": [
+          "title",
+          "filename",
+          "mime_type",
+          "size_bytes"
+        ],
+        "additionalProperties": false,
+        "description": "Begins an upload. Ricky answers where to `PUT` the bytes.",
+        "examples": [
+          {
+            "title": "Catálogo de lentes 2026",
+            "filename": "catalogo-2026.pdf",
+            "mime_type": "application/pdf",
+            "size_bytes": 482133
+          }
+        ]
+      },
+      "CompleteKnowledgeFile": {
+        "type": "object",
+        "properties": {
+          "consult_enabled": {
+            "default": true,
+            "description": "Agents may read it to answer. Ignored when Ricky reads no useful content.",
+            "type": "boolean"
+          },
+          "send_enabled": {
+            "default": true,
+            "description": "Agents may send the file itself.",
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The body is optional.",
+        "examples": [
+          {
+            "consult_enabled": true,
+            "send_enabled": false
+          }
+        ]
+      },
+      "UpdateKnowledgeFile": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "description": "Title the agents see."
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000,
+            "description": "When the agents should use it."
+          },
+          "consult_enabled": {
+            "description": "Agents may read it to answer.",
+            "type": "boolean"
+          },
+          "send_enabled": {
+            "description": "Agents may send the file itself.",
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Only the fields you send change. The file must be `ready`.",
+        "examples": [
+          {
+            "send_enabled": false
+          }
+        ]
+      },
       "CreateWorkflow": {
         "type": "object",
         "properties": {
@@ -17868,764 +20907,6 @@
         "examples": [
           {
             "name": "Fuera de horario (Albrook)"
-          }
-        ]
-      },
-      "CreateKnowledgeLocation": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 200,
-            "description": "Name customers know it by."
-          },
-          "address": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 500,
-            "description": "Full address as customers read it."
-          },
-          "latitude": {
-            "type": "number",
-            "minimum": -90,
-            "maximum": 90,
-            "description": "Latitude of the map pin, confirmed, not estimated."
-          },
-          "longitude": {
-            "type": "number",
-            "minimum": -180,
-            "maximum": 180,
-            "description": "Longitude of the map pin, confirmed, not estimated."
-          },
-          "street": {
-            "description": "Street.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "city": {
-            "description": "City.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "state": {
-            "description": "State, province or region.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "postal_code": {
-            "description": "Postal code.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "country": {
-            "description": "Country.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "country_code": {
-            "description": "Country code, ISO 3166-1 alpha-2.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 2
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "phone": {
-            "description": "Phone with country code, for example `+507 6000-1234`.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "email": {
-            "description": "Email.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 320,
-                "format": "email",
-                "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "hours": {
-            "description": "Opening hours, as free text.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 2000
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "required": [
-          "name",
-          "address",
-          "latitude",
-          "longitude"
-        ],
-        "additionalProperties": false,
-        "description": "A location needs a name, an address and its coordinates.",
-        "examples": [
-          {
-            "name": "Casa Nativa Albrook",
-            "address": "Albrook Mall, local 214, Panamá",
-            "latitude": 8.9733,
-            "longitude": -79.5511,
-            "phone": "+507 6000-0000",
-            "hours": "Lunes a sábado, 10:00 a 20:00"
-          }
-        ]
-      },
-      "UpdateKnowledgeLocation": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 200,
-            "description": "Name customers know it by."
-          },
-          "address": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 500,
-            "description": "Full address as customers read it."
-          },
-          "latitude": {
-            "type": "number",
-            "minimum": -90,
-            "maximum": 90,
-            "description": "Latitude of the map pin, confirmed, not estimated."
-          },
-          "longitude": {
-            "type": "number",
-            "minimum": -180,
-            "maximum": 180,
-            "description": "Longitude of the map pin, confirmed, not estimated."
-          },
-          "street": {
-            "description": "Street.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "city": {
-            "description": "City.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "state": {
-            "description": "State, province or region.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "postal_code": {
-            "description": "Postal code.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "country": {
-            "description": "Country.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "country_code": {
-            "description": "Country code, ISO 3166-1 alpha-2.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 2
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "phone": {
-            "description": "Phone with country code, for example `+507 6000-1234`.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "email": {
-            "description": "Email.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 320,
-                "format": "email",
-                "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "hours": {
-            "description": "Opening hours, as free text.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 2000
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false,
-        "description": "Only the fields you send change. Send `null` to clear an optional one.",
-        "examples": [
-          {
-            "hours": "Todos los días, 9:00 a 21:00"
-          }
-        ]
-      },
-      "CreateKnowledgeContact": {
-        "type": "object",
-        "properties": {
-          "display_name": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 200,
-            "description": "Name shown on the contact card."
-          },
-          "first_name": {
-            "description": "First name.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "last_name": {
-            "description": "Last name.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "prefix": {
-            "description": "Name prefix, such as `Dr.`.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 50
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "suffix": {
-            "description": "Name suffix.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 50
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "company": {
-            "description": "Company.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "department": {
-            "description": "Department.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "job_title": {
-            "description": "Job title.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "description": {
-            "description": "When the agents should share it.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 2000
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "phone": {
-            "description": "Phone with country code, for example `+507 6000-1234`.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "phone_type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "CELL",
-                  "WORK",
-                  "HOME"
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "email": {
-            "description": "Email.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 320,
-                "format": "email",
-                "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "email_type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "WORK",
-                  "PERSONAL"
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "required": [
-          "display_name"
-        ],
-        "additionalProperties": false,
-        "description": "A contact card needs a display name and a phone or an email.",
-        "examples": [
-          {
-            "display_name": "Ventas Casa Nativa",
-            "department": "Ventas",
-            "phone": "+507 6000-1111",
-            "phone_type": "WORK",
-            "email": "ventas@example.com"
-          }
-        ]
-      },
-      "UpdateKnowledgeContact": {
-        "type": "object",
-        "properties": {
-          "display_name": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 200,
-            "description": "Name shown on the contact card."
-          },
-          "first_name": {
-            "description": "First name.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "last_name": {
-            "description": "Last name.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "prefix": {
-            "description": "Name prefix, such as `Dr.`.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 50
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "suffix": {
-            "description": "Name suffix.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 50
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "company": {
-            "description": "Company.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "department": {
-            "description": "Department.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "job_title": {
-            "description": "Job title.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "description": {
-            "description": "When the agents should share it.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 2000
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "phone": {
-            "description": "Phone with country code, for example `+507 6000-1234`.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "phone_type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "CELL",
-                  "WORK",
-                  "HOME"
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "email": {
-            "description": "Email.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 320,
-                "format": "email",
-                "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "email_type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "WORK",
-                  "PERSONAL"
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false,
-        "description": "Only the fields you send change. Send `null` to clear an optional one; the card keeps a phone or an email.",
-        "examples": [
-          {
-            "job_title": "Gerente de ventas"
-          }
-        ]
-      },
-      "CreateKnowledgeFile": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 160,
-            "description": "Title the agents see."
-          },
-          "description": {
-            "default": "",
-            "type": "string",
-            "maxLength": 2000,
-            "description": "When the agents should use it."
-          },
-          "filename": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 255,
-            "description": "File name, with its extension."
-          },
-          "mime_type": {
-            "type": "string",
-            "enum": [
-              "application/pdf",
-              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-              "image/jpeg",
-              "image/png"
-            ],
-            "description": "File type: PDF, Word or Excel up to 100 MB; JPEG or PNG up to 5 MB."
-          },
-          "size_bytes": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 9007199254740991,
-            "description": "Exact size of the file you will upload."
-          }
-        },
-        "required": [
-          "title",
-          "filename",
-          "mime_type",
-          "size_bytes"
-        ],
-        "additionalProperties": false,
-        "description": "Begins an upload. Ricky answers where to `PUT` the bytes.",
-        "examples": [
-          {
-            "title": "Catálogo de lentes 2026",
-            "filename": "catalogo-2026.pdf",
-            "mime_type": "application/pdf",
-            "size_bytes": 482133
-          }
-        ]
-      },
-      "CompleteKnowledgeFile": {
-        "type": "object",
-        "properties": {
-          "consult_enabled": {
-            "default": true,
-            "description": "Agents may read it to answer. Ignored when Ricky reads no useful content.",
-            "type": "boolean"
-          },
-          "send_enabled": {
-            "default": true,
-            "description": "Agents may send the file itself.",
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false,
-        "description": "The body is optional.",
-        "examples": [
-          {
-            "consult_enabled": true,
-            "send_enabled": false
-          }
-        ]
-      },
-      "UpdateKnowledgeFile": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 160,
-            "description": "Title the agents see."
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 2000,
-            "description": "When the agents should use it."
-          },
-          "consult_enabled": {
-            "description": "Agents may read it to answer.",
-            "type": "boolean"
-          },
-          "send_enabled": {
-            "description": "Agents may send the file itself.",
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Only the fields you send change. The file must be `ready`.",
-        "examples": [
-          {
-            "send_enabled": false
           }
         ]
       }

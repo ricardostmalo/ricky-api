@@ -19,6 +19,12 @@ This page records changes to the API. A breaking change only ships in a new path
 * **Report operations.** `GET /reports/dashboard`, `/reports/conversations`, `/reports/messages`, `/reports/responses`, `/reports/resolutions`, `/reports/team`, `/reports/broadcasts` and `/reports/ads` answer the numbers of each Reports tab, with its filters and its definitions, for a period of America/Panama days. See [Reports](./reports.md).
 * **New scope.** `reports:read`.
 
+**AI agents and knowledge.** Compatible changes to v1.
+
+* **Agents.** `GET /agents`, `POST /agents`, `GET`, `PATCH` and `DELETE /agents/{agent_id}` list, create, read, update and archive AI agents. `GET /agent-options` lists the models, voices and capabilities they accept. They require `agents:read` or `agents:write`.
+* **The agent of a conversation.** `PATCH /conversations/{conversation_id}/agent` makes an agent answer a conversation or, with `null`, turns the AI off. It requires `conversations:write`.
+* **Knowledge.** `/knowledge/locations` and `/knowledge/contacts` create, read, update and delete locations and directory contacts. `/knowledge/files` uploads files in three steps, reads, updates and deletes them. They require `knowledge:read` or `knowledge:write`. See [Agents and knowledge](https://getricky.ai/docs/api/agents-and-knowledge).
+
 ## October 15, 2026
 
 **Immediate webhooks, new events, files, single messages, tags and notes.** Compatible changes to v1.

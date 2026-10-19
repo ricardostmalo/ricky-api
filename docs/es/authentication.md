@@ -46,20 +46,24 @@ Para rotar una clave, crea la nueva, despliégala en tu servidor y revoca la ant
 
 Cada operación exige un permiso (scope). Una clave sin ese permiso recibe `403 insufficient_scope`.
 
-| Permiso               | Permite                                                                   |
-| --------------------- | ------------------------------------------------------------------------- |
-| `contacts:read`       | Leer contactos y campos de contacto.                                      |
-| `contacts:write`      | Crear y actualizar contactos, agregarles notas y crear etiquetas.         |
-| `conversations:read`  | Leer conversaciones, mensajes y canales.                                  |
-| `conversations:write` | Asignar, cerrar y reabrir conversaciones.                                 |
-| `messages:send`       | Iniciar conversaciones, enviar mensajes y consultar envíos.               |
-| `templates:read`      | Leer las plantillas de WhatsApp.                                          |
-| `members:read`        | Leer los miembros de la organización.                                     |
-| `tags:read`           | Leer las etiquetas de contactos.                                          |
-| `webhooks:manage`     | Crear, listar y desactivar webhooks; consultar y reintentar sus entregas. |
-| `workflows:read`      | Leer workflows y sus ejecuciones.                                         |
-| `workflows:write`     | Crear, editar, activar, pausar y eliminar workflows.                      |
-| `reports:read`        | Leer los números de las páginas de Reportes.                              |
+| Permiso               | Permite                                                                                        |
+| --------------------- | ---------------------------------------------------------------------------------------------- |
+| `contacts:read`       | Leer contactos y campos de contacto.                                                           |
+| `contacts:write`      | Crear y actualizar contactos, agregarles notas y crear etiquetas.                              |
+| `conversations:read`  | Leer conversaciones, mensajes y canales.                                                       |
+| `conversations:write` | Asignar, cerrar y reabrir conversaciones, y definir su agente de IA.                           |
+| `messages:send`       | Iniciar conversaciones, enviar mensajes y consultar envíos.                                    |
+| `templates:read`      | Leer las plantillas de WhatsApp.                                                               |
+| `members:read`        | Leer los miembros de la organización.                                                          |
+| `tags:read`           | Leer las etiquetas de contactos.                                                               |
+| `webhooks:manage`     | Crear, listar y desactivar webhooks; consultar y reintentar sus entregas.                      |
+| `workflows:read`      | Leer workflows y sus ejecuciones.                                                              |
+| `workflows:write`     | Crear, editar, activar, pausar y eliminar workflows.                                           |
+| `reports:read`        | Leer los números de las páginas de Reportes.                                                   |
+| `agents:read`         | Leer agentes y sus opciones de configuración.                                                  |
+| `agents:write`        | Crear, actualizar y archivar agentes.                                                          |
+| `knowledge:read`      | Leer ubicaciones, contactos del directorio y archivos de conocimiento.                         |
+| `knowledge:write`     | Crear, actualizar y eliminar ubicaciones, contactos del directorio y archivos de conocimiento. |
 
 La tabla siguiente sale del contrato de la API: es la lista exacta de operaciones y el permiso de cada una.
 
@@ -109,6 +113,29 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Consultar el reporte del equipo](https://getricky.ai/docs/api/reference/reports/get-team-report) | `GET /reports/team` | `reports:read` |
 | [Consultar el reporte de envíos masivos](https://getricky.ai/docs/api/reference/reports/get-broadcasts-report) | `GET /reports/broadcasts` | `reports:read` |
 | [Consultar el reporte de anuncios](https://getricky.ai/docs/api/reference/reports/get-ads-report) | `GET /reports/ads` | `reports:read` |
+| [Listar agentes](https://getricky.ai/docs/api/reference/agents/list-agents) | `GET /agents` | `agents:read` |
+| [Crear un agente](https://getricky.ai/docs/api/reference/agents/create-agent) | `POST /agents` | `agents:write` |
+| [Consultar un agente](https://getricky.ai/docs/api/reference/agents/get-agent) | `GET /agents/{agent_id}` | `agents:read` |
+| [Actualizar un agente](https://getricky.ai/docs/api/reference/agents/update-agent) | `PATCH /agents/{agent_id}` | `agents:write` |
+| [Archivar un agente](https://getricky.ai/docs/api/reference/agents/archive-agent) | `DELETE /agents/{agent_id}` | `agents:write` |
+| [Consultar las opciones de agentes](https://getricky.ai/docs/api/reference/agents/get-agent-options) | `GET /agent-options` | `agents:read` |
+| [Definir el agente de IA de una conversación](https://getricky.ai/docs/api/reference/conversations/assign-conversation-agent) | `PATCH /conversations/{conversation_id}/agent` | `conversations:write` |
+| [Listar ubicaciones](https://getricky.ai/docs/api/reference/knowledge/list-knowledge-locations) | `GET /knowledge/locations` | `knowledge:read` |
+| [Crear una ubicación](https://getricky.ai/docs/api/reference/knowledge/create-knowledge-location) | `POST /knowledge/locations` | `knowledge:write` |
+| [Consultar una ubicación](https://getricky.ai/docs/api/reference/knowledge/get-knowledge-location) | `GET /knowledge/locations/{location_id}` | `knowledge:read` |
+| [Actualizar una ubicación](https://getricky.ai/docs/api/reference/knowledge/update-knowledge-location) | `PATCH /knowledge/locations/{location_id}` | `knowledge:write` |
+| [Eliminar una ubicación](https://getricky.ai/docs/api/reference/knowledge/delete-knowledge-location) | `DELETE /knowledge/locations/{location_id}` | `knowledge:write` |
+| [Listar contactos del directorio](https://getricky.ai/docs/api/reference/knowledge/list-knowledge-contacts) | `GET /knowledge/contacts` | `knowledge:read` |
+| [Crear un contacto del directorio](https://getricky.ai/docs/api/reference/knowledge/create-knowledge-contact) | `POST /knowledge/contacts` | `knowledge:write` |
+| [Consultar un contacto del directorio](https://getricky.ai/docs/api/reference/knowledge/get-knowledge-contact) | `GET /knowledge/contacts/{knowledge_contact_id}` | `knowledge:read` |
+| [Actualizar un contacto del directorio](https://getricky.ai/docs/api/reference/knowledge/update-knowledge-contact) | `PATCH /knowledge/contacts/{knowledge_contact_id}` | `knowledge:write` |
+| [Eliminar un contacto del directorio](https://getricky.ai/docs/api/reference/knowledge/delete-knowledge-contact) | `DELETE /knowledge/contacts/{knowledge_contact_id}` | `knowledge:write` |
+| [Listar archivos](https://getricky.ai/docs/api/reference/knowledge/list-knowledge-files) | `GET /knowledge/files` | `knowledge:read` |
+| [Subir un archivo](https://getricky.ai/docs/api/reference/knowledge/create-knowledge-file) | `POST /knowledge/files` | `knowledge:write` |
+| [Completar una carga](https://getricky.ai/docs/api/reference/knowledge/complete-knowledge-file) | `POST /knowledge/files/{file_id}/complete` | `knowledge:write` |
+| [Consultar un archivo](https://getricky.ai/docs/api/reference/knowledge/get-knowledge-file) | `GET /knowledge/files/{file_id}` | `knowledge:read` |
+| [Actualizar un archivo](https://getricky.ai/docs/api/reference/knowledge/update-knowledge-file) | `PATCH /knowledge/files/{file_id}` | `knowledge:write` |
+| [Eliminar un archivo](https://getricky.ai/docs/api/reference/knowledge/delete-knowledge-file) | `DELETE /knowledge/files/{file_id}` | `knowledge:write` |
 
 ## Respuestas de autenticación
 

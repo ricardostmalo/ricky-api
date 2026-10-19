@@ -19,6 +19,12 @@ Esta página registra los cambios de la API. Un cambio incompatible solo llega e
 * **Operaciones de reportes.** `GET /reports/dashboard`, `/reports/conversations`, `/reports/messages`, `/reports/responses`, `/reports/resolutions`, `/reports/team`, `/reports/broadcasts` y `/reports/ads` responden los números de cada pestaña de Reportes, con sus filtros y sus definiciones, para un período de días de America/Panama. Consulta [Reportes](./reports.md).
 * **Permiso nuevo.** `reports:read`.
 
+**Agentes de IA y conocimiento.** Cambios compatibles con la v1.
+
+* **Agentes.** `GET /agents`, `POST /agents`, `GET`, `PATCH` y `DELETE /agents/{agent_id}` listan, crean, consultan, actualizan y archivan agentes de IA. `GET /agent-options` lista los modelos, las voces y las capacidades que aceptan. Exigen `agents:read` o `agents:write`.
+* **Agente de una conversación.** `PATCH /conversations/{conversation_id}/agent` pone un agente a responder una conversación o, con `null`, apaga la IA. Exige `conversations:write`.
+* **Conocimiento.** `/knowledge/locations` y `/knowledge/contacts` crean, consultan, actualizan y eliminan ubicaciones y contactos del directorio. `/knowledge/files` sube archivos en tres pasos, los consulta, los actualiza y los elimina. Exigen `knowledge:read` o `knowledge:write`. Consulta [Agentes y conocimiento](./agents-and-knowledge.md).
+
 ## 15 de octubre de 2026
 
 **Webhooks inmediatos, eventos nuevos, archivos, mensajes sueltos, etiquetas y notas.** Cambios compatibles con la v1.
