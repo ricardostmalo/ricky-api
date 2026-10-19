@@ -6,6 +6,8 @@ This page records changes to the API. A breaking change only ships in a new path
 
 ## October 19, 2026
 
+**Appointment states.** Compatible change to v1. `GET /workflows/{workflow_id}/reminders/state-options` lists the Odoo appointment states an appointment reminder workflow can remind. See [Workflows](https://getricky.ai/en/docs/api/workflows#appointment-states).
+
 **WhatsApp media headers, variable mappings and number settings.** Compatible changes to v1.
 
 - **Media headers.** Templates take `IMAGE`, `VIDEO` and `DOCUMENT` headers. `POST /templates/media` and `POST /templates/media/complete` upload the sample Meta reviews and answer its `handle`. An edit that keeps a media header sends it again with a new `handle`. See [WhatsApp templates and numbers](https://getricky.ai/en/docs/api/whatsapp#image-video-and-document-headers).

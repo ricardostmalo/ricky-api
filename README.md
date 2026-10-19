@@ -22,6 +22,21 @@ This repository is generated from the code that serves the API and updated on ev
 | Rate limit | 120 requests per minute per key, reported in `X-RateLimit-*` headers |
 | Webhooks | Signed with HMAC-SHA256; up to ten delivery attempts |
 
+## What it covers
+
+| Family | What you do | Guide |
+|---|---|---|
+| Contacts, tags and fields | Read, create and update CRM people, their custom fields, tags and notes | [CRM and inbox](docs/en/crm-and-inbox.md) |
+| Conversations and inbox | Start, filter, assign, close and reopen conversations, resolve handoffs, mark them read or unread | [Inbox](docs/en/inbox.md) |
+| Messages | Send text, files and templates, and follow each send | [Sending messages](docs/en/sending-messages.md) |
+| Quick replies | Manage the team's saved replies | [CRM and inbox](docs/en/crm-and-inbox.md) |
+| WhatsApp templates and numbers | Create and edit templates, follow Meta's review, map variables, manage numbers | [WhatsApp](docs/en/whatsapp.md) |
+| Broadcasts | Send a template to many numbers, now or later, and follow each delivery | [Broadcasts](docs/en/broadcasts.md) |
+| Workflows | Create, edit, activate and pause workflows, review executions and appointment reminders | [Workflows](docs/en/workflows.md) |
+| Agents and knowledge | Create AI agents, put them on conversations, manage the files, branches and contact cards they use | [Agents and knowledge](docs/en/agents-and-knowledge.md) |
+| Reports | Read the numbers of the Reports pages for a period | [Reports](docs/en/reports.md) |
+| Webhooks | Subscribe to signed events and review deliveries | [Webhooks](docs/en/webhooks.md) |
+
 ## Quick start
 
 List the channels the organization can send from:

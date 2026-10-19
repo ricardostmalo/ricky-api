@@ -8,6 +8,13 @@ Esta página registra los cambios de la API. Un cambio incompatible solo llega e
 
 ## 19 de octubre de 2026
 
+**Encabezados multimedia, asignación de variables y ajustes de números de WhatsApp.** Cambios compatibles con la v1.
+
+* **Encabezados multimedia.** Las plantillas aceptan encabezados `IMAGE`, `VIDEO` y `DOCUMENT`. `POST /templates/media` y `POST /templates/media/complete` suben la muestra que revisa Meta y responden su `handle`. Una edición que mantiene un encabezado multimedia lo envía otra vez con un `handle` nuevo. Consulta [Plantillas y números de WhatsApp](./whatsapp.md#encabezados-de-imagen-video-y-documento).
+* **Variables con campos del contacto.** `GET` y `PUT /templates/{template_id}/field-mappings` leen y reemplazan los campos del contacto que llenan las variables de una plantilla.
+* **Gestión de números.** `PATCH /whatsapp-numbers/{channel_id}` activa o desactiva las llamadas. `PATCH /whatsapp-numbers/{channel_id}/business-profile` edita el perfil de empresa, `/profile-photo` pone la foto de perfil en tres pasos, `/display-name` pide a Meta revisar un nombre visible nuevo y `/refresh` lee el número en Meta. Requieren `conversations:write`.
+* **Más datos de cada número.** Los números de WhatsApp también responden `name_status` y `business_profile`.
+
 **Inbox.** Cambios compatibles con la v1.
 
 * **Filtros del inbox.** `GET /conversations` acepta `channel_id`, `tag_id`, `unread`, `pending_handoff`, `last_message_from`, `agent_id` y `unassigned`. Cada conversación trae `unread` y `active_handoff`. Consulta [Inbox](./inbox.md).

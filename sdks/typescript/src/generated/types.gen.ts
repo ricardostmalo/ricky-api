@@ -921,7 +921,7 @@ export type KnowledgeFile = {
      */
     size_bytes: number;
     /**
-     * `uploading` until `POST /knowledge/files/{file_id}/complete` reads it; then `ready`.
+     * `uploading` until `POST /knowledge/files/{file_id}/complete` reads it; then `ready`, also when Ricky could not read useful content, which `extraction_error` then says. Ricky does not set `failed` today.
      */
     status: 'uploading' | 'ready' | 'failed';
     /**
@@ -2320,6 +2320,20 @@ export type ResolutionsReport = {
 };
 
 /**
+ * An appointment state of the Odoo installation, one of those a reminder workflow can remind.
+ */
+export type AppointmentState = {
+    /**
+     * State as Odoo stores it.
+     */
+    value: string;
+    /**
+     * State as Odoo shows it.
+     */
+    label: string;
+};
+
+/**
  * The Odoo appointments a reminder workflow would message on a coming day.
  */
 export type ReminderPreview = {
@@ -2338,16 +2352,7 @@ export type ReminderPreview = {
     /**
      * Every appointment state the Odoo installation has.
      */
-    appointment_states: Array<{
-        /**
-         * State as Odoo stores it.
-         */
-        value: string;
-        /**
-         * State as Odoo shows it.
-         */
-        label: string;
-    }>;
+    appointment_states: Array<AppointmentState>;
     /**
      * Each appointment of that day in Odoo, in start order.
      */
@@ -7278,6 +7283,66 @@ export type GetWorkflowReminderHistoryResponses = {
 };
 
 export type GetWorkflowReminderHistoryResponse = GetWorkflowReminderHistoryResponses[keyof GetWorkflowReminderHistoryResponses];
+
+export type ListWorkflowReminderStatesData = {
+    body?: never;
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query?: never;
+    url: '/workflows/{workflow_id}/reminders/state-options';
+};
+
+export type ListWorkflowReminderStatesErrors = {
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type ListWorkflowReminderStatesError = ListWorkflowReminderStatesErrors[keyof ListWorkflowReminderStatesErrors];
+
+export type ListWorkflowReminderStatesResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<AppointmentState>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListWorkflowReminderStatesResponse = ListWorkflowReminderStatesResponses[keyof ListWorkflowReminderStatesResponses];
 
 export type GetDashboardReportData = {
     body?: never;

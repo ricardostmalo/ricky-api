@@ -47,6 +47,15 @@ We recommend sending it with every message send. These operations accept it:
 | [Create a template](https://getricky.ai/en/docs/api/reference/whats-app/create-template) | `POST /templates` | `templates:write` |
 | [Edit a template](https://getricky.ai/en/docs/api/reference/whats-app/update-template) | `PATCH /templates/{template_id}` | `templates:write` |
 | [Delete a template](https://getricky.ai/en/docs/api/reference/whats-app/delete-template) | `DELETE /templates/{template_id}` | `templates:write` |
+| [Upload a header sample](https://getricky.ai/en/docs/api/reference/whats-app/create-template-media-upload) | `POST /templates/media` | `templates:write` |
+| [Complete a header sample](https://getricky.ai/en/docs/api/reference/whats-app/complete-template-media-upload) | `POST /templates/media/complete` | `templates:write` |
+| [Set the field mappings of a template](https://getricky.ai/en/docs/api/reference/whats-app/replace-template-field-mappings) | `PUT /templates/{template_id}/field-mappings` | `templates:write` |
+| [Update a WhatsApp number](https://getricky.ai/en/docs/api/reference/whats-app/update-whats-app-number) | `PATCH /whatsapp-numbers/{channel_id}` | `conversations:write` |
+| [Edit a business profile](https://getricky.ai/en/docs/api/reference/whats-app/update-whats-app-business-profile) | `PATCH /whatsapp-numbers/{channel_id}/business-profile` | `conversations:write` |
+| [Upload a profile photo](https://getricky.ai/en/docs/api/reference/whats-app/create-profile-photo-upload) | `POST /whatsapp-numbers/{channel_id}/profile-photo` | `conversations:write` |
+| [Complete a profile photo](https://getricky.ai/en/docs/api/reference/whats-app/complete-profile-photo-upload) | `POST /whatsapp-numbers/{channel_id}/profile-photo/complete` | `conversations:write` |
+| [Request a display name change](https://getricky.ai/en/docs/api/reference/whats-app/request-whats-app-display-name) | `POST /whatsapp-numbers/{channel_id}/display-name` | `conversations:write` |
+| [Refresh a WhatsApp number](https://getricky.ai/en/docs/api/reference/whats-app/refresh-whats-app-number) | `POST /whatsapp-numbers/{channel_id}/refresh` | `conversations:write` |
 | [Create a broadcast](https://getricky.ai/en/docs/api/reference/broadcasts/create-broadcast) | `POST /broadcasts` | `broadcasts:write` |
 | [Cancel a scheduled broadcast](https://getricky.ai/en/docs/api/reference/broadcasts/cancel-broadcast) | `POST /broadcasts/{broadcast_id}/cancel` | `broadcasts:write` |
 | [Assign many conversations](https://getricky.ai/en/docs/api/reference/conversations/assign-conversations) | `POST /conversations/assignments` | `conversations:write` |

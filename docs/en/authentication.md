@@ -51,10 +51,10 @@ Each operation requires one scope. A key without it gets `403 insufficient_scope
 | `contacts:read`       | Read contacts and contact fields.                                                                       |
 | `contacts:write`      | Create and update contacts, add notes to them, change their tags, and create and delete contact fields. |
 | `conversations:read`  | Read and search conversations, messages, channels and WhatsApp numbers.                                 |
-| `conversations:write` | Assign, close, reopen and mark conversations read, and set their AI agent.                              |
+| `conversations:write` | Assign, close, reopen and mark conversations read, set their AI agent, and manage WhatsApp numbers.     |
 | `messages:send`       | Start conversations, send messages and read sends.                                                      |
 | `templates:read`      | Read WhatsApp templates and validate drafts.                                                            |
-| `templates:write`     | Create, edit and delete WhatsApp templates.                                                             |
+| `templates:write`     | Create, edit and delete WhatsApp templates, upload their header samples and map their variables.        |
 | `members:read`        | Read the members of the organization.                                                                   |
 | `tags:read`           | Read contact tags.                                                                                      |
 | `webhooks:manage`     | Create, list and disable webhooks; read and retry their deliveries.                                     |
@@ -166,6 +166,16 @@ The table below is generated from the API contract: it is the exact list of oper
 | [Delete a template](https://getricky.ai/en/docs/api/reference/whats-app/delete-template) | `DELETE /templates/{template_id}` | `templates:write` |
 | [List WhatsApp numbers](https://getricky.ai/en/docs/api/reference/whats-app/list-whats-app-numbers) | `GET /whatsapp-numbers` | `conversations:read` |
 | [Get a WhatsApp number](https://getricky.ai/en/docs/api/reference/whats-app/get-whats-app-number) | `GET /whatsapp-numbers/{channel_id}` | `conversations:read` |
+| [Upload a header sample](https://getricky.ai/en/docs/api/reference/whats-app/create-template-media-upload) | `POST /templates/media` | `templates:write` |
+| [Complete a header sample](https://getricky.ai/en/docs/api/reference/whats-app/complete-template-media-upload) | `POST /templates/media/complete` | `templates:write` |
+| [Get the field mappings of a template](https://getricky.ai/en/docs/api/reference/whats-app/get-template-field-mappings) | `GET /templates/{template_id}/field-mappings` | `templates:read` |
+| [Set the field mappings of a template](https://getricky.ai/en/docs/api/reference/whats-app/replace-template-field-mappings) | `PUT /templates/{template_id}/field-mappings` | `templates:write` |
+| [Update a WhatsApp number](https://getricky.ai/en/docs/api/reference/whats-app/update-whats-app-number) | `PATCH /whatsapp-numbers/{channel_id}` | `conversations:write` |
+| [Edit a business profile](https://getricky.ai/en/docs/api/reference/whats-app/update-whats-app-business-profile) | `PATCH /whatsapp-numbers/{channel_id}/business-profile` | `conversations:write` |
+| [Upload a profile photo](https://getricky.ai/en/docs/api/reference/whats-app/create-profile-photo-upload) | `POST /whatsapp-numbers/{channel_id}/profile-photo` | `conversations:write` |
+| [Complete a profile photo](https://getricky.ai/en/docs/api/reference/whats-app/complete-profile-photo-upload) | `POST /whatsapp-numbers/{channel_id}/profile-photo/complete` | `conversations:write` |
+| [Request a display name change](https://getricky.ai/en/docs/api/reference/whats-app/request-whats-app-display-name) | `POST /whatsapp-numbers/{channel_id}/display-name` | `conversations:write` |
+| [Refresh a WhatsApp number](https://getricky.ai/en/docs/api/reference/whats-app/refresh-whats-app-number) | `POST /whatsapp-numbers/{channel_id}/refresh` | `conversations:write` |
 | [List broadcasts](https://getricky.ai/en/docs/api/reference/broadcasts/list-broadcasts) | `GET /broadcasts` | `broadcasts:read` |
 | [Create a broadcast](https://getricky.ai/en/docs/api/reference/broadcasts/create-broadcast) | `POST /broadcasts` | `broadcasts:write` |
 | [Get a broadcast](https://getricky.ai/en/docs/api/reference/broadcasts/get-broadcast) | `GET /broadcasts/{broadcast_id}` | `broadcasts:read` |

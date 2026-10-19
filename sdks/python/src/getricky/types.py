@@ -984,7 +984,7 @@ class KnowledgeFile(TypedDict):
     """
     status: Literal["uploading", "ready", "failed"]
     """
-    `uploading` until `POST /knowledge/files/{file_id}/complete` reads it; then `ready`.
+    `uploading` until `POST /knowledge/files/{file_id}/complete` reads it; then `ready`, also when Ricky could not read useful content, which `extraction_error` then says. Ricky does not set `failed` today.
     """
     consult_enabled: bool
     """
@@ -2537,7 +2537,11 @@ class ResolutionsReport(TypedDict):
     """
 
 
-class ReminderPreviewAppointmentState(TypedDict):
+class AppointmentState(TypedDict):
+    """
+    An appointment state of the Odoo installation, one of those a reminder workflow can remind.
+    """
+
     value: str
     """
     State as Odoo stores it.
@@ -2619,7 +2623,7 @@ class ReminderPreview(TypedDict):
     """
     When Ricky read the appointments from Odoo.
     """
-    appointment_states: List[ReminderPreviewAppointmentState]
+    appointment_states: List[AppointmentState]
     """
     Every appointment state the Odoo installation has.
     """

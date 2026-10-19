@@ -8,6 +8,7 @@ from .types import (
     AdsReport,
     Agent,
     AgentOptions,
+    AppointmentState,
     AssignConversation,
     AssignConversationAgent,
     AssignConversations,
@@ -890,6 +891,22 @@ class SyncOperations:
             query={"date": date},
         ))
 
+    def list_workflow_reminder_states(
+        self,
+        workflow_id: str,
+    ) -> Page[AppointmentState]:
+        """List the Odoo appointment states.
+
+        Reads from Odoo, live, every appointment state its installation has: the values an appointment-reminder workflow’s `source.appointment_states` and the preview’s `appointment_states` take. Only for workflows with `source.kind` `odoo_appointments`, in an organization with Odoo connected.
+
+        Scope: `workflows:read`.
+        """
+        return cast(Page[AppointmentState], self._request(
+            "GET",
+            "/workflows/{workflow_id}/reminders/state-options",
+            path_parameters={"workflow_id": workflow_id},
+        ))
+
     def get_dashboard_report(
         self,
     ) -> Resource[DashboardReport]:
@@ -1633,9 +1650,9 @@ class SyncOperations:
         *,
         idempotency_key: Optional[str] = None,
     ) -> Resource[Contact]:
-        """Change a conversation's tags.
+        """Change the tags of a conversation's contact.
 
-        Tags belong to the conversation's contact: this adds and removes tags on it and answers the contact.
+        Tags belong to the conversation's contact, not to the conversation: this adds and removes tags on that contact, so every conversation of the contact shows them, and answers the contact. The change is a `contact.tags_changed` webhook event; there is no conversation tag event.
 
         Scope: `contacts:write`.
 
@@ -3188,6 +3205,22 @@ class AsyncOperations:
             query={"date": date},
         ))
 
+    async def list_workflow_reminder_states(
+        self,
+        workflow_id: str,
+    ) -> Page[AppointmentState]:
+        """List the Odoo appointment states.
+
+        Reads from Odoo, live, every appointment state its installation has: the values an appointment-reminder workflow’s `source.appointment_states` and the preview’s `appointment_states` take. Only for workflows with `source.kind` `odoo_appointments`, in an organization with Odoo connected.
+
+        Scope: `workflows:read`.
+        """
+        return cast(Page[AppointmentState], await self._request(
+            "GET",
+            "/workflows/{workflow_id}/reminders/state-options",
+            path_parameters={"workflow_id": workflow_id},
+        ))
+
     async def get_dashboard_report(
         self,
     ) -> Resource[DashboardReport]:
@@ -3931,9 +3964,9 @@ class AsyncOperations:
         *,
         idempotency_key: Optional[str] = None,
     ) -> Resource[Contact]:
-        """Change a conversation's tags.
+        """Change the tags of a conversation's contact.
 
-        Tags belong to the conversation's contact: this adds and removes tags on it and answers the contact.
+        Tags belong to the conversation's contact, not to the conversation: this adds and removes tags on that contact, so every conversation of the contact shows them, and answers the contact. The change is a `contact.tags_changed` webhook event; there is no conversation tag event.
 
         Scope: `contacts:write`.
 

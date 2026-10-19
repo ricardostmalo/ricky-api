@@ -46,30 +46,30 @@ Para rotar una clave, crea la nueva, despliégala en tu servidor y revoca la ant
 
 Cada operación exige un permiso (scope). Una clave sin ese permiso recibe `403 insufficient_scope`. `POST /tags` también acepta `contacts:write`, el permiso que exigía antes de que existiera `tags:write`.
 
-| Permiso               | Permite                                                                                                     |
-| --------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `contacts:read`       | Leer contactos y campos de contacto.                                                                        |
-| `contacts:write`      | Crear y actualizar contactos, agregarles notas, cambiar sus etiquetas, y crear y borrar campos de contacto. |
-| `conversations:read`  | Leer y buscar conversaciones, mensajes, canales y números de WhatsApp.                                      |
-| `conversations:write` | Asignar, cerrar, reabrir y marcar como leídas las conversaciones, y definir su agente de IA.                |
-| `messages:send`       | Iniciar conversaciones, enviar mensajes y consultar envíos.                                                 |
-| `templates:read`      | Leer las plantillas de WhatsApp y validar borradores.                                                       |
-| `templates:write`     | Crear, editar y eliminar plantillas de WhatsApp.                                                            |
-| `members:read`        | Leer los miembros de la organización.                                                                       |
-| `tags:read`           | Leer las etiquetas de contactos.                                                                            |
-| `webhooks:manage`     | Crear, listar y desactivar webhooks; consultar y reintentar sus entregas.                                   |
-| `workflows:read`      | Leer workflows, sus ejecuciones y la vista previa y el historial de recordatorios de citas.                 |
-| `workflows:write`     | Crear, editar, activar, pausar y eliminar workflows, y definir el archivo de encabezado de uno programado.  |
-| `reports:read`        | Leer los números de las páginas de Reportes.                                                                |
-| `agents:read`         | Leer agentes y sus opciones de configuración.                                                               |
-| `agents:write`        | Crear, actualizar y archivar agentes.                                                                       |
-| `knowledge:read`      | Leer ubicaciones, contactos del directorio y archivos de conocimiento.                                      |
-| `knowledge:write`     | Crear, actualizar y eliminar ubicaciones, contactos del directorio y archivos de conocimiento.              |
-| `tags:write`          | Crear, editar y borrar etiquetas.                                                                           |
-| `quick_replies:read`  | Leer respuestas rápidas.                                                                                    |
-| `quick_replies:write` | Crear, actualizar y borrar respuestas rápidas.                                                              |
-| `broadcasts:read`     | Leer campañas, sus conteos y el estado de entrega de cada destinatario, y previsualizar una audiencia.      |
-| `broadcasts:write`    | Crear, programar y cancelar campañas.                                                                       |
+| Permiso               | Permite                                                                                                                    |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `contacts:read`       | Leer contactos y campos de contacto.                                                                                       |
+| `contacts:write`      | Crear y actualizar contactos, agregarles notas, cambiar sus etiquetas, y crear y borrar campos de contacto.                |
+| `conversations:read`  | Leer y buscar conversaciones, mensajes, canales y números de WhatsApp.                                                     |
+| `conversations:write` | Asignar, cerrar, reabrir y marcar como leídas las conversaciones, definir su agente de IA y gestionar números de WhatsApp. |
+| `messages:send`       | Iniciar conversaciones, enviar mensajes y consultar envíos.                                                                |
+| `templates:read`      | Leer las plantillas de WhatsApp y validar borradores.                                                                      |
+| `templates:write`     | Crear, editar y eliminar plantillas de WhatsApp, subir sus muestras de encabezado y asignar sus variables.                 |
+| `members:read`        | Leer los miembros de la organización.                                                                                      |
+| `tags:read`           | Leer las etiquetas de contactos.                                                                                           |
+| `webhooks:manage`     | Crear, listar y desactivar webhooks; consultar y reintentar sus entregas.                                                  |
+| `workflows:read`      | Leer workflows, sus ejecuciones y la vista previa y el historial de recordatorios de citas.                                |
+| `workflows:write`     | Crear, editar, activar, pausar y eliminar workflows, y definir el archivo de encabezado de uno programado.                 |
+| `reports:read`        | Leer los números de las páginas de Reportes.                                                                               |
+| `agents:read`         | Leer agentes y sus opciones de configuración.                                                                              |
+| `agents:write`        | Crear, actualizar y archivar agentes.                                                                                      |
+| `knowledge:read`      | Leer ubicaciones, contactos del directorio y archivos de conocimiento.                                                     |
+| `knowledge:write`     | Crear, actualizar y eliminar ubicaciones, contactos del directorio y archivos de conocimiento.                             |
+| `tags:write`          | Crear, editar y borrar etiquetas.                                                                                          |
+| `quick_replies:read`  | Leer respuestas rápidas.                                                                                                   |
+| `quick_replies:write` | Crear, actualizar y borrar respuestas rápidas.                                                                             |
+| `broadcasts:read`     | Leer campañas, sus conteos y el estado de entrega de cada destinatario, y previsualizar una audiencia.                     |
+| `broadcasts:write`    | Crear, programar y cancelar campañas.                                                                                      |
 
 La tabla siguiente sale del contrato de la API: es la lista exacta de operaciones y el permiso de cada una.
 
@@ -166,6 +166,16 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Eliminar una plantilla](https://getricky.ai/docs/api/reference/whats-app/delete-template) | `DELETE /templates/{template_id}` | `templates:write` |
 | [Listar números de WhatsApp](https://getricky.ai/docs/api/reference/whats-app/list-whats-app-numbers) | `GET /whatsapp-numbers` | `conversations:read` |
 | [Consultar un número de WhatsApp](https://getricky.ai/docs/api/reference/whats-app/get-whats-app-number) | `GET /whatsapp-numbers/{channel_id}` | `conversations:read` |
+| [Subir una muestra de encabezado](https://getricky.ai/docs/api/reference/whats-app/create-template-media-upload) | `POST /templates/media` | `templates:write` |
+| [Completar una muestra de encabezado](https://getricky.ai/docs/api/reference/whats-app/complete-template-media-upload) | `POST /templates/media/complete` | `templates:write` |
+| [Consultar los campos asignados de una plantilla](https://getricky.ai/docs/api/reference/whats-app/get-template-field-mappings) | `GET /templates/{template_id}/field-mappings` | `templates:read` |
+| [Asignar los campos de una plantilla](https://getricky.ai/docs/api/reference/whats-app/replace-template-field-mappings) | `PUT /templates/{template_id}/field-mappings` | `templates:write` |
+| [Actualizar un número de WhatsApp](https://getricky.ai/docs/api/reference/whats-app/update-whats-app-number) | `PATCH /whatsapp-numbers/{channel_id}` | `conversations:write` |
+| [Editar un perfil de empresa](https://getricky.ai/docs/api/reference/whats-app/update-whats-app-business-profile) | `PATCH /whatsapp-numbers/{channel_id}/business-profile` | `conversations:write` |
+| [Subir una foto de perfil](https://getricky.ai/docs/api/reference/whats-app/create-profile-photo-upload) | `POST /whatsapp-numbers/{channel_id}/profile-photo` | `conversations:write` |
+| [Completar una foto de perfil](https://getricky.ai/docs/api/reference/whats-app/complete-profile-photo-upload) | `POST /whatsapp-numbers/{channel_id}/profile-photo/complete` | `conversations:write` |
+| [Pedir un cambio de nombre visible](https://getricky.ai/docs/api/reference/whats-app/request-whats-app-display-name) | `POST /whatsapp-numbers/{channel_id}/display-name` | `conversations:write` |
+| [Actualizar un número de WhatsApp desde Meta](https://getricky.ai/docs/api/reference/whats-app/refresh-whats-app-number) | `POST /whatsapp-numbers/{channel_id}/refresh` | `conversations:write` |
 | [Listar campañas](https://getricky.ai/docs/api/reference/broadcasts/list-broadcasts) | `GET /broadcasts` | `broadcasts:read` |
 | [Crear una campaña](https://getricky.ai/docs/api/reference/broadcasts/create-broadcast) | `POST /broadcasts` | `broadcasts:write` |
 | [Consultar una campaña](https://getricky.ai/docs/api/reference/broadcasts/get-broadcast) | `GET /broadcasts/{broadcast_id}` | `broadcasts:read` |

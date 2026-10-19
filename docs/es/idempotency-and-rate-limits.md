@@ -47,6 +47,15 @@ Recomendamos enviarla en todo envío de mensajes. Estas operaciones la aceptan:
 | [Crear una plantilla](https://getricky.ai/docs/api/reference/whats-app/create-template) | `POST /templates` | `templates:write` |
 | [Editar una plantilla](https://getricky.ai/docs/api/reference/whats-app/update-template) | `PATCH /templates/{template_id}` | `templates:write` |
 | [Eliminar una plantilla](https://getricky.ai/docs/api/reference/whats-app/delete-template) | `DELETE /templates/{template_id}` | `templates:write` |
+| [Subir una muestra de encabezado](https://getricky.ai/docs/api/reference/whats-app/create-template-media-upload) | `POST /templates/media` | `templates:write` |
+| [Completar una muestra de encabezado](https://getricky.ai/docs/api/reference/whats-app/complete-template-media-upload) | `POST /templates/media/complete` | `templates:write` |
+| [Asignar los campos de una plantilla](https://getricky.ai/docs/api/reference/whats-app/replace-template-field-mappings) | `PUT /templates/{template_id}/field-mappings` | `templates:write` |
+| [Actualizar un número de WhatsApp](https://getricky.ai/docs/api/reference/whats-app/update-whats-app-number) | `PATCH /whatsapp-numbers/{channel_id}` | `conversations:write` |
+| [Editar un perfil de empresa](https://getricky.ai/docs/api/reference/whats-app/update-whats-app-business-profile) | `PATCH /whatsapp-numbers/{channel_id}/business-profile` | `conversations:write` |
+| [Subir una foto de perfil](https://getricky.ai/docs/api/reference/whats-app/create-profile-photo-upload) | `POST /whatsapp-numbers/{channel_id}/profile-photo` | `conversations:write` |
+| [Completar una foto de perfil](https://getricky.ai/docs/api/reference/whats-app/complete-profile-photo-upload) | `POST /whatsapp-numbers/{channel_id}/profile-photo/complete` | `conversations:write` |
+| [Pedir un cambio de nombre visible](https://getricky.ai/docs/api/reference/whats-app/request-whats-app-display-name) | `POST /whatsapp-numbers/{channel_id}/display-name` | `conversations:write` |
+| [Actualizar un número de WhatsApp desde Meta](https://getricky.ai/docs/api/reference/whats-app/refresh-whats-app-number) | `POST /whatsapp-numbers/{channel_id}/refresh` | `conversations:write` |
 | [Crear una campaña](https://getricky.ai/docs/api/reference/broadcasts/create-broadcast) | `POST /broadcasts` | `broadcasts:write` |
 | [Cancelar una campaña programada](https://getricky.ai/docs/api/reference/broadcasts/cancel-broadcast) | `POST /broadcasts/{broadcast_id}/cancel` | `broadcasts:write` |
 | [Asignar muchas conversaciones](https://getricky.ai/docs/api/reference/conversations/assign-conversations) | `POST /conversations/assignments` | `conversations:write` |

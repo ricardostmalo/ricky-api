@@ -5382,6 +5382,143 @@
         }
       }
     },
+    "/workflows/{workflow_id}/reminders/state-options": {
+      "get": {
+        "operationId": "listWorkflowReminderStates",
+        "tags": [
+          "Workflows"
+        ],
+        "summary": "List the Odoo appointment states",
+        "description": "Reads from Odoo, live, every appointment state its installation has: the values an appointment-reminder workflow’s `source.appointment_states` and the preview’s `appointment_states` take. Only for workflows with `source.kind` `odoo_appointments`, in an organization with Odoo connected.\n\nScope: `workflows:read`.",
+        "parameters": [
+          {
+            "name": "workflow_id",
+            "in": "path",
+            "required": true,
+            "description": "Workflow ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "next_cursor"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AppointmentState"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Pass as `cursor` for the next page; null on the last page."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/reports/dashboard": {
       "get": {
         "operationId": "getDashboardReport",
@@ -10014,8 +10151,8 @@
         "tags": [
           "Conversations"
         ],
-        "summary": "Change a conversation's tags",
-        "description": "Tags belong to the conversation's contact: this adds and removes tags on it and answers the contact.\n\nScope: `contacts:write`.",
+        "summary": "Change the tags of a conversation's contact",
+        "description": "Tags belong to the conversation's contact, not to the conversation: this adds and removes tags on that contact, so every conversation of the contact shows them, and answers the contact. The change is a `contact.tags_changed` webhook event; there is no conversation tag event.\n\nScope: `contacts:write`.",
         "parameters": [
           {
             "name": "conversation_id",
@@ -18914,7 +19051,7 @@
               "ready",
               "failed"
             ],
-            "description": "`uploading` until `POST /knowledge/files/{file_id}/complete` reads it; then `ready`."
+            "description": "`uploading` until `POST /knowledge/files/{file_id}/complete` reads it; then `ready`, also when Ricky could not read useful content, which `extraction_error` then says. Ricky does not set `failed` today."
           },
           "consult_enabled": {
             "type": "boolean",
@@ -22188,6 +22325,30 @@
         ],
         "description": "How long conversations stay open before someone closes them. Every close in the period counts, dated when it happened; resolution time runs from the opening of that span to the close. Conversations without a single message are left out."
       },
+      "AppointmentState": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "State as Odoo stores it.",
+            "examples": [
+              "confirmed"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "State as Odoo shows it.",
+            "examples": [
+              "Confirmada"
+            ]
+          }
+        },
+        "required": [
+          "value",
+          "label"
+        ],
+        "description": "An appointment state of the Odoo installation, one of those a reminder workflow can remind."
+      },
       "ReminderPreview": {
         "type": "object",
         "properties": {
@@ -22219,27 +22380,7 @@
           "appointment_states": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "value": {
-                  "type": "string",
-                  "description": "State as Odoo stores it.",
-                  "examples": [
-                    "confirmed"
-                  ]
-                },
-                "label": {
-                  "type": "string",
-                  "description": "State as Odoo shows it.",
-                  "examples": [
-                    "Confirmada"
-                  ]
-                }
-              },
-              "required": [
-                "value",
-                "label"
-              ]
+              "$ref": "#/components/schemas/AppointmentState"
             },
             "description": "Every appointment state the Odoo installation has."
           },
