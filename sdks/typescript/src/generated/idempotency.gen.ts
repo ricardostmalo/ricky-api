@@ -4,6 +4,7 @@
 export const idempotentOperations: ReadonlySet<string> = new Set([
     'PATCH /contacts/{contact_id}',
     'PATCH /conversations/{conversation_id}/assignment',
+    'PATCH /workflows/{workflow_id}',
     'POST /contacts',
     'POST /contacts/{contact_id}/notes',
     'POST /conversations',
@@ -11,4 +12,5 @@ export const idempotentOperations: ReadonlySet<string> = new Set([
     'POST /conversations/{conversation_id}/messages',
     'POST /conversations/{conversation_id}/reopen',
     'POST /tags',
+    'POST /workflows',
 ]);

@@ -646,6 +646,434 @@ class WebhookTestResult(TypedDict):
     """
 
 
+WorkflowDefinitionConditionBusinessHoursWeekday: TypeAlias = int
+
+
+class WorkflowDefinitionConditionBusinessHours(TypedDict):
+    start: str
+    """
+    Opening time, `HH:MM`.
+    """
+    end: str
+    """
+    Closing time, `HH:MM`.
+    """
+    timezone: str
+    """
+    IANA time zone, for example `America/Panama`.
+    """
+    weekdays: List[WorkflowDefinitionConditionBusinessHoursWeekday]
+    """
+    Open days, 0 for Sunday to 6 for Saturday.
+    """
+
+
+class WorkflowDefinitionCondition(TypedDict):
+    """
+    When it runs; null runs at any hour.
+    """
+
+    kind: Literal["inside_business_hours"]
+    business_hours: WorkflowDefinitionConditionBusinessHours
+
+
+WorkflowDefinitionCondition1BusinessHoursWeekday: TypeAlias = int
+
+
+class WorkflowDefinitionCondition1BusinessHours(TypedDict):
+    start: str
+    """
+    Opening time, `HH:MM`.
+    """
+    end: str
+    """
+    Closing time, `HH:MM`.
+    """
+    timezone: str
+    """
+    IANA time zone, for example `America/Panama`.
+    """
+    weekdays: List[WorkflowDefinitionCondition1BusinessHoursWeekday]
+    """
+    Open days, 0 for Sunday to 6 for Saturday.
+    """
+
+
+class WorkflowDefinitionCondition1(TypedDict):
+    """
+    When it runs; null runs at any hour.
+    """
+
+    kind: Literal["outside_business_hours"]
+    business_hours: WorkflowDefinitionCondition1BusinessHours
+
+
+class WorkflowDefinitionFlowSteps(TypedDict):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["send_message"]
+    text: str
+    """
+    Text sent to the contact.
+    """
+
+
+class WorkflowDefinitionFlowSteps1Choice(TypedDict):
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    label: str
+    """
+    Button text, up to 20 characters.
+    """
+    next: Optional[str]
+    """
+    Step to run when the contact picks it.
+    """
+
+
+class WorkflowDefinitionFlowSteps1(TypedDict):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["ask_question"]
+    text: str
+    """
+    Text sent to the contact.
+    """
+    answer_key: str
+    """
+    Name the answer is kept under, for a later `branch`.
+    """
+    choices: List[WorkflowDefinitionFlowSteps1Choice]
+    """
+    Buttons or list options, WhatsApp only. Empty for a free-text answer, which goes to `next`.
+    """
+    timeout_seconds: int
+    """
+    How long to wait for the answer, up to 7 days.
+    """
+    on_timeout: Optional[str]
+    """
+    Step to run when no answer arrives in time.
+    """
+    on_invalid: Optional[str]
+    """
+    Step to run when the answer matches no option.
+    """
+
+
+class WorkflowDefinitionFlowSteps2(TypedDict):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["branch"]
+    answer_key: str
+    """
+    Name the answer is kept under, for a later `branch`.
+    """
+    operator: Literal["equals", "contains", "exists"]
+    value: str
+    """
+    Value compared with the answer.
+    """
+    otherwise: Optional[str]
+    """
+    Step to run when the condition does not hold; `next` when it does.
+    """
+
+
+class WorkflowDefinitionFlowSteps3(TypedDict):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["wait"]
+    seconds: int
+    """
+    Delay, up to 7 days.
+    """
+
+
+class WorkflowDefinitionFlowSteps4(TypedDict):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["assign_user"]
+    user_id: str
+    """
+    Member who takes the conversation. See `GET /members`.
+    """
+
+
+class WorkflowDefinitionFlowSteps5(TypedDict):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["assign_agent"]
+    agent_id: str
+    """
+    AI agent that answers the conversation.
+    """
+
+
+class WorkflowDefinitionFlowSteps6(TypedDict):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["close_conversation"]
+
+
+class WorkflowDefinitionFlowSteps7(TypedDict):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["end"]
+
+
+class WorkflowDefinitionFlow(TypedDict):
+    """
+    The steps and how they connect.
+    """
+
+    entry: str
+    """
+    ID of the first step.
+    """
+    steps: List[Union[WorkflowDefinitionFlowSteps, WorkflowDefinitionFlowSteps1, WorkflowDefinitionFlowSteps2, WorkflowDefinitionFlowSteps3, WorkflowDefinitionFlowSteps4, WorkflowDefinitionFlowSteps5, WorkflowDefinitionFlowSteps6, WorkflowDefinitionFlowSteps7]]
+
+
+class WorkflowDefinition(TypedDict):
+    """
+    Reacts to a conversation with messages, questions, waits and assignments.
+    """
+
+    trigger: Literal["conversation_opened", "first_message_received"]
+    """
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives.
+    """
+    channel_ids: List[str]
+    """
+    Channels it listens to. See `GET /channels`.
+    """
+    condition: Optional[Union[WorkflowDefinitionCondition, WorkflowDefinitionCondition1]]
+    """
+    When it runs; null runs at any hour.
+    """
+    flow: WorkflowDefinitionFlow
+    """
+    The steps and how they connect.
+    """
+
+
+class WorkflowDefinition1Trigger(TypedDict):
+    kind: Literal["daily"]
+    time: str
+    """
+    Time of day it runs, `HH:MM`.
+    """
+    timezone: str
+    """
+    IANA time zone of `time`.
+    """
+
+
+class WorkflowDefinition1Source(TypedDict):
+    """
+    Who it messages: Odoo appointments or Odoo birthdays.
+    """
+
+    kind: Literal["odoo_appointments"]
+    days_ahead: int
+    """
+    Days before the appointment it reminds.
+    """
+    appointment_states: Optional[List[str]]
+    """
+    Odoo appointment states it reminds; null for every state.
+    """
+
+
+class WorkflowDefinition1Source1(TypedDict):
+    """
+    Who it messages: Odoo appointments or Odoo birthdays.
+    """
+
+    kind: Literal["odoo_birthdays"]
+
+
+class WorkflowDefinition1Template(TypedDict):
+    channel_id: str
+    """
+    WhatsApp channel it sends from.
+    """
+    template_id: str
+    """
+    Template ID at Meta.
+    """
+    template_name: str
+    """
+    Template name.
+    """
+    language: str
+    """
+    Template language code.
+    """
+    parameters: Dict[str, Literal["appointment_start", "branch_name", "customer_first_name"]]
+    """
+    Value each template variable takes.
+    """
+    has_header_image: bool
+    """
+    Whether an image is stored for the header.
+    """
+
+
+class WorkflowDefinition1(TypedDict):
+    """
+    Sends a WhatsApp template every day from an Odoo integration. Created and edited in Ricky; the API reads, activates, pauses and deletes it.
+    """
+
+    trigger: WorkflowDefinition1Trigger
+    source: Union[WorkflowDefinition1Source, WorkflowDefinition1Source1]
+    """
+    Who it messages: Odoo appointments or Odoo birthdays.
+    """
+    template: WorkflowDefinition1Template
+
+
+class Workflow(TypedDict):
+    """
+    An automation Ricky runs for the organization.
+    """
+
+    id: str
+    """
+    Workflow ID.
+    """
+    name: str
+    """
+    Display name.
+    """
+    status: Literal["draft", "active", "paused"]
+    """
+    `draft` until activated; `paused` runs nothing new; `active` runs.
+    """
+    type: Literal["conversation", "scheduled"]
+    """
+    Which `definition` it has: a conversation flow or a daily template.
+    """
+    definition: Union[WorkflowDefinition, WorkflowDefinition1]
+    updated_at: str
+    """
+    Last change to the workflow.
+    """
+
+
+class WorkflowExecution(TypedDict):
+    """
+    One queued run of a workflow, or one template send of a scheduled workflow. Its status does not confirm each message's delivery.
+    """
+
+    id: str
+    """
+    Execution ID.
+    """
+    status: Literal["pending", "processing", "processed", "failed", "superseded"]
+    """
+    `pending` or `processing` while queued or retrying; `processed` when it ran; `failed` for good; `superseded` when a newer execution replaced it.
+    """
+    attempts: int
+    """
+    Attempts so far.
+    """
+    last_error: Optional[str]
+    """
+    Error of the latest failed attempt.
+    """
+    created_at: str
+    """
+    When it was queued.
+    """
+    processed_at: Optional[str]
+    """
+    When it finished, failed or was superseded.
+    """
+
+
 class CreateContact(TypedDict, closed=True):
     """
     A contact needs at least a name, a phone or an email.
@@ -1049,4 +1477,620 @@ class RotateWebhookSecret(TypedDict, closed=True):
     expire_previous_after_hours: NotRequired[int]
     """
     How long deliveries keep the previous signature too, so you can deploy the new secret first. 0 ends the previous secret now.
+    """
+
+
+CreateWorkflowDefinitionConditionBusinessHoursWeekday: TypeAlias = int
+
+
+class CreateWorkflowDefinitionConditionBusinessHours(TypedDict, closed=True):
+    start: str
+    """
+    Opening time, `HH:MM`.
+    """
+    end: str
+    """
+    Closing time, `HH:MM`.
+    """
+    timezone: str
+    """
+    IANA time zone, for example `America/Panama`.
+    """
+    weekdays: List[CreateWorkflowDefinitionConditionBusinessHoursWeekday]
+    """
+    Open days, 0 for Sunday to 6 for Saturday.
+    """
+
+
+class CreateWorkflowDefinitionCondition(TypedDict, closed=True):
+    """
+    When it runs; null runs at any hour.
+    """
+
+    kind: Literal["inside_business_hours"]
+    business_hours: CreateWorkflowDefinitionConditionBusinessHours
+
+
+CreateWorkflowDefinitionCondition1BusinessHoursWeekday: TypeAlias = int
+
+
+class CreateWorkflowDefinitionCondition1BusinessHours(TypedDict, closed=True):
+    start: str
+    """
+    Opening time, `HH:MM`.
+    """
+    end: str
+    """
+    Closing time, `HH:MM`.
+    """
+    timezone: str
+    """
+    IANA time zone, for example `America/Panama`.
+    """
+    weekdays: List[CreateWorkflowDefinitionCondition1BusinessHoursWeekday]
+    """
+    Open days, 0 for Sunday to 6 for Saturday.
+    """
+
+
+class CreateWorkflowDefinitionCondition1(TypedDict, closed=True):
+    """
+    When it runs; null runs at any hour.
+    """
+
+    kind: Literal["outside_business_hours"]
+    business_hours: CreateWorkflowDefinitionCondition1BusinessHours
+
+
+class CreateWorkflowDefinitionFlowSteps(TypedDict, closed=True):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["send_message"]
+    text: str
+    """
+    Text sent to the contact.
+    """
+
+
+class CreateWorkflowDefinitionFlowSteps1Choice(TypedDict, closed=True):
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    label: str
+    """
+    Button text, up to 20 characters.
+    """
+    next: Optional[str]
+    """
+    Step to run when the contact picks it.
+    """
+
+
+class CreateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["ask_question"]
+    text: str
+    """
+    Text sent to the contact.
+    """
+    answer_key: str
+    """
+    Name the answer is kept under, for a later `branch`.
+    """
+    choices: List[CreateWorkflowDefinitionFlowSteps1Choice]
+    """
+    Buttons or list options, WhatsApp only. Empty for a free-text answer, which goes to `next`.
+    """
+    timeout_seconds: int
+    """
+    How long to wait for the answer, up to 7 days.
+    """
+    on_timeout: Optional[str]
+    """
+    Step to run when no answer arrives in time.
+    """
+    on_invalid: Optional[str]
+    """
+    Step to run when the answer matches no option.
+    """
+
+
+class CreateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["branch"]
+    answer_key: str
+    """
+    Name the answer is kept under, for a later `branch`.
+    """
+    operator: Literal["equals", "contains", "exists"]
+    value: str
+    """
+    Value compared with the answer.
+    """
+    otherwise: Optional[str]
+    """
+    Step to run when the condition does not hold; `next` when it does.
+    """
+
+
+class CreateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["wait"]
+    seconds: int
+    """
+    Delay, up to 7 days.
+    """
+
+
+class CreateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["assign_user"]
+    user_id: str
+    """
+    Member who takes the conversation. See `GET /members`.
+    """
+
+
+class CreateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["assign_agent"]
+    agent_id: str
+    """
+    AI agent that answers the conversation.
+    """
+
+
+class CreateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["close_conversation"]
+
+
+class CreateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["end"]
+
+
+class CreateWorkflowDefinitionFlow(TypedDict, closed=True):
+    """
+    The steps and how they connect.
+    """
+
+    entry: str
+    """
+    ID of the first step.
+    """
+    steps: List[Union[CreateWorkflowDefinitionFlowSteps, CreateWorkflowDefinitionFlowSteps1, CreateWorkflowDefinitionFlowSteps2, CreateWorkflowDefinitionFlowSteps3, CreateWorkflowDefinitionFlowSteps4, CreateWorkflowDefinitionFlowSteps5, CreateWorkflowDefinitionFlowSteps6, CreateWorkflowDefinitionFlowSteps7]]
+
+
+class CreateWorkflowDefinition(TypedDict, closed=True):
+    """
+    Reacts to a conversation with messages, questions, waits and assignments.
+    """
+
+    trigger: Literal["conversation_opened", "first_message_received"]
+    """
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives.
+    """
+    channel_ids: List[str]
+    """
+    Channels it listens to. See `GET /channels`.
+    """
+    condition: Optional[Union[CreateWorkflowDefinitionCondition, CreateWorkflowDefinitionCondition1]]
+    """
+    When it runs; null runs at any hour.
+    """
+    flow: CreateWorkflowDefinitionFlow
+    """
+    The steps and how they connect.
+    """
+
+
+class CreateWorkflow(TypedDict, closed=True):
+    """
+    Creates a conversation workflow as a `draft`. Activating it is a separate call.
+    """
+
+    name: str
+    """
+    Display name.
+    """
+    definition: CreateWorkflowDefinition
+    """
+    Reacts to a conversation with messages, questions, waits and assignments.
+    """
+
+
+UpdateWorkflowDefinitionConditionBusinessHoursWeekday: TypeAlias = int
+
+
+class UpdateWorkflowDefinitionConditionBusinessHours(TypedDict, closed=True):
+    start: str
+    """
+    Opening time, `HH:MM`.
+    """
+    end: str
+    """
+    Closing time, `HH:MM`.
+    """
+    timezone: str
+    """
+    IANA time zone, for example `America/Panama`.
+    """
+    weekdays: List[UpdateWorkflowDefinitionConditionBusinessHoursWeekday]
+    """
+    Open days, 0 for Sunday to 6 for Saturday.
+    """
+
+
+class UpdateWorkflowDefinitionCondition(TypedDict, closed=True):
+    """
+    When it runs; null runs at any hour.
+    """
+
+    kind: Literal["inside_business_hours"]
+    business_hours: UpdateWorkflowDefinitionConditionBusinessHours
+
+
+UpdateWorkflowDefinitionCondition1BusinessHoursWeekday: TypeAlias = int
+
+
+class UpdateWorkflowDefinitionCondition1BusinessHours(TypedDict, closed=True):
+    start: str
+    """
+    Opening time, `HH:MM`.
+    """
+    end: str
+    """
+    Closing time, `HH:MM`.
+    """
+    timezone: str
+    """
+    IANA time zone, for example `America/Panama`.
+    """
+    weekdays: List[UpdateWorkflowDefinitionCondition1BusinessHoursWeekday]
+    """
+    Open days, 0 for Sunday to 6 for Saturday.
+    """
+
+
+class UpdateWorkflowDefinitionCondition1(TypedDict, closed=True):
+    """
+    When it runs; null runs at any hour.
+    """
+
+    kind: Literal["outside_business_hours"]
+    business_hours: UpdateWorkflowDefinitionCondition1BusinessHours
+
+
+class UpdateWorkflowDefinitionFlowSteps(TypedDict, closed=True):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["send_message"]
+    text: str
+    """
+    Text sent to the contact.
+    """
+
+
+class UpdateWorkflowDefinitionFlowSteps1Choice(TypedDict, closed=True):
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    label: str
+    """
+    Button text, up to 20 characters.
+    """
+    next: Optional[str]
+    """
+    Step to run when the contact picks it.
+    """
+
+
+class UpdateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["ask_question"]
+    text: str
+    """
+    Text sent to the contact.
+    """
+    answer_key: str
+    """
+    Name the answer is kept under, for a later `branch`.
+    """
+    choices: List[UpdateWorkflowDefinitionFlowSteps1Choice]
+    """
+    Buttons or list options, WhatsApp only. Empty for a free-text answer, which goes to `next`.
+    """
+    timeout_seconds: int
+    """
+    How long to wait for the answer, up to 7 days.
+    """
+    on_timeout: Optional[str]
+    """
+    Step to run when no answer arrives in time.
+    """
+    on_invalid: Optional[str]
+    """
+    Step to run when the answer matches no option.
+    """
+
+
+class UpdateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["branch"]
+    answer_key: str
+    """
+    Name the answer is kept under, for a later `branch`.
+    """
+    operator: Literal["equals", "contains", "exists"]
+    value: str
+    """
+    Value compared with the answer.
+    """
+    otherwise: Optional[str]
+    """
+    Step to run when the condition does not hold; `next` when it does.
+    """
+
+
+class UpdateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["wait"]
+    seconds: int
+    """
+    Delay, up to 7 days.
+    """
+
+
+class UpdateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["assign_user"]
+    user_id: str
+    """
+    Member who takes the conversation. See `GET /members`.
+    """
+
+
+class UpdateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["assign_agent"]
+    agent_id: str
+    """
+    AI agent that answers the conversation.
+    """
+
+
+class UpdateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["close_conversation"]
+
+
+class UpdateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
+    """
+    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["end"]
+
+
+class UpdateWorkflowDefinitionFlow(TypedDict, closed=True):
+    """
+    The steps and how they connect.
+    """
+
+    entry: str
+    """
+    ID of the first step.
+    """
+    steps: List[Union[UpdateWorkflowDefinitionFlowSteps, UpdateWorkflowDefinitionFlowSteps1, UpdateWorkflowDefinitionFlowSteps2, UpdateWorkflowDefinitionFlowSteps3, UpdateWorkflowDefinitionFlowSteps4, UpdateWorkflowDefinitionFlowSteps5, UpdateWorkflowDefinitionFlowSteps6, UpdateWorkflowDefinitionFlowSteps7]]
+
+
+class UpdateWorkflowDefinition(TypedDict, closed=True):
+    """
+    Replaces the whole definition.
+    """
+
+    trigger: Literal["conversation_opened", "first_message_received"]
+    """
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives.
+    """
+    channel_ids: List[str]
+    """
+    Channels it listens to. See `GET /channels`.
+    """
+    condition: Optional[Union[UpdateWorkflowDefinitionCondition, UpdateWorkflowDefinitionCondition1]]
+    """
+    When it runs; null runs at any hour.
+    """
+    flow: UpdateWorkflowDefinitionFlow
+    """
+    The steps and how they connect.
+    """
+
+
+class UpdateWorkflow(TypedDict, closed=True):
+    """
+    Only the fields you send change. The status stays: an active workflow runs the new definition from its next execution.
+    """
+
+    name: NotRequired[str]
+    """
+    Display name.
+    """
+    definition: NotRequired[UpdateWorkflowDefinition]
+    """
+    Replaces the whole definition.
     """

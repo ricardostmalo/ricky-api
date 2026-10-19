@@ -14,6 +14,7 @@ from .types import (
     CreateContact,
     CreateTag,
     CreateWebhook,
+    CreateWorkflow,
     CreatedWebhook,
     Member,
     Message,
@@ -24,9 +25,12 @@ from .types import (
     Tag,
     Template,
     UpdateContact,
+    UpdateWorkflow,
     Webhook,
     WebhookDelivery,
     WebhookTestResult,
+    Workflow,
+    WorkflowExecution,
 )
 
 
@@ -580,6 +584,156 @@ class SyncOperations:
             path_parameters={"webhook_id": webhook_id, "delivery_id": delivery_id},
         ))
 
+    def list_workflows(
+        self,
+    ) -> Page[Workflow]:
+        """List workflows.
+
+        Every workflow of the organization with its definition, last changed first.
+
+        Scope: `workflows:read`.
+        """
+        return cast(Page[Workflow], self._request(
+            "GET",
+            "/workflows",
+        ))
+
+    def create_workflow(
+        self,
+        body: CreateWorkflow,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Workflow]:
+        """Create a workflow.
+
+        Creates a conversation workflow as a `draft`; it runs nothing until you activate it. Ricky checks the flow with the rules of the workflow editor, and that its channels, members and agents belong to the organization.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Workflow], self._request(
+            "POST",
+            "/workflows",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def get_workflow(
+        self,
+        workflow_id: str,
+    ) -> Resource[Workflow]:
+        """Get a workflow.
+
+        One workflow with its definition.
+
+        Scope: `workflows:read`.
+        """
+        return cast(Resource[Workflow], self._request(
+            "GET",
+            "/workflows/{workflow_id}",
+            path_parameters={"workflow_id": workflow_id},
+        ))
+
+    def update_workflow(
+        self,
+        workflow_id: str,
+        body: UpdateWorkflow,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Workflow]:
+        """Update a workflow.
+
+        Changes the name, replaces the definition, or both, and keeps the status. An active workflow must still be able to run the new definition. A scheduled workflow only accepts a new name.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Workflow], self._request(
+            "PATCH",
+            "/workflows/{workflow_id}",
+            path_parameters={"workflow_id": workflow_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def delete_workflow(
+        self,
+        workflow_id: str,
+    ) -> Resource[Workflow]:
+        """Delete a workflow.
+
+        Deletes the workflow and answers it as it was. Sends already queued still go out. Deleting twice answers `404`.
+
+        Scope: `workflows:write`.
+        """
+        return cast(Resource[Workflow], self._request(
+            "DELETE",
+            "/workflows/{workflow_id}",
+            path_parameters={"workflow_id": workflow_id},
+        ))
+
+    def activate_workflow(
+        self,
+        workflow_id: str,
+    ) -> Resource[Workflow]:
+        """Activate a workflow.
+
+        From now on it runs on new events, and its steps can message contacts, assign members or put an AI agent on conversations. Ricky checks again what it references; assigning an AI agent needs an active subscription. Activating an active workflow changes nothing. Send no body.
+
+        Scope: `workflows:write`.
+        """
+        return cast(Resource[Workflow], self._request(
+            "POST",
+            "/workflows/{workflow_id}/activate",
+            path_parameters={"workflow_id": workflow_id},
+        ))
+
+    def pause_workflow(
+        self,
+        workflow_id: str,
+    ) -> Resource[Workflow]:
+        """Pause a workflow.
+
+        It starts no new executions; sends already queued still go out. Pausing a paused workflow changes nothing. Send no body.
+
+        Scope: `workflows:write`.
+        """
+        return cast(Resource[Workflow], self._request(
+            "POST",
+            "/workflows/{workflow_id}/pause",
+            path_parameters={"workflow_id": workflow_id},
+        ))
+
+    def list_workflow_executions(
+        self,
+        workflow_id: str,
+        *,
+        page_size: Optional[int] = None,
+        cursor: Optional[str] = None,
+    ) -> Page[WorkflowExecution]:
+        """List executions.
+
+        Runs of the workflow with their status, attempts and errors, newest first.
+
+        Scope: `workflows:read`.
+
+        Args:
+            page_size: Items per page.
+            cursor: `next_cursor` from the previous page. Use it unchanged.
+        """
+        return cast(Page[WorkflowExecution], self._request(
+            "GET",
+            "/workflows/{workflow_id}/executions",
+            path_parameters={"workflow_id": workflow_id},
+            query={"page_size": page_size, "cursor": cursor},
+        ))
+
 
 class AsyncOperations:
     """Every operation of the Ricky API, awaitable."""
@@ -1129,4 +1283,154 @@ class AsyncOperations:
             "POST",
             "/webhooks/{webhook_id}/deliveries/{delivery_id}/retry",
             path_parameters={"webhook_id": webhook_id, "delivery_id": delivery_id},
+        ))
+
+    async def list_workflows(
+        self,
+    ) -> Page[Workflow]:
+        """List workflows.
+
+        Every workflow of the organization with its definition, last changed first.
+
+        Scope: `workflows:read`.
+        """
+        return cast(Page[Workflow], await self._request(
+            "GET",
+            "/workflows",
+        ))
+
+    async def create_workflow(
+        self,
+        body: CreateWorkflow,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Workflow]:
+        """Create a workflow.
+
+        Creates a conversation workflow as a `draft`; it runs nothing until you activate it. Ricky checks the flow with the rules of the workflow editor, and that its channels, members and agents belong to the organization.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Workflow], await self._request(
+            "POST",
+            "/workflows",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def get_workflow(
+        self,
+        workflow_id: str,
+    ) -> Resource[Workflow]:
+        """Get a workflow.
+
+        One workflow with its definition.
+
+        Scope: `workflows:read`.
+        """
+        return cast(Resource[Workflow], await self._request(
+            "GET",
+            "/workflows/{workflow_id}",
+            path_parameters={"workflow_id": workflow_id},
+        ))
+
+    async def update_workflow(
+        self,
+        workflow_id: str,
+        body: UpdateWorkflow,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Workflow]:
+        """Update a workflow.
+
+        Changes the name, replaces the definition, or both, and keeps the status. An active workflow must still be able to run the new definition. A scheduled workflow only accepts a new name.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Workflow], await self._request(
+            "PATCH",
+            "/workflows/{workflow_id}",
+            path_parameters={"workflow_id": workflow_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def delete_workflow(
+        self,
+        workflow_id: str,
+    ) -> Resource[Workflow]:
+        """Delete a workflow.
+
+        Deletes the workflow and answers it as it was. Sends already queued still go out. Deleting twice answers `404`.
+
+        Scope: `workflows:write`.
+        """
+        return cast(Resource[Workflow], await self._request(
+            "DELETE",
+            "/workflows/{workflow_id}",
+            path_parameters={"workflow_id": workflow_id},
+        ))
+
+    async def activate_workflow(
+        self,
+        workflow_id: str,
+    ) -> Resource[Workflow]:
+        """Activate a workflow.
+
+        From now on it runs on new events, and its steps can message contacts, assign members or put an AI agent on conversations. Ricky checks again what it references; assigning an AI agent needs an active subscription. Activating an active workflow changes nothing. Send no body.
+
+        Scope: `workflows:write`.
+        """
+        return cast(Resource[Workflow], await self._request(
+            "POST",
+            "/workflows/{workflow_id}/activate",
+            path_parameters={"workflow_id": workflow_id},
+        ))
+
+    async def pause_workflow(
+        self,
+        workflow_id: str,
+    ) -> Resource[Workflow]:
+        """Pause a workflow.
+
+        It starts no new executions; sends already queued still go out. Pausing a paused workflow changes nothing. Send no body.
+
+        Scope: `workflows:write`.
+        """
+        return cast(Resource[Workflow], await self._request(
+            "POST",
+            "/workflows/{workflow_id}/pause",
+            path_parameters={"workflow_id": workflow_id},
+        ))
+
+    async def list_workflow_executions(
+        self,
+        workflow_id: str,
+        *,
+        page_size: Optional[int] = None,
+        cursor: Optional[str] = None,
+    ) -> Page[WorkflowExecution]:
+        """List executions.
+
+        Runs of the workflow with their status, attempts and errors, newest first.
+
+        Scope: `workflows:read`.
+
+        Args:
+            page_size: Items per page.
+            cursor: `next_cursor` from the previous page. Use it unchanged.
+        """
+        return cast(Page[WorkflowExecution], await self._request(
+            "GET",
+            "/workflows/{workflow_id}/executions",
+            path_parameters={"workflow_id": workflow_id},
+            query={"page_size": page_size, "cursor": cursor},
         ))

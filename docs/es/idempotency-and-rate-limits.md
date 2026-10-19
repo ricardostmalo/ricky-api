@@ -12,15 +12,15 @@ Recomendamos enviarla en todo envío de mensajes. Estas operaciones la aceptan:
 
 | Operación | Endpoint | Permiso |
 | --- | --- | --- |
-| [Create a contact](https://getricky.ai/docs/api/reference/contacts/create-contact) | `POST /contacts` | `contacts:write` |
-| [Update a contact](https://getricky.ai/docs/api/reference/contacts/update-contact) | `PATCH /contacts/{contact_id}` | `contacts:write` |
-| [Add a note to a contact](https://getricky.ai/docs/api/reference/contacts/add-contact-note) | `POST /contacts/{contact_id}/notes` | `contacts:write` |
-| [Start a conversation](https://getricky.ai/docs/api/reference/conversations/start-conversation) | `POST /conversations` | `messages:send` |
-| [Assign a conversation](https://getricky.ai/docs/api/reference/conversations/assign-conversation) | `PATCH /conversations/{conversation_id}/assignment` | `conversations:write` |
-| [Close a conversation](https://getricky.ai/docs/api/reference/conversations/close-conversation) | `POST /conversations/{conversation_id}/close` | `conversations:write` |
-| [Reopen a conversation](https://getricky.ai/docs/api/reference/conversations/reopen-conversation) | `POST /conversations/{conversation_id}/reopen` | `conversations:write` |
-| [Send a message](https://getricky.ai/docs/api/reference/messages/send-message) | `POST /conversations/{conversation_id}/messages` | `messages:send` |
-| [Create a tag](https://getricky.ai/docs/api/reference/catalogs/create-tag) | `POST /tags` | `contacts:write` |
+| [Crear un contacto](https://getricky.ai/docs/api/reference/contacts/create-contact) | `POST /contacts` | `contacts:write` |
+| [Actualizar un contacto](https://getricky.ai/docs/api/reference/contacts/update-contact) | `PATCH /contacts/{contact_id}` | `contacts:write` |
+| [Agregar una nota a un contacto](https://getricky.ai/docs/api/reference/contacts/add-contact-note) | `POST /contacts/{contact_id}/notes` | `contacts:write` |
+| [Iniciar una conversación](https://getricky.ai/docs/api/reference/conversations/start-conversation) | `POST /conversations` | `messages:send` |
+| [Asignar una conversación](https://getricky.ai/docs/api/reference/conversations/assign-conversation) | `PATCH /conversations/{conversation_id}/assignment` | `conversations:write` |
+| [Cerrar una conversación](https://getricky.ai/docs/api/reference/conversations/close-conversation) | `POST /conversations/{conversation_id}/close` | `conversations:write` |
+| [Reabrir una conversación](https://getricky.ai/docs/api/reference/conversations/reopen-conversation) | `POST /conversations/{conversation_id}/reopen` | `conversations:write` |
+| [Enviar un mensaje](https://getricky.ai/docs/api/reference/messages/send-message) | `POST /conversations/{conversation_id}/messages` | `messages:send` |
+| [Crear una etiqueta](https://getricky.ai/docs/api/reference/catalogs/create-tag) | `POST /tags` | `contacts:write` |
 
 Crear o desactivar un webhook y reintentar una entrega no usan esta cabecera.
 

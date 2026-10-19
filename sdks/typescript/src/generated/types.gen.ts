@@ -621,6 +621,331 @@ export type WebhookTestResult = {
 };
 
 /**
+ * An automation Ricky runs for the organization.
+ */
+export type Workflow = {
+    /**
+     * Workflow ID.
+     */
+    id: string;
+    /**
+     * Display name.
+     */
+    name: string;
+    /**
+     * `draft` until activated; `paused` runs nothing new; `active` runs.
+     */
+    status: 'draft' | 'active' | 'paused';
+    /**
+     * Which `definition` it has: a conversation flow or a daily template.
+     */
+    type: 'conversation' | 'scheduled';
+    definition: {
+        /**
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives.
+         */
+        trigger: 'conversation_opened' | 'first_message_received';
+        /**
+         * Channels it listens to. See `GET /channels`.
+         */
+        channel_ids: Array<string>;
+        /**
+         * When it runs; null runs at any hour.
+         */
+        condition: {
+            kind: 'inside_business_hours';
+            business_hours: {
+                /**
+                 * Opening time, `HH:MM`.
+                 */
+                start: string;
+                /**
+                 * Closing time, `HH:MM`.
+                 */
+                end: string;
+                /**
+                 * IANA time zone, for example `America/Panama`.
+                 */
+                timezone: string;
+                /**
+                 * Open days, 0 for Sunday to 6 for Saturday.
+                 */
+                weekdays: Array<number>;
+            };
+        } | {
+            kind: 'outside_business_hours';
+            business_hours: {
+                /**
+                 * Opening time, `HH:MM`.
+                 */
+                start: string;
+                /**
+                 * Closing time, `HH:MM`.
+                 */
+                end: string;
+                /**
+                 * IANA time zone, for example `America/Panama`.
+                 */
+                timezone: string;
+                /**
+                 * Open days, 0 for Sunday to 6 for Saturday.
+                 */
+                weekdays: Array<number>;
+            };
+        } | null;
+        /**
+         * The steps and how they connect.
+         */
+        flow: {
+            /**
+             * ID of the first step.
+             */
+            entry: string;
+            /**
+             * One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+             */
+            steps: Array<{
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'send_message';
+                /**
+                 * Text sent to the contact.
+                 */
+                text: string;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'ask_question';
+                /**
+                 * Text sent to the contact.
+                 */
+                text: string;
+                /**
+                 * Name the answer is kept under, for a later `branch`.
+                 */
+                answer_key: string;
+                /**
+                 * Buttons or list options, WhatsApp only. Empty for a free-text answer, which goes to `next`.
+                 */
+                choices: Array<{
+                    /**
+                     * Step ID: letters, digits, `_` or `-`, up to 64.
+                     */
+                    id: string;
+                    /**
+                     * Button text, up to 20 characters.
+                     */
+                    label: string;
+                    /**
+                     * Step to run when the contact picks it.
+                     */
+                    next: string | null;
+                }>;
+                /**
+                 * How long to wait for the answer, up to 7 days.
+                 */
+                timeout_seconds: number;
+                /**
+                 * Step to run when no answer arrives in time.
+                 */
+                on_timeout: string | null;
+                /**
+                 * Step to run when the answer matches no option.
+                 */
+                on_invalid: string | null;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'branch';
+                /**
+                 * Name the answer is kept under, for a later `branch`.
+                 */
+                answer_key: string;
+                operator: 'equals' | 'contains' | 'exists';
+                /**
+                 * Value compared with the answer.
+                 */
+                value: string;
+                /**
+                 * Step to run when the condition does not hold; `next` when it does.
+                 */
+                otherwise: string | null;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'wait';
+                /**
+                 * Delay, up to 7 days.
+                 */
+                seconds: number;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'assign_user';
+                /**
+                 * Member who takes the conversation. See `GET /members`.
+                 */
+                user_id: string;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'assign_agent';
+                /**
+                 * AI agent that answers the conversation.
+                 */
+                agent_id: string;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'close_conversation';
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'end';
+            }>;
+        };
+    } | {
+        trigger: {
+            kind: 'daily';
+            /**
+             * Time of day it runs, `HH:MM`.
+             */
+            time: string;
+            /**
+             * IANA time zone of `time`.
+             */
+            timezone: string;
+        };
+        /**
+         * Who it messages: Odoo appointments or Odoo birthdays.
+         */
+        source: {
+            kind: 'odoo_appointments';
+            /**
+             * Days before the appointment it reminds.
+             */
+            days_ahead: number;
+            /**
+             * Odoo appointment states it reminds; null for every state.
+             */
+            appointment_states: Array<string> | null;
+        } | {
+            kind: 'odoo_birthdays';
+        };
+        template: {
+            /**
+             * WhatsApp channel it sends from.
+             */
+            channel_id: string;
+            /**
+             * Template ID at Meta.
+             */
+            template_id: string;
+            /**
+             * Template name.
+             */
+            template_name: string;
+            /**
+             * Template language code.
+             */
+            language: string;
+            /**
+             * Value each template variable takes.
+             */
+            parameters: {
+                [key: string]: 'appointment_start' | 'branch_name' | 'customer_first_name';
+            };
+            /**
+             * Whether an image is stored for the header.
+             */
+            has_header_image: boolean;
+        };
+    };
+    /**
+     * Last change to the workflow.
+     */
+    updated_at: string;
+};
+
+/**
+ * One queued run of a workflow, or one template send of a scheduled workflow. Its status does not confirm each message's delivery.
+ */
+export type WorkflowExecution = {
+    /**
+     * Execution ID.
+     */
+    id: string;
+    /**
+     * `pending` or `processing` while queued or retrying; `processed` when it ran; `failed` for good; `superseded` when a newer execution replaced it.
+     */
+    status: 'pending' | 'processing' | 'processed' | 'failed' | 'superseded';
+    /**
+     * Attempts so far.
+     */
+    attempts: number;
+    /**
+     * Error of the latest failed attempt.
+     */
+    last_error: string | null;
+    /**
+     * When it was queued.
+     */
+    created_at: string;
+    /**
+     * When it finished, failed or was superseded.
+     */
+    processed_at: string | null;
+};
+
+/**
  * A contact needs at least a name, a phone or an email.
  */
 export type CreateContact = {
@@ -970,6 +1295,458 @@ export type RotateWebhookSecret = {
      * How long deliveries keep the previous signature too, so you can deploy the new secret first. 0 ends the previous secret now.
      */
     expire_previous_after_hours?: number;
+};
+
+/**
+ * Creates a conversation workflow as a `draft`. Activating it is a separate call.
+ */
+export type CreateWorkflow = {
+    /**
+     * Display name.
+     */
+    name: string;
+    /**
+     * Reacts to a conversation with messages, questions, waits and assignments.
+     */
+    definition: {
+        /**
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives.
+         */
+        trigger: 'conversation_opened' | 'first_message_received';
+        /**
+         * Channels it listens to. See `GET /channels`.
+         */
+        channel_ids: Array<string>;
+        /**
+         * When it runs; null runs at any hour.
+         */
+        condition: {
+            kind: 'inside_business_hours';
+            business_hours: {
+                /**
+                 * Opening time, `HH:MM`.
+                 */
+                start: string;
+                /**
+                 * Closing time, `HH:MM`.
+                 */
+                end: string;
+                /**
+                 * IANA time zone, for example `America/Panama`.
+                 */
+                timezone: string;
+                /**
+                 * Open days, 0 for Sunday to 6 for Saturday.
+                 */
+                weekdays: Array<number>;
+            };
+        } | {
+            kind: 'outside_business_hours';
+            business_hours: {
+                /**
+                 * Opening time, `HH:MM`.
+                 */
+                start: string;
+                /**
+                 * Closing time, `HH:MM`.
+                 */
+                end: string;
+                /**
+                 * IANA time zone, for example `America/Panama`.
+                 */
+                timezone: string;
+                /**
+                 * Open days, 0 for Sunday to 6 for Saturday.
+                 */
+                weekdays: Array<number>;
+            };
+        } | null;
+        /**
+         * The steps and how they connect.
+         */
+        flow: {
+            /**
+             * ID of the first step.
+             */
+            entry: string;
+            /**
+             * One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+             */
+            steps: Array<{
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'send_message';
+                /**
+                 * Text sent to the contact.
+                 */
+                text: string;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'ask_question';
+                /**
+                 * Text sent to the contact.
+                 */
+                text: string;
+                /**
+                 * Name the answer is kept under, for a later `branch`.
+                 */
+                answer_key: string;
+                /**
+                 * Buttons or list options, WhatsApp only. Empty for a free-text answer, which goes to `next`.
+                 */
+                choices: Array<{
+                    /**
+                     * Step ID: letters, digits, `_` or `-`, up to 64.
+                     */
+                    id: string;
+                    /**
+                     * Button text, up to 20 characters.
+                     */
+                    label: string;
+                    /**
+                     * Step to run when the contact picks it.
+                     */
+                    next: string | null;
+                }>;
+                /**
+                 * How long to wait for the answer, up to 7 days.
+                 */
+                timeout_seconds: number;
+                /**
+                 * Step to run when no answer arrives in time.
+                 */
+                on_timeout: string | null;
+                /**
+                 * Step to run when the answer matches no option.
+                 */
+                on_invalid: string | null;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'branch';
+                /**
+                 * Name the answer is kept under, for a later `branch`.
+                 */
+                answer_key: string;
+                operator: 'equals' | 'contains' | 'exists';
+                /**
+                 * Value compared with the answer.
+                 */
+                value: string;
+                /**
+                 * Step to run when the condition does not hold; `next` when it does.
+                 */
+                otherwise: string | null;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'wait';
+                /**
+                 * Delay, up to 7 days.
+                 */
+                seconds: number;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'assign_user';
+                /**
+                 * Member who takes the conversation. See `GET /members`.
+                 */
+                user_id: string;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'assign_agent';
+                /**
+                 * AI agent that answers the conversation.
+                 */
+                agent_id: string;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'close_conversation';
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'end';
+            }>;
+        };
+    };
+};
+
+/**
+ * Only the fields you send change. The status stays: an active workflow runs the new definition from its next execution.
+ */
+export type UpdateWorkflow = {
+    /**
+     * Display name.
+     */
+    name?: string;
+    /**
+     * Replaces the whole definition.
+     */
+    definition?: {
+        /**
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives.
+         */
+        trigger: 'conversation_opened' | 'first_message_received';
+        /**
+         * Channels it listens to. See `GET /channels`.
+         */
+        channel_ids: Array<string>;
+        /**
+         * When it runs; null runs at any hour.
+         */
+        condition: {
+            kind: 'inside_business_hours';
+            business_hours: {
+                /**
+                 * Opening time, `HH:MM`.
+                 */
+                start: string;
+                /**
+                 * Closing time, `HH:MM`.
+                 */
+                end: string;
+                /**
+                 * IANA time zone, for example `America/Panama`.
+                 */
+                timezone: string;
+                /**
+                 * Open days, 0 for Sunday to 6 for Saturday.
+                 */
+                weekdays: Array<number>;
+            };
+        } | {
+            kind: 'outside_business_hours';
+            business_hours: {
+                /**
+                 * Opening time, `HH:MM`.
+                 */
+                start: string;
+                /**
+                 * Closing time, `HH:MM`.
+                 */
+                end: string;
+                /**
+                 * IANA time zone, for example `America/Panama`.
+                 */
+                timezone: string;
+                /**
+                 * Open days, 0 for Sunday to 6 for Saturday.
+                 */
+                weekdays: Array<number>;
+            };
+        } | null;
+        /**
+         * The steps and how they connect.
+         */
+        flow: {
+            /**
+             * ID of the first step.
+             */
+            entry: string;
+            /**
+             * One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+             */
+            steps: Array<{
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'send_message';
+                /**
+                 * Text sent to the contact.
+                 */
+                text: string;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'ask_question';
+                /**
+                 * Text sent to the contact.
+                 */
+                text: string;
+                /**
+                 * Name the answer is kept under, for a later `branch`.
+                 */
+                answer_key: string;
+                /**
+                 * Buttons or list options, WhatsApp only. Empty for a free-text answer, which goes to `next`.
+                 */
+                choices: Array<{
+                    /**
+                     * Step ID: letters, digits, `_` or `-`, up to 64.
+                     */
+                    id: string;
+                    /**
+                     * Button text, up to 20 characters.
+                     */
+                    label: string;
+                    /**
+                     * Step to run when the contact picks it.
+                     */
+                    next: string | null;
+                }>;
+                /**
+                 * How long to wait for the answer, up to 7 days.
+                 */
+                timeout_seconds: number;
+                /**
+                 * Step to run when no answer arrives in time.
+                 */
+                on_timeout: string | null;
+                /**
+                 * Step to run when the answer matches no option.
+                 */
+                on_invalid: string | null;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'branch';
+                /**
+                 * Name the answer is kept under, for a later `branch`.
+                 */
+                answer_key: string;
+                operator: 'equals' | 'contains' | 'exists';
+                /**
+                 * Value compared with the answer.
+                 */
+                value: string;
+                /**
+                 * Step to run when the condition does not hold; `next` when it does.
+                 */
+                otherwise: string | null;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'wait';
+                /**
+                 * Delay, up to 7 days.
+                 */
+                seconds: number;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'assign_user';
+                /**
+                 * Member who takes the conversation. See `GET /members`.
+                 */
+                user_id: string;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'assign_agent';
+                /**
+                 * AI agent that answers the conversation.
+                 */
+                agent_id: string;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'close_conversation';
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'end';
+            }>;
+        };
+    };
 };
 
 /**
@@ -2650,6 +3427,469 @@ export type RetryWebhookDeliveryResponses = {
 };
 
 export type RetryWebhookDeliveryResponse = RetryWebhookDeliveryResponses[keyof RetryWebhookDeliveryResponses];
+
+export type ListWorkflowsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/workflows';
+};
+
+export type ListWorkflowsErrors = {
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListWorkflowsError = ListWorkflowsErrors[keyof ListWorkflowsErrors];
+
+export type ListWorkflowsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<Workflow>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListWorkflowsResponse = ListWorkflowsResponses[keyof ListWorkflowsResponses];
+
+export type CreateWorkflowData = {
+    body: CreateWorkflow;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/workflows';
+};
+
+export type CreateWorkflowErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type CreateWorkflowError = CreateWorkflowErrors[keyof CreateWorkflowErrors];
+
+export type CreateWorkflowResponses = {
+    /**
+     * Success.
+     */
+    201: {
+        data: Workflow;
+    };
+};
+
+export type CreateWorkflowResponse = CreateWorkflowResponses[keyof CreateWorkflowResponses];
+
+export type DeleteWorkflowData = {
+    body?: never;
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query?: never;
+    url: '/workflows/{workflow_id}';
+};
+
+export type DeleteWorkflowErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type DeleteWorkflowError = DeleteWorkflowErrors[keyof DeleteWorkflowErrors];
+
+export type DeleteWorkflowResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Workflow;
+    };
+};
+
+export type DeleteWorkflowResponse = DeleteWorkflowResponses[keyof DeleteWorkflowResponses];
+
+export type GetWorkflowData = {
+    body?: never;
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query?: never;
+    url: '/workflows/{workflow_id}';
+};
+
+export type GetWorkflowErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetWorkflowError = GetWorkflowErrors[keyof GetWorkflowErrors];
+
+export type GetWorkflowResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Workflow;
+    };
+};
+
+export type GetWorkflowResponse = GetWorkflowResponses[keyof GetWorkflowResponses];
+
+export type UpdateWorkflowData = {
+    body: UpdateWorkflow;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query?: never;
+    url: '/workflows/{workflow_id}';
+};
+
+export type UpdateWorkflowErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type UpdateWorkflowError = UpdateWorkflowErrors[keyof UpdateWorkflowErrors];
+
+export type UpdateWorkflowResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Workflow;
+    };
+};
+
+export type UpdateWorkflowResponse = UpdateWorkflowResponses[keyof UpdateWorkflowResponses];
+
+export type ActivateWorkflowData = {
+    body?: never;
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query?: never;
+    url: '/workflows/{workflow_id}/activate';
+};
+
+export type ActivateWorkflowErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ActivateWorkflowError = ActivateWorkflowErrors[keyof ActivateWorkflowErrors];
+
+export type ActivateWorkflowResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Workflow;
+    };
+};
+
+export type ActivateWorkflowResponse = ActivateWorkflowResponses[keyof ActivateWorkflowResponses];
+
+export type PauseWorkflowData = {
+    body?: never;
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query?: never;
+    url: '/workflows/{workflow_id}/pause';
+};
+
+export type PauseWorkflowErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type PauseWorkflowError = PauseWorkflowErrors[keyof PauseWorkflowErrors];
+
+export type PauseWorkflowResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Workflow;
+    };
+};
+
+export type PauseWorkflowResponse = PauseWorkflowResponses[keyof PauseWorkflowResponses];
+
+export type ListWorkflowExecutionsData = {
+    body?: never;
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query?: {
+        /**
+         * Items per page.
+         */
+        page_size?: number;
+        /**
+         * `next_cursor` from the previous page. Use it unchanged.
+         */
+        cursor?: string;
+    };
+    url: '/workflows/{workflow_id}/executions';
+};
+
+export type ListWorkflowExecutionsErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListWorkflowExecutionsError = ListWorkflowExecutionsErrors[keyof ListWorkflowExecutionsErrors];
+
+export type ListWorkflowExecutionsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<WorkflowExecution>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListWorkflowExecutionsResponse = ListWorkflowExecutionsResponses[keyof ListWorkflowExecutionsResponses];
 
 export type WebhookMessageReceivedWebhookPayload = WebhookEvent;
 

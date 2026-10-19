@@ -62,34 +62,34 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 
 | Operación | Endpoint | Permiso |
 | --- | --- | --- |
-| [List contacts](https://getricky.ai/docs/api/reference/contacts/list-contacts) | `GET /contacts` | `contacts:read` |
-| [Create a contact](https://getricky.ai/docs/api/reference/contacts/create-contact) | `POST /contacts` | `contacts:write` |
-| [Get a contact](https://getricky.ai/docs/api/reference/contacts/get-contact) | `GET /contacts/{contact_id}` | `contacts:read` |
-| [Update a contact](https://getricky.ai/docs/api/reference/contacts/update-contact) | `PATCH /contacts/{contact_id}` | `contacts:write` |
-| [Add a note to a contact](https://getricky.ai/docs/api/reference/contacts/add-contact-note) | `POST /contacts/{contact_id}/notes` | `contacts:write` |
-| [List contact fields](https://getricky.ai/docs/api/reference/contacts/list-contact-fields) | `GET /contact-fields` | `contacts:read` |
-| [List conversations](https://getricky.ai/docs/api/reference/conversations/list-conversations) | `GET /conversations` | `conversations:read` |
-| [Start a conversation](https://getricky.ai/docs/api/reference/conversations/start-conversation) | `POST /conversations` | `messages:send` |
-| [Get a conversation](https://getricky.ai/docs/api/reference/conversations/get-conversation) | `GET /conversations/{conversation_id}` | `conversations:read` |
-| [Assign a conversation](https://getricky.ai/docs/api/reference/conversations/assign-conversation) | `PATCH /conversations/{conversation_id}/assignment` | `conversations:write` |
-| [Close a conversation](https://getricky.ai/docs/api/reference/conversations/close-conversation) | `POST /conversations/{conversation_id}/close` | `conversations:write` |
-| [Reopen a conversation](https://getricky.ai/docs/api/reference/conversations/reopen-conversation) | `POST /conversations/{conversation_id}/reopen` | `conversations:write` |
-| [List messages](https://getricky.ai/docs/api/reference/messages/list-messages) | `GET /conversations/{conversation_id}/messages` | `conversations:read` |
-| [Get a message](https://getricky.ai/docs/api/reference/messages/get-message) | `GET /conversations/{conversation_id}/messages/{message_id}` | `conversations:read` |
-| [Send a message](https://getricky.ai/docs/api/reference/messages/send-message) | `POST /conversations/{conversation_id}/messages` | `messages:send` |
-| [Get a send](https://getricky.ai/docs/api/reference/messages/get-send) | `GET /sends/{send_id}` | `messages:send` |
-| [List channels](https://getricky.ai/docs/api/reference/catalogs/list-channels) | `GET /channels` | `conversations:read` |
-| [List members](https://getricky.ai/docs/api/reference/catalogs/list-members) | `GET /members` | `members:read` |
-| [List tags](https://getricky.ai/docs/api/reference/catalogs/list-tags) | `GET /tags` | `tags:read` |
-| [Create a tag](https://getricky.ai/docs/api/reference/catalogs/create-tag) | `POST /tags` | `contacts:write` |
-| [List templates](https://getricky.ai/docs/api/reference/catalogs/list-templates) | `GET /templates` | `templates:read` |
-| [List webhooks](https://getricky.ai/docs/api/reference/webhooks/list-webhooks) | `GET /webhooks` | `webhooks:manage` |
-| [Create a webhook](https://getricky.ai/docs/api/reference/webhooks/create-webhook) | `POST /webhooks` | `webhooks:manage` |
-| [Disable a webhook](https://getricky.ai/docs/api/reference/webhooks/disable-webhook) | `DELETE /webhooks/{webhook_id}` | `webhooks:manage` |
-| [Send a test event](https://getricky.ai/docs/api/reference/webhooks/test-webhook) | `POST /webhooks/{webhook_id}/test` | `webhooks:manage` |
-| [Rotate the signing secret](https://getricky.ai/docs/api/reference/webhooks/rotate-webhook-secret) | `POST /webhooks/{webhook_id}/rotate-secret` | `webhooks:manage` |
-| [List deliveries](https://getricky.ai/docs/api/reference/webhooks/list-webhook-deliveries) | `GET /webhooks/{webhook_id}/deliveries` | `webhooks:manage` |
-| [Retry a delivery](https://getricky.ai/docs/api/reference/webhooks/retry-webhook-delivery) | `POST /webhooks/{webhook_id}/deliveries/{delivery_id}/retry` | `webhooks:manage` |
+| [Listar contactos](https://getricky.ai/docs/api/reference/contacts/list-contacts) | `GET /contacts` | `contacts:read` |
+| [Crear un contacto](https://getricky.ai/docs/api/reference/contacts/create-contact) | `POST /contacts` | `contacts:write` |
+| [Consultar un contacto](https://getricky.ai/docs/api/reference/contacts/get-contact) | `GET /contacts/{contact_id}` | `contacts:read` |
+| [Actualizar un contacto](https://getricky.ai/docs/api/reference/contacts/update-contact) | `PATCH /contacts/{contact_id}` | `contacts:write` |
+| [Agregar una nota a un contacto](https://getricky.ai/docs/api/reference/contacts/add-contact-note) | `POST /contacts/{contact_id}/notes` | `contacts:write` |
+| [Listar campos de contacto](https://getricky.ai/docs/api/reference/contacts/list-contact-fields) | `GET /contact-fields` | `contacts:read` |
+| [Listar conversaciones](https://getricky.ai/docs/api/reference/conversations/list-conversations) | `GET /conversations` | `conversations:read` |
+| [Iniciar una conversación](https://getricky.ai/docs/api/reference/conversations/start-conversation) | `POST /conversations` | `messages:send` |
+| [Consultar una conversación](https://getricky.ai/docs/api/reference/conversations/get-conversation) | `GET /conversations/{conversation_id}` | `conversations:read` |
+| [Asignar una conversación](https://getricky.ai/docs/api/reference/conversations/assign-conversation) | `PATCH /conversations/{conversation_id}/assignment` | `conversations:write` |
+| [Cerrar una conversación](https://getricky.ai/docs/api/reference/conversations/close-conversation) | `POST /conversations/{conversation_id}/close` | `conversations:write` |
+| [Reabrir una conversación](https://getricky.ai/docs/api/reference/conversations/reopen-conversation) | `POST /conversations/{conversation_id}/reopen` | `conversations:write` |
+| [Listar mensajes](https://getricky.ai/docs/api/reference/messages/list-messages) | `GET /conversations/{conversation_id}/messages` | `conversations:read` |
+| [Consultar un mensaje](https://getricky.ai/docs/api/reference/messages/get-message) | `GET /conversations/{conversation_id}/messages/{message_id}` | `conversations:read` |
+| [Enviar un mensaje](https://getricky.ai/docs/api/reference/messages/send-message) | `POST /conversations/{conversation_id}/messages` | `messages:send` |
+| [Consultar un envío](https://getricky.ai/docs/api/reference/messages/get-send) | `GET /sends/{send_id}` | `messages:send` |
+| [Listar canales](https://getricky.ai/docs/api/reference/catalogs/list-channels) | `GET /channels` | `conversations:read` |
+| [Listar miembros](https://getricky.ai/docs/api/reference/catalogs/list-members) | `GET /members` | `members:read` |
+| [Listar etiquetas](https://getricky.ai/docs/api/reference/catalogs/list-tags) | `GET /tags` | `tags:read` |
+| [Crear una etiqueta](https://getricky.ai/docs/api/reference/catalogs/create-tag) | `POST /tags` | `contacts:write` |
+| [Listar plantillas](https://getricky.ai/docs/api/reference/catalogs/list-templates) | `GET /templates` | `templates:read` |
+| [Listar webhooks](https://getricky.ai/docs/api/reference/webhooks/list-webhooks) | `GET /webhooks` | `webhooks:manage` |
+| [Crear un webhook](https://getricky.ai/docs/api/reference/webhooks/create-webhook) | `POST /webhooks` | `webhooks:manage` |
+| [Desactivar un webhook](https://getricky.ai/docs/api/reference/webhooks/disable-webhook) | `DELETE /webhooks/{webhook_id}` | `webhooks:manage` |
+| [Enviar un evento de prueba](https://getricky.ai/docs/api/reference/webhooks/test-webhook) | `POST /webhooks/{webhook_id}/test` | `webhooks:manage` |
+| [Rotar el secreto de firma](https://getricky.ai/docs/api/reference/webhooks/rotate-webhook-secret) | `POST /webhooks/{webhook_id}/rotate-secret` | `webhooks:manage` |
+| [Listar entregas](https://getricky.ai/docs/api/reference/webhooks/list-webhook-deliveries) | `GET /webhooks/{webhook_id}/deliveries` | `webhooks:manage` |
+| [Reintentar una entrega](https://getricky.ai/docs/api/reference/webhooks/retry-webhook-delivery) | `POST /webhooks/{webhook_id}/deliveries/{delivery_id}/retry` | `webhooks:manage` |
 
 ## Respuestas de autenticación
 

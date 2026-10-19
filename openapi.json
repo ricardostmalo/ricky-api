@@ -3,7 +3,7 @@
   "info": {
     "title": "Ricky API",
     "version": "1.0.0",
-    "description": "REST API for one Ricky organization: contacts, conversations, messages, templates and webhooks. Requests and responses are JSON with snake_case fields; IDs are UUIDs except template IDs; times are ISO 8601 in UTC.",
+    "description": "REST API for one Ricky organization: contacts, conversations, messages, templates, workflows and webhooks. Requests and responses are JSON with snake_case fields; IDs are UUIDs except template IDs; times are ISO 8601 in UTC.",
     "contact": {
       "name": "Ricky",
       "url": "https://getricky.ai/docs/api",
@@ -44,6 +44,10 @@
     {
       "name": "Webhooks",
       "description": "Subscriptions Ricky posts events to, and their deliveries."
+    },
+    {
+      "name": "Workflows",
+      "description": "Automations that answer, ask, wait and assign when a conversation opens."
     }
   ],
   "paths": {
@@ -3746,6 +3750,1026 @@
           }
         }
       }
+    },
+    "/workflows": {
+      "get": {
+        "operationId": "listWorkflows",
+        "tags": [
+          "Workflows"
+        ],
+        "summary": "List workflows",
+        "description": "Every workflow of the organization with its definition, last changed first.\n\nScope: `workflows:read`.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "next_cursor"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Workflow"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Pass as `cursor` for the next page; null on the last page."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createWorkflow",
+        "tags": [
+          "Workflows"
+        ],
+        "summary": "Create a workflow",
+        "description": "Creates a conversation workflow as a `draft`; it runs nothing until you activate it. Ricky checks the flow with the rules of the workflow editor, and that its channels, members and agents belong to the organization.\n\nScope: `workflows:write`.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWorkflow"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Workflow"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workflows/{workflow_id}": {
+      "get": {
+        "operationId": "getWorkflow",
+        "tags": [
+          "Workflows"
+        ],
+        "summary": "Get a workflow",
+        "description": "One workflow with its definition.\n\nScope: `workflows:read`.",
+        "parameters": [
+          {
+            "name": "workflow_id",
+            "in": "path",
+            "required": true,
+            "description": "Workflow ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Workflow"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateWorkflow",
+        "tags": [
+          "Workflows"
+        ],
+        "summary": "Update a workflow",
+        "description": "Changes the name, replaces the definition, or both, and keeps the status. An active workflow must still be able to run the new definition. A scheduled workflow only accepts a new name.\n\nScope: `workflows:write`.",
+        "parameters": [
+          {
+            "name": "workflow_id",
+            "in": "path",
+            "required": true,
+            "description": "Workflow ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkflow"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Workflow"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteWorkflow",
+        "tags": [
+          "Workflows"
+        ],
+        "summary": "Delete a workflow",
+        "description": "Deletes the workflow and answers it as it was. Sends already queued still go out. Deleting twice answers `404`.\n\nScope: `workflows:write`.",
+        "parameters": [
+          {
+            "name": "workflow_id",
+            "in": "path",
+            "required": true,
+            "description": "Workflow ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Workflow"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workflows/{workflow_id}/activate": {
+      "post": {
+        "operationId": "activateWorkflow",
+        "tags": [
+          "Workflows"
+        ],
+        "summary": "Activate a workflow",
+        "description": "From now on it runs on new events, and its steps can message contacts, assign members or put an AI agent on conversations. Ricky checks again what it references; assigning an AI agent needs an active subscription. Activating an active workflow changes nothing. Send no body.\n\nScope: `workflows:write`.",
+        "parameters": [
+          {
+            "name": "workflow_id",
+            "in": "path",
+            "required": true,
+            "description": "Workflow ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Workflow"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workflows/{workflow_id}/pause": {
+      "post": {
+        "operationId": "pauseWorkflow",
+        "tags": [
+          "Workflows"
+        ],
+        "summary": "Pause a workflow",
+        "description": "It starts no new executions; sends already queued still go out. Pausing a paused workflow changes nothing. Send no body.\n\nScope: `workflows:write`.",
+        "parameters": [
+          {
+            "name": "workflow_id",
+            "in": "path",
+            "required": true,
+            "description": "Workflow ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Workflow"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workflows/{workflow_id}/executions": {
+      "get": {
+        "operationId": "listWorkflowExecutions",
+        "tags": [
+          "Workflows"
+        ],
+        "summary": "List executions",
+        "description": "Runs of the workflow with their status, attempts and errors, newest first.\n\nScope: `workflows:read`.",
+        "parameters": [
+          {
+            "name": "workflow_id",
+            "in": "path",
+            "required": true,
+            "description": "Workflow ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "description": "Items per page.",
+            "schema": {
+              "default": 50,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "`next_cursor` from the previous page. Use it unchanged.",
+            "schema": {
+              "type": "string",
+              "maxLength": 2048
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "next_cursor"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/WorkflowExecution"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Pass as `cursor` for the next page; null on the last page."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "webhooks": {
@@ -6119,6 +7143,920 @@
         ],
         "description": "What the endpoint answered to a `webhook.test` event."
       },
+      "Workflow": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Workflow ID.",
+            "examples": [
+              "a3b4c5d6-e7f8-4a9b-8c0d-2e3f4a5b6c7d"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "active",
+              "paused"
+            ],
+            "description": "`draft` until activated; `paused` runs nothing new; `active` runs."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "conversation",
+              "scheduled"
+            ],
+            "description": "Which `definition` it has: a conversation flow or a daily template."
+          },
+          "definition": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "trigger": {
+                    "type": "string",
+                    "enum": [
+                      "conversation_opened",
+                      "first_message_received"
+                    ],
+                    "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives."
+                  },
+                  "channel_ids": {
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "description": "Channels it listens to. See `GET /channels`."
+                  },
+                  "condition": {
+                    "anyOf": [
+                      {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "inside_business_hours"
+                              },
+                              "business_hours": {
+                                "type": "object",
+                                "properties": {
+                                  "start": {
+                                    "type": "string",
+                                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                                    "description": "Opening time, `HH:MM`."
+                                  },
+                                  "end": {
+                                    "type": "string",
+                                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                                    "description": "Closing time, `HH:MM`."
+                                  },
+                                  "timezone": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 100,
+                                    "description": "IANA time zone, for example `America/Panama`."
+                                  },
+                                  "weekdays": {
+                                    "minItems": 1,
+                                    "maxItems": 7,
+                                    "type": "array",
+                                    "items": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 6
+                                    },
+                                    "description": "Open days, 0 for Sunday to 6 for Saturday."
+                                  }
+                                },
+                                "required": [
+                                  "start",
+                                  "end",
+                                  "timezone",
+                                  "weekdays"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "business_hours"
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "outside_business_hours"
+                              },
+                              "business_hours": {
+                                "type": "object",
+                                "properties": {
+                                  "start": {
+                                    "type": "string",
+                                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                                    "description": "Opening time, `HH:MM`."
+                                  },
+                                  "end": {
+                                    "type": "string",
+                                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                                    "description": "Closing time, `HH:MM`."
+                                  },
+                                  "timezone": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 100,
+                                    "description": "IANA time zone, for example `America/Panama`."
+                                  },
+                                  "weekdays": {
+                                    "minItems": 1,
+                                    "maxItems": 7,
+                                    "type": "array",
+                                    "items": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 6
+                                    },
+                                    "description": "Open days, 0 for Sunday to 6 for Saturday."
+                                  }
+                                },
+                                "required": [
+                                  "start",
+                                  "end",
+                                  "timezone",
+                                  "weekdays"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "business_hours"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "When it runs; null runs at any hour."
+                  },
+                  "flow": {
+                    "type": "object",
+                    "properties": {
+                      "entry": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                        "description": "ID of the first step."
+                      },
+                      "steps": {
+                        "minItems": 1,
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                  "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                                },
+                                "next": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "Step to run next; null ends the flow."
+                                },
+                                "kind": {
+                                  "type": "string",
+                                  "const": "send_message"
+                                },
+                                "text": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024,
+                                  "description": "Text sent to the contact."
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "next",
+                                "kind",
+                                "text"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                  "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                                },
+                                "next": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "Step to run next; null ends the flow."
+                                },
+                                "kind": {
+                                  "type": "string",
+                                  "const": "ask_question"
+                                },
+                                "text": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024,
+                                  "description": "Text sent to the contact."
+                                },
+                                "answer_key": {
+                                  "type": "string",
+                                  "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                  "description": "Name the answer is kept under, for a later `branch`."
+                                },
+                                "choices": {
+                                  "maxItems": 10,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "id": {
+                                        "type": "string",
+                                        "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                        "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                                      },
+                                      "label": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 20,
+                                        "description": "Button text, up to 20 characters."
+                                      },
+                                      "next": {
+                                        "anyOf": [
+                                          {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 64
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ],
+                                        "description": "Step to run when the contact picks it."
+                                      }
+                                    },
+                                    "required": [
+                                      "id",
+                                      "label",
+                                      "next"
+                                    ]
+                                  },
+                                  "description": "Buttons or list options, WhatsApp only. Empty for a free-text answer, which goes to `next`."
+                                },
+                                "timeout_seconds": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 604800,
+                                  "description": "How long to wait for the answer, up to 7 days."
+                                },
+                                "on_timeout": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "Step to run when no answer arrives in time."
+                                },
+                                "on_invalid": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "Step to run when the answer matches no option."
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "next",
+                                "kind",
+                                "text",
+                                "answer_key",
+                                "choices",
+                                "timeout_seconds",
+                                "on_timeout",
+                                "on_invalid"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                  "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                                },
+                                "next": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "Step to run next; null ends the flow."
+                                },
+                                "kind": {
+                                  "type": "string",
+                                  "const": "branch"
+                                },
+                                "answer_key": {
+                                  "type": "string",
+                                  "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                  "description": "Name the answer is kept under, for a later `branch`."
+                                },
+                                "operator": {
+                                  "type": "string",
+                                  "enum": [
+                                    "equals",
+                                    "contains",
+                                    "exists"
+                                  ]
+                                },
+                                "value": {
+                                  "type": "string",
+                                  "maxLength": 1024,
+                                  "description": "Value compared with the answer."
+                                },
+                                "otherwise": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "Step to run when the condition does not hold; `next` when it does."
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "next",
+                                "kind",
+                                "answer_key",
+                                "operator",
+                                "value",
+                                "otherwise"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                  "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                                },
+                                "next": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "Step to run next; null ends the flow."
+                                },
+                                "kind": {
+                                  "type": "string",
+                                  "const": "wait"
+                                },
+                                "seconds": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 604800,
+                                  "description": "Delay, up to 7 days."
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "next",
+                                "kind",
+                                "seconds"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                  "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                                },
+                                "next": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "Step to run next; null ends the flow."
+                                },
+                                "kind": {
+                                  "type": "string",
+                                  "const": "assign_user"
+                                },
+                                "user_id": {
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "description": "Member who takes the conversation. See `GET /members`."
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "next",
+                                "kind",
+                                "user_id"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                  "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                                },
+                                "next": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "Step to run next; null ends the flow."
+                                },
+                                "kind": {
+                                  "type": "string",
+                                  "const": "assign_agent"
+                                },
+                                "agent_id": {
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "description": "AI agent that answers the conversation."
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "next",
+                                "kind",
+                                "agent_id"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                  "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                                },
+                                "next": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "Step to run next; null ends the flow."
+                                },
+                                "kind": {
+                                  "type": "string",
+                                  "const": "close_conversation"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "next",
+                                "kind"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                  "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                                },
+                                "next": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "Step to run next; null ends the flow."
+                                },
+                                "kind": {
+                                  "type": "string",
+                                  "const": "end"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "next",
+                                "kind"
+                              ]
+                            }
+                          ],
+                          "description": "One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run."
+                        }
+                      }
+                    },
+                    "required": [
+                      "entry",
+                      "steps"
+                    ],
+                    "description": "The steps and how they connect."
+                  }
+                },
+                "required": [
+                  "trigger",
+                  "channel_ids",
+                  "condition",
+                  "flow"
+                ],
+                "description": "Reacts to a conversation with messages, questions, waits and assignments."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "trigger": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "daily"
+                      },
+                      "time": {
+                        "type": "string",
+                        "description": "Time of day it runs, `HH:MM`."
+                      },
+                      "timezone": {
+                        "type": "string",
+                        "description": "IANA time zone of `time`."
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "time",
+                      "timezone"
+                    ]
+                  },
+                  "source": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "odoo_appointments"
+                          },
+                          "days_ahead": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991,
+                            "description": "Days before the appointment it reminds."
+                          },
+                          "appointment_states": {
+                            "anyOf": [
+                              {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ],
+                            "description": "Odoo appointment states it reminds; null for every state."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "days_ahead",
+                          "appointment_states"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "odoo_birthdays"
+                          }
+                        },
+                        "required": [
+                          "kind"
+                        ]
+                      }
+                    ],
+                    "description": "Who it messages: Odoo appointments or Odoo birthdays."
+                  },
+                  "template": {
+                    "type": "object",
+                    "properties": {
+                      "channel_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "WhatsApp channel it sends from.",
+                        "examples": [
+                          "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f"
+                        ]
+                      },
+                      "template_id": {
+                        "type": "string",
+                        "description": "Template ID at Meta."
+                      },
+                      "template_name": {
+                        "type": "string",
+                        "description": "Template name."
+                      },
+                      "language": {
+                        "type": "string",
+                        "description": "Template language code."
+                      },
+                      "parameters": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "type": "string",
+                          "enum": [
+                            "appointment_start",
+                            "branch_name",
+                            "customer_first_name"
+                          ]
+                        },
+                        "description": "Value each template variable takes."
+                      },
+                      "has_header_image": {
+                        "type": "boolean",
+                        "description": "Whether an image is stored for the header."
+                      }
+                    },
+                    "required": [
+                      "channel_id",
+                      "template_id",
+                      "template_name",
+                      "language",
+                      "parameters",
+                      "has_header_image"
+                    ]
+                  }
+                },
+                "required": [
+                  "trigger",
+                  "source",
+                  "template"
+                ],
+                "description": "Sends a WhatsApp template every day from an Odoo integration. Created and edited in Ricky; the API reads, activates, pauses and deletes it."
+              }
+            ]
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "Last change to the workflow.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "status",
+          "type",
+          "definition",
+          "updated_at"
+        ],
+        "description": "An automation Ricky runs for the organization.",
+        "examples": [
+          {
+            "id": "a3b4c5d6-e7f8-4a9b-8c0d-2e3f4a5b6c7d",
+            "name": "Fuera de horario",
+            "status": "active",
+            "type": "conversation",
+            "definition": {
+              "trigger": "conversation_opened",
+              "channel_ids": [
+                "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f"
+              ],
+              "condition": {
+                "kind": "outside_business_hours",
+                "business_hours": {
+                  "start": "09:00",
+                  "end": "18:00",
+                  "timezone": "America/Panama",
+                  "weekdays": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              },
+              "flow": {
+                "entry": "bienvenida",
+                "steps": [
+                  {
+                    "id": "bienvenida",
+                    "kind": "send_message",
+                    "text": "Hola, gracias por escribir a Casa Nativa. Abrimos de lunes a viernes de 9:00 a 18:00.",
+                    "next": "motivo"
+                  },
+                  {
+                    "id": "motivo",
+                    "kind": "ask_question",
+                    "text": "¿En qué te ayudamos?",
+                    "answer_key": "motivo",
+                    "choices": [
+                      {
+                        "id": "pedido",
+                        "label": "Mi pedido",
+                        "next": "asesor"
+                      },
+                      {
+                        "id": "otro",
+                        "label": "Otra consulta",
+                        "next": "agente"
+                      }
+                    ],
+                    "timeout_seconds": 3600,
+                    "on_timeout": "agente",
+                    "on_invalid": "agente",
+                    "next": "agente"
+                  },
+                  {
+                    "id": "asesor",
+                    "kind": "assign_user",
+                    "user_id": "2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b",
+                    "next": null
+                  },
+                  {
+                    "id": "agente",
+                    "kind": "assign_agent",
+                    "agent_id": "7e8f9a0b-1c2d-4e3f-a4b5-c6d7e8f9a0b1",
+                    "next": null
+                  }
+                ]
+              }
+            },
+            "updated_at": "2026-10-14T15:30:00.000Z"
+          }
+        ]
+      },
+      "WorkflowExecution": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Execution ID.",
+            "examples": [
+              "f2a3b4c5-d6e7-4f8a-9b0c-1d2e3f4a5b6c"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "processing",
+              "processed",
+              "failed",
+              "superseded"
+            ],
+            "description": "`pending` or `processing` while queued or retrying; `processed` when it ran; `failed` for good; `superseded` when a newer execution replaced it."
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "Attempts so far."
+          },
+          "last_error": {
+            "description": "Error of the latest failed attempt.",
+            "examples": [
+              null
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When it was queued.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          },
+          "processed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When it finished, failed or was superseded.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "attempts",
+          "last_error",
+          "created_at",
+          "processed_at"
+        ],
+        "description": "One queued run of a workflow, or one template send of a scheduled workflow. Its status does not confirm each message's delivery."
+      },
       "CreateContact": {
         "type": "object",
         "properties": {
@@ -7339,6 +9277,1288 @@
         "examples": [
           {
             "expire_previous_after_hours": 24
+          }
+        ]
+      },
+      "CreateWorkflow": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Display name."
+          },
+          "definition": {
+            "type": "object",
+            "properties": {
+              "trigger": {
+                "type": "string",
+                "enum": [
+                  "conversation_opened",
+                  "first_message_received"
+                ],
+                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives."
+              },
+              "channel_ids": {
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "description": "Channels it listens to. See `GET /channels`."
+              },
+              "condition": {
+                "anyOf": [
+                  {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "inside_business_hours"
+                          },
+                          "business_hours": {
+                            "type": "object",
+                            "properties": {
+                              "start": {
+                                "type": "string",
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                                "description": "Opening time, `HH:MM`."
+                              },
+                              "end": {
+                                "type": "string",
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                                "description": "Closing time, `HH:MM`."
+                              },
+                              "timezone": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100,
+                                "description": "IANA time zone, for example `America/Panama`."
+                              },
+                              "weekdays": {
+                                "minItems": 1,
+                                "maxItems": 7,
+                                "type": "array",
+                                "items": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 6
+                                },
+                                "description": "Open days, 0 for Sunday to 6 for Saturday."
+                              }
+                            },
+                            "required": [
+                              "start",
+                              "end",
+                              "timezone",
+                              "weekdays"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "business_hours"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "outside_business_hours"
+                          },
+                          "business_hours": {
+                            "type": "object",
+                            "properties": {
+                              "start": {
+                                "type": "string",
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                                "description": "Opening time, `HH:MM`."
+                              },
+                              "end": {
+                                "type": "string",
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                                "description": "Closing time, `HH:MM`."
+                              },
+                              "timezone": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100,
+                                "description": "IANA time zone, for example `America/Panama`."
+                              },
+                              "weekdays": {
+                                "minItems": 1,
+                                "maxItems": 7,
+                                "type": "array",
+                                "items": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 6
+                                },
+                                "description": "Open days, 0 for Sunday to 6 for Saturday."
+                              }
+                            },
+                            "required": [
+                              "start",
+                              "end",
+                              "timezone",
+                              "weekdays"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "business_hours"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "When it runs; null runs at any hour."
+              },
+              "flow": {
+                "type": "object",
+                "properties": {
+                  "entry": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                    "description": "ID of the first step."
+                  },
+                  "steps": {
+                    "minItems": 1,
+                    "maxItems": 100,
+                    "type": "array",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "send_message"
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 1024,
+                              "description": "Text sent to the contact."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "text"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "ask_question"
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 1024,
+                              "description": "Text sent to the contact."
+                            },
+                            "answer_key": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Name the answer is kept under, for a later `branch`."
+                            },
+                            "choices": {
+                              "maxItems": 10,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                    "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                                  },
+                                  "label": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 20,
+                                    "description": "Button text, up to 20 characters."
+                                  },
+                                  "next": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 64
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ],
+                                    "description": "Step to run when the contact picks it."
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "label",
+                                  "next"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "description": "Buttons or list options, WhatsApp only. Empty for a free-text answer, which goes to `next`."
+                            },
+                            "timeout_seconds": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 604800,
+                              "description": "How long to wait for the answer, up to 7 days."
+                            },
+                            "on_timeout": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run when no answer arrives in time."
+                            },
+                            "on_invalid": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run when the answer matches no option."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "text",
+                            "answer_key",
+                            "choices",
+                            "timeout_seconds",
+                            "on_timeout",
+                            "on_invalid"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "branch"
+                            },
+                            "answer_key": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Name the answer is kept under, for a later `branch`."
+                            },
+                            "operator": {
+                              "type": "string",
+                              "enum": [
+                                "equals",
+                                "contains",
+                                "exists"
+                              ]
+                            },
+                            "value": {
+                              "type": "string",
+                              "maxLength": 1024,
+                              "description": "Value compared with the answer."
+                            },
+                            "otherwise": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run when the condition does not hold; `next` when it does."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "answer_key",
+                            "operator",
+                            "value",
+                            "otherwise"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "wait"
+                            },
+                            "seconds": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 604800,
+                              "description": "Delay, up to 7 days."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "seconds"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "assign_user"
+                            },
+                            "user_id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "description": "Member who takes the conversation. See `GET /members`."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "user_id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "assign_agent"
+                            },
+                            "agent_id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "description": "AI agent that answers the conversation."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "agent_id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "close_conversation"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "end"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ],
+                      "description": "One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run."
+                    }
+                  }
+                },
+                "required": [
+                  "entry",
+                  "steps"
+                ],
+                "additionalProperties": false,
+                "description": "The steps and how they connect."
+              }
+            },
+            "required": [
+              "trigger",
+              "channel_ids",
+              "condition",
+              "flow"
+            ],
+            "additionalProperties": false,
+            "description": "Reacts to a conversation with messages, questions, waits and assignments."
+          }
+        },
+        "required": [
+          "name",
+          "definition"
+        ],
+        "additionalProperties": false,
+        "description": "Creates a conversation workflow as a `draft`. Activating it is a separate call.",
+        "examples": [
+          {
+            "name": "Fuera de horario",
+            "definition": {
+              "trigger": "conversation_opened",
+              "channel_ids": [
+                "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f"
+              ],
+              "condition": {
+                "kind": "outside_business_hours",
+                "business_hours": {
+                  "start": "09:00",
+                  "end": "18:00",
+                  "timezone": "America/Panama",
+                  "weekdays": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              },
+              "flow": {
+                "entry": "bienvenida",
+                "steps": [
+                  {
+                    "id": "bienvenida",
+                    "kind": "send_message",
+                    "text": "Hola, gracias por escribir a Casa Nativa. Abrimos de lunes a viernes de 9:00 a 18:00.",
+                    "next": "motivo"
+                  },
+                  {
+                    "id": "motivo",
+                    "kind": "ask_question",
+                    "text": "¿En qué te ayudamos?",
+                    "answer_key": "motivo",
+                    "choices": [
+                      {
+                        "id": "pedido",
+                        "label": "Mi pedido",
+                        "next": "asesor"
+                      },
+                      {
+                        "id": "otro",
+                        "label": "Otra consulta",
+                        "next": "agente"
+                      }
+                    ],
+                    "timeout_seconds": 3600,
+                    "on_timeout": "agente",
+                    "on_invalid": "agente",
+                    "next": "agente"
+                  },
+                  {
+                    "id": "asesor",
+                    "kind": "assign_user",
+                    "user_id": "2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b",
+                    "next": null
+                  },
+                  {
+                    "id": "agente",
+                    "kind": "assign_agent",
+                    "agent_id": "7e8f9a0b-1c2d-4e3f-a4b5-c6d7e8f9a0b1",
+                    "next": null
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "UpdateWorkflow": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Display name."
+          },
+          "definition": {
+            "description": "Replaces the whole definition.",
+            "type": "object",
+            "properties": {
+              "trigger": {
+                "type": "string",
+                "enum": [
+                  "conversation_opened",
+                  "first_message_received"
+                ],
+                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives."
+              },
+              "channel_ids": {
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "description": "Channels it listens to. See `GET /channels`."
+              },
+              "condition": {
+                "anyOf": [
+                  {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "inside_business_hours"
+                          },
+                          "business_hours": {
+                            "type": "object",
+                            "properties": {
+                              "start": {
+                                "type": "string",
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                                "description": "Opening time, `HH:MM`."
+                              },
+                              "end": {
+                                "type": "string",
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                                "description": "Closing time, `HH:MM`."
+                              },
+                              "timezone": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100,
+                                "description": "IANA time zone, for example `America/Panama`."
+                              },
+                              "weekdays": {
+                                "minItems": 1,
+                                "maxItems": 7,
+                                "type": "array",
+                                "items": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 6
+                                },
+                                "description": "Open days, 0 for Sunday to 6 for Saturday."
+                              }
+                            },
+                            "required": [
+                              "start",
+                              "end",
+                              "timezone",
+                              "weekdays"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "business_hours"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "outside_business_hours"
+                          },
+                          "business_hours": {
+                            "type": "object",
+                            "properties": {
+                              "start": {
+                                "type": "string",
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                                "description": "Opening time, `HH:MM`."
+                              },
+                              "end": {
+                                "type": "string",
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                                "description": "Closing time, `HH:MM`."
+                              },
+                              "timezone": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100,
+                                "description": "IANA time zone, for example `America/Panama`."
+                              },
+                              "weekdays": {
+                                "minItems": 1,
+                                "maxItems": 7,
+                                "type": "array",
+                                "items": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 6
+                                },
+                                "description": "Open days, 0 for Sunday to 6 for Saturday."
+                              }
+                            },
+                            "required": [
+                              "start",
+                              "end",
+                              "timezone",
+                              "weekdays"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "business_hours"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "When it runs; null runs at any hour."
+              },
+              "flow": {
+                "type": "object",
+                "properties": {
+                  "entry": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                    "description": "ID of the first step."
+                  },
+                  "steps": {
+                    "minItems": 1,
+                    "maxItems": 100,
+                    "type": "array",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "send_message"
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 1024,
+                              "description": "Text sent to the contact."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "text"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "ask_question"
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 1024,
+                              "description": "Text sent to the contact."
+                            },
+                            "answer_key": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Name the answer is kept under, for a later `branch`."
+                            },
+                            "choices": {
+                              "maxItems": 10,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                    "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                                  },
+                                  "label": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 20,
+                                    "description": "Button text, up to 20 characters."
+                                  },
+                                  "next": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 64
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ],
+                                    "description": "Step to run when the contact picks it."
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "label",
+                                  "next"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "description": "Buttons or list options, WhatsApp only. Empty for a free-text answer, which goes to `next`."
+                            },
+                            "timeout_seconds": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 604800,
+                              "description": "How long to wait for the answer, up to 7 days."
+                            },
+                            "on_timeout": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run when no answer arrives in time."
+                            },
+                            "on_invalid": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run when the answer matches no option."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "text",
+                            "answer_key",
+                            "choices",
+                            "timeout_seconds",
+                            "on_timeout",
+                            "on_invalid"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "branch"
+                            },
+                            "answer_key": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Name the answer is kept under, for a later `branch`."
+                            },
+                            "operator": {
+                              "type": "string",
+                              "enum": [
+                                "equals",
+                                "contains",
+                                "exists"
+                              ]
+                            },
+                            "value": {
+                              "type": "string",
+                              "maxLength": 1024,
+                              "description": "Value compared with the answer."
+                            },
+                            "otherwise": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run when the condition does not hold; `next` when it does."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "answer_key",
+                            "operator",
+                            "value",
+                            "otherwise"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "wait"
+                            },
+                            "seconds": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 604800,
+                              "description": "Delay, up to 7 days."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "seconds"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "assign_user"
+                            },
+                            "user_id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "description": "Member who takes the conversation. See `GET /members`."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "user_id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "assign_agent"
+                            },
+                            "agent_id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "description": "AI agent that answers the conversation."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "agent_id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "close_conversation"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "end"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ],
+                      "description": "One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run."
+                    }
+                  }
+                },
+                "required": [
+                  "entry",
+                  "steps"
+                ],
+                "additionalProperties": false,
+                "description": "The steps and how they connect."
+              }
+            },
+            "required": [
+              "trigger",
+              "channel_ids",
+              "condition",
+              "flow"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false,
+        "description": "Only the fields you send change. The status stays: an active workflow runs the new definition from its next execution.",
+        "examples": [
+          {
+            "name": "Fuera de horario (Albrook)"
           }
         ]
       }

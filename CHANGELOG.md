@@ -4,6 +4,14 @@ Also at https://getricky.ai/en/docs/api/changelog.
 
 This page records changes to the API. A breaking change only ships in a new path version and is announced here.
 
+## October 19, 2026
+
+**Workflows.** Compatible changes to v1.
+
+- **Manage workflows.** `GET /workflows`, `POST /workflows`, `GET`, `PATCH` and `DELETE /workflows/{workflow_id}`, `POST /workflows/{workflow_id}/activate` and `POST /workflows/{workflow_id}/pause`. Ricky checks each definition with the rules of the workflow editor. See [Workflows](https://getricky.ai/en/docs/api/workflows).
+- **Executions.** `GET /workflows/{workflow_id}/executions` lists a workflow's runs with their status, attempts and errors.
+- **New scopes.** `workflows:read` and `workflows:write`.
+
 ## October 15, 2026
 
 **Immediate webhooks, new events, files, single messages, tags and notes.** Compatible changes to v1.

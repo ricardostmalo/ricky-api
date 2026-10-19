@@ -2,7 +2,7 @@
 
 import { client } from './client.gen.js';
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client/index.js';
-import type { AddContactNoteData, AddContactNoteErrors, AddContactNoteResponses, AssignConversationData, AssignConversationErrors, AssignConversationResponses, CloseConversationData, CloseConversationErrors, CloseConversationResponses, CreateContactData, CreateContactErrors, CreateContactResponses, CreateTagData, CreateTagErrors, CreateTagResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, DisableWebhookData, DisableWebhookErrors, DisableWebhookResponses, GetContactData, GetContactErrors, GetContactResponses, GetConversationData, GetConversationErrors, GetConversationResponses, GetMessageData, GetMessageErrors, GetMessageResponses, GetSendData, GetSendErrors, GetSendResponses, ListChannelsData, ListChannelsErrors, ListChannelsResponses, ListContactFieldsData, ListContactFieldsErrors, ListContactFieldsResponses, ListContactsData, ListContactsErrors, ListContactsResponses, ListConversationsData, ListConversationsErrors, ListConversationsResponses, ListMembersData, ListMembersErrors, ListMembersResponses, ListMessagesData, ListMessagesErrors, ListMessagesResponses, ListTagsData, ListTagsErrors, ListTagsResponses, ListTemplatesData, ListTemplatesErrors, ListTemplatesResponses, ListWebhookDeliveriesData, ListWebhookDeliveriesErrors, ListWebhookDeliveriesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, ReopenConversationData, ReopenConversationErrors, ReopenConversationResponses, RetryWebhookDeliveryData, RetryWebhookDeliveryErrors, RetryWebhookDeliveryResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SendMessageData, SendMessageErrors, SendMessageResponses, StartConversationData, StartConversationErrors, StartConversationResponses, TestWebhookData, TestWebhookErrors, TestWebhookResponses, UpdateContactData, UpdateContactErrors, UpdateContactResponses } from './types.gen.js';
+import type { ActivateWorkflowData, ActivateWorkflowErrors, ActivateWorkflowResponses, AddContactNoteData, AddContactNoteErrors, AddContactNoteResponses, AssignConversationData, AssignConversationErrors, AssignConversationResponses, CloseConversationData, CloseConversationErrors, CloseConversationResponses, CreateContactData, CreateContactErrors, CreateContactResponses, CreateTagData, CreateTagErrors, CreateTagResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, CreateWorkflowData, CreateWorkflowErrors, CreateWorkflowResponses, DeleteWorkflowData, DeleteWorkflowErrors, DeleteWorkflowResponses, DisableWebhookData, DisableWebhookErrors, DisableWebhookResponses, GetContactData, GetContactErrors, GetContactResponses, GetConversationData, GetConversationErrors, GetConversationResponses, GetMessageData, GetMessageErrors, GetMessageResponses, GetSendData, GetSendErrors, GetSendResponses, GetWorkflowData, GetWorkflowErrors, GetWorkflowResponses, ListChannelsData, ListChannelsErrors, ListChannelsResponses, ListContactFieldsData, ListContactFieldsErrors, ListContactFieldsResponses, ListContactsData, ListContactsErrors, ListContactsResponses, ListConversationsData, ListConversationsErrors, ListConversationsResponses, ListMembersData, ListMembersErrors, ListMembersResponses, ListMessagesData, ListMessagesErrors, ListMessagesResponses, ListTagsData, ListTagsErrors, ListTagsResponses, ListTemplatesData, ListTemplatesErrors, ListTemplatesResponses, ListWebhookDeliveriesData, ListWebhookDeliveriesErrors, ListWebhookDeliveriesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, ListWorkflowExecutionsData, ListWorkflowExecutionsErrors, ListWorkflowExecutionsResponses, ListWorkflowsData, ListWorkflowsErrors, ListWorkflowsResponses, PauseWorkflowData, PauseWorkflowErrors, PauseWorkflowResponses, ReopenConversationData, ReopenConversationErrors, ReopenConversationResponses, RetryWebhookDeliveryData, RetryWebhookDeliveryErrors, RetryWebhookDeliveryResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SendMessageData, SendMessageErrors, SendMessageResponses, StartConversationData, StartConversationErrors, StartConversationResponses, TestWebhookData, TestWebhookErrors, TestWebhookResponses, UpdateContactData, UpdateContactErrors, UpdateContactResponses, UpdateWorkflowData, UpdateWorkflowErrors, UpdateWorkflowResponses } from './types.gen.js';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -541,6 +541,142 @@ export class RickyApi extends HeyApiClient {
             responseStyle: 'data',
             security: [{ scheme: 'bearer', type: 'http' }],
             url: '/webhooks/{webhook_id}/deliveries/{delivery_id}/retry',
+            ...options
+        });
+    }
+    
+    /**
+     * List workflows
+     *
+     * Every workflow of the organization with its definition, last changed first.
+     *
+     * Scope: `workflows:read`.
+     */
+    public listWorkflows<ThrowOnError extends boolean = true>(options?: Options<ListWorkflowsData, ThrowOnError>): RequestResult<ListWorkflowsResponses, ListWorkflowsErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<ListWorkflowsResponses, ListWorkflowsErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflows',
+            ...options
+        });
+    }
+    
+    /**
+     * Create a workflow
+     *
+     * Creates a conversation workflow as a `draft`; it runs nothing until you activate it. Ricky checks the flow with the rules of the workflow editor, and that its channels, members and agents belong to the organization.
+     *
+     * Scope: `workflows:write`.
+     */
+    public createWorkflow<ThrowOnError extends boolean = true>(options: Options<CreateWorkflowData, ThrowOnError>): RequestResult<CreateWorkflowResponses, CreateWorkflowErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<CreateWorkflowResponses, CreateWorkflowErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflows',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Delete a workflow
+     *
+     * Deletes the workflow and answers it as it was. Sends already queued still go out. Deleting twice answers `404`.
+     *
+     * Scope: `workflows:write`.
+     */
+    public deleteWorkflow<ThrowOnError extends boolean = true>(options: Options<DeleteWorkflowData, ThrowOnError>): RequestResult<DeleteWorkflowResponses, DeleteWorkflowErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).delete<DeleteWorkflowResponses, DeleteWorkflowErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflows/{workflow_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Get a workflow
+     *
+     * One workflow with its definition.
+     *
+     * Scope: `workflows:read`.
+     */
+    public getWorkflow<ThrowOnError extends boolean = true>(options: Options<GetWorkflowData, ThrowOnError>): RequestResult<GetWorkflowResponses, GetWorkflowErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).get<GetWorkflowResponses, GetWorkflowErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflows/{workflow_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Update a workflow
+     *
+     * Changes the name, replaces the definition, or both, and keeps the status. An active workflow must still be able to run the new definition. A scheduled workflow only accepts a new name.
+     *
+     * Scope: `workflows:write`.
+     */
+    public updateWorkflow<ThrowOnError extends boolean = true>(options: Options<UpdateWorkflowData, ThrowOnError>): RequestResult<UpdateWorkflowResponses, UpdateWorkflowErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).patch<UpdateWorkflowResponses, UpdateWorkflowErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflows/{workflow_id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Activate a workflow
+     *
+     * From now on it runs on new events, and its steps can message contacts, assign members or put an AI agent on conversations. Ricky checks again what it references; assigning an AI agent needs an active subscription. Activating an active workflow changes nothing. Send no body.
+     *
+     * Scope: `workflows:write`.
+     */
+    public activateWorkflow<ThrowOnError extends boolean = true>(options: Options<ActivateWorkflowData, ThrowOnError>): RequestResult<ActivateWorkflowResponses, ActivateWorkflowErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<ActivateWorkflowResponses, ActivateWorkflowErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflows/{workflow_id}/activate',
+            ...options
+        });
+    }
+    
+    /**
+     * Pause a workflow
+     *
+     * It starts no new executions; sends already queued still go out. Pausing a paused workflow changes nothing. Send no body.
+     *
+     * Scope: `workflows:write`.
+     */
+    public pauseWorkflow<ThrowOnError extends boolean = true>(options: Options<PauseWorkflowData, ThrowOnError>): RequestResult<PauseWorkflowResponses, PauseWorkflowErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<PauseWorkflowResponses, PauseWorkflowErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflows/{workflow_id}/pause',
+            ...options
+        });
+    }
+    
+    /**
+     * List executions
+     *
+     * Runs of the workflow with their status, attempts and errors, newest first.
+     *
+     * Scope: `workflows:read`.
+     */
+    public listWorkflowExecutions<ThrowOnError extends boolean = true>(options: Options<ListWorkflowExecutionsData, ThrowOnError>): RequestResult<ListWorkflowExecutionsResponses, ListWorkflowExecutionsErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).get<ListWorkflowExecutionsResponses, ListWorkflowExecutionsErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflows/{workflow_id}/executions',
             ...options
         });
     }
