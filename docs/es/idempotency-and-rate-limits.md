@@ -43,6 +43,9 @@ Recomendamos enviarla en todo envío de mensajes. Estas operaciones la aceptan:
 | [Crear una respuesta rápida](https://getricky.ai/docs/api/reference/quick-replies/create-quick-reply) | `POST /quick-replies` | `quick_replies:write` |
 | [Actualizar una respuesta rápida](https://getricky.ai/docs/api/reference/quick-replies/update-quick-reply) | `PATCH /quick-replies/{quick_reply_id}` | `quick_replies:write` |
 | [Eliminar una respuesta rápida](https://getricky.ai/docs/api/reference/quick-replies/delete-quick-reply) | `DELETE /quick-replies/{quick_reply_id}` | `quick_replies:write` |
+| [Crear una plantilla](https://getricky.ai/docs/api/reference/whats-app/create-template) | `POST /templates` | `templates:write` |
+| [Editar una plantilla](https://getricky.ai/docs/api/reference/whats-app/update-template) | `PATCH /templates/{template_id}` | `templates:write` |
+| [Eliminar una plantilla](https://getricky.ai/docs/api/reference/whats-app/delete-template) | `DELETE /templates/{template_id}` | `templates:write` |
 
 Crear o desactivar un webhook y reintentar una entrega no usan esta cabecera.
 

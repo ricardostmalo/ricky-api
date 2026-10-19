@@ -6,6 +6,12 @@ This page records changes to the API. A breaking change only ships in a new path
 
 ## October 19, 2026
 
+**Broadcasts.** Compatible changes to v1.
+
+- **Broadcasts.** `GET /broadcasts`, `POST /broadcasts` and `GET /broadcasts/{broadcast_id}` list, create and read WhatsApp broadcasts with how many recipients are in each delivery status. A broadcast sends now or at `scheduled_at`, up to 7 days ahead, to a contact filter, chosen contacts or phone numbers. See [Broadcasts](https://getricky.ai/en/docs/api/broadcasts).
+- **Cancel and follow.** `POST /broadcasts/{broadcast_id}/cancel` cancels a scheduled broadcast before it starts. `GET /broadcasts/{broadcast_id}/recipients` lists each number and where its message stands.
+- **New scopes.** `broadcasts:read` and `broadcasts:write`.
+
 **Workflows.** Compatible changes to v1.
 
 - **Manage workflows.** `GET /workflows`, `POST /workflows`, `GET`, `PATCH` and `DELETE /workflows/{workflow_id}`, `POST /workflows/{workflow_id}/activate` and `POST /workflows/{workflow_id}/pause`. Ricky checks each definition with the rules of the workflow editor. See [Workflows](https://getricky.ai/en/docs/api/workflows).
@@ -31,6 +37,13 @@ This page records changes to the API. A breaking change only ships in a new path
 - **Search.** `GET /conversations/search` and `GET /messages/search` search by text. Contacts are searched with `GET /contacts?query=`.
 - **Read marks.** `POST /conversations/{conversation_id}/read` marks a conversation read, as opening it in the inbox does.
 - **Quick replies.** `GET` and `POST /quick-replies`, `GET`, `PATCH` and `DELETE /quick-replies/{quick_reply_id}`, with the new `quick_replies:read` and `quick_replies:write` scopes. See [Tags, fields, search and quick replies](https://getricky.ai/en/docs/api/crm-and-inbox).
+
+**WhatsApp templates and numbers.** Compatible changes to v1.
+
+- **Manage templates.** `POST /templates` submits a template to Meta's review; `GET`, `PATCH` and `DELETE /templates/{template_id}` read it with its review status, edit it and delete it. `POST /templates/validate` checks a draft with the template editor's rules without submitting it. See [WhatsApp templates and numbers](https://getricky.ai/en/docs/api/whatsapp).
+- **WhatsApp numbers.** `GET /whatsapp-numbers` and `GET /whatsapp-numbers/{channel_id}` answer each number's status, quality rating and messaging limit. They need `conversations:read`.
+- **Components in Meta's format.** Templates carry `components` with Meta's keys, for example `example.body_text`. Before, nested keys came in camelCase.
+- **New scope.** `templates:write`.
 
 ## October 15, 2026
 

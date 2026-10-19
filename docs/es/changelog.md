@@ -34,6 +34,13 @@ Esta página registra los cambios de la API. Un cambio incompatible solo llega e
 * **Lectura.** `POST /conversations/{conversation_id}/read` marca una conversación como leída, como al abrirla en el inbox.
 * **Respuestas rápidas.** `GET` y `POST /quick-replies`, `GET`, `PATCH` y `DELETE /quick-replies/{quick_reply_id}`, con los permisos nuevos `quick_replies:read` y `quick_replies:write`. Consulta [Etiquetas, campos, búsqueda y respuestas rápidas](./crm-and-inbox.md).
 
+**Plantillas y números de WhatsApp.** Cambios compatibles con la v1.
+
+* **Gestionar plantillas.** `POST /templates` envía una plantilla a revisión de Meta; `GET`, `PATCH` y `DELETE /templates/{template_id}` la leen con su estado de revisión, la editan y la eliminan. `POST /templates/validate` revisa un borrador con las reglas del editor de plantillas sin enviarlo. Consulta [Plantillas y números de WhatsApp](./whatsapp.md).
+* **Números de WhatsApp.** `GET /whatsapp-numbers` y `GET /whatsapp-numbers/{channel_id}` devuelven el estado, la calidad y el límite de mensajes de cada número. Exigen `conversations:read`.
+* **Componentes en el formato de Meta.** Las plantillas traen `components` con las claves de Meta, por ejemplo `example.body_text`. Antes, las claves internas llegaban en camelCase.
+* **Permiso nuevo.** `templates:write`.
+
 ## 15 de octubre de 2026
 
 **Webhooks inmediatos, eventos nuevos, archivos, mensajes sueltos, etiquetas y notas.** Cambios compatibles con la v1.

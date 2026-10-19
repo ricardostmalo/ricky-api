@@ -3,7 +3,7 @@
   "info": {
     "title": "Ricky API",
     "version": "1.0.0",
-    "description": "REST API for one Ricky organization: contacts, conversations, messages, templates, workflows and webhooks. Requests and responses are JSON with snake_case fields; IDs are UUIDs except template IDs; times are ISO 8601 in UTC.",
+    "description": "REST API for one Ricky organization: contacts, conversations, messages, templates, broadcasts, workflows and webhooks. Requests and responses are JSON with snake_case fields; IDs are UUIDs except template IDs; times are ISO 8601 in UTC.",
     "contact": {
       "name": "Ricky",
       "url": "https://getricky.ai/docs/api",
@@ -38,12 +38,20 @@
       "description": "Read and send messages, and follow each send."
     },
     {
+      "name": "Broadcasts",
+      "description": "One WhatsApp template to many numbers, now or scheduled, and each delivery."
+    },
+    {
       "name": "Catalogs",
-      "description": "Channels, members, tags and templates to reference by ID."
+      "description": "Channels, members and tags to reference by ID."
     },
     {
       "name": "Quick replies",
       "description": "Saved answers operators insert into a message."
+    },
+    {
+      "name": "WhatsApp",
+      "description": "Message templates and their Meta review, and the status, quality and limits of each number."
     },
     {
       "name": "Webhooks",
@@ -2940,111 +2948,6 @@
           },
           "500": {
             "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/templates": {
-      "get": {
-        "operationId": "listTemplates",
-        "tags": [
-          "Catalogs"
-        ],
-        "summary": "List templates",
-        "description": "WhatsApp templates of every connected business account, read live from Meta.\n\nScope: `templates:read`.",
-        "responses": {
-          "200": {
-            "description": "Success.",
-            "headers": {
-              "X-Request-Id": {
-                "$ref": "#/components/headers/X-Request-Id"
-              },
-              "X-RateLimit-Limit": {
-                "$ref": "#/components/headers/X-RateLimit-Limit"
-              },
-              "X-RateLimit-Remaining": {
-                "$ref": "#/components/headers/X-RateLimit-Remaining"
-              },
-              "X-RateLimit-Reset": {
-                "$ref": "#/components/headers/X-RateLimit-Reset"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "data",
-                    "next_cursor"
-                  ],
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Template"
-                      }
-                    },
-                    "next_cursor": {
-                      "type": [
-                        "string",
-                        "null"
-                      ],
-                      "description": "Pass as `cursor` for the next page; null on the last page."
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "`upstream_error`: The messaging provider failed. Retry later.",
             "content": {
               "application/json": {
                 "schema": {
@@ -10599,6 +10502,1779 @@
           }
         }
       }
+    },
+    "/templates": {
+      "get": {
+        "operationId": "listTemplates",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "List templates",
+        "description": "WhatsApp templates of every connected business account, read live from Meta.\n\nScope: `templates:read`.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "next_cursor"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Template"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Pass as `cursor` for the next page; null on the last page."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createTemplate",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "Create a template",
+        "description": "Submits a template to Meta for review from the business account of `channel_id`. It answers the template as Meta has it, usually `PENDING`; follow it with `GET /templates/{template_id}`. A draft that breaks a rule answers `400` with the first problem; Meta refusing it answers `422 rule_violation` with its reason.\n\nScope: `templates:write`.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTemplate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Template"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templates/{template_id}": {
+      "get": {
+        "operationId": "getTemplate",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "Get a template",
+        "description": "One template, read live from Meta, with its review `status`: `PENDING` while Meta reviews it, then `APPROVED`, `REJECTED` or `PAUSED`. Read it again to follow Meta's review.\n\nScope: `templates:read`.",
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "description": "Template ID.",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{1,32}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Template"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`conflict`: The resource changed in a way that prevents the operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateTemplate",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "Edit a template",
+        "description": "Changes the category or content of a template and sends it to Meta for review again. Meta allows it only for `APPROVED`, `REJECTED` and `PAUSED` templates, and limits how often an approved one can change; otherwise it answers `422 rule_violation`. Templates with a media header, or with buttons and components Ricky’s editor does not build, cannot be edited here.\n\nScope: `templates:write`.",
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "description": "Template ID.",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{1,32}$"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTemplate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Template"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.\n\n`conflict`: The resource changed in a way that prevents the operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteTemplate",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "Delete a template",
+        "description": "Deletes the template at Meta. Meta deletes it in every language that shares its name, and the name cannot be used again for 30 days.\n\nScope: `templates:write`.",
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "description": "Template ID.",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{1,32}$"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DeletedTemplate"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.\n\n`conflict`: The resource changed in a way that prevents the operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templates/validate": {
+      "post": {
+        "operationId": "validateTemplate",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "Validate a template draft",
+        "description": "Checks a draft with the rules of Ricky’s template editor and answers every problem found, without submitting anything to Meta. A body that is not a draft answers `400`; a draft that breaks a rule answers `200` with `valid: false`. Meta can still reject a valid draft in its review.\n\nScope: `templates:read`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateTemplate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TemplateValidation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/whatsapp-numbers": {
+      "get": {
+        "operationId": "listWhatsAppNumbers",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "List WhatsApp numbers",
+        "description": "Every WhatsApp number of the organization, also disconnected ones, with its status, quality rating and messaging limit as Ricky last read them from Meta.\n\nScope: `conversations:read`.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "next_cursor"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/WhatsAppNumber"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Pass as `cursor` for the next page; null on the last page."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/whatsapp-numbers/{channel_id}": {
+      "get": {
+        "operationId": "getWhatsAppNumber",
+        "tags": [
+          "WhatsApp"
+        ],
+        "summary": "Get a WhatsApp number",
+        "description": "One WhatsApp number by its channel ID.\n\nScope: `conversations:read`.",
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "path",
+            "required": true,
+            "description": "Channel ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/WhatsAppNumber"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/broadcasts": {
+      "get": {
+        "operationId": "listBroadcasts",
+        "tags": [
+          "Broadcasts"
+        ],
+        "summary": "List broadcasts",
+        "description": "Newest first, with how many recipients are in each delivery status.\n\nScope: `broadcasts:read`.",
+        "parameters": [
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "description": "Items per page.",
+            "schema": {
+              "default": 50,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "`next_cursor` from the previous page. Use it unchanged.",
+            "schema": {
+              "type": "string",
+              "maxLength": 2048
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "next_cursor"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Broadcast"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Pass as `cursor` for the next page; null on the last page."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createBroadcast",
+        "tags": [
+          "Broadcasts"
+        ],
+        "summary": "Create a broadcast",
+        "description": "Sends an approved WhatsApp template to an audience, now or at `scheduled_at`. Ricky fixes the recipient list now and sends through each number’s conversation, as a template sent from the inbox; variables the template maps to contact fields in Ricky are filled per contact. Answers `201` with the broadcast `queued` or `scheduled`; follow it with `GET /broadcasts/{broadcast_id}`. An audience without any WhatsApp number answers `422 rule_violation`.\n\nScope: `broadcasts:write`.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBroadcast"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Broadcast"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/broadcasts/{broadcast_id}": {
+      "get": {
+        "operationId": "getBroadcast",
+        "tags": [
+          "Broadcasts"
+        ],
+        "summary": "Get a broadcast",
+        "description": "One broadcast with how many recipients are in each delivery status.\n\nScope: `broadcasts:read`.",
+        "parameters": [
+          {
+            "name": "broadcast_id",
+            "in": "path",
+            "required": true,
+            "description": "Broadcast ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Broadcast"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/broadcasts/{broadcast_id}/cancel": {
+      "post": {
+        "operationId": "cancelBroadcast",
+        "tags": [
+          "Broadcasts"
+        ],
+        "summary": "Cancel a scheduled broadcast",
+        "description": "Cancels a `scheduled` broadcast before it starts; nothing is sent. Once it is `queued` or sending, or already canceled, it answers `409 conflict`. Send no body.\n\nScope: `broadcasts:write`.",
+        "parameters": [
+          {
+            "name": "broadcast_id",
+            "in": "path",
+            "required": true,
+            "description": "Broadcast ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Broadcast"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.\n\n`conflict`: The resource changed in a way that prevents the operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/broadcasts/{broadcast_id}/recipients": {
+      "get": {
+        "operationId": "listBroadcastRecipients",
+        "tags": [
+          "Broadcasts"
+        ],
+        "summary": "List broadcast recipients",
+        "description": "Each number of the broadcast and where its message stands, in number order. Statuses change as WhatsApp reports them.\n\nScope: `broadcasts:read`.",
+        "parameters": [
+          {
+            "name": "broadcast_id",
+            "in": "path",
+            "required": true,
+            "description": "Broadcast ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "description": "Items per page.",
+            "schema": {
+              "default": 50,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "`next_cursor` from the previous page. Use it unchanged.",
+            "schema": {
+              "type": "string",
+              "maxLength": 2048
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "Only recipients in this delivery status.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "sent",
+                "delivered",
+                "read",
+                "failed"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "next_cursor"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/BroadcastRecipient"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Pass as `cursor` for the next page; null on the last page."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "webhooks": {
@@ -12807,6 +14483,439 @@
           "components"
         ],
         "description": "A WhatsApp message template."
+      },
+      "Broadcast": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Broadcast ID.",
+            "examples": [
+              "0c1d2e3f-4a5b-4c6d-8e7f-9a0b1c2d3e4f"
+            ]
+          },
+          "channel_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "WhatsApp channel it is sent from.",
+            "examples": [
+              "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f"
+            ]
+          },
+          "template": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Template ID at Meta.",
+                "examples": [
+                  "1234567890123456"
+                ]
+              },
+              "name": {
+                "type": "string",
+                "description": "Template name.",
+                "examples": [
+                  "promo_octubre"
+                ]
+              },
+              "language": {
+                "type": "string",
+                "description": "Language code.",
+                "examples": [
+                  "es"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "language"
+            ],
+            "description": "The approved template every recipient receives."
+          },
+          "audience": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "filter"
+                  },
+                  "tag_id": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Only contacts with this tag; null for any.",
+                        "examples": [
+                          "5c6d7e8f-9a0b-4c1d-8e2f-3a4b5c6d7e8f"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "lifecycle_stage": {
+                    "description": "Only contacts at this stage; null for any.",
+                    "examples": [
+                      "customer"
+                    ],
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "query": {
+                    "description": "Only contacts whose name, phone, email or company contains it.",
+                    "examples": [
+                      null
+                    ],
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "type",
+                  "tag_id",
+                  "lifecycle_stage",
+                  "query"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "contacts"
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "phones"
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              }
+            ],
+            "description": "How the recipient list was built: a contact filter, chosen contacts, or phone numbers. The list itself is fixed when the broadcast is created."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "scheduled",
+              "queued",
+              "sending",
+              "completed",
+              "canceled"
+            ],
+            "description": "`scheduled` waits for `scheduled_at`; `queued` and `sending` are on their way; `completed` once every message was handed to WhatsApp; `canceled` before it started."
+          },
+          "counts": {
+            "type": "object",
+            "properties": {
+              "recipients": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991,
+                "description": "Numbers the broadcast goes to."
+              },
+              "pending": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991,
+                "description": "Not sent yet, or WhatsApp has not answered yet."
+              },
+              "sent": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991,
+                "description": "Accepted by WhatsApp, not yet delivered."
+              },
+              "delivered": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991,
+                "description": "Delivered to the phone, not yet read."
+              },
+              "read": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991,
+                "description": "Read by the recipient."
+              },
+              "failed": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991,
+                "description": "Not delivered; each recipient says why."
+              }
+            },
+            "required": [
+              "recipients",
+              "pending",
+              "sent",
+              "delivered",
+              "read",
+              "failed"
+            ],
+            "description": "Recipients in each delivery status. Each recipient counts once, in its current one."
+          },
+          "scheduled_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When it starts sending; null if it was sent at once.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          },
+          "canceled_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When it was canceled; null otherwise.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When the last message was handed to WhatsApp.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          },
+          "created_by_user_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Member who created it, or who created the API key.",
+            "examples": [
+              "2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When it was created.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "channel_id",
+          "template",
+          "audience",
+          "status",
+          "counts",
+          "scheduled_at",
+          "canceled_at",
+          "completed_at",
+          "created_by_user_id",
+          "created_at"
+        ],
+        "description": "One approved WhatsApp template sent to many numbers.",
+        "examples": [
+          {
+            "id": "0c1d2e3f-4a5b-4c6d-8e7f-9a0b1c2d3e4f",
+            "channel_id": "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f",
+            "template": {
+              "id": "1234567890123456",
+              "name": "promo_octubre",
+              "language": "es"
+            },
+            "audience": {
+              "type": "filter",
+              "tag_id": "5c6d7e8f-9a0b-4c1d-8e2f-3a4b5c6d7e8f",
+              "lifecycle_stage": null,
+              "query": null
+            },
+            "status": "completed",
+            "counts": {
+              "recipients": 120,
+              "pending": 0,
+              "sent": 14,
+              "delivered": 61,
+              "read": 41,
+              "failed": 4
+            },
+            "scheduled_at": "2026-10-14T14:00:00.000Z",
+            "canceled_at": null,
+            "completed_at": "2026-10-14T14:03:12.000Z",
+            "created_by_user_id": "2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b",
+            "created_at": "2026-10-14T15:30:00.000Z"
+          }
+        ]
+      },
+      "BroadcastRecipient": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Recipient ID.",
+            "examples": [
+              "1d2e3f4a-5b6c-4d7e-9f8a-0b1c2d3e4f5a"
+            ]
+          },
+          "phone": {
+            "type": "string",
+            "description": "Number in E.164.",
+            "examples": [
+              "+50760001234"
+            ]
+          },
+          "contact_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "description": "The contact with this number, when Ricky knows it.",
+                "examples": [
+                  "3f6c2b1e-8d4a-4b7e-9a51-2c7d8e9f0a1b"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "sent",
+              "delivered",
+              "read",
+              "failed"
+            ],
+            "description": "`pending` until WhatsApp accepts or refuses the message; then `sent`, `delivered` and `read` as WhatsApp reports them, or `failed`."
+          },
+          "failure_reason": {
+            "description": "Why it failed; null unless `failed`.",
+            "examples": [
+              null
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "conversation_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "description": "Conversation the message went to; null before it was sent.",
+                "examples": [
+                  "9b2e4c61-7a3f-4d18-b5c2-6e0f1a2b3c4d"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "message_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "description": "The message in that conversation, once WhatsApp accepted it.",
+                "examples": [
+                  "c41d7e2a-5b6f-4a89-8c3d-0e1f2a3b4c5d"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "processed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When the broadcast handed the message to WhatsApp or recorded why it could not.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          },
+          "status_updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When WhatsApp reported the latest status of the message; null before.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "phone",
+          "contact_id",
+          "status",
+          "failure_reason",
+          "conversation_id",
+          "message_id",
+          "processed_at",
+          "status_updated_at"
+        ],
+        "description": "One number of a broadcast and where its message stands."
       },
       "Webhook": {
         "type": "object",
@@ -16335,6 +18444,287 @@
         ],
         "description": "How long conversations stay open before someone closes them. Every close in the period counts, dated when it happened; resolution time runs from the opening of that span to the close. Conversations without a single message are left out."
       },
+      "TemplateValidation": {
+        "type": "object",
+        "properties": {
+          "valid": {
+            "type": "boolean",
+            "description": "Whether `POST /templates` would submit this draft to Meta."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "param": {
+                  "type": "string",
+                  "description": "The request field the problem is in."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "What to change."
+                }
+              },
+              "required": [
+                "param",
+                "message"
+              ]
+            },
+            "description": "Every problem found; empty when the draft is valid.",
+            "examples": [
+              [
+                {
+                  "param": "body.examples.1",
+                  "message": "Example required for {{1}}."
+                }
+              ]
+            ]
+          },
+          "components": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The components Ricky would submit, in the WhatsApp Cloud API format; null when the draft is invalid.",
+            "examples": [
+              null
+            ]
+          }
+        },
+        "required": [
+          "valid",
+          "errors",
+          "components"
+        ],
+        "description": "The result of checking a template draft without submitting it."
+      },
+      "DeletedTemplate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Template ID at Meta.",
+            "examples": [
+              "1234567890123456"
+            ]
+          },
+          "deleted": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "id",
+          "deleted"
+        ],
+        "description": "A template Meta deleted."
+      },
+      "WhatsAppNumber": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Channel ID.",
+            "examples": [
+              "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "Name shown in Ricky.",
+            "examples": [
+              "Casa Nativa"
+            ]
+          },
+          "phone_number": {
+            "description": "Phone in E.164.",
+            "examples": [
+              "+50760001234"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "verified_name": {
+            "description": "Business name Meta approved for the number.",
+            "examples": [
+              "Casa Nativa"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "phone_number_id": {
+            "description": "Phone number ID at Meta.",
+            "examples": [
+              "109876543210987"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "whatsapp_business_account_id": {
+            "description": "WhatsApp Business Account that owns the number.",
+            "examples": [
+              "102030405060708"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "connection_mode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "dedicated",
+                  "coexistence"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "`coexistence` when the number also stays on the WhatsApp Business app; `dedicated` otherwise."
+          },
+          "status": {
+            "description": "Status of the number at Meta, as Meta reports it, for example `CONNECTED`.",
+            "examples": [
+              "CONNECTED"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "disconnected_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When the number was disconnected from Ricky; null while connected.",
+            "examples": [
+              null
+            ]
+          },
+          "messaging_health": {
+            "type": "string",
+            "enum": [
+              "available",
+              "limited",
+              "blocked"
+            ],
+            "description": "Whether Meta lets the number send: `available`, `limited` or `blocked`."
+          },
+          "quality_rating": {
+            "description": "Quality rating at Meta: `GREEN`, `YELLOW`, `RED` or `UNKNOWN`.",
+            "examples": [
+              "GREEN"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "messaging_limit": {
+            "description": "Messaging limit tier at Meta, for example `TIER_1K` or `TIER_UNLIMITED`.",
+            "examples": [
+              "TIER_1K"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "inbound_processing_enabled": {
+            "description": "Whether Ricky receives the messages sent to the number.",
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "calls_enabled": {
+            "description": "Whether customers can call the number and reach the AI agent.",
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "connected_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When it was connected.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          },
+          "last_synced_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When Ricky last read its details from Meta.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "phone_number",
+          "verified_name",
+          "phone_number_id",
+          "whatsapp_business_account_id",
+          "connection_mode",
+          "status",
+          "disconnected_at",
+          "messaging_health",
+          "quality_rating",
+          "messaging_limit",
+          "inbound_processing_enabled",
+          "calls_enabled",
+          "connected_at",
+          "last_synced_at"
+        ],
+        "description": "A WhatsApp number, with its status, quality and messaging limit at Meta."
+      },
       "Workflow": {
         "type": "object",
         "properties": {
@@ -18648,6 +21038,147 @@
           }
         ]
       },
+      "CreateBroadcast": {
+        "type": "object",
+        "properties": {
+          "channel_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "WhatsApp channel to send from. See `GET /channels`."
+          },
+          "template": {
+            "$ref": "#/components/schemas/TemplateMessage"
+          },
+          "audience": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "filter"
+                  },
+                  "tag_id": {
+                    "description": "Only contacts with this tag.",
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "lifecycle_stage": {
+                    "description": "Only contacts at this stage.",
+                    "type": "string",
+                    "enum": [
+                      "subscriber",
+                      "lead",
+                      "marketing_qualified",
+                      "sales_qualified",
+                      "opportunity",
+                      "customer",
+                      "evangelist",
+                      "other"
+                    ]
+                  },
+                  "query": {
+                    "description": "Only contacts whose name, phone, email or company contains it.",
+                    "type": "string",
+                    "maxLength": 200
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "contacts"
+                  },
+                  "contact_ids": {
+                    "minItems": 1,
+                    "maxItems": 1000,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "description": "Contacts of the organization."
+                  }
+                },
+                "required": [
+                  "type",
+                  "contact_ids"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "phones"
+                  },
+                  "phones": {
+                    "minItems": 1,
+                    "maxItems": 2000,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    },
+                    "description": "Numbers with country code, for example `+50760001234`."
+                  }
+                },
+                "required": [
+                  "type",
+                  "phones"
+                ],
+                "additionalProperties": false
+              }
+            ],
+            "description": "Who receives it. `filter` takes every contact matching all the filters you send (no filter: every contact); `contacts` and `phones` take the ones you list. Ricky uses each contact’s phone, or its WhatsApp number, skips contacts without one and sends once per number, up to 5,000."
+          },
+          "scheduled_at": {
+            "description": "When to start sending, up to 7 days ahead. Omit it to send now.",
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          }
+        },
+        "required": [
+          "channel_id",
+          "template",
+          "audience"
+        ],
+        "additionalProperties": false,
+        "description": "Sends an approved template to many numbers, now or at a set time.",
+        "examples": [
+          {
+            "channel_id": "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f",
+            "template": {
+              "id": "1234567890123456",
+              "components": [
+                {
+                  "type": "body",
+                  "parameters": [
+                    {
+                      "type": "text",
+                      "text": "20%"
+                    }
+                  ]
+                }
+              ]
+            },
+            "audience": {
+              "type": "filter",
+              "tag_id": "5c6d7e8f-9a0b-4c1d-8e2f-3a4b5c6d7e8f"
+            },
+            "scheduled_at": "2026-10-20T14:00:00Z"
+          }
+        ]
+      },
       "ChangeContactsTags": {
         "type": "object",
         "properties": {
@@ -19625,6 +22156,693 @@
         "examples": [
           {
             "send_enabled": false
+          }
+        ]
+      },
+      "CreateTemplate": {
+        "type": "object",
+        "properties": {
+          "channel_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "WhatsApp channel whose business account will own the template."
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 512,
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "description": "Lowercase letters, digits and underscores, starting with a letter."
+          },
+          "language": {
+            "type": "string",
+            "pattern": "^[a-z]{2,3}(?:_[A-Z]{2})?$",
+            "description": "Language code, for example `es` or `en_US`."
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "MARKETING",
+              "UTILITY"
+            ],
+            "description": "`UTILITY` for updates on something the customer asked for; `MARKETING` otherwise."
+          },
+          "parameter_format": {
+            "default": "NAMED",
+            "description": "How variables are written: `{{first_name}}` or `{{1}}`. It cannot change later.",
+            "type": "string",
+            "enum": [
+              "NAMED",
+              "POSITIONAL"
+            ]
+          },
+          "header": {
+            "description": "`TEXT` or `LOCATION`. Send `null` for no header.",
+            "anyOf": [
+              {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "TEXT"
+                      },
+                      "text": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60,
+                        "description": "Header text; at most one variable."
+                      },
+                      "example": {
+                        "description": "Example value of the header variable; required when it has one.",
+                        "type": "string",
+                        "maxLength": 1024
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "text"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "LOCATION"
+                      }
+                    },
+                    "required": [
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024,
+                "description": "Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end."
+              },
+              "examples": {
+                "description": "An example value for every variable, keyed by its number or name without braces. Meta reviews them.",
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "string",
+                  "maxLength": 1024
+                }
+              }
+            },
+            "required": [
+              "text"
+            ],
+            "additionalProperties": false,
+            "description": "The message text."
+          },
+          "footer": {
+            "description": "Footer text, without variables.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 60
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "buttons": {
+            "description": "Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.",
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "QUICK_REPLY"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "URL"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    },
+                    "url": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000,
+                      "description": "Link the button opens; it may end in the variable `{{1}}`."
+                    },
+                    "example": {
+                      "description": "Example URL for a link with `{{1}}`; required when it has one.",
+                      "type": "string",
+                      "maxLength": 2000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text",
+                    "url"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "PHONE_NUMBER"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    },
+                    "phone_number": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20,
+                      "description": "Phone the button calls, with country code."
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text",
+                    "phone_number"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "channel_id",
+          "name",
+          "language",
+          "category",
+          "body"
+        ],
+        "additionalProperties": false,
+        "description": "A template draft. Ricky checks it as `POST /templates/validate` does, then submits it.",
+        "examples": [
+          {
+            "channel_id": "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f",
+            "name": "pedido_listo",
+            "language": "es",
+            "category": "UTILITY",
+            "parameter_format": "POSITIONAL",
+            "body": {
+              "text": "Hola {{1}}, tu pedido {{2}} está listo para retirar.",
+              "examples": {
+                "1": "Ana",
+                "2": "10482"
+              }
+            },
+            "footer": "Casa Nativa",
+            "buttons": [
+              {
+                "type": "QUICK_REPLY",
+                "text": "Gracias"
+              }
+            ]
+          }
+        ]
+      },
+      "ValidateTemplate": {
+        "type": "object",
+        "properties": {
+          "channel_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "WhatsApp channel whose business account will own the template."
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 512,
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "description": "Lowercase letters, digits and underscores, starting with a letter."
+          },
+          "language": {
+            "type": "string",
+            "pattern": "^[a-z]{2,3}(?:_[A-Z]{2})?$",
+            "description": "Language code, for example `es` or `en_US`."
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "MARKETING",
+              "UTILITY"
+            ],
+            "description": "`UTILITY` for updates on something the customer asked for; `MARKETING` otherwise."
+          },
+          "parameter_format": {
+            "default": "NAMED",
+            "description": "How variables are written: `{{first_name}}` or `{{1}}`. It cannot change later.",
+            "type": "string",
+            "enum": [
+              "NAMED",
+              "POSITIONAL"
+            ]
+          },
+          "header": {
+            "description": "`TEXT` or `LOCATION`. Send `null` for no header.",
+            "anyOf": [
+              {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "TEXT"
+                      },
+                      "text": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60,
+                        "description": "Header text; at most one variable."
+                      },
+                      "example": {
+                        "description": "Example value of the header variable; required when it has one.",
+                        "type": "string",
+                        "maxLength": 1024
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "text"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "LOCATION"
+                      }
+                    },
+                    "required": [
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024,
+                "description": "Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end."
+              },
+              "examples": {
+                "description": "An example value for every variable, keyed by its number or name without braces. Meta reviews them.",
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "string",
+                  "maxLength": 1024
+                }
+              }
+            },
+            "required": [
+              "text"
+            ],
+            "additionalProperties": false,
+            "description": "The message text."
+          },
+          "footer": {
+            "description": "Footer text, without variables.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 60
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "buttons": {
+            "description": "Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.",
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "QUICK_REPLY"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "URL"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    },
+                    "url": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000,
+                      "description": "Link the button opens; it may end in the variable `{{1}}`."
+                    },
+                    "example": {
+                      "description": "Example URL for a link with `{{1}}`; required when it has one.",
+                      "type": "string",
+                      "maxLength": 2000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text",
+                    "url"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "PHONE_NUMBER"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    },
+                    "phone_number": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20,
+                      "description": "Phone the button calls, with country code."
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text",
+                    "phone_number"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "name",
+          "language",
+          "category",
+          "body"
+        ],
+        "additionalProperties": false,
+        "description": "The body of `POST /templates`; `channel_id` is optional here.",
+        "examples": [
+          {
+            "channel_id": "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f",
+            "name": "pedido_listo",
+            "language": "es",
+            "category": "UTILITY",
+            "parameter_format": "POSITIONAL",
+            "body": {
+              "text": "Hola {{1}}, tu pedido {{2}} está listo para retirar.",
+              "examples": {
+                "1": "Ana",
+                "2": "10482"
+              }
+            },
+            "footer": "Casa Nativa",
+            "buttons": [
+              {
+                "type": "QUICK_REPLY",
+                "text": "Gracias"
+              }
+            ]
+          }
+        ]
+      },
+      "UpdateTemplate": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "MARKETING",
+              "UTILITY"
+            ],
+            "description": "`UTILITY` for updates on something the customer asked for; `MARKETING` otherwise."
+          },
+          "header": {
+            "description": "`TEXT` or `LOCATION`. Send `null` for no header.",
+            "anyOf": [
+              {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "TEXT"
+                      },
+                      "text": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60,
+                        "description": "Header text; at most one variable."
+                      },
+                      "example": {
+                        "description": "Example value of the header variable; required when it has one.",
+                        "type": "string",
+                        "maxLength": 1024
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "text"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "LOCATION"
+                      }
+                    },
+                    "required": [
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024,
+                "description": "Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end."
+              },
+              "examples": {
+                "description": "An example value for every variable, keyed by its number or name without braces. Meta reviews them.",
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "string",
+                  "maxLength": 1024
+                }
+              }
+            },
+            "required": [
+              "text"
+            ],
+            "additionalProperties": false,
+            "description": "The message text."
+          },
+          "footer": {
+            "description": "Footer text, without variables.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 60
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "buttons": {
+            "description": "Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.",
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "QUICK_REPLY"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "URL"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    },
+                    "url": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000,
+                      "description": "Link the button opens; it may end in the variable `{{1}}`."
+                    },
+                    "example": {
+                      "description": "Example URL for a link with `{{1}}`; required when it has one.",
+                      "type": "string",
+                      "maxLength": 2000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text",
+                    "url"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "PHONE_NUMBER"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    },
+                    "phone_number": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20,
+                      "description": "Phone the button calls, with country code."
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text",
+                    "phone_number"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          }
+        },
+        "additionalProperties": false,
+        "description": "Only the parts you send change; `buttons` replaces every button. Name, language and `parameter_format` cannot change.",
+        "examples": [
+          {
+            "body": {
+              "text": "Hola {{1}}, tu pedido {{2}} ya está listo. Te esperamos.",
+              "examples": {
+                "1": "Ana",
+                "2": "10482"
+              }
+            }
           }
         ]
       },

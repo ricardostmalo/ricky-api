@@ -43,6 +43,9 @@ We recommend sending it with every message send. These operations accept it:
 | [Create a quick reply](https://getricky.ai/en/docs/api/reference/quick-replies/create-quick-reply) | `POST /quick-replies` | `quick_replies:write` |
 | [Update a quick reply](https://getricky.ai/en/docs/api/reference/quick-replies/update-quick-reply) | `PATCH /quick-replies/{quick_reply_id}` | `quick_replies:write` |
 | [Delete a quick reply](https://getricky.ai/en/docs/api/reference/quick-replies/delete-quick-reply) | `DELETE /quick-replies/{quick_reply_id}` | `quick_replies:write` |
+| [Create a template](https://getricky.ai/en/docs/api/reference/whats-app/create-template) | `POST /templates` | `templates:write` |
+| [Edit a template](https://getricky.ai/en/docs/api/reference/whats-app/update-template) | `PATCH /templates/{template_id}` | `templates:write` |
+| [Delete a template](https://getricky.ai/en/docs/api/reference/whats-app/delete-template) | `DELETE /templates/{template_id}` | `templates:write` |
 
 Creating or disabling a webhook and retrying a delivery do not use this header.
 

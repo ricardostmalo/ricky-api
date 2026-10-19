@@ -50,10 +50,11 @@ Cada operación exige un permiso (scope). Una clave sin ese permiso recibe `403 
 | --------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `contacts:read`       | Leer contactos y campos de contacto.                                                                        |
 | `contacts:write`      | Crear y actualizar contactos, agregarles notas, cambiar sus etiquetas, y crear y borrar campos de contacto. |
-| `conversations:read`  | Leer y buscar conversaciones, mensajes y canales.                                                           |
+| `conversations:read`  | Leer y buscar conversaciones, mensajes, canales y números de WhatsApp.                                      |
 | `conversations:write` | Asignar, cerrar, reabrir y marcar como leídas las conversaciones, y definir su agente de IA.                |
 | `messages:send`       | Iniciar conversaciones, enviar mensajes y consultar envíos.                                                 |
-| `templates:read`      | Leer las plantillas de WhatsApp.                                                                            |
+| `templates:read`      | Leer las plantillas de WhatsApp y validar borradores.                                                       |
+| `templates:write`     | Crear, editar y eliminar plantillas de WhatsApp.                                                            |
 | `members:read`        | Leer los miembros de la organización.                                                                       |
 | `tags:read`           | Leer las etiquetas de contactos.                                                                            |
 | `webhooks:manage`     | Crear, listar y desactivar webhooks; consultar y reintentar sus entregas.                                   |
@@ -92,7 +93,6 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Listar miembros](https://getricky.ai/docs/api/reference/catalogs/list-members) | `GET /members` | `members:read` |
 | [Listar etiquetas](https://getricky.ai/docs/api/reference/catalogs/list-tags) | `GET /tags` | `tags:read` |
 | [Crear una etiqueta](https://getricky.ai/docs/api/reference/catalogs/create-tag) | `POST /tags` | `tags:write` o, en claves anteriores, `contacts:write` |
-| [Listar plantillas](https://getricky.ai/docs/api/reference/catalogs/list-templates) | `GET /templates` | `templates:read` |
 | [Listar webhooks](https://getricky.ai/docs/api/reference/webhooks/list-webhooks) | `GET /webhooks` | `webhooks:manage` |
 | [Crear un webhook](https://getricky.ai/docs/api/reference/webhooks/create-webhook) | `POST /webhooks` | `webhooks:manage` |
 | [Desactivar un webhook](https://getricky.ai/docs/api/reference/webhooks/disable-webhook) | `DELETE /webhooks/{webhook_id}` | `webhooks:manage` |
@@ -153,6 +153,14 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Consultar una respuesta rápida](https://getricky.ai/docs/api/reference/quick-replies/get-quick-reply) | `GET /quick-replies/{quick_reply_id}` | `quick_replies:read` |
 | [Actualizar una respuesta rápida](https://getricky.ai/docs/api/reference/quick-replies/update-quick-reply) | `PATCH /quick-replies/{quick_reply_id}` | `quick_replies:write` |
 | [Eliminar una respuesta rápida](https://getricky.ai/docs/api/reference/quick-replies/delete-quick-reply) | `DELETE /quick-replies/{quick_reply_id}` | `quick_replies:write` |
+| [Listar plantillas](https://getricky.ai/docs/api/reference/whats-app/list-templates) | `GET /templates` | `templates:read` |
+| [Consultar una plantilla](https://getricky.ai/docs/api/reference/whats-app/get-template) | `GET /templates/{template_id}` | `templates:read` |
+| [Validar un borrador de plantilla](https://getricky.ai/docs/api/reference/whats-app/validate-template) | `POST /templates/validate` | `templates:read` |
+| [Crear una plantilla](https://getricky.ai/docs/api/reference/whats-app/create-template) | `POST /templates` | `templates:write` |
+| [Editar una plantilla](https://getricky.ai/docs/api/reference/whats-app/update-template) | `PATCH /templates/{template_id}` | `templates:write` |
+| [Eliminar una plantilla](https://getricky.ai/docs/api/reference/whats-app/delete-template) | `DELETE /templates/{template_id}` | `templates:write` |
+| [Listar números de WhatsApp](https://getricky.ai/docs/api/reference/whats-app/list-whats-app-numbers) | `GET /whatsapp-numbers` | `conversations:read` |
+| [Consultar un número de WhatsApp](https://getricky.ai/docs/api/reference/whats-app/get-whats-app-number) | `GET /whatsapp-numbers/{channel_id}` | `conversations:read` |
 
 ## Respuestas de autenticación
 

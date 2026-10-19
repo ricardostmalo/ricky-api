@@ -50,10 +50,11 @@ Each operation requires one scope. A key without it gets `403 insufficient_scope
 | --------------------- | ------------------------------------------------------------------------------------------------------- |
 | `contacts:read`       | Read contacts and contact fields.                                                                       |
 | `contacts:write`      | Create and update contacts, add notes to them, change their tags, and create and delete contact fields. |
-| `conversations:read`  | Read and search conversations, messages and channels.                                                   |
+| `conversations:read`  | Read and search conversations, messages, channels and WhatsApp numbers.                                 |
 | `conversations:write` | Assign, close, reopen and mark conversations read, and set their AI agent.                              |
 | `messages:send`       | Start conversations, send messages and read sends.                                                      |
-| `templates:read`      | Read WhatsApp templates.                                                                                |
+| `templates:read`      | Read WhatsApp templates and validate drafts.                                                            |
+| `templates:write`     | Create, edit and delete WhatsApp templates.                                                             |
 | `members:read`        | Read the members of the organization.                                                                   |
 | `tags:read`           | Read contact tags.                                                                                      |
 | `webhooks:manage`     | Create, list and disable webhooks; read and retry their deliveries.                                     |
@@ -92,7 +93,6 @@ The table below is generated from the API contract: it is the exact list of oper
 | [List members](https://getricky.ai/en/docs/api/reference/catalogs/list-members) | `GET /members` | `members:read` |
 | [List tags](https://getricky.ai/en/docs/api/reference/catalogs/list-tags) | `GET /tags` | `tags:read` |
 | [Create a tag](https://getricky.ai/en/docs/api/reference/catalogs/create-tag) | `POST /tags` | `tags:write` or, on older keys, `contacts:write` |
-| [List templates](https://getricky.ai/en/docs/api/reference/catalogs/list-templates) | `GET /templates` | `templates:read` |
 | [List webhooks](https://getricky.ai/en/docs/api/reference/webhooks/list-webhooks) | `GET /webhooks` | `webhooks:manage` |
 | [Create a webhook](https://getricky.ai/en/docs/api/reference/webhooks/create-webhook) | `POST /webhooks` | `webhooks:manage` |
 | [Disable a webhook](https://getricky.ai/en/docs/api/reference/webhooks/disable-webhook) | `DELETE /webhooks/{webhook_id}` | `webhooks:manage` |
@@ -153,6 +153,14 @@ The table below is generated from the API contract: it is the exact list of oper
 | [Get a quick reply](https://getricky.ai/en/docs/api/reference/quick-replies/get-quick-reply) | `GET /quick-replies/{quick_reply_id}` | `quick_replies:read` |
 | [Update a quick reply](https://getricky.ai/en/docs/api/reference/quick-replies/update-quick-reply) | `PATCH /quick-replies/{quick_reply_id}` | `quick_replies:write` |
 | [Delete a quick reply](https://getricky.ai/en/docs/api/reference/quick-replies/delete-quick-reply) | `DELETE /quick-replies/{quick_reply_id}` | `quick_replies:write` |
+| [List templates](https://getricky.ai/en/docs/api/reference/whats-app/list-templates) | `GET /templates` | `templates:read` |
+| [Get a template](https://getricky.ai/en/docs/api/reference/whats-app/get-template) | `GET /templates/{template_id}` | `templates:read` |
+| [Validate a template draft](https://getricky.ai/en/docs/api/reference/whats-app/validate-template) | `POST /templates/validate` | `templates:read` |
+| [Create a template](https://getricky.ai/en/docs/api/reference/whats-app/create-template) | `POST /templates` | `templates:write` |
+| [Edit a template](https://getricky.ai/en/docs/api/reference/whats-app/update-template) | `PATCH /templates/{template_id}` | `templates:write` |
+| [Delete a template](https://getricky.ai/en/docs/api/reference/whats-app/delete-template) | `DELETE /templates/{template_id}` | `templates:write` |
+| [List WhatsApp numbers](https://getricky.ai/en/docs/api/reference/whats-app/list-whats-app-numbers) | `GET /whatsapp-numbers` | `conversations:read` |
+| [Get a WhatsApp number](https://getricky.ai/en/docs/api/reference/whats-app/get-whats-app-number) | `GET /whatsapp-numbers/{channel_id}` | `conversations:read` |
 
 ## Authentication responses
 

@@ -580,6 +580,142 @@ export type Template = {
 };
 
 /**
+ * One approved WhatsApp template sent to many numbers.
+ */
+export type Broadcast = {
+    /**
+     * Broadcast ID.
+     */
+    id: string;
+    /**
+     * WhatsApp channel it is sent from.
+     */
+    channel_id: string;
+    /**
+     * The approved template every recipient receives.
+     */
+    template: {
+        /**
+         * Template ID at Meta.
+         */
+        id: string;
+        /**
+         * Template name.
+         */
+        name: string;
+        /**
+         * Language code.
+         */
+        language: string;
+    };
+    /**
+     * How the recipient list was built: a contact filter, chosen contacts, or phone numbers. The list itself is fixed when the broadcast is created.
+     */
+    audience: {
+        type: 'filter';
+        tag_id: string | null;
+        /**
+         * Only contacts at this stage; null for any.
+         */
+        lifecycle_stage: string | null;
+        /**
+         * Only contacts whose name, phone, email or company contains it.
+         */
+        query: string | null;
+    } | {
+        type: 'contacts';
+    } | {
+        type: 'phones';
+    };
+    /**
+     * `scheduled` waits for `scheduled_at`; `queued` and `sending` are on their way; `completed` once every message was handed to WhatsApp; `canceled` before it started.
+     */
+    status: 'scheduled' | 'queued' | 'sending' | 'completed' | 'canceled';
+    /**
+     * Recipients in each delivery status. Each recipient counts once, in its current one.
+     */
+    counts: {
+        /**
+         * Numbers the broadcast goes to.
+         */
+        recipients: number;
+        /**
+         * Not sent yet, or WhatsApp has not answered yet.
+         */
+        pending: number;
+        /**
+         * Accepted by WhatsApp, not yet delivered.
+         */
+        sent: number;
+        /**
+         * Delivered to the phone, not yet read.
+         */
+        delivered: number;
+        /**
+         * Read by the recipient.
+         */
+        read: number;
+        /**
+         * Not delivered; each recipient says why.
+         */
+        failed: number;
+    };
+    /**
+     * When it starts sending; null if it was sent at once.
+     */
+    scheduled_at: string | null;
+    /**
+     * When it was canceled; null otherwise.
+     */
+    canceled_at: string | null;
+    /**
+     * When the last message was handed to WhatsApp.
+     */
+    completed_at: string | null;
+    /**
+     * Member who created it, or who created the API key.
+     */
+    created_by_user_id: string;
+    /**
+     * When it was created.
+     */
+    created_at: string;
+};
+
+/**
+ * One number of a broadcast and where its message stands.
+ */
+export type BroadcastRecipient = {
+    /**
+     * Recipient ID.
+     */
+    id: string;
+    /**
+     * Number in E.164.
+     */
+    phone: string;
+    contact_id: string | null;
+    /**
+     * `pending` until WhatsApp accepts or refuses the message; then `sent`, `delivered` and `read` as WhatsApp reports them, or `failed`.
+     */
+    status: 'pending' | 'sent' | 'delivered' | 'read' | 'failed';
+    /**
+     * Why it failed; null unless `failed`.
+     */
+    failure_reason: string | null;
+    conversation_id: string | null;
+    message_id: string | null;
+    /**
+     * When the broadcast handed the message to WhatsApp or recorded why it could not.
+     */
+    processed_at: string | null;
+    /**
+     * When WhatsApp reported the latest status of the message; null before.
+     */
+    status_updated_at: string | null;
+};
+
+/**
  * A webhook subscription.
  */
 export type Webhook = {
@@ -2093,6 +2229,116 @@ export type ResolutionsReport = {
 };
 
 /**
+ * The result of checking a template draft without submitting it.
+ */
+export type TemplateValidation = {
+    /**
+     * Whether `POST /templates` would submit this draft to Meta.
+     */
+    valid: boolean;
+    /**
+     * Every problem found; empty when the draft is valid.
+     */
+    errors: Array<{
+        /**
+         * The request field the problem is in.
+         */
+        param: string;
+        /**
+         * What to change.
+         */
+        message: string;
+    }>;
+    /**
+     * The components Ricky would submit, in the WhatsApp Cloud API format; null when the draft is invalid.
+     */
+    components: Array<{
+        [key: string]: unknown;
+    }> | null;
+};
+
+/**
+ * A template Meta deleted.
+ */
+export type DeletedTemplate = {
+    /**
+     * Template ID at Meta.
+     */
+    id: string;
+    deleted: true;
+};
+
+/**
+ * A WhatsApp number, with its status, quality and messaging limit at Meta.
+ */
+export type WhatsAppNumber = {
+    /**
+     * Channel ID.
+     */
+    id: string;
+    /**
+     * Name shown in Ricky.
+     */
+    name: string;
+    /**
+     * Phone in E.164.
+     */
+    phone_number: string | null;
+    /**
+     * Business name Meta approved for the number.
+     */
+    verified_name: string | null;
+    /**
+     * Phone number ID at Meta.
+     */
+    phone_number_id: string | null;
+    /**
+     * WhatsApp Business Account that owns the number.
+     */
+    whatsapp_business_account_id: string | null;
+    /**
+     * `coexistence` when the number also stays on the WhatsApp Business app; `dedicated` otherwise.
+     */
+    connection_mode: 'dedicated' | 'coexistence' | null;
+    /**
+     * Status of the number at Meta, as Meta reports it, for example `CONNECTED`.
+     */
+    status: string | null;
+    /**
+     * When the number was disconnected from Ricky; null while connected.
+     */
+    disconnected_at: string | null;
+    /**
+     * Whether Meta lets the number send: `available`, `limited` or `blocked`.
+     */
+    messaging_health: 'available' | 'limited' | 'blocked';
+    /**
+     * Quality rating at Meta: `GREEN`, `YELLOW`, `RED` or `UNKNOWN`.
+     */
+    quality_rating: string | null;
+    /**
+     * Messaging limit tier at Meta, for example `TIER_1K` or `TIER_UNLIMITED`.
+     */
+    messaging_limit: string | null;
+    /**
+     * Whether Ricky receives the messages sent to the number.
+     */
+    inbound_processing_enabled: boolean | null;
+    /**
+     * Whether customers can call the number and reach the AI agent.
+     */
+    calls_enabled: boolean | null;
+    /**
+     * When it was connected.
+     */
+    connected_at: string | null;
+    /**
+     * When Ricky last read its details from Meta.
+     */
+    last_synced_at: string | null;
+};
+
+/**
  * An automation Ricky runs for the organization.
  */
 export type Workflow = {
@@ -2845,6 +3091,51 @@ export type RotateWebhookSecret = {
 };
 
 /**
+ * Sends an approved template to many numbers, now or at a set time.
+ */
+export type CreateBroadcast = {
+    /**
+     * WhatsApp channel to send from. See `GET /channels`.
+     */
+    channel_id: string;
+    template: TemplateMessage;
+    /**
+     * Who receives it. `filter` takes every contact matching all the filters you send (no filter: every contact); `contacts` and `phones` take the ones you list. Ricky uses each contact’s phone, or its WhatsApp number, skips contacts without one and sends once per number, up to 5,000.
+     */
+    audience: {
+        type: 'filter';
+        /**
+         * Only contacts with this tag.
+         */
+        tag_id?: string;
+        /**
+         * Only contacts at this stage.
+         */
+        lifecycle_stage?: 'subscriber' | 'lead' | 'marketing_qualified' | 'sales_qualified' | 'opportunity' | 'customer' | 'evangelist' | 'other';
+        /**
+         * Only contacts whose name, phone, email or company contains it.
+         */
+        query?: string;
+    } | {
+        type: 'contacts';
+        /**
+         * Contacts of the organization.
+         */
+        contact_ids: Array<string>;
+    } | {
+        type: 'phones';
+        /**
+         * Numbers with country code, for example `+50760001234`.
+         */
+        phones: Array<string>;
+    };
+    /**
+     * When to start sending, up to 7 days ahead. Omit it to send now.
+     */
+    scheduled_at?: string;
+};
+
+/**
  * Adds and removes the same tags on many contacts. Their other tags stay.
  */
 export type ChangeContactsTags = {
@@ -3213,6 +3504,248 @@ export type UpdateKnowledgeFile = {
      * Agents may send the file itself.
      */
     send_enabled?: boolean;
+};
+
+/**
+ * A template draft. Ricky checks it as `POST /templates/validate` does, then submits it.
+ */
+export type CreateTemplate = {
+    /**
+     * WhatsApp channel whose business account will own the template.
+     */
+    channel_id: string;
+    /**
+     * Lowercase letters, digits and underscores, starting with a letter.
+     */
+    name: string;
+    /**
+     * Language code, for example `es` or `en_US`.
+     */
+    language: string;
+    /**
+     * `UTILITY` for updates on something the customer asked for; `MARKETING` otherwise.
+     */
+    category: 'MARKETING' | 'UTILITY';
+    /**
+     * How variables are written: `{{first_name}}` or `{{1}}`. It cannot change later.
+     */
+    parameter_format?: 'NAMED' | 'POSITIONAL';
+    /**
+     * `TEXT` or `LOCATION`. Send `null` for no header.
+     */
+    header?: {
+        type: 'TEXT';
+        /**
+         * Header text; at most one variable.
+         */
+        text: string;
+        /**
+         * Example value of the header variable; required when it has one.
+         */
+        example?: string;
+    } | {
+        type: 'LOCATION';
+    } | null;
+    /**
+     * The message text.
+     */
+    body: {
+        /**
+         * Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end.
+         */
+        text: string;
+        /**
+         * An example value for every variable, keyed by its number or name without braces. Meta reviews them.
+         */
+        examples?: {
+            [key: string]: string;
+        };
+    };
+    /**
+     * Footer text, without variables.
+     */
+    footer?: string | null;
+    /**
+     * Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.
+     */
+    buttons?: Array<{
+        type: 'QUICK_REPLY';
+        text: string;
+    } | {
+        type: 'URL';
+        text: string;
+        /**
+         * Link the button opens; it may end in the variable `{{1}}`.
+         */
+        url: string;
+        /**
+         * Example URL for a link with `{{1}}`; required when it has one.
+         */
+        example?: string;
+    } | {
+        type: 'PHONE_NUMBER';
+        text: string;
+        /**
+         * Phone the button calls, with country code.
+         */
+        phone_number: string;
+    }>;
+};
+
+/**
+ * The body of `POST /templates`; `channel_id` is optional here.
+ */
+export type ValidateTemplate = {
+    /**
+     * WhatsApp channel whose business account will own the template.
+     */
+    channel_id?: string;
+    /**
+     * Lowercase letters, digits and underscores, starting with a letter.
+     */
+    name: string;
+    /**
+     * Language code, for example `es` or `en_US`.
+     */
+    language: string;
+    /**
+     * `UTILITY` for updates on something the customer asked for; `MARKETING` otherwise.
+     */
+    category: 'MARKETING' | 'UTILITY';
+    /**
+     * How variables are written: `{{first_name}}` or `{{1}}`. It cannot change later.
+     */
+    parameter_format?: 'NAMED' | 'POSITIONAL';
+    /**
+     * `TEXT` or `LOCATION`. Send `null` for no header.
+     */
+    header?: {
+        type: 'TEXT';
+        /**
+         * Header text; at most one variable.
+         */
+        text: string;
+        /**
+         * Example value of the header variable; required when it has one.
+         */
+        example?: string;
+    } | {
+        type: 'LOCATION';
+    } | null;
+    /**
+     * The message text.
+     */
+    body: {
+        /**
+         * Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end.
+         */
+        text: string;
+        /**
+         * An example value for every variable, keyed by its number or name without braces. Meta reviews them.
+         */
+        examples?: {
+            [key: string]: string;
+        };
+    };
+    /**
+     * Footer text, without variables.
+     */
+    footer?: string | null;
+    /**
+     * Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.
+     */
+    buttons?: Array<{
+        type: 'QUICK_REPLY';
+        text: string;
+    } | {
+        type: 'URL';
+        text: string;
+        /**
+         * Link the button opens; it may end in the variable `{{1}}`.
+         */
+        url: string;
+        /**
+         * Example URL for a link with `{{1}}`; required when it has one.
+         */
+        example?: string;
+    } | {
+        type: 'PHONE_NUMBER';
+        text: string;
+        /**
+         * Phone the button calls, with country code.
+         */
+        phone_number: string;
+    }>;
+};
+
+/**
+ * Only the parts you send change; `buttons` replaces every button. Name, language and `parameter_format` cannot change.
+ */
+export type UpdateTemplate = {
+    /**
+     * `UTILITY` for updates on something the customer asked for; `MARKETING` otherwise.
+     */
+    category?: 'MARKETING' | 'UTILITY';
+    /**
+     * `TEXT` or `LOCATION`. Send `null` for no header.
+     */
+    header?: {
+        type: 'TEXT';
+        /**
+         * Header text; at most one variable.
+         */
+        text: string;
+        /**
+         * Example value of the header variable; required when it has one.
+         */
+        example?: string;
+    } | {
+        type: 'LOCATION';
+    } | null;
+    /**
+     * The message text.
+     */
+    body?: {
+        /**
+         * Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end.
+         */
+        text: string;
+        /**
+         * An example value for every variable, keyed by its number or name without braces. Meta reviews them.
+         */
+        examples?: {
+            [key: string]: string;
+        };
+    };
+    /**
+     * Footer text, without variables.
+     */
+    footer?: string | null;
+    /**
+     * Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.
+     */
+    buttons?: Array<{
+        type: 'QUICK_REPLY';
+        text: string;
+    } | {
+        type: 'URL';
+        text: string;
+        /**
+         * Link the button opens; it may end in the variable `{{1}}`.
+         */
+        url: string;
+        /**
+         * Example URL for a link with `{{1}}`; required when it has one.
+         */
+        example?: string;
+    } | {
+        type: 'PHONE_NUMBER';
+        text: string;
+        /**
+         * Phone the button calls, with country code.
+         */
+        phone_number: string;
+    }>;
 };
 
 /**
@@ -4991,53 +5524,6 @@ export type CreateTagResponses = {
 };
 
 export type CreateTagResponse = CreateTagResponses[keyof CreateTagResponses];
-
-export type ListTemplatesData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/templates';
-};
-
-export type ListTemplatesErrors = {
-    /**
-     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
-     */
-    401: Error;
-    /**
-     * `insufficient_scope`: The key lacks the scope this operation requires.
-     */
-    403: Error;
-    /**
-     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
-     */
-    429: Error;
-    /**
-     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
-     */
-    500: Error;
-    /**
-     * `upstream_error`: The messaging provider failed. Retry later.
-     */
-    502: Error;
-};
-
-export type ListTemplatesError = ListTemplatesErrors[keyof ListTemplatesErrors];
-
-export type ListTemplatesResponses = {
-    /**
-     * Success.
-     */
-    200: {
-        data: Array<Template>;
-        /**
-         * Pass as `cursor` for the next page; null on the last page.
-         */
-        next_cursor: string | null;
-    };
-};
-
-export type ListTemplatesResponse = ListTemplatesResponses[keyof ListTemplatesResponses];
 
 export type ListWebhooksData = {
     body?: never;
@@ -8478,6 +8964,816 @@ export type UpdateQuickReplyResponses = {
 };
 
 export type UpdateQuickReplyResponse = UpdateQuickReplyResponses[keyof UpdateQuickReplyResponses];
+
+export type ListTemplatesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/templates';
+};
+
+export type ListTemplatesErrors = {
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type ListTemplatesError = ListTemplatesErrors[keyof ListTemplatesErrors];
+
+export type ListTemplatesResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<Template>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListTemplatesResponse = ListTemplatesResponses[keyof ListTemplatesResponses];
+
+export type CreateTemplateData = {
+    body: CreateTemplate;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/templates';
+};
+
+export type CreateTemplateErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type CreateTemplateError = CreateTemplateErrors[keyof CreateTemplateErrors];
+
+export type CreateTemplateResponses = {
+    /**
+     * Success.
+     */
+    201: {
+        data: Template;
+    };
+};
+
+export type CreateTemplateResponse = CreateTemplateResponses[keyof CreateTemplateResponses];
+
+export type DeleteTemplateData = {
+    body?: never;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Template ID.
+         */
+        template_id: string;
+    };
+    query?: never;
+    url: '/templates/{template_id}';
+};
+
+export type DeleteTemplateErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type DeleteTemplateError = DeleteTemplateErrors[keyof DeleteTemplateErrors];
+
+export type DeleteTemplateResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: DeletedTemplate;
+    };
+};
+
+export type DeleteTemplateResponse = DeleteTemplateResponses[keyof DeleteTemplateResponses];
+
+export type GetTemplateData = {
+    body?: never;
+    path: {
+        /**
+         * Template ID.
+         */
+        template_id: string;
+    };
+    query?: never;
+    url: '/templates/{template_id}';
+};
+
+export type GetTemplateErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type GetTemplateError = GetTemplateErrors[keyof GetTemplateErrors];
+
+export type GetTemplateResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Template;
+    };
+};
+
+export type GetTemplateResponse = GetTemplateResponses[keyof GetTemplateResponses];
+
+export type UpdateTemplateData = {
+    body: UpdateTemplate;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Template ID.
+         */
+        template_id: string;
+    };
+    query?: never;
+    url: '/templates/{template_id}';
+};
+
+export type UpdateTemplateErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type UpdateTemplateError = UpdateTemplateErrors[keyof UpdateTemplateErrors];
+
+export type UpdateTemplateResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Template;
+    };
+};
+
+export type UpdateTemplateResponse = UpdateTemplateResponses[keyof UpdateTemplateResponses];
+
+export type ValidateTemplateData = {
+    body: ValidateTemplate;
+    path?: never;
+    query?: never;
+    url: '/templates/validate';
+};
+
+export type ValidateTemplateErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ValidateTemplateError = ValidateTemplateErrors[keyof ValidateTemplateErrors];
+
+export type ValidateTemplateResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: TemplateValidation;
+    };
+};
+
+export type ValidateTemplateResponse = ValidateTemplateResponses[keyof ValidateTemplateResponses];
+
+export type ListWhatsAppNumbersData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/whatsapp-numbers';
+};
+
+export type ListWhatsAppNumbersErrors = {
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListWhatsAppNumbersError = ListWhatsAppNumbersErrors[keyof ListWhatsAppNumbersErrors];
+
+export type ListWhatsAppNumbersResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<WhatsAppNumber>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListWhatsAppNumbersResponse = ListWhatsAppNumbersResponses[keyof ListWhatsAppNumbersResponses];
+
+export type GetWhatsAppNumberData = {
+    body?: never;
+    path: {
+        /**
+         * Channel ID.
+         */
+        channel_id: string;
+    };
+    query?: never;
+    url: '/whatsapp-numbers/{channel_id}';
+};
+
+export type GetWhatsAppNumberErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetWhatsAppNumberError = GetWhatsAppNumberErrors[keyof GetWhatsAppNumberErrors];
+
+export type GetWhatsAppNumberResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: WhatsAppNumber;
+    };
+};
+
+export type GetWhatsAppNumberResponse = GetWhatsAppNumberResponses[keyof GetWhatsAppNumberResponses];
+
+export type ListBroadcastsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Items per page.
+         */
+        page_size?: number;
+        /**
+         * `next_cursor` from the previous page. Use it unchanged.
+         */
+        cursor?: string;
+    };
+    url: '/broadcasts';
+};
+
+export type ListBroadcastsErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListBroadcastsError = ListBroadcastsErrors[keyof ListBroadcastsErrors];
+
+export type ListBroadcastsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<Broadcast>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListBroadcastsResponse = ListBroadcastsResponses[keyof ListBroadcastsResponses];
+
+export type CreateBroadcastData = {
+    body: CreateBroadcast;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/broadcasts';
+};
+
+export type CreateBroadcastErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type CreateBroadcastError = CreateBroadcastErrors[keyof CreateBroadcastErrors];
+
+export type CreateBroadcastResponses = {
+    /**
+     * Success.
+     */
+    201: {
+        data: Broadcast;
+    };
+};
+
+export type CreateBroadcastResponse = CreateBroadcastResponses[keyof CreateBroadcastResponses];
+
+export type GetBroadcastData = {
+    body?: never;
+    path: {
+        /**
+         * Broadcast ID.
+         */
+        broadcast_id: string;
+    };
+    query?: never;
+    url: '/broadcasts/{broadcast_id}';
+};
+
+export type GetBroadcastErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetBroadcastError = GetBroadcastErrors[keyof GetBroadcastErrors];
+
+export type GetBroadcastResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Broadcast;
+    };
+};
+
+export type GetBroadcastResponse = GetBroadcastResponses[keyof GetBroadcastResponses];
+
+export type CancelBroadcastData = {
+    body?: never;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Broadcast ID.
+         */
+        broadcast_id: string;
+    };
+    query?: never;
+    url: '/broadcasts/{broadcast_id}/cancel';
+};
+
+export type CancelBroadcastErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type CancelBroadcastError = CancelBroadcastErrors[keyof CancelBroadcastErrors];
+
+export type CancelBroadcastResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Broadcast;
+    };
+};
+
+export type CancelBroadcastResponse = CancelBroadcastResponses[keyof CancelBroadcastResponses];
+
+export type ListBroadcastRecipientsData = {
+    body?: never;
+    path: {
+        /**
+         * Broadcast ID.
+         */
+        broadcast_id: string;
+    };
+    query?: {
+        /**
+         * Items per page.
+         */
+        page_size?: number;
+        /**
+         * `next_cursor` from the previous page. Use it unchanged.
+         */
+        cursor?: string;
+        /**
+         * Only recipients in this delivery status.
+         */
+        status?: 'pending' | 'sent' | 'delivered' | 'read' | 'failed';
+    };
+    url: '/broadcasts/{broadcast_id}/recipients';
+};
+
+export type ListBroadcastRecipientsErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListBroadcastRecipientsError = ListBroadcastRecipientsErrors[keyof ListBroadcastRecipientsErrors];
+
+export type ListBroadcastRecipientsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<BroadcastRecipient>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListBroadcastRecipientsResponse = ListBroadcastRecipientsResponses[keyof ListBroadcastRecipientsResponses];
 
 export type WebhookMessageReceivedWebhookPayload = WebhookEvent;
 
