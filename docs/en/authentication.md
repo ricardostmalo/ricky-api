@@ -57,6 +57,8 @@ Each operation requires one scope. A key without it gets `403 insufficient_scope
 | `members:read`        | Read the members of the organization.                               |
 | `tags:read`           | Read contact tags.                                                  |
 | `webhooks:manage`     | Create, list and disable webhooks; read and retry their deliveries. |
+| `workflows:read`      | Read workflows and their executions.                                |
+| `workflows:write`     | Create, edit, activate, pause and delete workflows.                 |
 
 The table below is generated from the API contract: it is the exact list of operations and the scope each one requires.
 
@@ -90,6 +92,14 @@ The table below is generated from the API contract: it is the exact list of oper
 | [Rotate the signing secret](https://getricky.ai/en/docs/api/reference/webhooks/rotate-webhook-secret) | `POST /webhooks/{webhook_id}/rotate-secret` | `webhooks:manage` |
 | [List deliveries](https://getricky.ai/en/docs/api/reference/webhooks/list-webhook-deliveries) | `GET /webhooks/{webhook_id}/deliveries` | `webhooks:manage` |
 | [Retry a delivery](https://getricky.ai/en/docs/api/reference/webhooks/retry-webhook-delivery) | `POST /webhooks/{webhook_id}/deliveries/{delivery_id}/retry` | `webhooks:manage` |
+| [List workflows](https://getricky.ai/en/docs/api/reference/workflows/list-workflows) | `GET /workflows` | `workflows:read` |
+| [Create a workflow](https://getricky.ai/en/docs/api/reference/workflows/create-workflow) | `POST /workflows` | `workflows:write` |
+| [Get a workflow](https://getricky.ai/en/docs/api/reference/workflows/get-workflow) | `GET /workflows/{workflow_id}` | `workflows:read` |
+| [Update a workflow](https://getricky.ai/en/docs/api/reference/workflows/update-workflow) | `PATCH /workflows/{workflow_id}` | `workflows:write` |
+| [Delete a workflow](https://getricky.ai/en/docs/api/reference/workflows/delete-workflow) | `DELETE /workflows/{workflow_id}` | `workflows:write` |
+| [Activate a workflow](https://getricky.ai/en/docs/api/reference/workflows/activate-workflow) | `POST /workflows/{workflow_id}/activate` | `workflows:write` |
+| [Pause a workflow](https://getricky.ai/en/docs/api/reference/workflows/pause-workflow) | `POST /workflows/{workflow_id}/pause` | `workflows:write` |
+| [List executions](https://getricky.ai/en/docs/api/reference/workflows/list-workflow-executions) | `GET /workflows/{workflow_id}/executions` | `workflows:read` |
 
 ## Authentication responses
 

@@ -6,6 +6,14 @@ URL: https://getricky.ai/docs/api/changelog
 
 Esta página registra los cambios de la API. Un cambio incompatible solo llega en una versión nueva de la ruta y se anuncia aquí.
 
+## 19 de octubre de 2026
+
+**Workflows.** Cambios compatibles con la v1.
+
+* **Gestionar workflows.** `GET /workflows`, `POST /workflows`, `GET`, `PATCH` y `DELETE /workflows/{workflow_id}`, `POST /workflows/{workflow_id}/activate` y `POST /workflows/{workflow_id}/pause`. Ricky revisa cada definición con las reglas del editor de workflows. Consulta [Workflows](./workflows.md).
+* **Ejecuciones.** `GET /workflows/{workflow_id}/executions` lista las ejecuciones de un workflow con su estado, intentos y errores.
+* **Permisos nuevos.** `workflows:read` y `workflows:write`.
+
 ## 15 de octubre de 2026
 
 **Webhooks inmediatos, eventos nuevos, archivos, mensajes sueltos, etiquetas y notas.** Cambios compatibles con la v1.

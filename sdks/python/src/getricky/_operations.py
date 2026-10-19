@@ -5,24 +5,32 @@ from typing import Any, Literal, Optional, cast
 from ._page import Page, Resource
 from .types import (
     AddContactNote,
+    AdsReport,
     AssignConversation,
+    BroadcastsReport,
     Channel,
     CloseConversation,
     Contact,
     ContactField,
     Conversation,
+    ConversationsReport,
     CreateContact,
     CreateTag,
     CreateWebhook,
     CreateWorkflow,
     CreatedWebhook,
+    DashboardReport,
     Member,
     Message,
+    MessagesReport,
+    ResolutionsReport,
+    ResponsesReport,
     RotateWebhookSecret,
     Send,
     SendMessage,
     StartConversation,
     Tag,
+    TeamReport,
     Template,
     UpdateContact,
     UpdateWorkflow,
@@ -734,6 +742,186 @@ class SyncOperations:
             query={"page_size": page_size, "cursor": cursor},
         ))
 
+    def get_dashboard_report(
+        self,
+    ) -> Resource[DashboardReport]:
+        """Get the live dashboard.
+
+        Open conversations, who holds them and who is waiting for a reply, right now. "Today" is the America/Panama day.
+
+        Scope: `reports:read`.
+        """
+        return cast(Resource[DashboardReport], self._request(
+            "GET",
+            "/reports/dashboard",
+        ))
+
+    def get_conversations_report(
+        self,
+        *,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+    ) -> Resource[ConversationsReport]:
+        """Get the conversations report.
+
+        Customers who wrote in the period, new or returning, per channel, day and hour. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+
+        Scope: `reports:read`.
+
+        Args:
+            from_: First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+            to: Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+            channel: Only this channel.
+        """
+        return cast(Resource[ConversationsReport], self._request(
+            "GET",
+            "/reports/conversations",
+            query={"from": from_, "to": to, "channel": channel},
+        ))
+
+    def get_messages_report(
+        self,
+        *,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+    ) -> Resource[MessagesReport]:
+        """Get the messages report.
+
+        Messages received and sent in the period, and who sent them. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+
+        Scope: `reports:read`.
+
+        Args:
+            from_: First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+            to: Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+            channel: Only this channel.
+        """
+        return cast(Resource[MessagesReport], self._request(
+            "GET",
+            "/reports/messages",
+            query={"from": from_, "to": to, "channel": channel},
+        ))
+
+    def get_responses_report(
+        self,
+        *,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+        responder: Optional[str] = None,
+    ) -> Resource[ResponsesReport]:
+        """Get the responses report.
+
+        How fast people and AI agents answered customers in the period, per channel and responder. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+
+        Scope: `reports:read`.
+
+        Args:
+            from_: First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+            to: Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+            channel: Only this channel.
+            responder: Only responses from people, in Ricky or in the channel's own app (`humans`), from AI agents (`agents`), or from one member or AI agent by ID.
+        """
+        return cast(Resource[ResponsesReport], self._request(
+            "GET",
+            "/reports/responses",
+            query={"from": from_, "to": to, "channel": channel, "responder": responder},
+        ))
+
+    def get_resolutions_report(
+        self,
+        *,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+    ) -> Resource[ResolutionsReport]:
+        """Get the resolutions report.
+
+        Conversations closed in the period and how long they were open. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+
+        Scope: `reports:read`.
+
+        Args:
+            from_: First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+            to: Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+            channel: Only this channel.
+        """
+        return cast(Resource[ResolutionsReport], self._request(
+            "GET",
+            "/reports/resolutions",
+            query={"from": from_, "to": to, "channel": channel},
+        ))
+
+    def get_team_report(
+        self,
+        *,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+    ) -> Resource[TeamReport]:
+        """Get the team report.
+
+        Assignments, messages, closes and medians per member and AI agent in the period. Days are America/Panama time, like the Reports pages.
+
+        Scope: `reports:read`.
+
+        Args:
+            from_: First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+            to: Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+            channel: Only this channel.
+        """
+        return cast(Resource[TeamReport], self._request(
+            "GET",
+            "/reports/team",
+            query={"from": from_, "to": to, "channel": channel},
+        ))
+
+    def get_broadcasts_report(
+        self,
+        *,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+    ) -> Resource[BroadcastsReport]:
+        """Get the broadcasts report.
+
+        WhatsApp broadcasts created in the period and their recipients' outcomes. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+
+        Scope: `reports:read`.
+
+        Args:
+            from_: First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+            to: Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+        """
+        return cast(Resource[BroadcastsReport], self._request(
+            "GET",
+            "/reports/broadcasts",
+            query={"from": from_, "to": to},
+        ))
+
+    def get_ads_report(
+        self,
+        *,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+    ) -> Resource[AdsReport]:
+        """Get the ads report.
+
+        Meta ad spend and the conversations each ad brought in the period. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+
+        Scope: `reports:read`.
+
+        Args:
+            from_: First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+            to: Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+        """
+        return cast(Resource[AdsReport], self._request(
+            "GET",
+            "/reports/ads",
+            query={"from": from_, "to": to},
+        ))
+
 
 class AsyncOperations:
     """Every operation of the Ricky API, awaitable."""
@@ -1433,4 +1621,184 @@ class AsyncOperations:
             "/workflows/{workflow_id}/executions",
             path_parameters={"workflow_id": workflow_id},
             query={"page_size": page_size, "cursor": cursor},
+        ))
+
+    async def get_dashboard_report(
+        self,
+    ) -> Resource[DashboardReport]:
+        """Get the live dashboard.
+
+        Open conversations, who holds them and who is waiting for a reply, right now. "Today" is the America/Panama day.
+
+        Scope: `reports:read`.
+        """
+        return cast(Resource[DashboardReport], await self._request(
+            "GET",
+            "/reports/dashboard",
+        ))
+
+    async def get_conversations_report(
+        self,
+        *,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+    ) -> Resource[ConversationsReport]:
+        """Get the conversations report.
+
+        Customers who wrote in the period, new or returning, per channel, day and hour. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+
+        Scope: `reports:read`.
+
+        Args:
+            from_: First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+            to: Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+            channel: Only this channel.
+        """
+        return cast(Resource[ConversationsReport], await self._request(
+            "GET",
+            "/reports/conversations",
+            query={"from": from_, "to": to, "channel": channel},
+        ))
+
+    async def get_messages_report(
+        self,
+        *,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+    ) -> Resource[MessagesReport]:
+        """Get the messages report.
+
+        Messages received and sent in the period, and who sent them. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+
+        Scope: `reports:read`.
+
+        Args:
+            from_: First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+            to: Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+            channel: Only this channel.
+        """
+        return cast(Resource[MessagesReport], await self._request(
+            "GET",
+            "/reports/messages",
+            query={"from": from_, "to": to, "channel": channel},
+        ))
+
+    async def get_responses_report(
+        self,
+        *,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+        responder: Optional[str] = None,
+    ) -> Resource[ResponsesReport]:
+        """Get the responses report.
+
+        How fast people and AI agents answered customers in the period, per channel and responder. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+
+        Scope: `reports:read`.
+
+        Args:
+            from_: First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+            to: Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+            channel: Only this channel.
+            responder: Only responses from people, in Ricky or in the channel's own app (`humans`), from AI agents (`agents`), or from one member or AI agent by ID.
+        """
+        return cast(Resource[ResponsesReport], await self._request(
+            "GET",
+            "/reports/responses",
+            query={"from": from_, "to": to, "channel": channel, "responder": responder},
+        ))
+
+    async def get_resolutions_report(
+        self,
+        *,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+    ) -> Resource[ResolutionsReport]:
+        """Get the resolutions report.
+
+        Conversations closed in the period and how long they were open. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+
+        Scope: `reports:read`.
+
+        Args:
+            from_: First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+            to: Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+            channel: Only this channel.
+        """
+        return cast(Resource[ResolutionsReport], await self._request(
+            "GET",
+            "/reports/resolutions",
+            query={"from": from_, "to": to, "channel": channel},
+        ))
+
+    async def get_team_report(
+        self,
+        *,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+    ) -> Resource[TeamReport]:
+        """Get the team report.
+
+        Assignments, messages, closes and medians per member and AI agent in the period. Days are America/Panama time, like the Reports pages.
+
+        Scope: `reports:read`.
+
+        Args:
+            from_: First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+            to: Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+            channel: Only this channel.
+        """
+        return cast(Resource[TeamReport], await self._request(
+            "GET",
+            "/reports/team",
+            query={"from": from_, "to": to, "channel": channel},
+        ))
+
+    async def get_broadcasts_report(
+        self,
+        *,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+    ) -> Resource[BroadcastsReport]:
+        """Get the broadcasts report.
+
+        WhatsApp broadcasts created in the period and their recipients' outcomes. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+
+        Scope: `reports:read`.
+
+        Args:
+            from_: First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+            to: Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+        """
+        return cast(Resource[BroadcastsReport], await self._request(
+            "GET",
+            "/reports/broadcasts",
+            query={"from": from_, "to": to},
+        ))
+
+    async def get_ads_report(
+        self,
+        *,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+    ) -> Resource[AdsReport]:
+        """Get the ads report.
+
+        Meta ad spend and the conversations each ad brought in the period. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+
+        Scope: `reports:read`.
+
+        Args:
+            from_: First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+            to: Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+        """
+        return cast(Resource[AdsReport], await self._request(
+            "GET",
+            "/reports/ads",
+            query={"from": from_, "to": to},
         ))

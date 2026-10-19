@@ -149,13 +149,16 @@ def operation_spec(spec: dict, path: str, method: str, operation: dict) -> dict:
     body = operation.get("requestBody")
     body_model = ref_name(body["content"]["application/json"]["schema"]) if body else None
     query = [
-        {"name": p["name"], "annotation": query_annotation(p["schema"]), "description": p.get("description", "")}
+        {
+            "name": p["name"],
+            # A Python keyword (`from`) takes a trailing underscore, as PEP 8 advises.
+            "argument": p["name"] + "_" if keyword.iskeyword(p["name"]) else p["name"],
+            "annotation": query_annotation(p["schema"]),
+            "description": p.get("description", ""),
+        }
         for p in parameters
         if p["in"] == "query"
     ]
-    for parameter in query:
-        if keyword.iskeyword(parameter["name"]):
-            raise SystemExit(f"Query parameter {parameter['name']} is a Python keyword")
     return {
         "body": body_model,
         "body_required": bool(body and body.get("required")),
@@ -180,7 +183,7 @@ def method_lines(operation: dict, asynchronous: bool) -> list:
             if operation["body_required"]
             else f"body: Optional[{operation['body']}] = None"
         )
-    keywords = [f"{p['name']}: Optional[{p['annotation']}] = None" for p in operation["query"]]
+    keywords = [f"{p['argument']}: Optional[{p['annotation']}] = None" for p in operation["query"]]
     if operation["idempotent"]:
         keywords.append("idempotency_key: Optional[str] = None")
     if keywords:
@@ -189,7 +192,7 @@ def method_lines(operation: dict, asynchronous: bool) -> list:
     if operation["path_parameters"]:
         call.append("path_parameters={" + ", ".join(f'"{n}": {n}' for n in operation["path_parameters"]) + "}")
     if operation["query"]:
-        call.append("query={" + ", ".join(f'"{p["name"]}": {p["name"]}' for p in operation["query"]) + "}")
+        call.append("query={" + ", ".join(f'"{p["name"]}": {p["argument"]}' for p in operation["query"]) + "}")
     if operation["body"]:
         call.append("body=body")
     if operation["idempotent"]:
@@ -207,7 +210,7 @@ def method_lines(operation: dict, asynchronous: bool) -> list:
 
 def docstring(operation: dict) -> list:
     text = operation["summary"] + ".\n\n" + operation["description"].strip()
-    parameter_lines = [f"{p['name']}: {p['description']}" for p in operation["query"] if p["description"]]
+    parameter_lines = [f"{p['argument']}: {p['description']}" for p in operation["query"] if p["description"]]
     if operation["idempotent"]:
         parameter_lines.append(
             "idempotency_key: Retrying with the same key replays the first response. "

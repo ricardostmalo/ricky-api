@@ -48,6 +48,10 @@
     {
       "name": "Workflows",
       "description": "Automations that answer, ask, wait and assign when a conversation opens."
+    },
+    {
+      "name": "Reports",
+      "description": "The numbers of the Reports pages, for a period and the same filters."
     }
   ],
   "paths": {
@@ -4770,6 +4774,1019 @@
           }
         }
       }
+    },
+    "/reports/dashboard": {
+      "get": {
+        "operationId": "getDashboardReport",
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Get the live dashboard",
+        "description": "Open conversations, who holds them and who is waiting for a reply, right now. \"Today\" is the America/Panama day.\n\nScope: `reports:read`.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DashboardReport"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/conversations": {
+      "get": {
+        "operationId": "getConversationsReport",
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Get the conversations report",
+        "description": "Customers who wrote in the period, new or returning, per channel, day and hour. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.\n\nScope: `reports:read`.",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "query",
+            "required": false,
+            "description": "Only this channel.",
+            "schema": {
+              "default": "all",
+              "type": "string",
+              "enum": [
+                "all",
+                "whatsapp",
+                "instagram",
+                "messenger"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ConversationsReport"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/messages": {
+      "get": {
+        "operationId": "getMessagesReport",
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Get the messages report",
+        "description": "Messages received and sent in the period, and who sent them. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.\n\nScope: `reports:read`.",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "query",
+            "required": false,
+            "description": "Only this channel.",
+            "schema": {
+              "default": "all",
+              "type": "string",
+              "enum": [
+                "all",
+                "whatsapp",
+                "instagram",
+                "messenger"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MessagesReport"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/responses": {
+      "get": {
+        "operationId": "getResponsesReport",
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Get the responses report",
+        "description": "How fast people and AI agents answered customers in the period, per channel and responder. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.\n\nScope: `reports:read`.",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "query",
+            "required": false,
+            "description": "Only this channel.",
+            "schema": {
+              "default": "all",
+              "type": "string",
+              "enum": [
+                "all",
+                "whatsapp",
+                "instagram",
+                "messenger"
+              ]
+            }
+          },
+          {
+            "name": "responder",
+            "in": "query",
+            "required": false,
+            "description": "Only responses from people, in Ricky or in the channel's own app (`humans`), from AI agents (`agents`), or from one member or AI agent by ID.",
+            "schema": {
+              "default": "all",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "all",
+                    "humans",
+                    "agents"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ResponsesReport"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/resolutions": {
+      "get": {
+        "operationId": "getResolutionsReport",
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Get the resolutions report",
+        "description": "Conversations closed in the period and how long they were open. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.\n\nScope: `reports:read`.",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "query",
+            "required": false,
+            "description": "Only this channel.",
+            "schema": {
+              "default": "all",
+              "type": "string",
+              "enum": [
+                "all",
+                "whatsapp",
+                "instagram",
+                "messenger"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ResolutionsReport"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/team": {
+      "get": {
+        "operationId": "getTeamReport",
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Get the team report",
+        "description": "Assignments, messages, closes and medians per member and AI agent in the period. Days are America/Panama time, like the Reports pages.\n\nScope: `reports:read`.",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "query",
+            "required": false,
+            "description": "Only this channel.",
+            "schema": {
+              "default": "all",
+              "type": "string",
+              "enum": [
+                "all",
+                "whatsapp",
+                "instagram",
+                "messenger"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TeamReport"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/broadcasts": {
+      "get": {
+        "operationId": "getBroadcastsReport",
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Get the broadcasts report",
+        "description": "WhatsApp broadcasts created in the period and their recipients' outcomes. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.\n\nScope: `reports:read`.",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/BroadcastsReport"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/ads": {
+      "get": {
+        "operationId": "getAdsReport",
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Get the ads report",
+        "description": "Meta ad spend and the conversations each ad brought in the period. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.\n\nScope: `reports:read`.",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AdsReport"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "webhooks": {
@@ -7142,6 +8159,2459 @@
           "duration_ms"
         ],
         "description": "What the endpoint answered to a `webhook.test` event."
+      },
+      "ReportPeriod": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "First day, inclusive.",
+            "examples": [
+              "2026-10-14"
+            ]
+          },
+          "to": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "Last day, inclusive. A `to` after today is today.",
+            "examples": [
+              "2026-10-14"
+            ]
+          },
+          "days": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 366,
+            "description": "Days in the period."
+          },
+          "granularity": {
+            "type": "string",
+            "enum": [
+              "day",
+              "hour"
+            ],
+            "description": "`hour` when the period is one day: series then have 24 hourly slots."
+          },
+          "time_zone": {
+            "type": "string",
+            "const": "America/Panama",
+            "description": "The time zone of every day and hour in the report."
+          },
+          "previous_from": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "First day of the previous period: the same number of days, right before.",
+            "examples": [
+              "2026-10-14"
+            ]
+          },
+          "previous_to": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "Last day of the previous period.",
+            "examples": [
+              "2026-10-14"
+            ]
+          }
+        },
+        "required": [
+          "from",
+          "to",
+          "days",
+          "granularity",
+          "time_zone",
+          "previous_from",
+          "previous_to"
+        ],
+        "description": "The days a report covers, in America/Panama time, and the period it is compared with."
+      },
+      "ConversationsReport": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "$ref": "#/components/schemas/ReportPeriod"
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "all",
+              "whatsapp",
+              "instagram",
+              "messenger"
+            ],
+            "description": "The channel filter the report applied."
+          },
+          "totals": {
+            "type": "object",
+            "properties": {
+              "customers": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Conversations with at least one customer message in the period."
+              },
+              "new_customers": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Customers whose first message ever falls in the period."
+              },
+              "returning_customers": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Customers who had written before the period."
+              },
+              "messages": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Messages customers sent in the period."
+              }
+            },
+            "required": [
+              "customers",
+              "new_customers",
+              "returning_customers",
+              "messages"
+            ],
+            "description": "The period."
+          },
+          "previous": {
+            "type": "object",
+            "properties": {
+              "customers": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Conversations with at least one customer message in the period."
+              },
+              "new_customers": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Customers whose first message ever falls in the period."
+              },
+              "returning_customers": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Customers who had written before the period."
+              },
+              "messages": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Messages customers sent in the period."
+              }
+            },
+            "required": [
+              "customers",
+              "new_customers",
+              "returning_customers",
+              "messages"
+            ],
+            "description": "The previous period."
+          },
+          "by_channel": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel": {
+                  "type": "string",
+                  "enum": [
+                    "whatsapp",
+                    "instagram",
+                    "messenger"
+                  ],
+                  "description": "Channel."
+                },
+                "customers": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Conversations with at least one customer message in the period."
+                },
+                "new_customers": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Customers whose first message ever falls in the period."
+                },
+                "returning_customers": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Customers who had written before the period."
+                },
+                "messages": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Messages customers sent in the period."
+                }
+              },
+              "required": [
+                "channel",
+                "customers",
+                "new_customers",
+                "returning_customers",
+                "messages"
+              ]
+            },
+            "description": "The period per channel, most customers first."
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "slot": {
+                  "type": "string",
+                  "description": "America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.",
+                  "examples": [
+                    "2026-10-14"
+                  ]
+                },
+                "new_customers": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Customers whose first message ever falls in this slot."
+                },
+                "returning_customers": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Customers who wrote in this slot and had written before."
+                },
+                "previous_customers": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Customers in the same slot of the previous period; null when it has none."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "slot",
+                "new_customers",
+                "returning_customers",
+                "previous_customers"
+              ]
+            },
+            "description": "One entry per day of the period, or per hour of a one-day period."
+          },
+          "heatmap": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "day_of_week": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 6,
+                  "description": "0 is Sunday, 6 is Saturday."
+                },
+                "hour": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 23,
+                  "description": "Hour of the day, 0–23."
+                },
+                "messages": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Customer messages in that hour of that weekday."
+                }
+              },
+              "required": [
+                "day_of_week",
+                "hour",
+                "messages"
+              ]
+            },
+            "description": "Customer messages of the period per weekday and hour; slots without any are left out."
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When Ricky computed the report.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "period",
+          "channel",
+          "totals",
+          "previous",
+          "by_channel",
+          "series",
+          "heatmap",
+          "generated_at"
+        ],
+        "description": "How many customers write, whether they are new, and when. Only messages customers send count: a customer is a conversation with at least one of them in the period, and it is new when its first message ever falls in the period. Messages from the team, AI agents or campaigns and conversation openings and closes play no part."
+      },
+      "MessagesReport": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "$ref": "#/components/schemas/ReportPeriod"
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "all",
+              "whatsapp",
+              "instagram",
+              "messenger"
+            ],
+            "description": "The channel filter the report applied."
+          },
+          "totals": {
+            "type": "object",
+            "properties": {
+              "received": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Messages customers sent."
+              },
+              "sent": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Messages sent to customers, by anyone; the sum of `sent_by`."
+              },
+              "sent_by": {
+                "type": "object",
+                "properties": {
+                  "human": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Sent by a person in Ricky."
+                  },
+                  "ai": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Sent by an AI agent."
+                  },
+                  "automation": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Sent by an automation."
+                  },
+                  "campaign": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Templates not sent by an automation: broadcasts and templates sent by hand or through the API."
+                  },
+                  "external": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history."
+                  }
+                },
+                "required": [
+                  "human",
+                  "ai",
+                  "automation",
+                  "campaign",
+                  "external"
+                ],
+                "description": "Sent messages by sender; each message counts in one of them."
+              }
+            },
+            "required": [
+              "received",
+              "sent",
+              "sent_by"
+            ],
+            "description": "The period."
+          },
+          "previous": {
+            "type": "object",
+            "properties": {
+              "received": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Messages customers sent."
+              },
+              "sent": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Messages sent to customers, by anyone; the sum of `sent_by`."
+              },
+              "sent_by": {
+                "type": "object",
+                "properties": {
+                  "human": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Sent by a person in Ricky."
+                  },
+                  "ai": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Sent by an AI agent."
+                  },
+                  "automation": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Sent by an automation."
+                  },
+                  "campaign": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Templates not sent by an automation: broadcasts and templates sent by hand or through the API."
+                  },
+                  "external": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history."
+                  }
+                },
+                "required": [
+                  "human",
+                  "ai",
+                  "automation",
+                  "campaign",
+                  "external"
+                ],
+                "description": "Sent messages by sender; each message counts in one of them."
+              }
+            },
+            "required": [
+              "received",
+              "sent",
+              "sent_by"
+            ],
+            "description": "The previous period."
+          },
+          "by_channel": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel": {
+                  "type": "string",
+                  "enum": [
+                    "whatsapp",
+                    "instagram",
+                    "messenger"
+                  ],
+                  "description": "Channel."
+                },
+                "received": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Messages customers sent."
+                },
+                "sent": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Messages sent to customers, by anyone; the sum of `sent_by`."
+                },
+                "sent_by": {
+                  "type": "object",
+                  "properties": {
+                    "human": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent by a person in Ricky."
+                    },
+                    "ai": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent by an AI agent."
+                    },
+                    "automation": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent by an automation."
+                    },
+                    "campaign": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Templates not sent by an automation: broadcasts and templates sent by hand or through the API."
+                    },
+                    "external": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history."
+                    }
+                  },
+                  "required": [
+                    "human",
+                    "ai",
+                    "automation",
+                    "campaign",
+                    "external"
+                  ],
+                  "description": "Sent messages by sender; each message counts in one of them."
+                }
+              },
+              "required": [
+                "channel",
+                "received",
+                "sent",
+                "sent_by"
+              ]
+            },
+            "description": "The period per channel, most messages first."
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "slot": {
+                  "type": "string",
+                  "description": "America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.",
+                  "examples": [
+                    "2026-10-14"
+                  ]
+                },
+                "received": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Messages customers sent."
+                },
+                "sent": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Messages sent to customers, by anyone; the sum of `sent_by`."
+                },
+                "sent_by": {
+                  "type": "object",
+                  "properties": {
+                    "human": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent by a person in Ricky."
+                    },
+                    "ai": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent by an AI agent."
+                    },
+                    "automation": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent by an automation."
+                    },
+                    "campaign": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Templates not sent by an automation: broadcasts and templates sent by hand or through the API."
+                    },
+                    "external": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history."
+                    }
+                  },
+                  "required": [
+                    "human",
+                    "ai",
+                    "automation",
+                    "campaign",
+                    "external"
+                  ],
+                  "description": "Sent messages by sender; each message counts in one of them."
+                },
+                "previous_received": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Received in the same slot of the previous period; null when it has none."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "previous_sent": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent in the same slot of the previous period; null when it has none."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "slot",
+                "received",
+                "sent",
+                "sent_by",
+                "previous_received",
+                "previous_sent"
+              ]
+            },
+            "description": "One entry per day of the period, or per hour of a one-day period."
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When Ricky computed the report.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "period",
+          "channel",
+          "totals",
+          "previous",
+          "by_channel",
+          "series",
+          "generated_at"
+        ],
+        "description": "Messages received from customers and sent to them in the period, and who sent them, dated when each message was sent."
+      },
+      "DashboardReport": {
+        "type": "object",
+        "properties": {
+          "totals": {
+            "type": "object",
+            "properties": {
+              "open_now": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Open conversations."
+              },
+              "unassigned": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Open conversations with no member or AI agent assigned."
+              },
+              "awaiting_reply": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Open conversations whose last message, reactions aside, is from the customer."
+              },
+              "pending_handoffs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Handoffs from an AI agent to a person still waiting."
+              },
+              "opened_today": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Conversations opened or reopened today, America/Panama."
+              },
+              "closed_today": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Conversations closed today, America/Panama."
+              }
+            },
+            "required": [
+              "open_now",
+              "unassigned",
+              "awaiting_reply",
+              "pending_handoffs",
+              "opened_today",
+              "closed_today"
+            ],
+            "description": "Now."
+          },
+          "by_channel": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel": {
+                  "type": "string",
+                  "enum": [
+                    "whatsapp",
+                    "instagram",
+                    "messenger"
+                  ],
+                  "description": "Channel."
+                },
+                "open": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Open conversations."
+                }
+              },
+              "required": [
+                "channel",
+                "open"
+              ]
+            },
+            "description": "Open conversations per channel, most first."
+          },
+          "assignees": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "human",
+                    "ai",
+                    "unassigned"
+                  ],
+                  "description": "`human` is a member, `ai` an AI agent, `unassigned` nobody."
+                },
+                "id": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "User ID or AI agent ID; null for `unassigned`."
+                },
+                "name": {
+                  "description": "Name; null when it has none and for `unassigned`.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "open": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Open conversations they hold."
+                },
+                "awaiting_reply": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Of those, the ones whose last message is from the customer."
+                }
+              },
+              "required": [
+                "type",
+                "id",
+                "name",
+                "open",
+                "awaiting_reply"
+              ]
+            },
+            "description": "Open conversations per assignee, most first."
+          },
+          "longest_waiting": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "conversation_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "Conversation ID."
+                },
+                "channel": {
+                  "type": "string",
+                  "enum": [
+                    "whatsapp",
+                    "instagram",
+                    "messenger"
+                  ],
+                  "description": "Channel."
+                },
+                "participant_name": {
+                  "description": "Name the channel reports for the customer.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "waiting_since": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                  "description": "When the customer message they wait on arrived.",
+                  "examples": [
+                    "2026-10-14T15:30:00.000Z"
+                  ]
+                },
+                "assignee_type": {
+                  "type": "string",
+                  "enum": [
+                    "human",
+                    "ai",
+                    "unassigned"
+                  ],
+                  "description": "`human` is a member, `ai` an AI agent, `unassigned` nobody."
+                },
+                "assignee_name": {
+                  "description": "Assignee name; null when there is none.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "conversation_id",
+                "channel",
+                "participant_name",
+                "waiting_since",
+                "assignee_type",
+                "assignee_name"
+              ]
+            },
+            "description": "The 15 open conversations waiting longest for a reply, oldest first."
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When Ricky computed the report.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "totals",
+          "by_channel",
+          "assignees",
+          "longest_waiting",
+          "generated_at"
+        ],
+        "description": "What the inbox looks like right now; it has no period."
+      },
+      "TeamReport": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "$ref": "#/components/schemas/ReportPeriod"
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "all",
+              "whatsapp",
+              "instagram",
+              "messenger"
+            ],
+            "description": "The channel filter the report applied."
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "human",
+                    "ai"
+                  ],
+                  "description": "`human` is a member, `ai` an active AI agent."
+                },
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "User ID or AI agent ID."
+                },
+                "name": {
+                  "description": "Name; null when it has none.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "assigned": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Assignments to them in the period; each assignment counts."
+                },
+                "messages_sent": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Messages they sent in the period."
+                },
+                "closed": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Closes in the period while they held the conversation."
+                },
+                "open_now": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Conversations they hold that are open right now, whatever the period."
+                },
+                "median_first_response_seconds": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "For conversations opened in the period, median time from the opening to the first message a person or AI agent sent, counted for whoever sent it, in seconds. Not narrowed by `channel`."
+                },
+                "median_resolution_seconds": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Median time from opening to close of the conversations they closed, in seconds."
+                }
+              },
+              "required": [
+                "type",
+                "id",
+                "name",
+                "assigned",
+                "messages_sent",
+                "closed",
+                "open_now",
+                "median_first_response_seconds",
+                "median_resolution_seconds"
+              ]
+            },
+            "description": "Every member and active AI agent, most messages and closes first."
+          },
+          "totals": {
+            "type": "object",
+            "properties": {
+              "assignments": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Assignments in the period."
+              },
+              "reassignments": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Assignments in the period that replaced a previous assignee."
+              }
+            },
+            "required": [
+              "assignments",
+              "reassignments"
+            ],
+            "description": "The period."
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When Ricky computed the report.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "period",
+          "channel",
+          "members",
+          "totals",
+          "generated_at"
+        ],
+        "description": "People and AI agents side by side: what they were assigned, what they sent, what they closed and how fast."
+      },
+      "BroadcastsReport": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "$ref": "#/components/schemas/ReportPeriod"
+          },
+          "totals": {
+            "type": "object",
+            "properties": {
+              "broadcasts": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Broadcasts created in the period."
+              },
+              "recipients": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Recipients."
+              },
+              "sent": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Recipients the template was sent to."
+              },
+              "failed": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Recipients the send failed for."
+              },
+              "delivered": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Sent recipients whose template message the provider confirmed delivered or read."
+              },
+              "read": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Sent recipients who read the template message."
+              }
+            },
+            "required": [
+              "broadcasts",
+              "recipients",
+              "sent",
+              "failed",
+              "delivered",
+              "read"
+            ],
+            "description": "The period."
+          },
+          "previous": {
+            "type": "object",
+            "properties": {
+              "broadcasts": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Broadcasts created in the period."
+              },
+              "recipients": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Recipients."
+              }
+            },
+            "required": [
+              "broadcasts",
+              "recipients"
+            ],
+            "description": "The previous period."
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "slot": {
+                  "type": "string",
+                  "description": "America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.",
+                  "examples": [
+                    "2026-10-14"
+                  ]
+                },
+                "broadcasts": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Broadcasts created in the slot."
+                },
+                "recipients": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Their recipients."
+                }
+              },
+              "required": [
+                "slot",
+                "broadcasts",
+                "recipients"
+              ]
+            },
+            "description": "One entry per day of the period, or per hour of a one-day period."
+          },
+          "broadcasts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "Broadcast ID."
+                },
+                "template_name": {
+                  "type": "string",
+                  "description": "Template name."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "queued",
+                    "sending",
+                    "completed"
+                  ],
+                  "description": "Broadcast status."
+                },
+                "channel_name": {
+                  "description": "The WhatsApp number it went out from.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "created_by_name": {
+                  "description": "Member who sent it; null when they have no name.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                  "description": "When it was created.",
+                  "examples": [
+                    "2026-10-14T15:30:00.000Z"
+                  ]
+                },
+                "completed_at": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "When it finished; null while it runs.",
+                  "examples": [
+                    "2026-10-14T15:30:00.000Z"
+                  ]
+                },
+                "pending": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Recipients not sent yet."
+                },
+                "recipients": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Recipients."
+                },
+                "sent": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Recipients the template was sent to."
+                },
+                "failed": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Recipients the send failed for."
+                },
+                "delivered": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Sent recipients whose template message the provider confirmed delivered or read."
+                },
+                "read": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Sent recipients who read the template message."
+                }
+              },
+              "required": [
+                "id",
+                "template_name",
+                "status",
+                "channel_name",
+                "created_by_name",
+                "created_at",
+                "completed_at",
+                "pending",
+                "recipients",
+                "sent",
+                "failed",
+                "delivered",
+                "read"
+              ]
+            },
+            "description": "Broadcasts created in the period, newest first."
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When Ricky computed the report.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "period",
+          "totals",
+          "previous",
+          "series",
+          "broadcasts",
+          "generated_at"
+        ],
+        "description": "WhatsApp broadcasts created in the period and what happened to their recipients. Delivered and read come from the template message each recipient's conversation got while the broadcast ran; a recipient counts once."
+      },
+      "AdsReport": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "$ref": "#/components/schemas/ReportPeriod"
+          },
+          "connection": {
+            "type": "string",
+            "enum": [
+              "connected",
+              "disconnected",
+              "error"
+            ],
+            "description": "The Meta Ads connection that syncs spend."
+          },
+          "synced_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When spend was last synced; null if never.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          },
+          "currency_code": {
+            "description": "ISO 4217 currency of the spend; null when there is none or several.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "totals": {
+            "type": "object",
+            "properties": {
+              "spend": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Spend of every ad, including ads that brought no conversation."
+              },
+              "impressions": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Impressions."
+              },
+              "clicks": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Clicks."
+              },
+              "conversations": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Conversations an ad brought in the period; one brought back by several ads counts once."
+              },
+              "cost_per_conversation": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Spend divided by conversations; null without spend, without conversations, or when the spend mixes currencies."
+              }
+            },
+            "required": [
+              "spend",
+              "impressions",
+              "clicks",
+              "conversations",
+              "cost_per_conversation"
+            ],
+            "description": "The period."
+          },
+          "previous": {
+            "type": "object",
+            "properties": {
+              "spend": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Spend."
+              },
+              "conversations": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Conversations ads brought."
+              }
+            },
+            "required": [
+              "spend",
+              "conversations"
+            ],
+            "description": "The previous period."
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "slot": {
+                  "type": "string",
+                  "description": "America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.",
+                  "examples": [
+                    "2026-10-14"
+                  ]
+                },
+                "spend": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Spend that day; null for hourly slots and when the spend mixes currencies."
+                },
+                "conversations": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Conversations ads brought."
+                }
+              },
+              "required": [
+                "slot",
+                "spend",
+                "conversations"
+              ]
+            },
+            "description": "One entry per day of the period, or per hour of a one-day period."
+          },
+          "ads": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ad_id": {
+                  "type": "string",
+                  "description": "Ad ID at Meta.",
+                  "examples": [
+                    "120210000000000001"
+                  ]
+                },
+                "ad_name": {
+                  "description": "Name in Meta; null when no spend was synced for it in the period.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "campaign_name": {
+                  "description": "Campaign name in Meta.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "headline": {
+                  "description": "The ad title the referral carried.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "spend": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Spend."
+                },
+                "currency_code": {
+                  "description": "ISO 4217 currency of the spend; null when there is none or several.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "impressions": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Impressions."
+                },
+                "clicks": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Clicks."
+                },
+                "conversations": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Distinct conversations this ad opened or brought back in the period."
+                },
+                "cost_per_conversation": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Spend divided by conversations; null without spend, without conversations, or when the spend mixes currencies."
+                }
+              },
+              "required": [
+                "ad_id",
+                "ad_name",
+                "campaign_name",
+                "headline",
+                "spend",
+                "currency_code",
+                "impressions",
+                "clicks",
+                "conversations",
+                "cost_per_conversation"
+              ]
+            },
+            "description": "Ads with spend or conversations in the period."
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When Ricky computed the report.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "period",
+          "connection",
+          "synced_at",
+          "currency_code",
+          "totals",
+          "previous",
+          "series",
+          "ads",
+          "generated_at"
+        ],
+        "description": "Meta ad spend next to the conversations each ad brought. A conversation comes from an ad when a customer message carries a Meta ad referral (WhatsApp click-to-chat or an Instagram ad); those are America/Panama days. Spend, impressions and clicks are Meta's daily figures for the ad account's own days, so the edges of a period can differ by the time zones' offset."
+      },
+      "ResponsesReport": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "$ref": "#/components/schemas/ReportPeriod"
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "all",
+              "whatsapp",
+              "instagram",
+              "messenger"
+            ],
+            "description": "The channel filter the report applied."
+          },
+          "responder": {
+            "type": "string",
+            "description": "The responder filter the report applied: `all`, `humans`, `agents` or an ID.",
+            "examples": [
+              "all"
+            ]
+          },
+          "awaiting_reply_now": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991,
+            "description": "Open conversations whose last message, reactions aside, is from the customer, right now. Narrowed by `channel` only."
+          },
+          "response_time": {
+            "type": "object",
+            "properties": {
+              "responses": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Responses in the period: the sample."
+              },
+              "average_seconds": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Average response time, in seconds."
+              },
+              "median_seconds": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Median response time, in seconds."
+              },
+              "p90_seconds": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Nine in ten responses were faster than this, in seconds."
+              },
+              "previous_average_seconds": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Average response time of the previous period, in seconds."
+              },
+              "buckets": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "bucket": {
+                      "type": "string",
+                      "enum": [
+                        "under_30s",
+                        "30s_2m",
+                        "2m_5m",
+                        "5m_10m",
+                        "10m_30m",
+                        "30m_1h",
+                        "over_1h"
+                      ]
+                    },
+                    "count": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Items in the bucket."
+                    },
+                    "share": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1,
+                      "description": "Share of the sample, 0–1."
+                    }
+                  },
+                  "required": [
+                    "bucket",
+                    "count",
+                    "share"
+                  ]
+                },
+                "description": "Responses of the period by how long they took."
+              },
+              "series": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "slot": {
+                      "type": "string",
+                      "description": "America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.",
+                      "examples": [
+                        "2026-10-14"
+                      ]
+                    },
+                    "average_seconds": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Average response time, in seconds."
+                    },
+                    "median_seconds": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Median response time, in seconds."
+                    },
+                    "previous_average_seconds": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Average of the same slot of the previous period, in seconds."
+                    },
+                    "previous_median_seconds": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Median of the same slot of the previous period, in seconds."
+                    }
+                  },
+                  "required": [
+                    "slot",
+                    "average_seconds",
+                    "median_seconds",
+                    "previous_average_seconds",
+                    "previous_median_seconds"
+                  ]
+                },
+                "description": "One entry per day of the period, or per hour of a one-day period."
+              }
+            },
+            "required": [
+              "responses",
+              "average_seconds",
+              "median_seconds",
+              "p90_seconds",
+              "previous_average_seconds",
+              "buckets",
+              "series"
+            ],
+            "description": "How long customers waited for each response."
+          },
+          "responses_per_conversation": {
+            "type": "object",
+            "properties": {
+              "conversations": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Conversations that got at least one response in the period: the sample."
+              },
+              "average": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Responses in the period divided by the conversations they went to."
+              },
+              "previous_average": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "The same for the previous period."
+              },
+              "buckets": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "bucket": {
+                      "type": "string",
+                      "enum": [
+                        "1_2",
+                        "3_10",
+                        "11_20",
+                        "over_20"
+                      ]
+                    },
+                    "count": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Items in the bucket."
+                    },
+                    "share": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1,
+                      "description": "Share of the sample, 0–1."
+                    }
+                  },
+                  "required": [
+                    "bucket",
+                    "count",
+                    "share"
+                  ]
+                },
+                "description": "Conversations by how many responses they got."
+              },
+              "series": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "slot": {
+                      "type": "string",
+                      "description": "America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.",
+                      "examples": [
+                        "2026-10-14"
+                      ]
+                    },
+                    "average": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Responses per conversation in the slot."
+                    },
+                    "previous_average": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "The same slot of the previous period."
+                    }
+                  },
+                  "required": [
+                    "slot",
+                    "average",
+                    "previous_average"
+                  ]
+                },
+                "description": "One entry per day of the period, or per hour of a one-day period."
+              }
+            },
+            "required": [
+              "conversations",
+              "average",
+              "previous_average",
+              "buckets",
+              "series"
+            ],
+            "description": "How many responses each answered conversation got."
+          },
+          "by_channel": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel": {
+                  "type": "string",
+                  "enum": [
+                    "whatsapp",
+                    "instagram",
+                    "messenger"
+                  ],
+                  "description": "Channel."
+                },
+                "responses": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Responses in the period."
+                },
+                "conversations": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Conversations those responses went to."
+                },
+                "average_seconds": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Average response time, in seconds."
+                },
+                "median_seconds": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Median response time, in seconds."
+                },
+                "p90_seconds": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Nine in ten responses were faster than this, in seconds."
+                }
+              },
+              "required": [
+                "channel",
+                "responses",
+                "conversations",
+                "average_seconds",
+                "median_seconds",
+                "p90_seconds"
+              ]
+            },
+            "description": "The period per channel, most responses first."
+          },
+          "by_responder": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "human",
+                    "ai",
+                    "external"
+                  ],
+                  "description": "`human` is a person in Ricky, `ai` an AI agent, `external` someone answering from the channel's own app."
+                },
+                "id": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "User ID or AI agent ID; null for `external`."
+                },
+                "name": {
+                  "description": "Name; null when it has none and for `external`.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "channel": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "whatsapp",
+                        "instagram",
+                        "messenger"
+                      ],
+                      "description": "Channel."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "The app an `external` responder used; null otherwise."
+                },
+                "responses": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Responses in the period."
+                },
+                "conversations": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Conversations those responses went to."
+                },
+                "average_seconds": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Average response time, in seconds."
+                },
+                "median_seconds": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Median response time, in seconds."
+                },
+                "p90_seconds": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Nine in ten responses were faster than this, in seconds."
+                }
+              },
+              "required": [
+                "type",
+                "id",
+                "name",
+                "channel",
+                "responses",
+                "conversations",
+                "average_seconds",
+                "median_seconds",
+                "p90_seconds"
+              ]
+            },
+            "description": "The period per responder, most responses first."
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When Ricky computed the report.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "period",
+          "channel",
+          "responder",
+          "awaiting_reply_now",
+          "response_time",
+          "responses_per_conversation",
+          "by_channel",
+          "by_responder",
+          "generated_at"
+        ],
+        "description": "How fast people and AI agents answer customers. A response is the first message sent to the customer, other than a reaction, right after a customer message that is not a reaction; its response time is the wait since that customer message. Later messages in a row are follow-ups, and automations and templates are not responses. Responses are dated when they were sent. Conversation openings, closes and assignments play no part."
+      },
+      "ResolutionsReport": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "$ref": "#/components/schemas/ReportPeriod"
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "all",
+              "whatsapp",
+              "instagram",
+              "messenger"
+            ],
+            "description": "The channel filter the report applied."
+          },
+          "summary": {
+            "type": "object",
+            "properties": {
+              "closed": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Conversations closed in the period; a conversation closed twice counts twice."
+              },
+              "average_resolution_seconds": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Average time from opening to close, in seconds."
+              },
+              "median_resolution_seconds": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Median time from opening to close, in seconds."
+              },
+              "average_time_to_first_assignment_seconds": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Average time from opening to the first assignment before the close, in seconds; closes without an assignment are left out."
+              },
+              "average_assignments_to_close": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Average number of assignments between opening and close."
+              }
+            },
+            "required": [
+              "closed",
+              "average_resolution_seconds",
+              "median_resolution_seconds",
+              "average_time_to_first_assignment_seconds",
+              "average_assignments_to_close"
+            ],
+            "description": "The period."
+          },
+          "previous": {
+            "type": "object",
+            "properties": {
+              "closed": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Conversations closed in the period; a conversation closed twice counts twice."
+              },
+              "average_resolution_seconds": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Average time from opening to close, in seconds."
+              },
+              "median_resolution_seconds": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Median time from opening to close, in seconds."
+              },
+              "average_time_to_first_assignment_seconds": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Average time from opening to the first assignment before the close, in seconds; closes without an assignment are left out."
+              },
+              "average_assignments_to_close": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Average number of assignments between opening and close."
+              }
+            },
+            "required": [
+              "closed",
+              "average_resolution_seconds",
+              "median_resolution_seconds",
+              "average_time_to_first_assignment_seconds",
+              "average_assignments_to_close"
+            ],
+            "description": "The previous period."
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "slot": {
+                  "type": "string",
+                  "description": "America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.",
+                  "examples": [
+                    "2026-10-14"
+                  ]
+                },
+                "closed": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Closes in the slot."
+                },
+                "median_resolution_seconds": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Median time from opening to close, in seconds."
+                }
+              },
+              "required": [
+                "slot",
+                "closed",
+                "median_resolution_seconds"
+              ]
+            },
+            "description": "One entry per day of the period, or per hour of a one-day period."
+          },
+          "by_channel": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel": {
+                  "type": "string",
+                  "enum": [
+                    "whatsapp",
+                    "instagram",
+                    "messenger"
+                  ],
+                  "description": "Channel."
+                },
+                "closed": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Closes in the period."
+                },
+                "median_resolution_seconds": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Median time from opening to close, in seconds."
+                }
+              },
+              "required": [
+                "channel",
+                "closed",
+                "median_resolution_seconds"
+              ]
+            },
+            "description": "The period per channel, most closes first."
+          },
+          "by_assignee": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "human",
+                    "ai",
+                    "unassigned"
+                  ],
+                  "description": "Who held the conversation when it closed."
+                },
+                "name": {
+                  "description": "Name; null when it has none and for `unassigned`. Equal names are one row.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "closed": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Closes in the period."
+                },
+                "median_resolution_seconds": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Median time from opening to close, in seconds."
+                }
+              },
+              "required": [
+                "type",
+                "name",
+                "closed",
+                "median_resolution_seconds"
+              ]
+            },
+            "description": "The period by who held the conversation when it closed, most closes first."
+          },
+          "distribution": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "bucket": {
+                  "type": "string",
+                  "enum": [
+                    "under_1h",
+                    "1h_4h",
+                    "4h_24h",
+                    "1d_3d",
+                    "over_3d"
+                  ]
+                },
+                "closed": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Closes in the period that took that long."
+                }
+              },
+              "required": [
+                "bucket",
+                "closed"
+              ]
+            },
+            "description": "Closes of the period by how long the conversation was open."
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When Ricky computed the report.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "period",
+          "channel",
+          "summary",
+          "previous",
+          "series",
+          "by_channel",
+          "by_assignee",
+          "distribution",
+          "generated_at"
+        ],
+        "description": "How long conversations stay open before someone closes them. Every close in the period counts, dated when it happened; resolution time runs from the opening of that span to the close. Conversations without a single message are left out."
       },
       "Workflow": {
         "type": "object",

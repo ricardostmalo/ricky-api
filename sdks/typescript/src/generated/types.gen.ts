@@ -621,6 +621,1094 @@ export type WebhookTestResult = {
 };
 
 /**
+ * The days a report covers, in America/Panama time, and the period it is compared with.
+ */
+export type ReportPeriod = {
+    /**
+     * First day, inclusive.
+     */
+    from: string;
+    /**
+     * Last day, inclusive. A `to` after today is today.
+     */
+    to: string;
+    /**
+     * Days in the period.
+     */
+    days: number;
+    /**
+     * `hour` when the period is one day: series then have 24 hourly slots.
+     */
+    granularity: 'day' | 'hour';
+    /**
+     * The time zone of every day and hour in the report.
+     */
+    time_zone: 'America/Panama';
+    /**
+     * First day of the previous period: the same number of days, right before.
+     */
+    previous_from: string;
+    /**
+     * Last day of the previous period.
+     */
+    previous_to: string;
+};
+
+/**
+ * How many customers write, whether they are new, and when. Only messages customers send count: a customer is a conversation with at least one of them in the period, and it is new when its first message ever falls in the period. Messages from the team, AI agents or campaigns and conversation openings and closes play no part.
+ */
+export type ConversationsReport = {
+    period: ReportPeriod;
+    /**
+     * The channel filter the report applied.
+     */
+    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+    /**
+     * The period.
+     */
+    totals: {
+        /**
+         * Conversations with at least one customer message in the period.
+         */
+        customers: number;
+        /**
+         * Customers whose first message ever falls in the period.
+         */
+        new_customers: number;
+        /**
+         * Customers who had written before the period.
+         */
+        returning_customers: number;
+        /**
+         * Messages customers sent in the period.
+         */
+        messages: number;
+    };
+    /**
+     * The previous period.
+     */
+    previous: {
+        /**
+         * Conversations with at least one customer message in the period.
+         */
+        customers: number;
+        /**
+         * Customers whose first message ever falls in the period.
+         */
+        new_customers: number;
+        /**
+         * Customers who had written before the period.
+         */
+        returning_customers: number;
+        /**
+         * Messages customers sent in the period.
+         */
+        messages: number;
+    };
+    /**
+     * The period per channel, most customers first.
+     */
+    by_channel: Array<{
+        /**
+         * Channel.
+         */
+        channel: 'whatsapp' | 'instagram' | 'messenger';
+        /**
+         * Conversations with at least one customer message in the period.
+         */
+        customers: number;
+        /**
+         * Customers whose first message ever falls in the period.
+         */
+        new_customers: number;
+        /**
+         * Customers who had written before the period.
+         */
+        returning_customers: number;
+        /**
+         * Messages customers sent in the period.
+         */
+        messages: number;
+    }>;
+    /**
+     * One entry per day of the period, or per hour of a one-day period.
+     */
+    series: Array<{
+        /**
+         * America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+         */
+        slot: string;
+        /**
+         * Customers whose first message ever falls in this slot.
+         */
+        new_customers: number;
+        /**
+         * Customers who wrote in this slot and had written before.
+         */
+        returning_customers: number;
+        previous_customers: number | null;
+    }>;
+    /**
+     * Customer messages of the period per weekday and hour; slots without any are left out.
+     */
+    heatmap: Array<{
+        /**
+         * 0 is Sunday, 6 is Saturday.
+         */
+        day_of_week: number;
+        /**
+         * Hour of the day, 0–23.
+         */
+        hour: number;
+        /**
+         * Customer messages in that hour of that weekday.
+         */
+        messages: number;
+    }>;
+    /**
+     * When Ricky computed the report.
+     */
+    generated_at: string;
+};
+
+/**
+ * Messages received from customers and sent to them in the period, and who sent them, dated when each message was sent.
+ */
+export type MessagesReport = {
+    period: ReportPeriod;
+    /**
+     * The channel filter the report applied.
+     */
+    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+    /**
+     * The period.
+     */
+    totals: {
+        /**
+         * Messages customers sent.
+         */
+        received: number;
+        /**
+         * Messages sent to customers, by anyone; the sum of `sent_by`.
+         */
+        sent: number;
+        /**
+         * Sent messages by sender; each message counts in one of them.
+         */
+        sent_by: {
+            /**
+             * Sent by a person in Ricky.
+             */
+            human: number;
+            /**
+             * Sent by an AI agent.
+             */
+            ai: number;
+            /**
+             * Sent by an automation.
+             */
+            automation: number;
+            /**
+             * Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
+             */
+            campaign: number;
+            /**
+             * Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
+             */
+            external: number;
+        };
+    };
+    /**
+     * The previous period.
+     */
+    previous: {
+        /**
+         * Messages customers sent.
+         */
+        received: number;
+        /**
+         * Messages sent to customers, by anyone; the sum of `sent_by`.
+         */
+        sent: number;
+        /**
+         * Sent messages by sender; each message counts in one of them.
+         */
+        sent_by: {
+            /**
+             * Sent by a person in Ricky.
+             */
+            human: number;
+            /**
+             * Sent by an AI agent.
+             */
+            ai: number;
+            /**
+             * Sent by an automation.
+             */
+            automation: number;
+            /**
+             * Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
+             */
+            campaign: number;
+            /**
+             * Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
+             */
+            external: number;
+        };
+    };
+    /**
+     * The period per channel, most messages first.
+     */
+    by_channel: Array<{
+        /**
+         * Channel.
+         */
+        channel: 'whatsapp' | 'instagram' | 'messenger';
+        /**
+         * Messages customers sent.
+         */
+        received: number;
+        /**
+         * Messages sent to customers, by anyone; the sum of `sent_by`.
+         */
+        sent: number;
+        /**
+         * Sent messages by sender; each message counts in one of them.
+         */
+        sent_by: {
+            /**
+             * Sent by a person in Ricky.
+             */
+            human: number;
+            /**
+             * Sent by an AI agent.
+             */
+            ai: number;
+            /**
+             * Sent by an automation.
+             */
+            automation: number;
+            /**
+             * Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
+             */
+            campaign: number;
+            /**
+             * Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
+             */
+            external: number;
+        };
+    }>;
+    /**
+     * One entry per day of the period, or per hour of a one-day period.
+     */
+    series: Array<{
+        /**
+         * America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+         */
+        slot: string;
+        /**
+         * Messages customers sent.
+         */
+        received: number;
+        /**
+         * Messages sent to customers, by anyone; the sum of `sent_by`.
+         */
+        sent: number;
+        /**
+         * Sent messages by sender; each message counts in one of them.
+         */
+        sent_by: {
+            /**
+             * Sent by a person in Ricky.
+             */
+            human: number;
+            /**
+             * Sent by an AI agent.
+             */
+            ai: number;
+            /**
+             * Sent by an automation.
+             */
+            automation: number;
+            /**
+             * Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
+             */
+            campaign: number;
+            /**
+             * Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
+             */
+            external: number;
+        };
+        previous_received: number | null;
+        previous_sent: number | null;
+    }>;
+    /**
+     * When Ricky computed the report.
+     */
+    generated_at: string;
+};
+
+/**
+ * What the inbox looks like right now; it has no period.
+ */
+export type DashboardReport = {
+    /**
+     * Now.
+     */
+    totals: {
+        /**
+         * Open conversations.
+         */
+        open_now: number;
+        /**
+         * Open conversations with no member or AI agent assigned.
+         */
+        unassigned: number;
+        /**
+         * Open conversations whose last message, reactions aside, is from the customer.
+         */
+        awaiting_reply: number;
+        /**
+         * Handoffs from an AI agent to a person still waiting.
+         */
+        pending_handoffs: number;
+        /**
+         * Conversations opened or reopened today, America/Panama.
+         */
+        opened_today: number;
+        /**
+         * Conversations closed today, America/Panama.
+         */
+        closed_today: number;
+    };
+    /**
+     * Open conversations per channel, most first.
+     */
+    by_channel: Array<{
+        /**
+         * Channel.
+         */
+        channel: 'whatsapp' | 'instagram' | 'messenger';
+        /**
+         * Open conversations.
+         */
+        open: number;
+    }>;
+    /**
+     * Open conversations per assignee, most first.
+     */
+    assignees: Array<{
+        /**
+         * `human` is a member, `ai` an AI agent, `unassigned` nobody.
+         */
+        type: 'human' | 'ai' | 'unassigned';
+        /**
+         * User ID or AI agent ID; null for `unassigned`.
+         */
+        id: string | null;
+        /**
+         * Name; null when it has none and for `unassigned`.
+         */
+        name: string | null;
+        /**
+         * Open conversations they hold.
+         */
+        open: number;
+        /**
+         * Of those, the ones whose last message is from the customer.
+         */
+        awaiting_reply: number;
+    }>;
+    /**
+     * The 15 open conversations waiting longest for a reply, oldest first.
+     */
+    longest_waiting: Array<{
+        /**
+         * Conversation ID.
+         */
+        conversation_id: string;
+        /**
+         * Channel.
+         */
+        channel: 'whatsapp' | 'instagram' | 'messenger';
+        /**
+         * Name the channel reports for the customer.
+         */
+        participant_name: string | null;
+        /**
+         * When the customer message they wait on arrived.
+         */
+        waiting_since: string;
+        /**
+         * `human` is a member, `ai` an AI agent, `unassigned` nobody.
+         */
+        assignee_type: 'human' | 'ai' | 'unassigned';
+        /**
+         * Assignee name; null when there is none.
+         */
+        assignee_name: string | null;
+    }>;
+    /**
+     * When Ricky computed the report.
+     */
+    generated_at: string;
+};
+
+/**
+ * People and AI agents side by side: what they were assigned, what they sent, what they closed and how fast.
+ */
+export type TeamReport = {
+    period: ReportPeriod;
+    /**
+     * The channel filter the report applied.
+     */
+    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+    /**
+     * Every member and active AI agent, most messages and closes first.
+     */
+    members: Array<{
+        /**
+         * `human` is a member, `ai` an active AI agent.
+         */
+        type: 'human' | 'ai';
+        /**
+         * User ID or AI agent ID.
+         */
+        id: string;
+        /**
+         * Name; null when it has none.
+         */
+        name: string | null;
+        /**
+         * Assignments to them in the period; each assignment counts.
+         */
+        assigned: number;
+        /**
+         * Messages they sent in the period.
+         */
+        messages_sent: number;
+        /**
+         * Closes in the period while they held the conversation.
+         */
+        closed: number;
+        /**
+         * Conversations they hold that are open right now, whatever the period.
+         */
+        open_now: number;
+        /**
+         * For conversations opened in the period, median time from the opening to the first message a person or AI agent sent, counted for whoever sent it, in seconds. Not narrowed by `channel`.
+         */
+        median_first_response_seconds: number | null;
+        /**
+         * Median time from opening to close of the conversations they closed, in seconds.
+         */
+        median_resolution_seconds: number | null;
+    }>;
+    /**
+     * The period.
+     */
+    totals: {
+        /**
+         * Assignments in the period.
+         */
+        assignments: number;
+        /**
+         * Assignments in the period that replaced a previous assignee.
+         */
+        reassignments: number;
+    };
+    /**
+     * When Ricky computed the report.
+     */
+    generated_at: string;
+};
+
+/**
+ * WhatsApp broadcasts created in the period and what happened to their recipients. Delivered and read come from the template message each recipient's conversation got while the broadcast ran; a recipient counts once.
+ */
+export type BroadcastsReport = {
+    period: ReportPeriod;
+    /**
+     * The period.
+     */
+    totals: {
+        /**
+         * Broadcasts created in the period.
+         */
+        broadcasts: number;
+        /**
+         * Recipients.
+         */
+        recipients: number;
+        /**
+         * Recipients the template was sent to.
+         */
+        sent: number;
+        /**
+         * Recipients the send failed for.
+         */
+        failed: number;
+        /**
+         * Sent recipients whose template message the provider confirmed delivered or read.
+         */
+        delivered: number;
+        /**
+         * Sent recipients who read the template message.
+         */
+        read: number;
+    };
+    /**
+     * The previous period.
+     */
+    previous: {
+        /**
+         * Broadcasts created in the period.
+         */
+        broadcasts: number;
+        /**
+         * Recipients.
+         */
+        recipients: number;
+    };
+    /**
+     * One entry per day of the period, or per hour of a one-day period.
+     */
+    series: Array<{
+        /**
+         * America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+         */
+        slot: string;
+        /**
+         * Broadcasts created in the slot.
+         */
+        broadcasts: number;
+        /**
+         * Their recipients.
+         */
+        recipients: number;
+    }>;
+    /**
+     * Broadcasts created in the period, newest first.
+     */
+    broadcasts: Array<{
+        /**
+         * Broadcast ID.
+         */
+        id: string;
+        /**
+         * Template name.
+         */
+        template_name: string;
+        /**
+         * Broadcast status.
+         */
+        status: 'queued' | 'sending' | 'completed';
+        /**
+         * The WhatsApp number it went out from.
+         */
+        channel_name: string | null;
+        /**
+         * Member who sent it; null when they have no name.
+         */
+        created_by_name: string | null;
+        /**
+         * When it was created.
+         */
+        created_at: string;
+        /**
+         * When it finished; null while it runs.
+         */
+        completed_at: string | null;
+        /**
+         * Recipients not sent yet.
+         */
+        pending: number;
+        /**
+         * Recipients.
+         */
+        recipients: number;
+        /**
+         * Recipients the template was sent to.
+         */
+        sent: number;
+        /**
+         * Recipients the send failed for.
+         */
+        failed: number;
+        /**
+         * Sent recipients whose template message the provider confirmed delivered or read.
+         */
+        delivered: number;
+        /**
+         * Sent recipients who read the template message.
+         */
+        read: number;
+    }>;
+    /**
+     * When Ricky computed the report.
+     */
+    generated_at: string;
+};
+
+/**
+ * Meta ad spend next to the conversations each ad brought. A conversation comes from an ad when a customer message carries a Meta ad referral (WhatsApp click-to-chat or an Instagram ad); those are America/Panama days. Spend, impressions and clicks are Meta's daily figures for the ad account's own days, so the edges of a period can differ by the time zones' offset.
+ */
+export type AdsReport = {
+    period: ReportPeriod;
+    /**
+     * The Meta Ads connection that syncs spend.
+     */
+    connection: 'connected' | 'disconnected' | 'error';
+    /**
+     * When spend was last synced; null if never.
+     */
+    synced_at: string | null;
+    /**
+     * ISO 4217 currency of the spend; null when there is none or several.
+     */
+    currency_code: string | null;
+    /**
+     * The period.
+     */
+    totals: {
+        /**
+         * Spend of every ad, including ads that brought no conversation.
+         */
+        spend: number | null;
+        /**
+         * Impressions.
+         */
+        impressions: number | null;
+        /**
+         * Clicks.
+         */
+        clicks: number | null;
+        /**
+         * Conversations an ad brought in the period; one brought back by several ads counts once.
+         */
+        conversations: number;
+        /**
+         * Spend divided by conversations; null without spend, without conversations, or when the spend mixes currencies.
+         */
+        cost_per_conversation: number | null;
+    };
+    /**
+     * The previous period.
+     */
+    previous: {
+        /**
+         * Spend.
+         */
+        spend: number | null;
+        /**
+         * Conversations ads brought.
+         */
+        conversations: number;
+    };
+    /**
+     * One entry per day of the period, or per hour of a one-day period.
+     */
+    series: Array<{
+        /**
+         * America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+         */
+        slot: string;
+        /**
+         * Spend that day; null for hourly slots and when the spend mixes currencies.
+         */
+        spend: number | null;
+        /**
+         * Conversations ads brought.
+         */
+        conversations: number;
+    }>;
+    /**
+     * Ads with spend or conversations in the period.
+     */
+    ads: Array<{
+        /**
+         * Ad ID at Meta.
+         */
+        ad_id: string;
+        /**
+         * Name in Meta; null when no spend was synced for it in the period.
+         */
+        ad_name: string | null;
+        /**
+         * Campaign name in Meta.
+         */
+        campaign_name: string | null;
+        /**
+         * The ad title the referral carried.
+         */
+        headline: string | null;
+        /**
+         * Spend.
+         */
+        spend: number | null;
+        /**
+         * ISO 4217 currency of the spend; null when there is none or several.
+         */
+        currency_code: string | null;
+        /**
+         * Impressions.
+         */
+        impressions: number | null;
+        /**
+         * Clicks.
+         */
+        clicks: number | null;
+        /**
+         * Distinct conversations this ad opened or brought back in the period.
+         */
+        conversations: number;
+        /**
+         * Spend divided by conversations; null without spend, without conversations, or when the spend mixes currencies.
+         */
+        cost_per_conversation: number | null;
+    }>;
+    /**
+     * When Ricky computed the report.
+     */
+    generated_at: string;
+};
+
+/**
+ * How fast people and AI agents answer customers. A response is the first message sent to the customer, other than a reaction, right after a customer message that is not a reaction; its response time is the wait since that customer message. Later messages in a row are follow-ups, and automations and templates are not responses. Responses are dated when they were sent. Conversation openings, closes and assignments play no part.
+ */
+export type ResponsesReport = {
+    period: ReportPeriod;
+    /**
+     * The channel filter the report applied.
+     */
+    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+    /**
+     * The responder filter the report applied: `all`, `humans`, `agents` or an ID.
+     */
+    responder: string;
+    /**
+     * Open conversations whose last message, reactions aside, is from the customer, right now. Narrowed by `channel` only.
+     */
+    awaiting_reply_now: number;
+    /**
+     * How long customers waited for each response.
+     */
+    response_time: {
+        /**
+         * Responses in the period: the sample.
+         */
+        responses: number;
+        /**
+         * Average response time, in seconds.
+         */
+        average_seconds: number | null;
+        /**
+         * Median response time, in seconds.
+         */
+        median_seconds: number | null;
+        /**
+         * Nine in ten responses were faster than this, in seconds.
+         */
+        p90_seconds: number | null;
+        /**
+         * Average response time of the previous period, in seconds.
+         */
+        previous_average_seconds: number | null;
+        /**
+         * Responses of the period by how long they took.
+         */
+        buckets: Array<{
+            bucket: 'under_30s' | '30s_2m' | '2m_5m' | '5m_10m' | '10m_30m' | '30m_1h' | 'over_1h';
+            /**
+             * Items in the bucket.
+             */
+            count: number;
+            /**
+             * Share of the sample, 0–1.
+             */
+            share: number;
+        }>;
+        /**
+         * One entry per day of the period, or per hour of a one-day period.
+         */
+        series: Array<{
+            /**
+             * America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+             */
+            slot: string;
+            /**
+             * Average response time, in seconds.
+             */
+            average_seconds: number | null;
+            /**
+             * Median response time, in seconds.
+             */
+            median_seconds: number | null;
+            /**
+             * Average of the same slot of the previous period, in seconds.
+             */
+            previous_average_seconds: number | null;
+            /**
+             * Median of the same slot of the previous period, in seconds.
+             */
+            previous_median_seconds: number | null;
+        }>;
+    };
+    /**
+     * How many responses each answered conversation got.
+     */
+    responses_per_conversation: {
+        /**
+         * Conversations that got at least one response in the period: the sample.
+         */
+        conversations: number;
+        /**
+         * Responses in the period divided by the conversations they went to.
+         */
+        average: number | null;
+        /**
+         * The same for the previous period.
+         */
+        previous_average: number | null;
+        /**
+         * Conversations by how many responses they got.
+         */
+        buckets: Array<{
+            bucket: '1_2' | '3_10' | '11_20' | 'over_20';
+            /**
+             * Items in the bucket.
+             */
+            count: number;
+            /**
+             * Share of the sample, 0–1.
+             */
+            share: number;
+        }>;
+        /**
+         * One entry per day of the period, or per hour of a one-day period.
+         */
+        series: Array<{
+            /**
+             * America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+             */
+            slot: string;
+            /**
+             * Responses per conversation in the slot.
+             */
+            average: number | null;
+            /**
+             * The same slot of the previous period.
+             */
+            previous_average: number | null;
+        }>;
+    };
+    /**
+     * The period per channel, most responses first.
+     */
+    by_channel: Array<{
+        /**
+         * Channel.
+         */
+        channel: 'whatsapp' | 'instagram' | 'messenger';
+        /**
+         * Responses in the period.
+         */
+        responses: number;
+        /**
+         * Conversations those responses went to.
+         */
+        conversations: number;
+        /**
+         * Average response time, in seconds.
+         */
+        average_seconds: number | null;
+        /**
+         * Median response time, in seconds.
+         */
+        median_seconds: number | null;
+        /**
+         * Nine in ten responses were faster than this, in seconds.
+         */
+        p90_seconds: number | null;
+    }>;
+    /**
+     * The period per responder, most responses first.
+     */
+    by_responder: Array<{
+        /**
+         * `human` is a person in Ricky, `ai` an AI agent, `external` someone answering from the channel's own app.
+         */
+        type: 'human' | 'ai' | 'external';
+        /**
+         * User ID or AI agent ID; null for `external`.
+         */
+        id: string | null;
+        /**
+         * Name; null when it has none and for `external`.
+         */
+        name: string | null;
+        /**
+         * The app an `external` responder used; null otherwise.
+         */
+        channel: 'whatsapp' | 'instagram' | 'messenger' | null;
+        /**
+         * Responses in the period.
+         */
+        responses: number;
+        /**
+         * Conversations those responses went to.
+         */
+        conversations: number;
+        /**
+         * Average response time, in seconds.
+         */
+        average_seconds: number | null;
+        /**
+         * Median response time, in seconds.
+         */
+        median_seconds: number | null;
+        /**
+         * Nine in ten responses were faster than this, in seconds.
+         */
+        p90_seconds: number | null;
+    }>;
+    /**
+     * When Ricky computed the report.
+     */
+    generated_at: string;
+};
+
+/**
+ * How long conversations stay open before someone closes them. Every close in the period counts, dated when it happened; resolution time runs from the opening of that span to the close. Conversations without a single message are left out.
+ */
+export type ResolutionsReport = {
+    period: ReportPeriod;
+    /**
+     * The channel filter the report applied.
+     */
+    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+    /**
+     * The period.
+     */
+    summary: {
+        /**
+         * Conversations closed in the period; a conversation closed twice counts twice.
+         */
+        closed: number;
+        /**
+         * Average time from opening to close, in seconds.
+         */
+        average_resolution_seconds: number | null;
+        /**
+         * Median time from opening to close, in seconds.
+         */
+        median_resolution_seconds: number | null;
+        /**
+         * Average time from opening to the first assignment before the close, in seconds; closes without an assignment are left out.
+         */
+        average_time_to_first_assignment_seconds: number | null;
+        /**
+         * Average number of assignments between opening and close.
+         */
+        average_assignments_to_close: number | null;
+    };
+    /**
+     * The previous period.
+     */
+    previous: {
+        /**
+         * Conversations closed in the period; a conversation closed twice counts twice.
+         */
+        closed: number;
+        /**
+         * Average time from opening to close, in seconds.
+         */
+        average_resolution_seconds: number | null;
+        /**
+         * Median time from opening to close, in seconds.
+         */
+        median_resolution_seconds: number | null;
+        /**
+         * Average time from opening to the first assignment before the close, in seconds; closes without an assignment are left out.
+         */
+        average_time_to_first_assignment_seconds: number | null;
+        /**
+         * Average number of assignments between opening and close.
+         */
+        average_assignments_to_close: number | null;
+    };
+    /**
+     * One entry per day of the period, or per hour of a one-day period.
+     */
+    series: Array<{
+        /**
+         * America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+         */
+        slot: string;
+        /**
+         * Closes in the slot.
+         */
+        closed: number;
+        /**
+         * Median time from opening to close, in seconds.
+         */
+        median_resolution_seconds: number | null;
+    }>;
+    /**
+     * The period per channel, most closes first.
+     */
+    by_channel: Array<{
+        /**
+         * Channel.
+         */
+        channel: 'whatsapp' | 'instagram' | 'messenger';
+        /**
+         * Closes in the period.
+         */
+        closed: number;
+        /**
+         * Median time from opening to close, in seconds.
+         */
+        median_resolution_seconds: number | null;
+    }>;
+    /**
+     * The period by who held the conversation when it closed, most closes first.
+     */
+    by_assignee: Array<{
+        /**
+         * Who held the conversation when it closed.
+         */
+        type: 'human' | 'ai' | 'unassigned';
+        /**
+         * Name; null when it has none and for `unassigned`. Equal names are one row.
+         */
+        name: string | null;
+        /**
+         * Closes in the period.
+         */
+        closed: number;
+        /**
+         * Median time from opening to close, in seconds.
+         */
+        median_resolution_seconds: number | null;
+    }>;
+    /**
+     * Closes of the period by how long the conversation was open.
+     */
+    distribution: Array<{
+        bucket: 'under_1h' | '1h_4h' | '4h_24h' | '1d_3d' | 'over_3d';
+        /**
+         * Closes in the period that took that long.
+         */
+        closed: number;
+    }>;
+    /**
+     * When Ricky computed the report.
+     */
+    generated_at: string;
+};
+
+/**
  * An automation Ricky runs for the organization.
  */
 export type Workflow = {
@@ -3890,6 +4978,433 @@ export type ListWorkflowExecutionsResponses = {
 };
 
 export type ListWorkflowExecutionsResponse = ListWorkflowExecutionsResponses[keyof ListWorkflowExecutionsResponses];
+
+export type GetDashboardReportData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/reports/dashboard';
+};
+
+export type GetDashboardReportErrors = {
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetDashboardReportError = GetDashboardReportErrors[keyof GetDashboardReportErrors];
+
+export type GetDashboardReportResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: DashboardReport;
+    };
+};
+
+export type GetDashboardReportResponse = GetDashboardReportResponses[keyof GetDashboardReportResponses];
+
+export type GetConversationsReportData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+         */
+        from?: string;
+        /**
+         * Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+         */
+        to?: string;
+        /**
+         * Only this channel.
+         */
+        channel?: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+    };
+    url: '/reports/conversations';
+};
+
+export type GetConversationsReportErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetConversationsReportError = GetConversationsReportErrors[keyof GetConversationsReportErrors];
+
+export type GetConversationsReportResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: ConversationsReport;
+    };
+};
+
+export type GetConversationsReportResponse = GetConversationsReportResponses[keyof GetConversationsReportResponses];
+
+export type GetMessagesReportData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+         */
+        from?: string;
+        /**
+         * Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+         */
+        to?: string;
+        /**
+         * Only this channel.
+         */
+        channel?: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+    };
+    url: '/reports/messages';
+};
+
+export type GetMessagesReportErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetMessagesReportError = GetMessagesReportErrors[keyof GetMessagesReportErrors];
+
+export type GetMessagesReportResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: MessagesReport;
+    };
+};
+
+export type GetMessagesReportResponse = GetMessagesReportResponses[keyof GetMessagesReportResponses];
+
+export type GetResponsesReportData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+         */
+        from?: string;
+        /**
+         * Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+         */
+        to?: string;
+        /**
+         * Only this channel.
+         */
+        channel?: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+        /**
+         * Only responses from people, in Ricky or in the channel's own app (`humans`), from AI agents (`agents`), or from one member or AI agent by ID.
+         */
+        responder?: 'all' | 'humans' | 'agents' | string;
+    };
+    url: '/reports/responses';
+};
+
+export type GetResponsesReportErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetResponsesReportError = GetResponsesReportErrors[keyof GetResponsesReportErrors];
+
+export type GetResponsesReportResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: ResponsesReport;
+    };
+};
+
+export type GetResponsesReportResponse = GetResponsesReportResponses[keyof GetResponsesReportResponses];
+
+export type GetResolutionsReportData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+         */
+        from?: string;
+        /**
+         * Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+         */
+        to?: string;
+        /**
+         * Only this channel.
+         */
+        channel?: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+    };
+    url: '/reports/resolutions';
+};
+
+export type GetResolutionsReportErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetResolutionsReportError = GetResolutionsReportErrors[keyof GetResolutionsReportErrors];
+
+export type GetResolutionsReportResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: ResolutionsReport;
+    };
+};
+
+export type GetResolutionsReportResponse = GetResolutionsReportResponses[keyof GetResolutionsReportResponses];
+
+export type GetTeamReportData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+         */
+        from?: string;
+        /**
+         * Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+         */
+        to?: string;
+        /**
+         * Only this channel.
+         */
+        channel?: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+    };
+    url: '/reports/team';
+};
+
+export type GetTeamReportErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetTeamReportError = GetTeamReportErrors[keyof GetTeamReportErrors];
+
+export type GetTeamReportResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: TeamReport;
+    };
+};
+
+export type GetTeamReportResponse = GetTeamReportResponses[keyof GetTeamReportResponses];
+
+export type GetBroadcastsReportData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+         */
+        from?: string;
+        /**
+         * Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+         */
+        to?: string;
+    };
+    url: '/reports/broadcasts';
+};
+
+export type GetBroadcastsReportErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetBroadcastsReportError = GetBroadcastsReportErrors[keyof GetBroadcastsReportErrors];
+
+export type GetBroadcastsReportResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: BroadcastsReport;
+    };
+};
+
+export type GetBroadcastsReportResponse = GetBroadcastsReportResponses[keyof GetBroadcastsReportResponses];
+
+export type GetAdsReportData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+         */
+        from?: string;
+        /**
+         * Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+         */
+        to?: string;
+    };
+    url: '/reports/ads';
+};
+
+export type GetAdsReportErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetAdsReportError = GetAdsReportErrors[keyof GetAdsReportErrors];
+
+export type GetAdsReportResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: AdsReport;
+    };
+};
+
+export type GetAdsReportResponse = GetAdsReportResponses[keyof GetAdsReportResponses];
 
 export type WebhookMessageReceivedWebhookPayload = WebhookEvent;
 

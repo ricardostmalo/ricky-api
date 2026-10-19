@@ -646,6 +646,1236 @@ class WebhookTestResult(TypedDict):
     """
 
 
+ReportPeriod = TypedDict(
+    "ReportPeriod",
+    {
+        "from": str,
+        "to": str,
+        "days": int,
+        "granularity": Literal["day", "hour"],
+        "time_zone": Literal["America/Panama"],
+        "previous_from": str,
+        "previous_to": str,
+    },
+)
+
+
+class ConversationsReportTotals(TypedDict):
+    """
+    The period.
+    """
+
+    customers: int
+    """
+    Conversations with at least one customer message in the period.
+    """
+    new_customers: int
+    """
+    Customers whose first message ever falls in the period.
+    """
+    returning_customers: int
+    """
+    Customers who had written before the period.
+    """
+    messages: int
+    """
+    Messages customers sent in the period.
+    """
+
+
+class ConversationsReportPrevious(TypedDict):
+    """
+    The previous period.
+    """
+
+    customers: int
+    """
+    Conversations with at least one customer message in the period.
+    """
+    new_customers: int
+    """
+    Customers whose first message ever falls in the period.
+    """
+    returning_customers: int
+    """
+    Customers who had written before the period.
+    """
+    messages: int
+    """
+    Messages customers sent in the period.
+    """
+
+
+class ConversationsReportByChannelItem(TypedDict):
+    channel: Literal["whatsapp", "instagram", "messenger"]
+    """
+    Channel.
+    """
+    customers: int
+    """
+    Conversations with at least one customer message in the period.
+    """
+    new_customers: int
+    """
+    Customers whose first message ever falls in the period.
+    """
+    returning_customers: int
+    """
+    Customers who had written before the period.
+    """
+    messages: int
+    """
+    Messages customers sent in the period.
+    """
+
+
+class ConversationsReportSery(TypedDict):
+    slot: str
+    """
+    America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+    """
+    new_customers: int
+    """
+    Customers whose first message ever falls in this slot.
+    """
+    returning_customers: int
+    """
+    Customers who wrote in this slot and had written before.
+    """
+    previous_customers: Optional[int]
+
+
+class ConversationsReportHeatmapItem(TypedDict):
+    day_of_week: int
+    """
+    0 is Sunday, 6 is Saturday.
+    """
+    hour: int
+    """
+    Hour of the day, 0–23.
+    """
+    messages: int
+    """
+    Customer messages in that hour of that weekday.
+    """
+
+
+class ConversationsReport(TypedDict):
+    """
+    How many customers write, whether they are new, and when. Only messages customers send count: a customer is a conversation with at least one of them in the period, and it is new when its first message ever falls in the period. Messages from the team, AI agents or campaigns and conversation openings and closes play no part.
+    """
+
+    period: ReportPeriod
+    channel: Literal["all", "whatsapp", "instagram", "messenger"]
+    """
+    The channel filter the report applied.
+    """
+    totals: ConversationsReportTotals
+    """
+    The period.
+    """
+    previous: ConversationsReportPrevious
+    """
+    The previous period.
+    """
+    by_channel: List[ConversationsReportByChannelItem]
+    """
+    The period per channel, most customers first.
+    """
+    series: List[ConversationsReportSery]
+    """
+    One entry per day of the period, or per hour of a one-day period.
+    """
+    heatmap: List[ConversationsReportHeatmapItem]
+    """
+    Customer messages of the period per weekday and hour; slots without any are left out.
+    """
+    generated_at: str
+    """
+    When Ricky computed the report.
+    """
+
+
+class MessagesReportTotalsSentBy(TypedDict):
+    """
+    Sent messages by sender; each message counts in one of them.
+    """
+
+    human: int
+    """
+    Sent by a person in Ricky.
+    """
+    ai: int
+    """
+    Sent by an AI agent.
+    """
+    automation: int
+    """
+    Sent by an automation.
+    """
+    campaign: int
+    """
+    Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
+    """
+    external: int
+    """
+    Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
+    """
+
+
+class MessagesReportTotals(TypedDict):
+    """
+    The period.
+    """
+
+    received: int
+    """
+    Messages customers sent.
+    """
+    sent: int
+    """
+    Messages sent to customers, by anyone; the sum of `sent_by`.
+    """
+    sent_by: MessagesReportTotalsSentBy
+    """
+    Sent messages by sender; each message counts in one of them.
+    """
+
+
+class MessagesReportPreviousSentBy(TypedDict):
+    """
+    Sent messages by sender; each message counts in one of them.
+    """
+
+    human: int
+    """
+    Sent by a person in Ricky.
+    """
+    ai: int
+    """
+    Sent by an AI agent.
+    """
+    automation: int
+    """
+    Sent by an automation.
+    """
+    campaign: int
+    """
+    Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
+    """
+    external: int
+    """
+    Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
+    """
+
+
+class MessagesReportPrevious(TypedDict):
+    """
+    The previous period.
+    """
+
+    received: int
+    """
+    Messages customers sent.
+    """
+    sent: int
+    """
+    Messages sent to customers, by anyone; the sum of `sent_by`.
+    """
+    sent_by: MessagesReportPreviousSentBy
+    """
+    Sent messages by sender; each message counts in one of them.
+    """
+
+
+class MessagesReportByChannelItemSentBy(TypedDict):
+    """
+    Sent messages by sender; each message counts in one of them.
+    """
+
+    human: int
+    """
+    Sent by a person in Ricky.
+    """
+    ai: int
+    """
+    Sent by an AI agent.
+    """
+    automation: int
+    """
+    Sent by an automation.
+    """
+    campaign: int
+    """
+    Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
+    """
+    external: int
+    """
+    Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
+    """
+
+
+class MessagesReportByChannelItem(TypedDict):
+    channel: Literal["whatsapp", "instagram", "messenger"]
+    """
+    Channel.
+    """
+    received: int
+    """
+    Messages customers sent.
+    """
+    sent: int
+    """
+    Messages sent to customers, by anyone; the sum of `sent_by`.
+    """
+    sent_by: MessagesReportByChannelItemSentBy
+    """
+    Sent messages by sender; each message counts in one of them.
+    """
+
+
+class MessagesReportSerySentBy(TypedDict):
+    """
+    Sent messages by sender; each message counts in one of them.
+    """
+
+    human: int
+    """
+    Sent by a person in Ricky.
+    """
+    ai: int
+    """
+    Sent by an AI agent.
+    """
+    automation: int
+    """
+    Sent by an automation.
+    """
+    campaign: int
+    """
+    Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
+    """
+    external: int
+    """
+    Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
+    """
+
+
+class MessagesReportSery(TypedDict):
+    slot: str
+    """
+    America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+    """
+    received: int
+    """
+    Messages customers sent.
+    """
+    sent: int
+    """
+    Messages sent to customers, by anyone; the sum of `sent_by`.
+    """
+    sent_by: MessagesReportSerySentBy
+    """
+    Sent messages by sender; each message counts in one of them.
+    """
+    previous_received: Optional[int]
+    previous_sent: Optional[int]
+
+
+class MessagesReport(TypedDict):
+    """
+    Messages received from customers and sent to them in the period, and who sent them, dated when each message was sent.
+    """
+
+    period: ReportPeriod
+    channel: Literal["all", "whatsapp", "instagram", "messenger"]
+    """
+    The channel filter the report applied.
+    """
+    totals: MessagesReportTotals
+    """
+    The period.
+    """
+    previous: MessagesReportPrevious
+    """
+    The previous period.
+    """
+    by_channel: List[MessagesReportByChannelItem]
+    """
+    The period per channel, most messages first.
+    """
+    series: List[MessagesReportSery]
+    """
+    One entry per day of the period, or per hour of a one-day period.
+    """
+    generated_at: str
+    """
+    When Ricky computed the report.
+    """
+
+
+class DashboardReportTotals(TypedDict):
+    """
+    Now.
+    """
+
+    open_now: int
+    """
+    Open conversations.
+    """
+    unassigned: int
+    """
+    Open conversations with no member or AI agent assigned.
+    """
+    awaiting_reply: int
+    """
+    Open conversations whose last message, reactions aside, is from the customer.
+    """
+    pending_handoffs: int
+    """
+    Handoffs from an AI agent to a person still waiting.
+    """
+    opened_today: int
+    """
+    Conversations opened or reopened today, America/Panama.
+    """
+    closed_today: int
+    """
+    Conversations closed today, America/Panama.
+    """
+
+
+class DashboardReportByChannelItem(TypedDict):
+    channel: Literal["whatsapp", "instagram", "messenger"]
+    """
+    Channel.
+    """
+    open: int
+    """
+    Open conversations.
+    """
+
+
+class DashboardReportAssignee(TypedDict):
+    type: Literal["human", "ai", "unassigned"]
+    """
+    `human` is a member, `ai` an AI agent, `unassigned` nobody.
+    """
+    id: Optional[str]
+    """
+    User ID or AI agent ID; null for `unassigned`.
+    """
+    name: Optional[str]
+    """
+    Name; null when it has none and for `unassigned`.
+    """
+    open: int
+    """
+    Open conversations they hold.
+    """
+    awaiting_reply: int
+    """
+    Of those, the ones whose last message is from the customer.
+    """
+
+
+class DashboardReportLongestWaitingItem(TypedDict):
+    conversation_id: str
+    """
+    Conversation ID.
+    """
+    channel: Literal["whatsapp", "instagram", "messenger"]
+    """
+    Channel.
+    """
+    participant_name: Optional[str]
+    """
+    Name the channel reports for the customer.
+    """
+    waiting_since: str
+    """
+    When the customer message they wait on arrived.
+    """
+    assignee_type: Literal["human", "ai", "unassigned"]
+    """
+    `human` is a member, `ai` an AI agent, `unassigned` nobody.
+    """
+    assignee_name: Optional[str]
+    """
+    Assignee name; null when there is none.
+    """
+
+
+class DashboardReport(TypedDict):
+    """
+    What the inbox looks like right now; it has no period.
+    """
+
+    totals: DashboardReportTotals
+    """
+    Now.
+    """
+    by_channel: List[DashboardReportByChannelItem]
+    """
+    Open conversations per channel, most first.
+    """
+    assignees: List[DashboardReportAssignee]
+    """
+    Open conversations per assignee, most first.
+    """
+    longest_waiting: List[DashboardReportLongestWaitingItem]
+    """
+    The 15 open conversations waiting longest for a reply, oldest first.
+    """
+    generated_at: str
+    """
+    When Ricky computed the report.
+    """
+
+
+class TeamReportMember(TypedDict):
+    type: Literal["human", "ai"]
+    """
+    `human` is a member, `ai` an active AI agent.
+    """
+    id: str
+    """
+    User ID or AI agent ID.
+    """
+    name: Optional[str]
+    """
+    Name; null when it has none.
+    """
+    assigned: int
+    """
+    Assignments to them in the period; each assignment counts.
+    """
+    messages_sent: int
+    """
+    Messages they sent in the period.
+    """
+    closed: int
+    """
+    Closes in the period while they held the conversation.
+    """
+    open_now: int
+    """
+    Conversations they hold that are open right now, whatever the period.
+    """
+    median_first_response_seconds: Optional[float]
+    """
+    For conversations opened in the period, median time from the opening to the first message a person or AI agent sent, counted for whoever sent it, in seconds. Not narrowed by `channel`.
+    """
+    median_resolution_seconds: Optional[float]
+    """
+    Median time from opening to close of the conversations they closed, in seconds.
+    """
+
+
+class TeamReportTotals(TypedDict):
+    """
+    The period.
+    """
+
+    assignments: int
+    """
+    Assignments in the period.
+    """
+    reassignments: int
+    """
+    Assignments in the period that replaced a previous assignee.
+    """
+
+
+class TeamReport(TypedDict):
+    """
+    People and AI agents side by side: what they were assigned, what they sent, what they closed and how fast.
+    """
+
+    period: ReportPeriod
+    channel: Literal["all", "whatsapp", "instagram", "messenger"]
+    """
+    The channel filter the report applied.
+    """
+    members: List[TeamReportMember]
+    """
+    Every member and active AI agent, most messages and closes first.
+    """
+    totals: TeamReportTotals
+    """
+    The period.
+    """
+    generated_at: str
+    """
+    When Ricky computed the report.
+    """
+
+
+class BroadcastsReportTotals(TypedDict):
+    """
+    The period.
+    """
+
+    broadcasts: int
+    """
+    Broadcasts created in the period.
+    """
+    recipients: int
+    """
+    Recipients.
+    """
+    sent: int
+    """
+    Recipients the template was sent to.
+    """
+    failed: int
+    """
+    Recipients the send failed for.
+    """
+    delivered: int
+    """
+    Sent recipients whose template message the provider confirmed delivered or read.
+    """
+    read: int
+    """
+    Sent recipients who read the template message.
+    """
+
+
+class BroadcastsReportPrevious(TypedDict):
+    """
+    The previous period.
+    """
+
+    broadcasts: int
+    """
+    Broadcasts created in the period.
+    """
+    recipients: int
+    """
+    Recipients.
+    """
+
+
+class BroadcastsReportSery(TypedDict):
+    slot: str
+    """
+    America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+    """
+    broadcasts: int
+    """
+    Broadcasts created in the slot.
+    """
+    recipients: int
+    """
+    Their recipients.
+    """
+
+
+class BroadcastsReportBroadcast(TypedDict):
+    id: str
+    """
+    Broadcast ID.
+    """
+    template_name: str
+    """
+    Template name.
+    """
+    status: Literal["queued", "sending", "completed"]
+    """
+    Broadcast status.
+    """
+    channel_name: Optional[str]
+    """
+    The WhatsApp number it went out from.
+    """
+    created_by_name: Optional[str]
+    """
+    Member who sent it; null when they have no name.
+    """
+    created_at: str
+    """
+    When it was created.
+    """
+    completed_at: Optional[str]
+    """
+    When it finished; null while it runs.
+    """
+    pending: int
+    """
+    Recipients not sent yet.
+    """
+    recipients: int
+    """
+    Recipients.
+    """
+    sent: int
+    """
+    Recipients the template was sent to.
+    """
+    failed: int
+    """
+    Recipients the send failed for.
+    """
+    delivered: int
+    """
+    Sent recipients whose template message the provider confirmed delivered or read.
+    """
+    read: int
+    """
+    Sent recipients who read the template message.
+    """
+
+
+class BroadcastsReport(TypedDict):
+    """
+    WhatsApp broadcasts created in the period and what happened to their recipients. Delivered and read come from the template message each recipient's conversation got while the broadcast ran; a recipient counts once.
+    """
+
+    period: ReportPeriod
+    totals: BroadcastsReportTotals
+    """
+    The period.
+    """
+    previous: BroadcastsReportPrevious
+    """
+    The previous period.
+    """
+    series: List[BroadcastsReportSery]
+    """
+    One entry per day of the period, or per hour of a one-day period.
+    """
+    broadcasts: List[BroadcastsReportBroadcast]
+    """
+    Broadcasts created in the period, newest first.
+    """
+    generated_at: str
+    """
+    When Ricky computed the report.
+    """
+
+
+class AdsReportTotals(TypedDict):
+    """
+    The period.
+    """
+
+    spend: Optional[float]
+    """
+    Spend of every ad, including ads that brought no conversation.
+    """
+    impressions: Optional[int]
+    """
+    Impressions.
+    """
+    clicks: Optional[int]
+    """
+    Clicks.
+    """
+    conversations: int
+    """
+    Conversations an ad brought in the period; one brought back by several ads counts once.
+    """
+    cost_per_conversation: Optional[float]
+    """
+    Spend divided by conversations; null without spend, without conversations, or when the spend mixes currencies.
+    """
+
+
+class AdsReportPrevious(TypedDict):
+    """
+    The previous period.
+    """
+
+    spend: Optional[float]
+    """
+    Spend.
+    """
+    conversations: int
+    """
+    Conversations ads brought.
+    """
+
+
+class AdsReportSery(TypedDict):
+    slot: str
+    """
+    America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+    """
+    spend: Optional[float]
+    """
+    Spend that day; null for hourly slots and when the spend mixes currencies.
+    """
+    conversations: int
+    """
+    Conversations ads brought.
+    """
+
+
+class AdsReportAd(TypedDict):
+    ad_id: str
+    """
+    Ad ID at Meta.
+    """
+    ad_name: Optional[str]
+    """
+    Name in Meta; null when no spend was synced for it in the period.
+    """
+    campaign_name: Optional[str]
+    """
+    Campaign name in Meta.
+    """
+    headline: Optional[str]
+    """
+    The ad title the referral carried.
+    """
+    spend: Optional[float]
+    """
+    Spend.
+    """
+    currency_code: Optional[str]
+    """
+    ISO 4217 currency of the spend; null when there is none or several.
+    """
+    impressions: Optional[int]
+    """
+    Impressions.
+    """
+    clicks: Optional[int]
+    """
+    Clicks.
+    """
+    conversations: int
+    """
+    Distinct conversations this ad opened or brought back in the period.
+    """
+    cost_per_conversation: Optional[float]
+    """
+    Spend divided by conversations; null without spend, without conversations, or when the spend mixes currencies.
+    """
+
+
+class AdsReport(TypedDict):
+    """
+    Meta ad spend next to the conversations each ad brought. A conversation comes from an ad when a customer message carries a Meta ad referral (WhatsApp click-to-chat or an Instagram ad); those are America/Panama days. Spend, impressions and clicks are Meta's daily figures for the ad account's own days, so the edges of a period can differ by the time zones' offset.
+    """
+
+    period: ReportPeriod
+    connection: Literal["connected", "disconnected", "error"]
+    """
+    The Meta Ads connection that syncs spend.
+    """
+    synced_at: Optional[str]
+    """
+    When spend was last synced; null if never.
+    """
+    currency_code: Optional[str]
+    """
+    ISO 4217 currency of the spend; null when there is none or several.
+    """
+    totals: AdsReportTotals
+    """
+    The period.
+    """
+    previous: AdsReportPrevious
+    """
+    The previous period.
+    """
+    series: List[AdsReportSery]
+    """
+    One entry per day of the period, or per hour of a one-day period.
+    """
+    ads: List[AdsReportAd]
+    """
+    Ads with spend or conversations in the period.
+    """
+    generated_at: str
+    """
+    When Ricky computed the report.
+    """
+
+
+class ResponsesReportResponseTimeBucket(TypedDict):
+    bucket: Literal["under_30s", "30s_2m", "2m_5m", "5m_10m", "10m_30m", "30m_1h", "over_1h"]
+    count: int
+    """
+    Items in the bucket.
+    """
+    share: float
+    """
+    Share of the sample, 0–1.
+    """
+
+
+class ResponsesReportResponseTimeSery(TypedDict):
+    slot: str
+    """
+    America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+    """
+    average_seconds: Optional[float]
+    """
+    Average response time, in seconds.
+    """
+    median_seconds: Optional[float]
+    """
+    Median response time, in seconds.
+    """
+    previous_average_seconds: Optional[float]
+    """
+    Average of the same slot of the previous period, in seconds.
+    """
+    previous_median_seconds: Optional[float]
+    """
+    Median of the same slot of the previous period, in seconds.
+    """
+
+
+class ResponsesReportResponseTime(TypedDict):
+    """
+    How long customers waited for each response.
+    """
+
+    responses: int
+    """
+    Responses in the period: the sample.
+    """
+    average_seconds: Optional[float]
+    """
+    Average response time, in seconds.
+    """
+    median_seconds: Optional[float]
+    """
+    Median response time, in seconds.
+    """
+    p90_seconds: Optional[float]
+    """
+    Nine in ten responses were faster than this, in seconds.
+    """
+    previous_average_seconds: Optional[float]
+    """
+    Average response time of the previous period, in seconds.
+    """
+    buckets: List[ResponsesReportResponseTimeBucket]
+    """
+    Responses of the period by how long they took.
+    """
+    series: List[ResponsesReportResponseTimeSery]
+    """
+    One entry per day of the period, or per hour of a one-day period.
+    """
+
+
+class ResponsesReportResponsesPerConversationBucket(TypedDict):
+    bucket: Literal["1_2", "3_10", "11_20", "over_20"]
+    count: int
+    """
+    Items in the bucket.
+    """
+    share: float
+    """
+    Share of the sample, 0–1.
+    """
+
+
+class ResponsesReportResponsesPerConversationSery(TypedDict):
+    slot: str
+    """
+    America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+    """
+    average: Optional[float]
+    """
+    Responses per conversation in the slot.
+    """
+    previous_average: Optional[float]
+    """
+    The same slot of the previous period.
+    """
+
+
+class ResponsesReportResponsesPerConversation(TypedDict):
+    """
+    How many responses each answered conversation got.
+    """
+
+    conversations: int
+    """
+    Conversations that got at least one response in the period: the sample.
+    """
+    average: Optional[float]
+    """
+    Responses in the period divided by the conversations they went to.
+    """
+    previous_average: Optional[float]
+    """
+    The same for the previous period.
+    """
+    buckets: List[ResponsesReportResponsesPerConversationBucket]
+    """
+    Conversations by how many responses they got.
+    """
+    series: List[ResponsesReportResponsesPerConversationSery]
+    """
+    One entry per day of the period, or per hour of a one-day period.
+    """
+
+
+class ResponsesReportByChannelItem(TypedDict):
+    channel: Literal["whatsapp", "instagram", "messenger"]
+    """
+    Channel.
+    """
+    responses: int
+    """
+    Responses in the period.
+    """
+    conversations: int
+    """
+    Conversations those responses went to.
+    """
+    average_seconds: Optional[float]
+    """
+    Average response time, in seconds.
+    """
+    median_seconds: Optional[float]
+    """
+    Median response time, in seconds.
+    """
+    p90_seconds: Optional[float]
+    """
+    Nine in ten responses were faster than this, in seconds.
+    """
+
+
+class ResponsesReportByResponderItem(TypedDict):
+    type: Literal["human", "ai", "external"]
+    """
+    `human` is a person in Ricky, `ai` an AI agent, `external` someone answering from the channel's own app.
+    """
+    id: Optional[str]
+    """
+    User ID or AI agent ID; null for `external`.
+    """
+    name: Optional[str]
+    """
+    Name; null when it has none and for `external`.
+    """
+    channel: Optional[Literal["whatsapp", "instagram", "messenger"]]
+    """
+    The app an `external` responder used; null otherwise.
+    """
+    responses: int
+    """
+    Responses in the period.
+    """
+    conversations: int
+    """
+    Conversations those responses went to.
+    """
+    average_seconds: Optional[float]
+    """
+    Average response time, in seconds.
+    """
+    median_seconds: Optional[float]
+    """
+    Median response time, in seconds.
+    """
+    p90_seconds: Optional[float]
+    """
+    Nine in ten responses were faster than this, in seconds.
+    """
+
+
+class ResponsesReport(TypedDict):
+    """
+    How fast people and AI agents answer customers. A response is the first message sent to the customer, other than a reaction, right after a customer message that is not a reaction; its response time is the wait since that customer message. Later messages in a row are follow-ups, and automations and templates are not responses. Responses are dated when they were sent. Conversation openings, closes and assignments play no part.
+    """
+
+    period: ReportPeriod
+    channel: Literal["all", "whatsapp", "instagram", "messenger"]
+    """
+    The channel filter the report applied.
+    """
+    responder: str
+    """
+    The responder filter the report applied: `all`, `humans`, `agents` or an ID.
+    """
+    awaiting_reply_now: int
+    """
+    Open conversations whose last message, reactions aside, is from the customer, right now. Narrowed by `channel` only.
+    """
+    response_time: ResponsesReportResponseTime
+    """
+    How long customers waited for each response.
+    """
+    responses_per_conversation: ResponsesReportResponsesPerConversation
+    """
+    How many responses each answered conversation got.
+    """
+    by_channel: List[ResponsesReportByChannelItem]
+    """
+    The period per channel, most responses first.
+    """
+    by_responder: List[ResponsesReportByResponderItem]
+    """
+    The period per responder, most responses first.
+    """
+    generated_at: str
+    """
+    When Ricky computed the report.
+    """
+
+
+class ResolutionsReportSummary(TypedDict):
+    """
+    The period.
+    """
+
+    closed: int
+    """
+    Conversations closed in the period; a conversation closed twice counts twice.
+    """
+    average_resolution_seconds: Optional[float]
+    """
+    Average time from opening to close, in seconds.
+    """
+    median_resolution_seconds: Optional[float]
+    """
+    Median time from opening to close, in seconds.
+    """
+    average_time_to_first_assignment_seconds: Optional[float]
+    """
+    Average time from opening to the first assignment before the close, in seconds; closes without an assignment are left out.
+    """
+    average_assignments_to_close: Optional[float]
+    """
+    Average number of assignments between opening and close.
+    """
+
+
+class ResolutionsReportPrevious(TypedDict):
+    """
+    The previous period.
+    """
+
+    closed: int
+    """
+    Conversations closed in the period; a conversation closed twice counts twice.
+    """
+    average_resolution_seconds: Optional[float]
+    """
+    Average time from opening to close, in seconds.
+    """
+    median_resolution_seconds: Optional[float]
+    """
+    Median time from opening to close, in seconds.
+    """
+    average_time_to_first_assignment_seconds: Optional[float]
+    """
+    Average time from opening to the first assignment before the close, in seconds; closes without an assignment are left out.
+    """
+    average_assignments_to_close: Optional[float]
+    """
+    Average number of assignments between opening and close.
+    """
+
+
+class ResolutionsReportSery(TypedDict):
+    slot: str
+    """
+    America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+    """
+    closed: int
+    """
+    Closes in the slot.
+    """
+    median_resolution_seconds: Optional[float]
+    """
+    Median time from opening to close, in seconds.
+    """
+
+
+class ResolutionsReportByChannelItem(TypedDict):
+    channel: Literal["whatsapp", "instagram", "messenger"]
+    """
+    Channel.
+    """
+    closed: int
+    """
+    Closes in the period.
+    """
+    median_resolution_seconds: Optional[float]
+    """
+    Median time from opening to close, in seconds.
+    """
+
+
+class ResolutionsReportByAssigneeItem(TypedDict):
+    type: Literal["human", "ai", "unassigned"]
+    """
+    Who held the conversation when it closed.
+    """
+    name: Optional[str]
+    """
+    Name; null when it has none and for `unassigned`. Equal names are one row.
+    """
+    closed: int
+    """
+    Closes in the period.
+    """
+    median_resolution_seconds: Optional[float]
+    """
+    Median time from opening to close, in seconds.
+    """
+
+
+class ResolutionsReportDistributionItem(TypedDict):
+    bucket: Literal["under_1h", "1h_4h", "4h_24h", "1d_3d", "over_3d"]
+    closed: int
+    """
+    Closes in the period that took that long.
+    """
+
+
+class ResolutionsReport(TypedDict):
+    """
+    How long conversations stay open before someone closes them. Every close in the period counts, dated when it happened; resolution time runs from the opening of that span to the close. Conversations without a single message are left out.
+    """
+
+    period: ReportPeriod
+    channel: Literal["all", "whatsapp", "instagram", "messenger"]
+    """
+    The channel filter the report applied.
+    """
+    summary: ResolutionsReportSummary
+    """
+    The period.
+    """
+    previous: ResolutionsReportPrevious
+    """
+    The previous period.
+    """
+    series: List[ResolutionsReportSery]
+    """
+    One entry per day of the period, or per hour of a one-day period.
+    """
+    by_channel: List[ResolutionsReportByChannelItem]
+    """
+    The period per channel, most closes first.
+    """
+    by_assignee: List[ResolutionsReportByAssigneeItem]
+    """
+    The period by who held the conversation when it closed, most closes first.
+    """
+    distribution: List[ResolutionsReportDistributionItem]
+    """
+    Closes of the period by how long the conversation was open.
+    """
+    generated_at: str
+    """
+    When Ricky computed the report.
+    """
+
+
 WorkflowDefinitionConditionBusinessHoursWeekday: TypeAlias = int
 
 

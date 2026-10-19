@@ -2,7 +2,7 @@
 
 import { client } from './client.gen.js';
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client/index.js';
-import type { ActivateWorkflowData, ActivateWorkflowErrors, ActivateWorkflowResponses, AddContactNoteData, AddContactNoteErrors, AddContactNoteResponses, AssignConversationData, AssignConversationErrors, AssignConversationResponses, CloseConversationData, CloseConversationErrors, CloseConversationResponses, CreateContactData, CreateContactErrors, CreateContactResponses, CreateTagData, CreateTagErrors, CreateTagResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, CreateWorkflowData, CreateWorkflowErrors, CreateWorkflowResponses, DeleteWorkflowData, DeleteWorkflowErrors, DeleteWorkflowResponses, DisableWebhookData, DisableWebhookErrors, DisableWebhookResponses, GetContactData, GetContactErrors, GetContactResponses, GetConversationData, GetConversationErrors, GetConversationResponses, GetMessageData, GetMessageErrors, GetMessageResponses, GetSendData, GetSendErrors, GetSendResponses, GetWorkflowData, GetWorkflowErrors, GetWorkflowResponses, ListChannelsData, ListChannelsErrors, ListChannelsResponses, ListContactFieldsData, ListContactFieldsErrors, ListContactFieldsResponses, ListContactsData, ListContactsErrors, ListContactsResponses, ListConversationsData, ListConversationsErrors, ListConversationsResponses, ListMembersData, ListMembersErrors, ListMembersResponses, ListMessagesData, ListMessagesErrors, ListMessagesResponses, ListTagsData, ListTagsErrors, ListTagsResponses, ListTemplatesData, ListTemplatesErrors, ListTemplatesResponses, ListWebhookDeliveriesData, ListWebhookDeliveriesErrors, ListWebhookDeliveriesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, ListWorkflowExecutionsData, ListWorkflowExecutionsErrors, ListWorkflowExecutionsResponses, ListWorkflowsData, ListWorkflowsErrors, ListWorkflowsResponses, PauseWorkflowData, PauseWorkflowErrors, PauseWorkflowResponses, ReopenConversationData, ReopenConversationErrors, ReopenConversationResponses, RetryWebhookDeliveryData, RetryWebhookDeliveryErrors, RetryWebhookDeliveryResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SendMessageData, SendMessageErrors, SendMessageResponses, StartConversationData, StartConversationErrors, StartConversationResponses, TestWebhookData, TestWebhookErrors, TestWebhookResponses, UpdateContactData, UpdateContactErrors, UpdateContactResponses, UpdateWorkflowData, UpdateWorkflowErrors, UpdateWorkflowResponses } from './types.gen.js';
+import type { ActivateWorkflowData, ActivateWorkflowErrors, ActivateWorkflowResponses, AddContactNoteData, AddContactNoteErrors, AddContactNoteResponses, AssignConversationData, AssignConversationErrors, AssignConversationResponses, CloseConversationData, CloseConversationErrors, CloseConversationResponses, CreateContactData, CreateContactErrors, CreateContactResponses, CreateTagData, CreateTagErrors, CreateTagResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, CreateWorkflowData, CreateWorkflowErrors, CreateWorkflowResponses, DeleteWorkflowData, DeleteWorkflowErrors, DeleteWorkflowResponses, DisableWebhookData, DisableWebhookErrors, DisableWebhookResponses, GetAdsReportData, GetAdsReportErrors, GetAdsReportResponses, GetBroadcastsReportData, GetBroadcastsReportErrors, GetBroadcastsReportResponses, GetContactData, GetContactErrors, GetContactResponses, GetConversationData, GetConversationErrors, GetConversationResponses, GetConversationsReportData, GetConversationsReportErrors, GetConversationsReportResponses, GetDashboardReportData, GetDashboardReportErrors, GetDashboardReportResponses, GetMessageData, GetMessageErrors, GetMessageResponses, GetMessagesReportData, GetMessagesReportErrors, GetMessagesReportResponses, GetResolutionsReportData, GetResolutionsReportErrors, GetResolutionsReportResponses, GetResponsesReportData, GetResponsesReportErrors, GetResponsesReportResponses, GetSendData, GetSendErrors, GetSendResponses, GetTeamReportData, GetTeamReportErrors, GetTeamReportResponses, GetWorkflowData, GetWorkflowErrors, GetWorkflowResponses, ListChannelsData, ListChannelsErrors, ListChannelsResponses, ListContactFieldsData, ListContactFieldsErrors, ListContactFieldsResponses, ListContactsData, ListContactsErrors, ListContactsResponses, ListConversationsData, ListConversationsErrors, ListConversationsResponses, ListMembersData, ListMembersErrors, ListMembersResponses, ListMessagesData, ListMessagesErrors, ListMessagesResponses, ListTagsData, ListTagsErrors, ListTagsResponses, ListTemplatesData, ListTemplatesErrors, ListTemplatesResponses, ListWebhookDeliveriesData, ListWebhookDeliveriesErrors, ListWebhookDeliveriesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, ListWorkflowExecutionsData, ListWorkflowExecutionsErrors, ListWorkflowExecutionsResponses, ListWorkflowsData, ListWorkflowsErrors, ListWorkflowsResponses, PauseWorkflowData, PauseWorkflowErrors, PauseWorkflowResponses, ReopenConversationData, ReopenConversationErrors, ReopenConversationResponses, RetryWebhookDeliveryData, RetryWebhookDeliveryErrors, RetryWebhookDeliveryResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SendMessageData, SendMessageErrors, SendMessageResponses, StartConversationData, StartConversationErrors, StartConversationResponses, TestWebhookData, TestWebhookErrors, TestWebhookResponses, UpdateContactData, UpdateContactErrors, UpdateContactResponses, UpdateWorkflowData, UpdateWorkflowErrors, UpdateWorkflowResponses } from './types.gen.js';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -677,6 +677,134 @@ export class RickyApi extends HeyApiClient {
             responseStyle: 'data',
             security: [{ scheme: 'bearer', type: 'http' }],
             url: '/workflows/{workflow_id}/executions',
+            ...options
+        });
+    }
+    
+    /**
+     * Get the live dashboard
+     *
+     * Open conversations, who holds them and who is waiting for a reply, right now. "Today" is the America/Panama day.
+     *
+     * Scope: `reports:read`.
+     */
+    public getDashboardReport<ThrowOnError extends boolean = true>(options?: Options<GetDashboardReportData, ThrowOnError>): RequestResult<GetDashboardReportResponses, GetDashboardReportErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<GetDashboardReportResponses, GetDashboardReportErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/reports/dashboard',
+            ...options
+        });
+    }
+    
+    /**
+     * Get the conversations report
+     *
+     * Customers who wrote in the period, new or returning, per channel, day and hour. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+     *
+     * Scope: `reports:read`.
+     */
+    public getConversationsReport<ThrowOnError extends boolean = true>(options?: Options<GetConversationsReportData, ThrowOnError>): RequestResult<GetConversationsReportResponses, GetConversationsReportErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<GetConversationsReportResponses, GetConversationsReportErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/reports/conversations',
+            ...options
+        });
+    }
+    
+    /**
+     * Get the messages report
+     *
+     * Messages received and sent in the period, and who sent them. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+     *
+     * Scope: `reports:read`.
+     */
+    public getMessagesReport<ThrowOnError extends boolean = true>(options?: Options<GetMessagesReportData, ThrowOnError>): RequestResult<GetMessagesReportResponses, GetMessagesReportErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<GetMessagesReportResponses, GetMessagesReportErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/reports/messages',
+            ...options
+        });
+    }
+    
+    /**
+     * Get the responses report
+     *
+     * How fast people and AI agents answered customers in the period, per channel and responder. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+     *
+     * Scope: `reports:read`.
+     */
+    public getResponsesReport<ThrowOnError extends boolean = true>(options?: Options<GetResponsesReportData, ThrowOnError>): RequestResult<GetResponsesReportResponses, GetResponsesReportErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<GetResponsesReportResponses, GetResponsesReportErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/reports/responses',
+            ...options
+        });
+    }
+    
+    /**
+     * Get the resolutions report
+     *
+     * Conversations closed in the period and how long they were open. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+     *
+     * Scope: `reports:read`.
+     */
+    public getResolutionsReport<ThrowOnError extends boolean = true>(options?: Options<GetResolutionsReportData, ThrowOnError>): RequestResult<GetResolutionsReportResponses, GetResolutionsReportErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<GetResolutionsReportResponses, GetResolutionsReportErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/reports/resolutions',
+            ...options
+        });
+    }
+    
+    /**
+     * Get the team report
+     *
+     * Assignments, messages, closes and medians per member and AI agent in the period. Days are America/Panama time, like the Reports pages.
+     *
+     * Scope: `reports:read`.
+     */
+    public getTeamReport<ThrowOnError extends boolean = true>(options?: Options<GetTeamReportData, ThrowOnError>): RequestResult<GetTeamReportResponses, GetTeamReportErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<GetTeamReportResponses, GetTeamReportErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/reports/team',
+            ...options
+        });
+    }
+    
+    /**
+     * Get the broadcasts report
+     *
+     * WhatsApp broadcasts created in the period and their recipients' outcomes. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+     *
+     * Scope: `reports:read`.
+     */
+    public getBroadcastsReport<ThrowOnError extends boolean = true>(options?: Options<GetBroadcastsReportData, ThrowOnError>): RequestResult<GetBroadcastsReportResponses, GetBroadcastsReportErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<GetBroadcastsReportResponses, GetBroadcastsReportErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/reports/broadcasts',
+            ...options
+        });
+    }
+    
+    /**
+     * Get the ads report
+     *
+     * Meta ad spend and the conversations each ad brought in the period. Days and hours are America/Panama time, like the Reports pages; each number is compared with the previous period of the same length.
+     *
+     * Scope: `reports:read`.
+     */
+    public getAdsReport<ThrowOnError extends boolean = true>(options?: Options<GetAdsReportData, ThrowOnError>): RequestResult<GetAdsReportResponses, GetAdsReportErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<GetAdsReportResponses, GetAdsReportErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/reports/ads',
             ...options
         });
     }

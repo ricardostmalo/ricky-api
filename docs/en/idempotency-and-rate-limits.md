@@ -21,6 +21,8 @@ We recommend sending it with every message send. These operations accept it:
 | [Reopen a conversation](https://getricky.ai/en/docs/api/reference/conversations/reopen-conversation) | `POST /conversations/{conversation_id}/reopen` | `conversations:write` |
 | [Send a message](https://getricky.ai/en/docs/api/reference/messages/send-message) | `POST /conversations/{conversation_id}/messages` | `messages:send` |
 | [Create a tag](https://getricky.ai/en/docs/api/reference/catalogs/create-tag) | `POST /tags` | `contacts:write` |
+| [Create a workflow](https://getricky.ai/en/docs/api/reference/workflows/create-workflow) | `POST /workflows` | `workflows:write` |
+| [Update a workflow](https://getricky.ai/en/docs/api/reference/workflows/update-workflow) | `PATCH /workflows/{workflow_id}` | `workflows:write` |
 
 Creating or disabling a webhook and retrying a delivery do not use this header.
 

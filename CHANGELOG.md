@@ -12,6 +12,11 @@ This page records changes to the API. A breaking change only ships in a new path
 - **Executions.** `GET /workflows/{workflow_id}/executions` lists a workflow's runs with their status, attempts and errors.
 - **New scopes.** `workflows:read` and `workflows:write`.
 
+**Reports.** Compatible changes to v1.
+
+- **Report operations.** `GET /reports/dashboard`, `/reports/conversations`, `/reports/messages`, `/reports/responses`, `/reports/resolutions`, `/reports/team`, `/reports/broadcasts` and `/reports/ads` answer the numbers of each Reports tab, with its filters and its definitions, for a period of America/Panama days. See [Reports](https://getricky.ai/en/docs/api/reports).
+- **New scope.** `reports:read`.
+
 ## October 15, 2026
 
 **Immediate webhooks, new events, files, single messages, tags and notes.** Compatible changes to v1.
