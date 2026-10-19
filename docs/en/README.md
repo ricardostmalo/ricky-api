@@ -42,6 +42,7 @@ A breaking change only ships in a new path version. Ricky announces it in the [C
 | Messages      | Read and send messages, and follow each send.                              | [Messages](https://getricky.ai/en/docs/api/reference/messages/list-messages)                |
 | Catalogs      | Channels, members, tags and templates that other operations use by ID.     | [Catalogs](https://getricky.ai/en/docs/api/reference/catalogs/list-channels)                |
 | Webhooks      | Event subscriptions and the log of their deliveries.                       | [Webhooks](https://getricky.ai/en/docs/api/reference/webhooks/list-webhooks)                |
+| Reports       | The numbers of the Reports pages, for a period and the same filters.       | [Reports](https://getricky.ai/en/docs/api/reference/reports/get-dashboard-report)           |
 
 The reference is generated from the API contract. The complete OpenAPI 3.1 document is at [`https://getricky.ai/openapi.json`](https://getricky.ai/openapi.json). Use it to generate a client or import it into your API testing tool.
 

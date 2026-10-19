@@ -59,6 +59,7 @@ Each operation requires one scope. A key without it gets `403 insufficient_scope
 | `webhooks:manage`     | Create, list and disable webhooks; read and retry their deliveries. |
 | `workflows:read`      | Read workflows and their executions.                                |
 | `workflows:write`     | Create, edit, activate, pause and delete workflows.                 |
+| `reports:read`        | Read the numbers of the Reports pages.                              |
 
 The table below is generated from the API contract: it is the exact list of operations and the scope each one requires.
 
@@ -100,6 +101,14 @@ The table below is generated from the API contract: it is the exact list of oper
 | [Activate a workflow](https://getricky.ai/en/docs/api/reference/workflows/activate-workflow) | `POST /workflows/{workflow_id}/activate` | `workflows:write` |
 | [Pause a workflow](https://getricky.ai/en/docs/api/reference/workflows/pause-workflow) | `POST /workflows/{workflow_id}/pause` | `workflows:write` |
 | [List executions](https://getricky.ai/en/docs/api/reference/workflows/list-workflow-executions) | `GET /workflows/{workflow_id}/executions` | `workflows:read` |
+| [Get the live dashboard](https://getricky.ai/en/docs/api/reference/reports/get-dashboard-report) | `GET /reports/dashboard` | `reports:read` |
+| [Get the conversations report](https://getricky.ai/en/docs/api/reference/reports/get-conversations-report) | `GET /reports/conversations` | `reports:read` |
+| [Get the messages report](https://getricky.ai/en/docs/api/reference/reports/get-messages-report) | `GET /reports/messages` | `reports:read` |
+| [Get the responses report](https://getricky.ai/en/docs/api/reference/reports/get-responses-report) | `GET /reports/responses` | `reports:read` |
+| [Get the resolutions report](https://getricky.ai/en/docs/api/reference/reports/get-resolutions-report) | `GET /reports/resolutions` | `reports:read` |
+| [Get the team report](https://getricky.ai/en/docs/api/reference/reports/get-team-report) | `GET /reports/team` | `reports:read` |
+| [Get the broadcasts report](https://getricky.ai/en/docs/api/reference/reports/get-broadcasts-report) | `GET /reports/broadcasts` | `reports:read` |
+| [Get the ads report](https://getricky.ai/en/docs/api/reference/reports/get-ads-report) | `GET /reports/ads` | `reports:read` |
 
 ## Authentication responses
 

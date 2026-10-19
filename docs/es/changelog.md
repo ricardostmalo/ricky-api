@@ -14,6 +14,11 @@ Esta página registra los cambios de la API. Un cambio incompatible solo llega e
 * **Ejecuciones.** `GET /workflows/{workflow_id}/executions` lista las ejecuciones de un workflow con su estado, intentos y errores.
 * **Permisos nuevos.** `workflows:read` y `workflows:write`.
 
+**Reportes.** Cambios compatibles con la v1.
+
+* **Operaciones de reportes.** `GET /reports/dashboard`, `/reports/conversations`, `/reports/messages`, `/reports/responses`, `/reports/resolutions`, `/reports/team`, `/reports/broadcasts` y `/reports/ads` responden los números de cada pestaña de Reportes, con sus filtros y sus definiciones, para un período de días de America/Panama. Consulta [Reportes](./reports.md).
+* **Permiso nuevo.** `reports:read`.
+
 ## 15 de octubre de 2026
 
 **Webhooks inmediatos, eventos nuevos, archivos, mensajes sueltos, etiquetas y notas.** Cambios compatibles con la v1.

@@ -1,6 +1,6 @@
 {
   "name": "getricky",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Official TypeScript SDK for the Ricky REST API",
   "keywords": [
     "api",

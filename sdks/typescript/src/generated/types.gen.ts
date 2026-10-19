@@ -31,6 +31,112 @@ export type Error = {
 };
 
 /**
+ * An AI agent that answers conversations alongside the team.
+ */
+export type Agent = {
+    /**
+     * Agent ID.
+     */
+    id: string;
+    /**
+     * Name the team sees.
+     */
+    name: string;
+    /**
+     * What the agent is for.
+     */
+    description: string | null;
+    /**
+     * How the agent answers customers.
+     */
+    instructions: string | null;
+    /**
+     * Model that writes its replies; one `id` of `GET /agent-options`.
+     */
+    model: string | null;
+    /**
+     * Voice on calls; one of `GET /agent-options`.
+     */
+    voice: string;
+    /**
+     * What the agent may do beyond replying, by capability `name`.
+     */
+    capabilities: Array<string>;
+    /**
+     * Members who receive the conversation when the agent hands it to a person.
+     */
+    handoff_user_ids: Array<string>;
+    /**
+     * When it was created.
+     */
+    created_at: string;
+    /**
+     * Last change to its settings.
+     */
+    updated_at: string;
+    /**
+     * When it was archived; null while active.
+     */
+    archived_at: string | null;
+};
+
+/**
+ * What an agent can be configured with.
+ */
+export type AgentOptions = {
+    /**
+     * Models an agent can use.
+     */
+    models: Array<{
+        /**
+         * Model ID, the value of `model`.
+         */
+        id: string;
+        /**
+         * Display name.
+         */
+        label: string;
+        /**
+         * What the model reads.
+         */
+        input: Array<'text' | 'image'>;
+    }>;
+    /**
+     * Model of an agent created without one.
+     */
+    default_model: string;
+    /**
+     * Voices an agent can use.
+     */
+    voices: Array<string>;
+    /**
+     * Voice of an agent created without one.
+     */
+    default_voice: string;
+    /**
+     * Capabilities an agent can be given.
+     */
+    capabilities: Array<{
+        /**
+         * Capability name, the value in `capabilities`.
+         */
+        name: string;
+        /**
+         * Display name in Ricky.
+         */
+        label: string;
+        /**
+         * What it lets the agent do, as Ricky shows it.
+         */
+        description: string;
+        /**
+         * Integration it belongs to; it works only once the organization connects it in Ricky. `human_handoff` needs no connection but requires `handoff_user_ids`.
+         */
+        family: string;
+    }>;
+};
+
+/**
  * A label applied to contacts.
  */
 export type Tag = {
@@ -2034,6 +2140,282 @@ export type WorkflowExecution = {
 };
 
 /**
+ * A branch or place the agents can send as a WhatsApp location.
+ */
+export type KnowledgeLocation = {
+    /**
+     * Location ID.
+     */
+    id: string;
+    /**
+     * Name customers know it by.
+     */
+    name: string;
+    /**
+     * Full address as customers read it.
+     */
+    address: string;
+    /**
+     * Latitude of the map pin.
+     */
+    latitude: number;
+    /**
+     * Longitude of the map pin.
+     */
+    longitude: number;
+    /**
+     * Street.
+     */
+    street: string | null;
+    /**
+     * City.
+     */
+    city: string | null;
+    /**
+     * State, province or region.
+     */
+    state: string | null;
+    /**
+     * Postal code.
+     */
+    postal_code: string | null;
+    /**
+     * Country.
+     */
+    country: string | null;
+    /**
+     * Country code, ISO 3166-1 alpha-2.
+     */
+    country_code: string | null;
+    /**
+     * Phone in E.164.
+     */
+    phone: string | null;
+    /**
+     * Email.
+     */
+    email: string | null;
+    /**
+     * Opening hours, as free text.
+     */
+    hours: string | null;
+};
+
+/**
+ * A contact card in the knowledge directory, which agents can send to customers.
+ */
+export type KnowledgeContact = {
+    /**
+     * Knowledge contact ID.
+     */
+    id: string;
+    /**
+     * Name shown on the contact card.
+     */
+    display_name: string;
+    /**
+     * First name.
+     */
+    first_name: string | null;
+    /**
+     * Last name.
+     */
+    last_name: string | null;
+    /**
+     * Name prefix, such as `Dr.`.
+     */
+    prefix: string | null;
+    /**
+     * Name suffix.
+     */
+    suffix: string | null;
+    /**
+     * Company.
+     */
+    company: string | null;
+    /**
+     * Department.
+     */
+    department: string | null;
+    /**
+     * Job title.
+     */
+    job_title: string | null;
+    /**
+     * When the agents should share it.
+     */
+    description: string | null;
+    /**
+     * Phone in E.164.
+     */
+    phone: string | null;
+    /**
+     * `CELL`, `WORK` or `HOME`.
+     */
+    phone_type: string | null;
+    /**
+     * Email.
+     */
+    email: string | null;
+    /**
+     * `WORK` or `PERSONAL`.
+     */
+    email_type: string | null;
+};
+
+/**
+ * A document or image the agents can consult or send.
+ */
+export type KnowledgeFile = {
+    /**
+     * File ID.
+     */
+    id: string;
+    /**
+     * Title the agents see.
+     */
+    title: string;
+    /**
+     * When the agents should use it; may be empty.
+     */
+    description: string;
+    /**
+     * Original file name.
+     */
+    filename: string;
+    /**
+     * File type.
+     */
+    mime_type: 'application/pdf' | 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' | 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' | 'image/jpeg' | 'image/png';
+    /**
+     * Size in bytes.
+     */
+    size_bytes: number;
+    /**
+     * `uploading` until `POST /knowledge/files/{file_id}/complete` reads it; then `ready`.
+     */
+    status: 'uploading' | 'ready' | 'failed';
+    /**
+     * Agents may read it to answer.
+     */
+    consult_enabled: boolean;
+    /**
+     * Agents may send the file itself to customers.
+     */
+    send_enabled: boolean;
+    /**
+     * Pages of a PDF; null otherwise.
+     */
+    page_count: number | null;
+    /**
+     * Start of the text Ricky read from it.
+     */
+    preview: string | null;
+    /**
+     * Why Ricky could not read useful content; null when it could.
+     */
+    extraction_error: string | null;
+    /**
+     * Signed download URL, valid for five minutes. Only `GET /knowledge/files/{file_id}` of a `ready` file carries it; null elsewhere.
+     */
+    download_url: string | null;
+    /**
+     * When the upload began.
+     */
+    created_at: string;
+    /**
+     * Last change.
+     */
+    updated_at: string;
+};
+
+/**
+ * A file waiting for its bytes, and where to put them.
+ */
+export type KnowledgeFileUpload = {
+    file: KnowledgeFile;
+    /**
+     * Signed URL valid for two hours. `PUT` the file bytes to it with `Content-Type` set to `mime_type`, then call `POST /knowledge/files/{file_id}/complete`.
+     */
+    upload_url: string;
+};
+
+/**
+ * Only `name` is required; it does not connect the agent to any channel.
+ */
+export type CreateAgent = {
+    /**
+     * Name the team sees.
+     */
+    name: string;
+    /**
+     * What the agent is for.
+     */
+    description?: string | null;
+    /**
+     * How the agent answers customers.
+     */
+    instructions?: string | null;
+    /**
+     * A model `id` of `GET /agent-options`. Without one, the default model.
+     */
+    model?: string;
+    /**
+     * A voice of `GET /agent-options`. Without one, the default voice.
+     */
+    voice?: string;
+    /**
+     * The complete set of capability names. Replaces the current ones.
+     */
+    capabilities?: Array<string>;
+    /**
+     * The complete set of members who receive handed-off conversations. Required with `ricky.handoff.request`.
+     */
+    handoff_user_ids?: Array<string>;
+};
+
+/**
+ * Only the fields you send change. Send `null` to clear a text.
+ */
+export type UpdateAgent = {
+    /**
+     * Name the team sees.
+     */
+    name?: string;
+    /**
+     * What the agent is for.
+     */
+    description?: string | null;
+    /**
+     * How the agent answers customers.
+     */
+    instructions?: string | null;
+    /**
+     * A model `id` of `GET /agent-options`. Without one, the default model.
+     */
+    model?: string;
+    /**
+     * A voice of `GET /agent-options`. Without one, the default voice.
+     */
+    voice?: string;
+    /**
+     * The complete set of capability names. Replaces the current ones.
+     */
+    capabilities?: Array<string>;
+    /**
+     * The complete set of members who receive handed-off conversations. Required with `ricky.handoff.request`.
+     */
+    handoff_user_ids?: Array<string>;
+};
+
+export type AssignConversationAgent = {
+    /**
+     * Agent that answers from now on; null turns the AI off for the conversation.
+     */
+    agent_id: string | null;
+};
+
+/**
  * A contact needs at least a name, a phone or an email.
  */
 export type CreateContact = {
@@ -2835,6 +3217,288 @@ export type UpdateWorkflow = {
             }>;
         };
     };
+};
+
+/**
+ * A location needs a name, an address and its coordinates.
+ */
+export type CreateKnowledgeLocation = {
+    /**
+     * Name customers know it by.
+     */
+    name: string;
+    /**
+     * Full address as customers read it.
+     */
+    address: string;
+    /**
+     * Latitude of the map pin, confirmed, not estimated.
+     */
+    latitude: number;
+    /**
+     * Longitude of the map pin, confirmed, not estimated.
+     */
+    longitude: number;
+    /**
+     * Street.
+     */
+    street?: string | null;
+    /**
+     * City.
+     */
+    city?: string | null;
+    /**
+     * State, province or region.
+     */
+    state?: string | null;
+    /**
+     * Postal code.
+     */
+    postal_code?: string | null;
+    /**
+     * Country.
+     */
+    country?: string | null;
+    /**
+     * Country code, ISO 3166-1 alpha-2.
+     */
+    country_code?: string | null;
+    /**
+     * Phone with country code, for example `+507 6000-1234`.
+     */
+    phone?: string | null;
+    /**
+     * Email.
+     */
+    email?: string | null;
+    /**
+     * Opening hours, as free text.
+     */
+    hours?: string | null;
+};
+
+/**
+ * Only the fields you send change. Send `null` to clear an optional one.
+ */
+export type UpdateKnowledgeLocation = {
+    /**
+     * Name customers know it by.
+     */
+    name?: string;
+    /**
+     * Full address as customers read it.
+     */
+    address?: string;
+    /**
+     * Latitude of the map pin, confirmed, not estimated.
+     */
+    latitude?: number;
+    /**
+     * Longitude of the map pin, confirmed, not estimated.
+     */
+    longitude?: number;
+    /**
+     * Street.
+     */
+    street?: string | null;
+    /**
+     * City.
+     */
+    city?: string | null;
+    /**
+     * State, province or region.
+     */
+    state?: string | null;
+    /**
+     * Postal code.
+     */
+    postal_code?: string | null;
+    /**
+     * Country.
+     */
+    country?: string | null;
+    /**
+     * Country code, ISO 3166-1 alpha-2.
+     */
+    country_code?: string | null;
+    /**
+     * Phone with country code, for example `+507 6000-1234`.
+     */
+    phone?: string | null;
+    /**
+     * Email.
+     */
+    email?: string | null;
+    /**
+     * Opening hours, as free text.
+     */
+    hours?: string | null;
+};
+
+/**
+ * A contact card needs a display name and a phone or an email.
+ */
+export type CreateKnowledgeContact = {
+    /**
+     * Name shown on the contact card.
+     */
+    display_name: string;
+    /**
+     * First name.
+     */
+    first_name?: string | null;
+    /**
+     * Last name.
+     */
+    last_name?: string | null;
+    /**
+     * Name prefix, such as `Dr.`.
+     */
+    prefix?: string | null;
+    /**
+     * Name suffix.
+     */
+    suffix?: string | null;
+    /**
+     * Company.
+     */
+    company?: string | null;
+    /**
+     * Department.
+     */
+    department?: string | null;
+    /**
+     * Job title.
+     */
+    job_title?: string | null;
+    /**
+     * When the agents should share it.
+     */
+    description?: string | null;
+    /**
+     * Phone with country code, for example `+507 6000-1234`.
+     */
+    phone?: string | null;
+    phone_type?: 'CELL' | 'WORK' | 'HOME' | null;
+    /**
+     * Email.
+     */
+    email?: string | null;
+    email_type?: 'WORK' | 'PERSONAL' | null;
+};
+
+/**
+ * Only the fields you send change. Send `null` to clear an optional one; the card keeps a phone or an email.
+ */
+export type UpdateKnowledgeContact = {
+    /**
+     * Name shown on the contact card.
+     */
+    display_name?: string;
+    /**
+     * First name.
+     */
+    first_name?: string | null;
+    /**
+     * Last name.
+     */
+    last_name?: string | null;
+    /**
+     * Name prefix, such as `Dr.`.
+     */
+    prefix?: string | null;
+    /**
+     * Name suffix.
+     */
+    suffix?: string | null;
+    /**
+     * Company.
+     */
+    company?: string | null;
+    /**
+     * Department.
+     */
+    department?: string | null;
+    /**
+     * Job title.
+     */
+    job_title?: string | null;
+    /**
+     * When the agents should share it.
+     */
+    description?: string | null;
+    /**
+     * Phone with country code, for example `+507 6000-1234`.
+     */
+    phone?: string | null;
+    phone_type?: 'CELL' | 'WORK' | 'HOME' | null;
+    /**
+     * Email.
+     */
+    email?: string | null;
+    email_type?: 'WORK' | 'PERSONAL' | null;
+};
+
+/**
+ * Begins an upload. Ricky answers where to `PUT` the bytes.
+ */
+export type CreateKnowledgeFile = {
+    /**
+     * Title the agents see.
+     */
+    title: string;
+    /**
+     * When the agents should use it.
+     */
+    description?: string;
+    /**
+     * File name, with its extension.
+     */
+    filename: string;
+    /**
+     * File type: PDF, Word or Excel up to 100 MB; JPEG or PNG up to 5 MB.
+     */
+    mime_type: 'application/pdf' | 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' | 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' | 'image/jpeg' | 'image/png';
+    /**
+     * Exact size of the file you will upload.
+     */
+    size_bytes: number;
+};
+
+/**
+ * The body is optional.
+ */
+export type CompleteKnowledgeFile = {
+    /**
+     * Agents may read it to answer. Ignored when Ricky reads no useful content.
+     */
+    consult_enabled?: boolean;
+    /**
+     * Agents may send the file itself.
+     */
+    send_enabled?: boolean;
+};
+
+/**
+ * Only the fields you send change. The file must be `ready`.
+ */
+export type UpdateKnowledgeFile = {
+    /**
+     * Title the agents see.
+     */
+    title?: string;
+    /**
+     * When the agents should use it.
+     */
+    description?: string;
+    /**
+     * Agents may read it to answer.
+     */
+    consult_enabled?: boolean;
+    /**
+     * Agents may send the file itself.
+     */
+    send_enabled?: boolean;
 };
 
 /**
@@ -5405,6 +6069,1357 @@ export type GetAdsReportResponses = {
 };
 
 export type GetAdsReportResponse = GetAdsReportResponses[keyof GetAdsReportResponses];
+
+export type ListAgentsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/agents';
+};
+
+export type ListAgentsErrors = {
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListAgentsError = ListAgentsErrors[keyof ListAgentsErrors];
+
+export type ListAgentsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<Agent>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListAgentsResponse = ListAgentsResponses[keyof ListAgentsResponses];
+
+export type CreateAgentData = {
+    body: CreateAgent;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/agents';
+};
+
+export type CreateAgentErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type CreateAgentError = CreateAgentErrors[keyof CreateAgentErrors];
+
+export type CreateAgentResponses = {
+    /**
+     * Success.
+     */
+    201: {
+        data: Agent;
+    };
+};
+
+export type CreateAgentResponse = CreateAgentResponses[keyof CreateAgentResponses];
+
+export type ArchiveAgentData = {
+    body?: never;
+    path: {
+        /**
+         * Agent ID.
+         */
+        agent_id: string;
+    };
+    query?: never;
+    url: '/agents/{agent_id}';
+};
+
+export type ArchiveAgentErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ArchiveAgentError = ArchiveAgentErrors[keyof ArchiveAgentErrors];
+
+export type ArchiveAgentResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Agent;
+    };
+};
+
+export type ArchiveAgentResponse = ArchiveAgentResponses[keyof ArchiveAgentResponses];
+
+export type GetAgentData = {
+    body?: never;
+    path: {
+        /**
+         * Agent ID.
+         */
+        agent_id: string;
+    };
+    query?: never;
+    url: '/agents/{agent_id}';
+};
+
+export type GetAgentErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetAgentError = GetAgentErrors[keyof GetAgentErrors];
+
+export type GetAgentResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Agent;
+    };
+};
+
+export type GetAgentResponse = GetAgentResponses[keyof GetAgentResponses];
+
+export type UpdateAgentData = {
+    body: UpdateAgent;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Agent ID.
+         */
+        agent_id: string;
+    };
+    query?: never;
+    url: '/agents/{agent_id}';
+};
+
+export type UpdateAgentErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type UpdateAgentError = UpdateAgentErrors[keyof UpdateAgentErrors];
+
+export type UpdateAgentResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Agent;
+    };
+};
+
+export type UpdateAgentResponse = UpdateAgentResponses[keyof UpdateAgentResponses];
+
+export type GetAgentOptionsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/agent-options';
+};
+
+export type GetAgentOptionsErrors = {
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetAgentOptionsError = GetAgentOptionsErrors[keyof GetAgentOptionsErrors];
+
+export type GetAgentOptionsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: AgentOptions;
+    };
+};
+
+export type GetAgentOptionsResponse = GetAgentOptionsResponses[keyof GetAgentOptionsResponses];
+
+export type AssignConversationAgentData = {
+    body: AssignConversationAgent;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Conversation ID.
+         */
+        conversation_id: string;
+    };
+    query?: never;
+    url: '/conversations/{conversation_id}/agent';
+};
+
+export type AssignConversationAgentErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type AssignConversationAgentError = AssignConversationAgentErrors[keyof AssignConversationAgentErrors];
+
+export type AssignConversationAgentResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Conversation;
+    };
+};
+
+export type AssignConversationAgentResponse = AssignConversationAgentResponses[keyof AssignConversationAgentResponses];
+
+export type ListKnowledgeLocationsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/knowledge/locations';
+};
+
+export type ListKnowledgeLocationsErrors = {
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListKnowledgeLocationsError = ListKnowledgeLocationsErrors[keyof ListKnowledgeLocationsErrors];
+
+export type ListKnowledgeLocationsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<KnowledgeLocation>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListKnowledgeLocationsResponse = ListKnowledgeLocationsResponses[keyof ListKnowledgeLocationsResponses];
+
+export type CreateKnowledgeLocationData = {
+    body: CreateKnowledgeLocation;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/knowledge/locations';
+};
+
+export type CreateKnowledgeLocationErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type CreateKnowledgeLocationError = CreateKnowledgeLocationErrors[keyof CreateKnowledgeLocationErrors];
+
+export type CreateKnowledgeLocationResponses = {
+    /**
+     * Success.
+     */
+    201: {
+        data: KnowledgeLocation;
+    };
+};
+
+export type CreateKnowledgeLocationResponse = CreateKnowledgeLocationResponses[keyof CreateKnowledgeLocationResponses];
+
+export type DeleteKnowledgeLocationData = {
+    body?: never;
+    path: {
+        /**
+         * Location ID.
+         */
+        location_id: string;
+    };
+    query?: never;
+    url: '/knowledge/locations/{location_id}';
+};
+
+export type DeleteKnowledgeLocationErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type DeleteKnowledgeLocationError = DeleteKnowledgeLocationErrors[keyof DeleteKnowledgeLocationErrors];
+
+export type DeleteKnowledgeLocationResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: KnowledgeLocation;
+    };
+};
+
+export type DeleteKnowledgeLocationResponse = DeleteKnowledgeLocationResponses[keyof DeleteKnowledgeLocationResponses];
+
+export type GetKnowledgeLocationData = {
+    body?: never;
+    path: {
+        /**
+         * Location ID.
+         */
+        location_id: string;
+    };
+    query?: never;
+    url: '/knowledge/locations/{location_id}';
+};
+
+export type GetKnowledgeLocationErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetKnowledgeLocationError = GetKnowledgeLocationErrors[keyof GetKnowledgeLocationErrors];
+
+export type GetKnowledgeLocationResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: KnowledgeLocation;
+    };
+};
+
+export type GetKnowledgeLocationResponse = GetKnowledgeLocationResponses[keyof GetKnowledgeLocationResponses];
+
+export type UpdateKnowledgeLocationData = {
+    body: UpdateKnowledgeLocation;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Location ID.
+         */
+        location_id: string;
+    };
+    query?: never;
+    url: '/knowledge/locations/{location_id}';
+};
+
+export type UpdateKnowledgeLocationErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type UpdateKnowledgeLocationError = UpdateKnowledgeLocationErrors[keyof UpdateKnowledgeLocationErrors];
+
+export type UpdateKnowledgeLocationResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: KnowledgeLocation;
+    };
+};
+
+export type UpdateKnowledgeLocationResponse = UpdateKnowledgeLocationResponses[keyof UpdateKnowledgeLocationResponses];
+
+export type ListKnowledgeContactsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/knowledge/contacts';
+};
+
+export type ListKnowledgeContactsErrors = {
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListKnowledgeContactsError = ListKnowledgeContactsErrors[keyof ListKnowledgeContactsErrors];
+
+export type ListKnowledgeContactsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<KnowledgeContact>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListKnowledgeContactsResponse = ListKnowledgeContactsResponses[keyof ListKnowledgeContactsResponses];
+
+export type CreateKnowledgeContactData = {
+    body: CreateKnowledgeContact;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/knowledge/contacts';
+};
+
+export type CreateKnowledgeContactErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type CreateKnowledgeContactError = CreateKnowledgeContactErrors[keyof CreateKnowledgeContactErrors];
+
+export type CreateKnowledgeContactResponses = {
+    /**
+     * Success.
+     */
+    201: {
+        data: KnowledgeContact;
+    };
+};
+
+export type CreateKnowledgeContactResponse = CreateKnowledgeContactResponses[keyof CreateKnowledgeContactResponses];
+
+export type DeleteKnowledgeContactData = {
+    body?: never;
+    path: {
+        /**
+         * Knowledge contact ID.
+         */
+        knowledge_contact_id: string;
+    };
+    query?: never;
+    url: '/knowledge/contacts/{knowledge_contact_id}';
+};
+
+export type DeleteKnowledgeContactErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type DeleteKnowledgeContactError = DeleteKnowledgeContactErrors[keyof DeleteKnowledgeContactErrors];
+
+export type DeleteKnowledgeContactResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: KnowledgeContact;
+    };
+};
+
+export type DeleteKnowledgeContactResponse = DeleteKnowledgeContactResponses[keyof DeleteKnowledgeContactResponses];
+
+export type GetKnowledgeContactData = {
+    body?: never;
+    path: {
+        /**
+         * Knowledge contact ID.
+         */
+        knowledge_contact_id: string;
+    };
+    query?: never;
+    url: '/knowledge/contacts/{knowledge_contact_id}';
+};
+
+export type GetKnowledgeContactErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetKnowledgeContactError = GetKnowledgeContactErrors[keyof GetKnowledgeContactErrors];
+
+export type GetKnowledgeContactResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: KnowledgeContact;
+    };
+};
+
+export type GetKnowledgeContactResponse = GetKnowledgeContactResponses[keyof GetKnowledgeContactResponses];
+
+export type UpdateKnowledgeContactData = {
+    body: UpdateKnowledgeContact;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Knowledge contact ID.
+         */
+        knowledge_contact_id: string;
+    };
+    query?: never;
+    url: '/knowledge/contacts/{knowledge_contact_id}';
+};
+
+export type UpdateKnowledgeContactErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type UpdateKnowledgeContactError = UpdateKnowledgeContactErrors[keyof UpdateKnowledgeContactErrors];
+
+export type UpdateKnowledgeContactResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: KnowledgeContact;
+    };
+};
+
+export type UpdateKnowledgeContactResponse = UpdateKnowledgeContactResponses[keyof UpdateKnowledgeContactResponses];
+
+export type ListKnowledgeFilesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/knowledge/files';
+};
+
+export type ListKnowledgeFilesErrors = {
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListKnowledgeFilesError = ListKnowledgeFilesErrors[keyof ListKnowledgeFilesErrors];
+
+export type ListKnowledgeFilesResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<KnowledgeFile>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListKnowledgeFilesResponse = ListKnowledgeFilesResponses[keyof ListKnowledgeFilesResponses];
+
+export type CreateKnowledgeFileData = {
+    body: CreateKnowledgeFile;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/knowledge/files';
+};
+
+export type CreateKnowledgeFileErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type CreateKnowledgeFileError = CreateKnowledgeFileErrors[keyof CreateKnowledgeFileErrors];
+
+export type CreateKnowledgeFileResponses = {
+    /**
+     * Success.
+     */
+    201: {
+        data: KnowledgeFileUpload;
+    };
+};
+
+export type CreateKnowledgeFileResponse = CreateKnowledgeFileResponses[keyof CreateKnowledgeFileResponses];
+
+export type CompleteKnowledgeFileData = {
+    body: CompleteKnowledgeFile;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * File ID.
+         */
+        file_id: string;
+    };
+    query?: never;
+    url: '/knowledge/files/{file_id}/complete';
+};
+
+export type CompleteKnowledgeFileErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type CompleteKnowledgeFileError = CompleteKnowledgeFileErrors[keyof CompleteKnowledgeFileErrors];
+
+export type CompleteKnowledgeFileResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: KnowledgeFile;
+    };
+};
+
+export type CompleteKnowledgeFileResponse = CompleteKnowledgeFileResponses[keyof CompleteKnowledgeFileResponses];
+
+export type DeleteKnowledgeFileData = {
+    body?: never;
+    path: {
+        /**
+         * File ID.
+         */
+        file_id: string;
+    };
+    query?: never;
+    url: '/knowledge/files/{file_id}';
+};
+
+export type DeleteKnowledgeFileErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type DeleteKnowledgeFileError = DeleteKnowledgeFileErrors[keyof DeleteKnowledgeFileErrors];
+
+export type DeleteKnowledgeFileResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: KnowledgeFile;
+    };
+};
+
+export type DeleteKnowledgeFileResponse = DeleteKnowledgeFileResponses[keyof DeleteKnowledgeFileResponses];
+
+export type GetKnowledgeFileData = {
+    body?: never;
+    path: {
+        /**
+         * File ID.
+         */
+        file_id: string;
+    };
+    query?: never;
+    url: '/knowledge/files/{file_id}';
+};
+
+export type GetKnowledgeFileErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type GetKnowledgeFileError = GetKnowledgeFileErrors[keyof GetKnowledgeFileErrors];
+
+export type GetKnowledgeFileResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: KnowledgeFile;
+    };
+};
+
+export type GetKnowledgeFileResponse = GetKnowledgeFileResponses[keyof GetKnowledgeFileResponses];
+
+export type UpdateKnowledgeFileData = {
+    body: UpdateKnowledgeFile;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * File ID.
+         */
+        file_id: string;
+    };
+    query?: never;
+    url: '/knowledge/files/{file_id}';
+};
+
+export type UpdateKnowledgeFileErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type UpdateKnowledgeFileError = UpdateKnowledgeFileErrors[keyof UpdateKnowledgeFileErrors];
+
+export type UpdateKnowledgeFileResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: KnowledgeFile;
+    };
+};
+
+export type UpdateKnowledgeFileResponse = UpdateKnowledgeFileResponses[keyof UpdateKnowledgeFileResponses];
 
 export type WebhookMessageReceivedWebhookPayload = WebhookEvent;
 

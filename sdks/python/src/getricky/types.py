@@ -35,6 +35,118 @@ class Error(TypedDict):
     error: ErrorError
 
 
+class Agent(TypedDict):
+    """
+    An AI agent that answers conversations alongside the team.
+    """
+
+    id: str
+    """
+    Agent ID.
+    """
+    name: str
+    """
+    Name the team sees.
+    """
+    description: Optional[str]
+    """
+    What the agent is for.
+    """
+    instructions: Optional[str]
+    """
+    How the agent answers customers.
+    """
+    model: Optional[str]
+    """
+    Model that writes its replies; one `id` of `GET /agent-options`.
+    """
+    voice: str
+    """
+    Voice on calls; one of `GET /agent-options`.
+    """
+    capabilities: List[str]
+    """
+    What the agent may do beyond replying, by capability `name`.
+    """
+    handoff_user_ids: List[str]
+    """
+    Members who receive the conversation when the agent hands it to a person.
+    """
+    created_at: str
+    """
+    When it was created.
+    """
+    updated_at: str
+    """
+    Last change to its settings.
+    """
+    archived_at: Optional[str]
+    """
+    When it was archived; null while active.
+    """
+
+
+class AgentOptionsModel(TypedDict):
+    id: str
+    """
+    Model ID, the value of `model`.
+    """
+    label: str
+    """
+    Display name.
+    """
+    input: List[Literal["text", "image"]]
+    """
+    What the model reads.
+    """
+
+
+class AgentOptionsCapability(TypedDict):
+    name: str
+    """
+    Capability name, the value in `capabilities`.
+    """
+    label: str
+    """
+    Display name in Ricky.
+    """
+    description: str
+    """
+    What it lets the agent do, as Ricky shows it.
+    """
+    family: str
+    """
+    Integration it belongs to; it works only once the organization connects it in Ricky. `human_handoff` needs no connection but requires `handoff_user_ids`.
+    """
+
+
+class AgentOptions(TypedDict):
+    """
+    What an agent can be configured with.
+    """
+
+    models: List[AgentOptionsModel]
+    """
+    Models an agent can use.
+    """
+    default_model: str
+    """
+    Model of an agent created without one.
+    """
+    voices: List[str]
+    """
+    Voices an agent can use.
+    """
+    default_voice: str
+    """
+    Voice of an agent created without one.
+    """
+    capabilities: List[AgentOptionsCapability]
+    """
+    Capabilities an agent can be given.
+    """
+
+
 class Tag(TypedDict):
     """
     A label applied to contacts.
@@ -2304,6 +2416,294 @@ class WorkflowExecution(TypedDict):
     """
 
 
+class KnowledgeLocation(TypedDict):
+    """
+    A branch or place the agents can send as a WhatsApp location.
+    """
+
+    id: str
+    """
+    Location ID.
+    """
+    name: str
+    """
+    Name customers know it by.
+    """
+    address: str
+    """
+    Full address as customers read it.
+    """
+    latitude: float
+    """
+    Latitude of the map pin.
+    """
+    longitude: float
+    """
+    Longitude of the map pin.
+    """
+    street: Optional[str]
+    """
+    Street.
+    """
+    city: Optional[str]
+    """
+    City.
+    """
+    state: Optional[str]
+    """
+    State, province or region.
+    """
+    postal_code: Optional[str]
+    """
+    Postal code.
+    """
+    country: Optional[str]
+    """
+    Country.
+    """
+    country_code: Optional[str]
+    """
+    Country code, ISO 3166-1 alpha-2.
+    """
+    phone: Optional[str]
+    """
+    Phone in E.164.
+    """
+    email: Optional[str]
+    """
+    Email.
+    """
+    hours: Optional[str]
+    """
+    Opening hours, as free text.
+    """
+
+
+class KnowledgeContact(TypedDict):
+    """
+    A contact card in the knowledge directory, which agents can send to customers.
+    """
+
+    id: str
+    """
+    Knowledge contact ID.
+    """
+    display_name: str
+    """
+    Name shown on the contact card.
+    """
+    first_name: Optional[str]
+    """
+    First name.
+    """
+    last_name: Optional[str]
+    """
+    Last name.
+    """
+    prefix: Optional[str]
+    """
+    Name prefix, such as `Dr.`.
+    """
+    suffix: Optional[str]
+    """
+    Name suffix.
+    """
+    company: Optional[str]
+    """
+    Company.
+    """
+    department: Optional[str]
+    """
+    Department.
+    """
+    job_title: Optional[str]
+    """
+    Job title.
+    """
+    description: Optional[str]
+    """
+    When the agents should share it.
+    """
+    phone: Optional[str]
+    """
+    Phone in E.164.
+    """
+    phone_type: Optional[str]
+    """
+    `CELL`, `WORK` or `HOME`.
+    """
+    email: Optional[str]
+    """
+    Email.
+    """
+    email_type: Optional[str]
+    """
+    `WORK` or `PERSONAL`.
+    """
+
+
+class KnowledgeFile(TypedDict):
+    """
+    A document or image the agents can consult or send.
+    """
+
+    id: str
+    """
+    File ID.
+    """
+    title: str
+    """
+    Title the agents see.
+    """
+    description: str
+    """
+    When the agents should use it; may be empty.
+    """
+    filename: str
+    """
+    Original file name.
+    """
+    mime_type: Literal["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "image/jpeg", "image/png"]
+    """
+    File type.
+    """
+    size_bytes: int
+    """
+    Size in bytes.
+    """
+    status: Literal["uploading", "ready", "failed"]
+    """
+    `uploading` until `POST /knowledge/files/{file_id}/complete` reads it; then `ready`.
+    """
+    consult_enabled: bool
+    """
+    Agents may read it to answer.
+    """
+    send_enabled: bool
+    """
+    Agents may send the file itself to customers.
+    """
+    page_count: Optional[int]
+    """
+    Pages of a PDF; null otherwise.
+    """
+    preview: Optional[str]
+    """
+    Start of the text Ricky read from it.
+    """
+    extraction_error: Optional[str]
+    """
+    Why Ricky could not read useful content; null when it could.
+    """
+    download_url: Optional[str]
+    """
+    Signed download URL, valid for five minutes. Only `GET /knowledge/files/{file_id}` of a `ready` file carries it; null elsewhere.
+    """
+    created_at: str
+    """
+    When the upload began.
+    """
+    updated_at: str
+    """
+    Last change.
+    """
+
+
+class KnowledgeFileUpload(TypedDict):
+    """
+    A file waiting for its bytes, and where to put them.
+    """
+
+    file: KnowledgeFile
+    upload_url: str
+    """
+    Signed URL valid for two hours. `PUT` the file bytes to it with `Content-Type` set to `mime_type`, then call `POST /knowledge/files/{file_id}/complete`.
+    """
+
+
+CreateAgentCapability: TypeAlias = str
+
+
+class CreateAgent(TypedDict, closed=True):
+    """
+    Only `name` is required; it does not connect the agent to any channel.
+    """
+
+    name: str
+    """
+    Name the team sees.
+    """
+    description: NotRequired[Optional[str]]
+    """
+    What the agent is for.
+    """
+    instructions: NotRequired[Optional[str]]
+    """
+    How the agent answers customers.
+    """
+    model: NotRequired[str]
+    """
+    A model `id` of `GET /agent-options`. Without one, the default model.
+    """
+    voice: NotRequired[str]
+    """
+    A voice of `GET /agent-options`. Without one, the default voice.
+    """
+    capabilities: NotRequired[List[CreateAgentCapability]]
+    """
+    The complete set of capability names. Replaces the current ones.
+    """
+    handoff_user_ids: NotRequired[List[str]]
+    """
+    The complete set of members who receive handed-off conversations. Required with `ricky.handoff.request`.
+    """
+
+
+UpdateAgentCapability: TypeAlias = str
+
+
+class UpdateAgent(TypedDict, closed=True):
+    """
+    Only the fields you send change. Send `null` to clear a text.
+    """
+
+    name: NotRequired[str]
+    """
+    Name the team sees.
+    """
+    description: NotRequired[Optional[str]]
+    """
+    What the agent is for.
+    """
+    instructions: NotRequired[Optional[str]]
+    """
+    How the agent answers customers.
+    """
+    model: NotRequired[str]
+    """
+    A model `id` of `GET /agent-options`. Without one, the default model.
+    """
+    voice: NotRequired[str]
+    """
+    A voice of `GET /agent-options`. Without one, the default voice.
+    """
+    capabilities: NotRequired[List[UpdateAgentCapability]]
+    """
+    The complete set of capability names. Replaces the current ones.
+    """
+    handoff_user_ids: NotRequired[List[str]]
+    """
+    The complete set of members who receive handed-off conversations. Required with `ricky.handoff.request`.
+    """
+
+
+class AssignConversationAgent(TypedDict, closed=True):
+    agent_id: Optional[str]
+    """
+    Agent that answers from now on; null turns the AI off for the conversation.
+    """
+
+
 class CreateContact(TypedDict, closed=True):
     """
     A contact needs at least a name, a phone or an email.
@@ -3323,4 +3723,293 @@ class UpdateWorkflow(TypedDict, closed=True):
     definition: NotRequired[UpdateWorkflowDefinition]
     """
     Replaces the whole definition.
+    """
+
+
+class CreateKnowledgeLocation(TypedDict, closed=True):
+    """
+    A location needs a name, an address and its coordinates.
+    """
+
+    name: str
+    """
+    Name customers know it by.
+    """
+    address: str
+    """
+    Full address as customers read it.
+    """
+    latitude: float
+    """
+    Latitude of the map pin, confirmed, not estimated.
+    """
+    longitude: float
+    """
+    Longitude of the map pin, confirmed, not estimated.
+    """
+    street: NotRequired[Optional[str]]
+    """
+    Street.
+    """
+    city: NotRequired[Optional[str]]
+    """
+    City.
+    """
+    state: NotRequired[Optional[str]]
+    """
+    State, province or region.
+    """
+    postal_code: NotRequired[Optional[str]]
+    """
+    Postal code.
+    """
+    country: NotRequired[Optional[str]]
+    """
+    Country.
+    """
+    country_code: NotRequired[Optional[str]]
+    """
+    Country code, ISO 3166-1 alpha-2.
+    """
+    phone: NotRequired[Optional[str]]
+    """
+    Phone with country code, for example `+507 6000-1234`.
+    """
+    email: NotRequired[Optional[str]]
+    """
+    Email.
+    """
+    hours: NotRequired[Optional[str]]
+    """
+    Opening hours, as free text.
+    """
+
+
+class UpdateKnowledgeLocation(TypedDict, closed=True):
+    """
+    Only the fields you send change. Send `null` to clear an optional one.
+    """
+
+    name: NotRequired[str]
+    """
+    Name customers know it by.
+    """
+    address: NotRequired[str]
+    """
+    Full address as customers read it.
+    """
+    latitude: NotRequired[float]
+    """
+    Latitude of the map pin, confirmed, not estimated.
+    """
+    longitude: NotRequired[float]
+    """
+    Longitude of the map pin, confirmed, not estimated.
+    """
+    street: NotRequired[Optional[str]]
+    """
+    Street.
+    """
+    city: NotRequired[Optional[str]]
+    """
+    City.
+    """
+    state: NotRequired[Optional[str]]
+    """
+    State, province or region.
+    """
+    postal_code: NotRequired[Optional[str]]
+    """
+    Postal code.
+    """
+    country: NotRequired[Optional[str]]
+    """
+    Country.
+    """
+    country_code: NotRequired[Optional[str]]
+    """
+    Country code, ISO 3166-1 alpha-2.
+    """
+    phone: NotRequired[Optional[str]]
+    """
+    Phone with country code, for example `+507 6000-1234`.
+    """
+    email: NotRequired[Optional[str]]
+    """
+    Email.
+    """
+    hours: NotRequired[Optional[str]]
+    """
+    Opening hours, as free text.
+    """
+
+
+class CreateKnowledgeContact(TypedDict, closed=True):
+    """
+    A contact card needs a display name and a phone or an email.
+    """
+
+    display_name: str
+    """
+    Name shown on the contact card.
+    """
+    first_name: NotRequired[Optional[str]]
+    """
+    First name.
+    """
+    last_name: NotRequired[Optional[str]]
+    """
+    Last name.
+    """
+    prefix: NotRequired[Optional[str]]
+    """
+    Name prefix, such as `Dr.`.
+    """
+    suffix: NotRequired[Optional[str]]
+    """
+    Name suffix.
+    """
+    company: NotRequired[Optional[str]]
+    """
+    Company.
+    """
+    department: NotRequired[Optional[str]]
+    """
+    Department.
+    """
+    job_title: NotRequired[Optional[str]]
+    """
+    Job title.
+    """
+    description: NotRequired[Optional[str]]
+    """
+    When the agents should share it.
+    """
+    phone: NotRequired[Optional[str]]
+    """
+    Phone with country code, for example `+507 6000-1234`.
+    """
+    phone_type: NotRequired[Optional[Literal["CELL", "WORK", "HOME"]]]
+    email: NotRequired[Optional[str]]
+    """
+    Email.
+    """
+    email_type: NotRequired[Optional[Literal["WORK", "PERSONAL"]]]
+
+
+class UpdateKnowledgeContact(TypedDict, closed=True):
+    """
+    Only the fields you send change. Send `null` to clear an optional one; the card keeps a phone or an email.
+    """
+
+    display_name: NotRequired[str]
+    """
+    Name shown on the contact card.
+    """
+    first_name: NotRequired[Optional[str]]
+    """
+    First name.
+    """
+    last_name: NotRequired[Optional[str]]
+    """
+    Last name.
+    """
+    prefix: NotRequired[Optional[str]]
+    """
+    Name prefix, such as `Dr.`.
+    """
+    suffix: NotRequired[Optional[str]]
+    """
+    Name suffix.
+    """
+    company: NotRequired[Optional[str]]
+    """
+    Company.
+    """
+    department: NotRequired[Optional[str]]
+    """
+    Department.
+    """
+    job_title: NotRequired[Optional[str]]
+    """
+    Job title.
+    """
+    description: NotRequired[Optional[str]]
+    """
+    When the agents should share it.
+    """
+    phone: NotRequired[Optional[str]]
+    """
+    Phone with country code, for example `+507 6000-1234`.
+    """
+    phone_type: NotRequired[Optional[Literal["CELL", "WORK", "HOME"]]]
+    email: NotRequired[Optional[str]]
+    """
+    Email.
+    """
+    email_type: NotRequired[Optional[Literal["WORK", "PERSONAL"]]]
+
+
+class CreateKnowledgeFile(TypedDict, closed=True):
+    """
+    Begins an upload. Ricky answers where to `PUT` the bytes.
+    """
+
+    title: str
+    """
+    Title the agents see.
+    """
+    description: NotRequired[str]
+    """
+    When the agents should use it.
+    """
+    filename: str
+    """
+    File name, with its extension.
+    """
+    mime_type: Literal["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "image/jpeg", "image/png"]
+    """
+    File type: PDF, Word or Excel up to 100 MB; JPEG or PNG up to 5 MB.
+    """
+    size_bytes: int
+    """
+    Exact size of the file you will upload.
+    """
+
+
+class CompleteKnowledgeFile(TypedDict, closed=True):
+    """
+    The body is optional.
+    """
+
+    consult_enabled: NotRequired[bool]
+    """
+    Agents may read it to answer. Ignored when Ricky reads no useful content.
+    """
+    send_enabled: NotRequired[bool]
+    """
+    Agents may send the file itself.
+    """
+
+
+class UpdateKnowledgeFile(TypedDict, closed=True):
+    """
+    Only the fields you send change. The file must be `ready`.
+    """
+
+    title: NotRequired[str]
+    """
+    Title the agents see.
+    """
+    description: NotRequired[str]
+    """
+    When the agents should use it.
+    """
+    consult_enabled: NotRequired[bool]
+    """
+    Agents may read it to answer.
+    """
+    send_enabled: NotRequired[bool]
+    """
+    Agents may send the file itself.
     """

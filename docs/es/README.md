@@ -42,6 +42,7 @@ Un cambio incompatible solo llega en una versión nueva de la ruta. Ricky lo anu
 | Mensajes       | Leer y enviar mensajes, y seguir cada envío.                                 | [Messages](https://getricky.ai/docs/api/reference/messages/list-messages)                |
 | Catálogos      | Canales, miembros, etiquetas y plantillas que otras operaciones usan por ID. | [Catalogs](https://getricky.ai/docs/api/reference/catalogs/list-channels)                |
 | Webhooks       | Suscripciones a eventos y el registro de sus entregas.                       | [Webhooks](https://getricky.ai/docs/api/reference/webhooks/list-webhooks)                |
+| Reportes       | Los números de las páginas de Reportes, por período y con sus filtros.       | [Reports](https://getricky.ai/docs/api/reference/reports/get-dashboard-report)           |
 
 La referencia sale del contrato de la API. El documento OpenAPI 3.1 completo está en [`https://getricky.ai/openapi.json`](https://getricky.ai/openapi.json). Puedes usarlo para generar un cliente o importarlo en tu herramienta de pruebas.
 

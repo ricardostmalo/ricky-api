@@ -2,15 +2,25 @@
 
 /** `METHOD /path/{template}` of every write that accepts an `Idempotency-Key` header. */
 export const idempotentOperations: ReadonlySet<string> = new Set([
+    'PATCH /agents/{agent_id}',
     'PATCH /contacts/{contact_id}',
+    'PATCH /conversations/{conversation_id}/agent',
     'PATCH /conversations/{conversation_id}/assignment',
+    'PATCH /knowledge/contacts/{knowledge_contact_id}',
+    'PATCH /knowledge/files/{file_id}',
+    'PATCH /knowledge/locations/{location_id}',
     'PATCH /workflows/{workflow_id}',
+    'POST /agents',
     'POST /contacts',
     'POST /contacts/{contact_id}/notes',
     'POST /conversations',
     'POST /conversations/{conversation_id}/close',
     'POST /conversations/{conversation_id}/messages',
     'POST /conversations/{conversation_id}/reopen',
+    'POST /knowledge/contacts',
+    'POST /knowledge/files',
+    'POST /knowledge/files/{file_id}/complete',
+    'POST /knowledge/locations',
     'POST /tags',
     'POST /workflows',
 ]);

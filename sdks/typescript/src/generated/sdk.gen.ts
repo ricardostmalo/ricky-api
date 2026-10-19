@@ -2,7 +2,7 @@
 
 import { client } from './client.gen.js';
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client/index.js';
-import type { ActivateWorkflowData, ActivateWorkflowErrors, ActivateWorkflowResponses, AddContactNoteData, AddContactNoteErrors, AddContactNoteResponses, AssignConversationData, AssignConversationErrors, AssignConversationResponses, CloseConversationData, CloseConversationErrors, CloseConversationResponses, CreateContactData, CreateContactErrors, CreateContactResponses, CreateTagData, CreateTagErrors, CreateTagResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, CreateWorkflowData, CreateWorkflowErrors, CreateWorkflowResponses, DeleteWorkflowData, DeleteWorkflowErrors, DeleteWorkflowResponses, DisableWebhookData, DisableWebhookErrors, DisableWebhookResponses, GetAdsReportData, GetAdsReportErrors, GetAdsReportResponses, GetBroadcastsReportData, GetBroadcastsReportErrors, GetBroadcastsReportResponses, GetContactData, GetContactErrors, GetContactResponses, GetConversationData, GetConversationErrors, GetConversationResponses, GetConversationsReportData, GetConversationsReportErrors, GetConversationsReportResponses, GetDashboardReportData, GetDashboardReportErrors, GetDashboardReportResponses, GetMessageData, GetMessageErrors, GetMessageResponses, GetMessagesReportData, GetMessagesReportErrors, GetMessagesReportResponses, GetResolutionsReportData, GetResolutionsReportErrors, GetResolutionsReportResponses, GetResponsesReportData, GetResponsesReportErrors, GetResponsesReportResponses, GetSendData, GetSendErrors, GetSendResponses, GetTeamReportData, GetTeamReportErrors, GetTeamReportResponses, GetWorkflowData, GetWorkflowErrors, GetWorkflowResponses, ListChannelsData, ListChannelsErrors, ListChannelsResponses, ListContactFieldsData, ListContactFieldsErrors, ListContactFieldsResponses, ListContactsData, ListContactsErrors, ListContactsResponses, ListConversationsData, ListConversationsErrors, ListConversationsResponses, ListMembersData, ListMembersErrors, ListMembersResponses, ListMessagesData, ListMessagesErrors, ListMessagesResponses, ListTagsData, ListTagsErrors, ListTagsResponses, ListTemplatesData, ListTemplatesErrors, ListTemplatesResponses, ListWebhookDeliveriesData, ListWebhookDeliveriesErrors, ListWebhookDeliveriesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, ListWorkflowExecutionsData, ListWorkflowExecutionsErrors, ListWorkflowExecutionsResponses, ListWorkflowsData, ListWorkflowsErrors, ListWorkflowsResponses, PauseWorkflowData, PauseWorkflowErrors, PauseWorkflowResponses, ReopenConversationData, ReopenConversationErrors, ReopenConversationResponses, RetryWebhookDeliveryData, RetryWebhookDeliveryErrors, RetryWebhookDeliveryResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SendMessageData, SendMessageErrors, SendMessageResponses, StartConversationData, StartConversationErrors, StartConversationResponses, TestWebhookData, TestWebhookErrors, TestWebhookResponses, UpdateContactData, UpdateContactErrors, UpdateContactResponses, UpdateWorkflowData, UpdateWorkflowErrors, UpdateWorkflowResponses } from './types.gen.js';
+import type { ActivateWorkflowData, ActivateWorkflowErrors, ActivateWorkflowResponses, AddContactNoteData, AddContactNoteErrors, AddContactNoteResponses, ArchiveAgentData, ArchiveAgentErrors, ArchiveAgentResponses, AssignConversationAgentData, AssignConversationAgentErrors, AssignConversationAgentResponses, AssignConversationData, AssignConversationErrors, AssignConversationResponses, CloseConversationData, CloseConversationErrors, CloseConversationResponses, CompleteKnowledgeFileData, CompleteKnowledgeFileErrors, CompleteKnowledgeFileResponses, CreateAgentData, CreateAgentErrors, CreateAgentResponses, CreateContactData, CreateContactErrors, CreateContactResponses, CreateKnowledgeContactData, CreateKnowledgeContactErrors, CreateKnowledgeContactResponses, CreateKnowledgeFileData, CreateKnowledgeFileErrors, CreateKnowledgeFileResponses, CreateKnowledgeLocationData, CreateKnowledgeLocationErrors, CreateKnowledgeLocationResponses, CreateTagData, CreateTagErrors, CreateTagResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, CreateWorkflowData, CreateWorkflowErrors, CreateWorkflowResponses, DeleteKnowledgeContactData, DeleteKnowledgeContactErrors, DeleteKnowledgeContactResponses, DeleteKnowledgeFileData, DeleteKnowledgeFileErrors, DeleteKnowledgeFileResponses, DeleteKnowledgeLocationData, DeleteKnowledgeLocationErrors, DeleteKnowledgeLocationResponses, DeleteWorkflowData, DeleteWorkflowErrors, DeleteWorkflowResponses, DisableWebhookData, DisableWebhookErrors, DisableWebhookResponses, GetAdsReportData, GetAdsReportErrors, GetAdsReportResponses, GetAgentData, GetAgentErrors, GetAgentOptionsData, GetAgentOptionsErrors, GetAgentOptionsResponses, GetAgentResponses, GetBroadcastsReportData, GetBroadcastsReportErrors, GetBroadcastsReportResponses, GetContactData, GetContactErrors, GetContactResponses, GetConversationData, GetConversationErrors, GetConversationResponses, GetConversationsReportData, GetConversationsReportErrors, GetConversationsReportResponses, GetDashboardReportData, GetDashboardReportErrors, GetDashboardReportResponses, GetKnowledgeContactData, GetKnowledgeContactErrors, GetKnowledgeContactResponses, GetKnowledgeFileData, GetKnowledgeFileErrors, GetKnowledgeFileResponses, GetKnowledgeLocationData, GetKnowledgeLocationErrors, GetKnowledgeLocationResponses, GetMessageData, GetMessageErrors, GetMessageResponses, GetMessagesReportData, GetMessagesReportErrors, GetMessagesReportResponses, GetResolutionsReportData, GetResolutionsReportErrors, GetResolutionsReportResponses, GetResponsesReportData, GetResponsesReportErrors, GetResponsesReportResponses, GetSendData, GetSendErrors, GetSendResponses, GetTeamReportData, GetTeamReportErrors, GetTeamReportResponses, GetWorkflowData, GetWorkflowErrors, GetWorkflowResponses, ListAgentsData, ListAgentsErrors, ListAgentsResponses, ListChannelsData, ListChannelsErrors, ListChannelsResponses, ListContactFieldsData, ListContactFieldsErrors, ListContactFieldsResponses, ListContactsData, ListContactsErrors, ListContactsResponses, ListConversationsData, ListConversationsErrors, ListConversationsResponses, ListKnowledgeContactsData, ListKnowledgeContactsErrors, ListKnowledgeContactsResponses, ListKnowledgeFilesData, ListKnowledgeFilesErrors, ListKnowledgeFilesResponses, ListKnowledgeLocationsData, ListKnowledgeLocationsErrors, ListKnowledgeLocationsResponses, ListMembersData, ListMembersErrors, ListMembersResponses, ListMessagesData, ListMessagesErrors, ListMessagesResponses, ListTagsData, ListTagsErrors, ListTagsResponses, ListTemplatesData, ListTemplatesErrors, ListTemplatesResponses, ListWebhookDeliveriesData, ListWebhookDeliveriesErrors, ListWebhookDeliveriesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, ListWorkflowExecutionsData, ListWorkflowExecutionsErrors, ListWorkflowExecutionsResponses, ListWorkflowsData, ListWorkflowsErrors, ListWorkflowsResponses, PauseWorkflowData, PauseWorkflowErrors, PauseWorkflowResponses, ReopenConversationData, ReopenConversationErrors, ReopenConversationResponses, RetryWebhookDeliveryData, RetryWebhookDeliveryErrors, RetryWebhookDeliveryResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SendMessageData, SendMessageErrors, SendMessageResponses, StartConversationData, StartConversationErrors, StartConversationResponses, TestWebhookData, TestWebhookErrors, TestWebhookResponses, UpdateAgentData, UpdateAgentErrors, UpdateAgentResponses, UpdateContactData, UpdateContactErrors, UpdateContactResponses, UpdateKnowledgeContactData, UpdateKnowledgeContactErrors, UpdateKnowledgeContactResponses, UpdateKnowledgeFileData, UpdateKnowledgeFileErrors, UpdateKnowledgeFileResponses, UpdateKnowledgeLocationData, UpdateKnowledgeLocationErrors, UpdateKnowledgeLocationResponses, UpdateWorkflowData, UpdateWorkflowErrors, UpdateWorkflowResponses } from './types.gen.js';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -806,6 +806,414 @@ export class RickyApi extends HeyApiClient {
             security: [{ scheme: 'bearer', type: 'http' }],
             url: '/reports/ads',
             ...options
+        });
+    }
+    
+    /**
+     * List agents
+     *
+     * Active agents, newest first. Archived agents are not listed.
+     *
+     * Scope: `agents:read`.
+     */
+    public listAgents<ThrowOnError extends boolean = true>(options?: Options<ListAgentsData, ThrowOnError>): RequestResult<ListAgentsResponses, ListAgentsErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<ListAgentsResponses, ListAgentsErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/agents',
+            ...options
+        });
+    }
+    
+    /**
+     * Create an agent
+     *
+     * Creates an AI agent with its instructions, model, voice and capabilities. It answers no conversation until you assign it to one or make it a channel default in Ricky.
+     *
+     * Scope: `agents:write`.
+     */
+    public createAgent<ThrowOnError extends boolean = true>(options: Options<CreateAgentData, ThrowOnError>): RequestResult<CreateAgentResponses, CreateAgentErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<CreateAgentResponses, CreateAgentErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/agents',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Archive an agent
+     *
+     * Archives the agent and answers it as it was, with `archived_at`. Its conversations stop being answered by it and workflows that assign it are paused. Archiving twice answers `404`.
+     *
+     * Scope: `agents:write`.
+     */
+    public archiveAgent<ThrowOnError extends boolean = true>(options: Options<ArchiveAgentData, ThrowOnError>): RequestResult<ArchiveAgentResponses, ArchiveAgentErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).delete<ArchiveAgentResponses, ArchiveAgentErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/agents/{agent_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Get an agent
+     *
+     * One active agent with its full settings.
+     *
+     * Scope: `agents:read`.
+     */
+    public getAgent<ThrowOnError extends boolean = true>(options: Options<GetAgentData, ThrowOnError>): RequestResult<GetAgentResponses, GetAgentErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).get<GetAgentResponses, GetAgentErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/agents/{agent_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Update an agent
+     *
+     * Changes only the fields in the body. `capabilities` and `handoff_user_ids` replace their whole sets.
+     *
+     * Scope: `agents:write`.
+     */
+    public updateAgent<ThrowOnError extends boolean = true>(options: Options<UpdateAgentData, ThrowOnError>): RequestResult<UpdateAgentResponses, UpdateAgentErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).patch<UpdateAgentResponses, UpdateAgentErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/agents/{agent_id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Get agent options
+     *
+     * The models, voices and capabilities an agent can be configured with.
+     *
+     * Scope: `agents:read`.
+     */
+    public getAgentOptions<ThrowOnError extends boolean = true>(options?: Options<GetAgentOptionsData, ThrowOnError>): RequestResult<GetAgentOptionsResponses, GetAgentOptionsErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<GetAgentOptionsResponses, GetAgentOptionsErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/agent-options',
+            ...options
+        });
+    }
+    
+    /**
+     * Set the AI agent of a conversation
+     *
+     * Makes an agent answer the conversation, or turns the AI off with `null`. Either way the conversation is no longer assigned to a member; the contact owner stays.
+     *
+     * Scope: `conversations:write`.
+     */
+    public assignConversationAgent<ThrowOnError extends boolean = true>(options: Options<AssignConversationAgentData, ThrowOnError>): RequestResult<AssignConversationAgentResponses, AssignConversationAgentErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).patch<AssignConversationAgentResponses, AssignConversationAgentErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/conversations/{conversation_id}/agent',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * List locations
+     *
+     * Branches and places, newest first.
+     *
+     * Scope: `knowledge:read`.
+     */
+    public listKnowledgeLocations<ThrowOnError extends boolean = true>(options?: Options<ListKnowledgeLocationsData, ThrowOnError>): RequestResult<ListKnowledgeLocationsResponses, ListKnowledgeLocationsErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<ListKnowledgeLocationsResponses, ListKnowledgeLocationsErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/knowledge/locations',
+            ...options
+        });
+    }
+    
+    /**
+     * Create a location
+     *
+     * Adds a branch or place the agents can share.
+     *
+     * Scope: `knowledge:write`.
+     */
+    public createKnowledgeLocation<ThrowOnError extends boolean = true>(options: Options<CreateKnowledgeLocationData, ThrowOnError>): RequestResult<CreateKnowledgeLocationResponses, CreateKnowledgeLocationErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<CreateKnowledgeLocationResponses, CreateKnowledgeLocationErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/knowledge/locations',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Delete a location
+     *
+     * Deletes it for good and answers it as it was.
+     *
+     * Scope: `knowledge:write`.
+     */
+    public deleteKnowledgeLocation<ThrowOnError extends boolean = true>(options: Options<DeleteKnowledgeLocationData, ThrowOnError>): RequestResult<DeleteKnowledgeLocationResponses, DeleteKnowledgeLocationErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).delete<DeleteKnowledgeLocationResponses, DeleteKnowledgeLocationErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/knowledge/locations/{location_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Get a location
+     *
+     * One location.
+     *
+     * Scope: `knowledge:read`.
+     */
+    public getKnowledgeLocation<ThrowOnError extends boolean = true>(options: Options<GetKnowledgeLocationData, ThrowOnError>): RequestResult<GetKnowledgeLocationResponses, GetKnowledgeLocationErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).get<GetKnowledgeLocationResponses, GetKnowledgeLocationErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/knowledge/locations/{location_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Update a location
+     *
+     * Changes only the fields in the body.
+     *
+     * Scope: `knowledge:write`.
+     */
+    public updateKnowledgeLocation<ThrowOnError extends boolean = true>(options: Options<UpdateKnowledgeLocationData, ThrowOnError>): RequestResult<UpdateKnowledgeLocationResponses, UpdateKnowledgeLocationErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).patch<UpdateKnowledgeLocationResponses, UpdateKnowledgeLocationErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/knowledge/locations/{location_id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * List directory contacts
+     *
+     * Contact cards of the knowledge directory, by display name. These are not CRM contacts.
+     *
+     * Scope: `knowledge:read`.
+     */
+    public listKnowledgeContacts<ThrowOnError extends boolean = true>(options?: Options<ListKnowledgeContactsData, ThrowOnError>): RequestResult<ListKnowledgeContactsResponses, ListKnowledgeContactsErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<ListKnowledgeContactsResponses, ListKnowledgeContactsErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/knowledge/contacts',
+            ...options
+        });
+    }
+    
+    /**
+     * Create a directory contact
+     *
+     * Adds a contact card the agents can send to customers.
+     *
+     * Scope: `knowledge:write`.
+     */
+    public createKnowledgeContact<ThrowOnError extends boolean = true>(options: Options<CreateKnowledgeContactData, ThrowOnError>): RequestResult<CreateKnowledgeContactResponses, CreateKnowledgeContactErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<CreateKnowledgeContactResponses, CreateKnowledgeContactErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/knowledge/contacts',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Delete a directory contact
+     *
+     * Deletes it for good and answers it as it was.
+     *
+     * Scope: `knowledge:write`.
+     */
+    public deleteKnowledgeContact<ThrowOnError extends boolean = true>(options: Options<DeleteKnowledgeContactData, ThrowOnError>): RequestResult<DeleteKnowledgeContactResponses, DeleteKnowledgeContactErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).delete<DeleteKnowledgeContactResponses, DeleteKnowledgeContactErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/knowledge/contacts/{knowledge_contact_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Get a directory contact
+     *
+     * One contact card.
+     *
+     * Scope: `knowledge:read`.
+     */
+    public getKnowledgeContact<ThrowOnError extends boolean = true>(options: Options<GetKnowledgeContactData, ThrowOnError>): RequestResult<GetKnowledgeContactResponses, GetKnowledgeContactErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).get<GetKnowledgeContactResponses, GetKnowledgeContactErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/knowledge/contacts/{knowledge_contact_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Update a directory contact
+     *
+     * Changes only the fields in the body.
+     *
+     * Scope: `knowledge:write`.
+     */
+    public updateKnowledgeContact<ThrowOnError extends boolean = true>(options: Options<UpdateKnowledgeContactData, ThrowOnError>): RequestResult<UpdateKnowledgeContactResponses, UpdateKnowledgeContactErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).patch<UpdateKnowledgeContactResponses, UpdateKnowledgeContactErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/knowledge/contacts/{knowledge_contact_id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * List files
+     *
+     * Documents and images the agents can consult or send, newest first.
+     *
+     * Scope: `knowledge:read`.
+     */
+    public listKnowledgeFiles<ThrowOnError extends boolean = true>(options?: Options<ListKnowledgeFilesData, ThrowOnError>): RequestResult<ListKnowledgeFilesResponses, ListKnowledgeFilesErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<ListKnowledgeFilesResponses, ListKnowledgeFilesErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/knowledge/files',
+            ...options
+        });
+    }
+    
+    /**
+     * Upload a file
+     *
+     * Begins an upload in three steps: this call answers the file, `uploading`, and an `upload_url`; `PUT` the bytes there; then call `POST /knowledge/files/{file_id}/complete`.
+     *
+     * Scope: `knowledge:write`.
+     */
+    public createKnowledgeFile<ThrowOnError extends boolean = true>(options: Options<CreateKnowledgeFileData, ThrowOnError>): RequestResult<CreateKnowledgeFileResponses, CreateKnowledgeFileErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<CreateKnowledgeFileResponses, CreateKnowledgeFileErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/knowledge/files',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Complete an upload
+     *
+     * Checks the uploaded bytes against the declared type and size, reads the content for the agents and answers the file, `ready`. Reading a long PDF can take minutes. Completing a `ready` file changes nothing.
+     *
+     * Scope: `knowledge:write`.
+     */
+    public completeKnowledgeFile<ThrowOnError extends boolean = true>(options: Options<CompleteKnowledgeFileData, ThrowOnError>): RequestResult<CompleteKnowledgeFileResponses, CompleteKnowledgeFileErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<CompleteKnowledgeFileResponses, CompleteKnowledgeFileErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/knowledge/files/{file_id}/complete',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Delete a file
+     *
+     * Deletes it for good and answers it as it was. Copies already sent in conversations stay there.
+     *
+     * Scope: `knowledge:write`.
+     */
+    public deleteKnowledgeFile<ThrowOnError extends boolean = true>(options: Options<DeleteKnowledgeFileData, ThrowOnError>): RequestResult<DeleteKnowledgeFileResponses, DeleteKnowledgeFileErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).delete<DeleteKnowledgeFileResponses, DeleteKnowledgeFileErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/knowledge/files/{file_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Get a file
+     *
+     * One file; a `ready` one carries a `download_url`.
+     *
+     * Scope: `knowledge:read`.
+     */
+    public getKnowledgeFile<ThrowOnError extends boolean = true>(options: Options<GetKnowledgeFileData, ThrowOnError>): RequestResult<GetKnowledgeFileResponses, GetKnowledgeFileErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).get<GetKnowledgeFileResponses, GetKnowledgeFileErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/knowledge/files/{file_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Update a file
+     *
+     * Changes its title, description or what the agents may do with it. Only a `ready` file changes; otherwise `409 conflict`.
+     *
+     * Scope: `knowledge:write`.
+     */
+    public updateKnowledgeFile<ThrowOnError extends boolean = true>(options: Options<UpdateKnowledgeFileData, ThrowOnError>): RequestResult<UpdateKnowledgeFileResponses, UpdateKnowledgeFileErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).patch<UpdateKnowledgeFileResponses, UpdateKnowledgeFileErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/knowledge/files/{file_id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
         });
     }
 }

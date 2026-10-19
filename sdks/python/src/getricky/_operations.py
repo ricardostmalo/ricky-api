@@ -6,20 +6,32 @@ from ._page import Page, Resource
 from .types import (
     AddContactNote,
     AdsReport,
+    Agent,
+    AgentOptions,
     AssignConversation,
+    AssignConversationAgent,
     BroadcastsReport,
     Channel,
     CloseConversation,
+    CompleteKnowledgeFile,
     Contact,
     ContactField,
     Conversation,
     ConversationsReport,
+    CreateAgent,
     CreateContact,
+    CreateKnowledgeContact,
+    CreateKnowledgeFile,
+    CreateKnowledgeLocation,
     CreateTag,
     CreateWebhook,
     CreateWorkflow,
     CreatedWebhook,
     DashboardReport,
+    KnowledgeContact,
+    KnowledgeFile,
+    KnowledgeFileUpload,
+    KnowledgeLocation,
     Member,
     Message,
     MessagesReport,
@@ -32,7 +44,11 @@ from .types import (
     Tag,
     TeamReport,
     Template,
+    UpdateAgent,
     UpdateContact,
+    UpdateKnowledgeContact,
+    UpdateKnowledgeFile,
+    UpdateKnowledgeLocation,
     UpdateWorkflow,
     Webhook,
     WebhookDelivery,
@@ -922,6 +938,446 @@ class SyncOperations:
             query={"from": from_, "to": to},
         ))
 
+    def list_agents(
+        self,
+    ) -> Page[Agent]:
+        """List agents.
+
+        Active agents, newest first. Archived agents are not listed.
+
+        Scope: `agents:read`.
+        """
+        return cast(Page[Agent], self._request(
+            "GET",
+            "/agents",
+        ))
+
+    def create_agent(
+        self,
+        body: CreateAgent,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Agent]:
+        """Create an agent.
+
+        Creates an AI agent with its instructions, model, voice and capabilities. It answers no conversation until you assign it to one or make it a channel default in Ricky.
+
+        Scope: `agents:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Agent], self._request(
+            "POST",
+            "/agents",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def get_agent(
+        self,
+        agent_id: str,
+    ) -> Resource[Agent]:
+        """Get an agent.
+
+        One active agent with its full settings.
+
+        Scope: `agents:read`.
+        """
+        return cast(Resource[Agent], self._request(
+            "GET",
+            "/agents/{agent_id}",
+            path_parameters={"agent_id": agent_id},
+        ))
+
+    def update_agent(
+        self,
+        agent_id: str,
+        body: UpdateAgent,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Agent]:
+        """Update an agent.
+
+        Changes only the fields in the body. `capabilities` and `handoff_user_ids` replace their whole sets.
+
+        Scope: `agents:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Agent], self._request(
+            "PATCH",
+            "/agents/{agent_id}",
+            path_parameters={"agent_id": agent_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def archive_agent(
+        self,
+        agent_id: str,
+    ) -> Resource[Agent]:
+        """Archive an agent.
+
+        Archives the agent and answers it as it was, with `archived_at`. Its conversations stop being answered by it and workflows that assign it are paused. Archiving twice answers `404`.
+
+        Scope: `agents:write`.
+        """
+        return cast(Resource[Agent], self._request(
+            "DELETE",
+            "/agents/{agent_id}",
+            path_parameters={"agent_id": agent_id},
+        ))
+
+    def get_agent_options(
+        self,
+    ) -> Resource[AgentOptions]:
+        """Get agent options.
+
+        The models, voices and capabilities an agent can be configured with.
+
+        Scope: `agents:read`.
+        """
+        return cast(Resource[AgentOptions], self._request(
+            "GET",
+            "/agent-options",
+        ))
+
+    def assign_conversation_agent(
+        self,
+        conversation_id: str,
+        body: AssignConversationAgent,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Conversation]:
+        """Set the AI agent of a conversation.
+
+        Makes an agent answer the conversation, or turns the AI off with `null`. Either way the conversation is no longer assigned to a member; the contact owner stays.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Conversation], self._request(
+            "PATCH",
+            "/conversations/{conversation_id}/agent",
+            path_parameters={"conversation_id": conversation_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def list_knowledge_locations(
+        self,
+    ) -> Page[KnowledgeLocation]:
+        """List locations.
+
+        Branches and places, newest first.
+
+        Scope: `knowledge:read`.
+        """
+        return cast(Page[KnowledgeLocation], self._request(
+            "GET",
+            "/knowledge/locations",
+        ))
+
+    def create_knowledge_location(
+        self,
+        body: CreateKnowledgeLocation,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeLocation]:
+        """Create a location.
+
+        Adds a branch or place the agents can share.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeLocation], self._request(
+            "POST",
+            "/knowledge/locations",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def get_knowledge_location(
+        self,
+        location_id: str,
+    ) -> Resource[KnowledgeLocation]:
+        """Get a location.
+
+        One location.
+
+        Scope: `knowledge:read`.
+        """
+        return cast(Resource[KnowledgeLocation], self._request(
+            "GET",
+            "/knowledge/locations/{location_id}",
+            path_parameters={"location_id": location_id},
+        ))
+
+    def update_knowledge_location(
+        self,
+        location_id: str,
+        body: UpdateKnowledgeLocation,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeLocation]:
+        """Update a location.
+
+        Changes only the fields in the body.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeLocation], self._request(
+            "PATCH",
+            "/knowledge/locations/{location_id}",
+            path_parameters={"location_id": location_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def delete_knowledge_location(
+        self,
+        location_id: str,
+    ) -> Resource[KnowledgeLocation]:
+        """Delete a location.
+
+        Deletes it for good and answers it as it was.
+
+        Scope: `knowledge:write`.
+        """
+        return cast(Resource[KnowledgeLocation], self._request(
+            "DELETE",
+            "/knowledge/locations/{location_id}",
+            path_parameters={"location_id": location_id},
+        ))
+
+    def list_knowledge_contacts(
+        self,
+    ) -> Page[KnowledgeContact]:
+        """List directory contacts.
+
+        Contact cards of the knowledge directory, by display name. These are not CRM contacts.
+
+        Scope: `knowledge:read`.
+        """
+        return cast(Page[KnowledgeContact], self._request(
+            "GET",
+            "/knowledge/contacts",
+        ))
+
+    def create_knowledge_contact(
+        self,
+        body: CreateKnowledgeContact,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeContact]:
+        """Create a directory contact.
+
+        Adds a contact card the agents can send to customers.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeContact], self._request(
+            "POST",
+            "/knowledge/contacts",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def get_knowledge_contact(
+        self,
+        knowledge_contact_id: str,
+    ) -> Resource[KnowledgeContact]:
+        """Get a directory contact.
+
+        One contact card.
+
+        Scope: `knowledge:read`.
+        """
+        return cast(Resource[KnowledgeContact], self._request(
+            "GET",
+            "/knowledge/contacts/{knowledge_contact_id}",
+            path_parameters={"knowledge_contact_id": knowledge_contact_id},
+        ))
+
+    def update_knowledge_contact(
+        self,
+        knowledge_contact_id: str,
+        body: UpdateKnowledgeContact,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeContact]:
+        """Update a directory contact.
+
+        Changes only the fields in the body.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeContact], self._request(
+            "PATCH",
+            "/knowledge/contacts/{knowledge_contact_id}",
+            path_parameters={"knowledge_contact_id": knowledge_contact_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def delete_knowledge_contact(
+        self,
+        knowledge_contact_id: str,
+    ) -> Resource[KnowledgeContact]:
+        """Delete a directory contact.
+
+        Deletes it for good and answers it as it was.
+
+        Scope: `knowledge:write`.
+        """
+        return cast(Resource[KnowledgeContact], self._request(
+            "DELETE",
+            "/knowledge/contacts/{knowledge_contact_id}",
+            path_parameters={"knowledge_contact_id": knowledge_contact_id},
+        ))
+
+    def list_knowledge_files(
+        self,
+    ) -> Page[KnowledgeFile]:
+        """List files.
+
+        Documents and images the agents can consult or send, newest first.
+
+        Scope: `knowledge:read`.
+        """
+        return cast(Page[KnowledgeFile], self._request(
+            "GET",
+            "/knowledge/files",
+        ))
+
+    def create_knowledge_file(
+        self,
+        body: CreateKnowledgeFile,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeFileUpload]:
+        """Upload a file.
+
+        Begins an upload in three steps: this call answers the file, `uploading`, and an `upload_url`; `PUT` the bytes there; then call `POST /knowledge/files/{file_id}/complete`.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeFileUpload], self._request(
+            "POST",
+            "/knowledge/files",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def complete_knowledge_file(
+        self,
+        file_id: str,
+        body: CompleteKnowledgeFile,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeFile]:
+        """Complete an upload.
+
+        Checks the uploaded bytes against the declared type and size, reads the content for the agents and answers the file, `ready`. Reading a long PDF can take minutes. Completing a `ready` file changes nothing.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeFile], self._request(
+            "POST",
+            "/knowledge/files/{file_id}/complete",
+            path_parameters={"file_id": file_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def get_knowledge_file(
+        self,
+        file_id: str,
+    ) -> Resource[KnowledgeFile]:
+        """Get a file.
+
+        One file; a `ready` one carries a `download_url`.
+
+        Scope: `knowledge:read`.
+        """
+        return cast(Resource[KnowledgeFile], self._request(
+            "GET",
+            "/knowledge/files/{file_id}",
+            path_parameters={"file_id": file_id},
+        ))
+
+    def update_knowledge_file(
+        self,
+        file_id: str,
+        body: UpdateKnowledgeFile,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeFile]:
+        """Update a file.
+
+        Changes its title, description or what the agents may do with it. Only a `ready` file changes; otherwise `409 conflict`.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeFile], self._request(
+            "PATCH",
+            "/knowledge/files/{file_id}",
+            path_parameters={"file_id": file_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def delete_knowledge_file(
+        self,
+        file_id: str,
+    ) -> Resource[KnowledgeFile]:
+        """Delete a file.
+
+        Deletes it for good and answers it as it was. Copies already sent in conversations stay there.
+
+        Scope: `knowledge:write`.
+        """
+        return cast(Resource[KnowledgeFile], self._request(
+            "DELETE",
+            "/knowledge/files/{file_id}",
+            path_parameters={"file_id": file_id},
+        ))
+
 
 class AsyncOperations:
     """Every operation of the Ricky API, awaitable."""
@@ -1801,4 +2257,444 @@ class AsyncOperations:
             "GET",
             "/reports/ads",
             query={"from": from_, "to": to},
+        ))
+
+    async def list_agents(
+        self,
+    ) -> Page[Agent]:
+        """List agents.
+
+        Active agents, newest first. Archived agents are not listed.
+
+        Scope: `agents:read`.
+        """
+        return cast(Page[Agent], await self._request(
+            "GET",
+            "/agents",
+        ))
+
+    async def create_agent(
+        self,
+        body: CreateAgent,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Agent]:
+        """Create an agent.
+
+        Creates an AI agent with its instructions, model, voice and capabilities. It answers no conversation until you assign it to one or make it a channel default in Ricky.
+
+        Scope: `agents:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Agent], await self._request(
+            "POST",
+            "/agents",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def get_agent(
+        self,
+        agent_id: str,
+    ) -> Resource[Agent]:
+        """Get an agent.
+
+        One active agent with its full settings.
+
+        Scope: `agents:read`.
+        """
+        return cast(Resource[Agent], await self._request(
+            "GET",
+            "/agents/{agent_id}",
+            path_parameters={"agent_id": agent_id},
+        ))
+
+    async def update_agent(
+        self,
+        agent_id: str,
+        body: UpdateAgent,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Agent]:
+        """Update an agent.
+
+        Changes only the fields in the body. `capabilities` and `handoff_user_ids` replace their whole sets.
+
+        Scope: `agents:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Agent], await self._request(
+            "PATCH",
+            "/agents/{agent_id}",
+            path_parameters={"agent_id": agent_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def archive_agent(
+        self,
+        agent_id: str,
+    ) -> Resource[Agent]:
+        """Archive an agent.
+
+        Archives the agent and answers it as it was, with `archived_at`. Its conversations stop being answered by it and workflows that assign it are paused. Archiving twice answers `404`.
+
+        Scope: `agents:write`.
+        """
+        return cast(Resource[Agent], await self._request(
+            "DELETE",
+            "/agents/{agent_id}",
+            path_parameters={"agent_id": agent_id},
+        ))
+
+    async def get_agent_options(
+        self,
+    ) -> Resource[AgentOptions]:
+        """Get agent options.
+
+        The models, voices and capabilities an agent can be configured with.
+
+        Scope: `agents:read`.
+        """
+        return cast(Resource[AgentOptions], await self._request(
+            "GET",
+            "/agent-options",
+        ))
+
+    async def assign_conversation_agent(
+        self,
+        conversation_id: str,
+        body: AssignConversationAgent,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Conversation]:
+        """Set the AI agent of a conversation.
+
+        Makes an agent answer the conversation, or turns the AI off with `null`. Either way the conversation is no longer assigned to a member; the contact owner stays.
+
+        Scope: `conversations:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Conversation], await self._request(
+            "PATCH",
+            "/conversations/{conversation_id}/agent",
+            path_parameters={"conversation_id": conversation_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def list_knowledge_locations(
+        self,
+    ) -> Page[KnowledgeLocation]:
+        """List locations.
+
+        Branches and places, newest first.
+
+        Scope: `knowledge:read`.
+        """
+        return cast(Page[KnowledgeLocation], await self._request(
+            "GET",
+            "/knowledge/locations",
+        ))
+
+    async def create_knowledge_location(
+        self,
+        body: CreateKnowledgeLocation,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeLocation]:
+        """Create a location.
+
+        Adds a branch or place the agents can share.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeLocation], await self._request(
+            "POST",
+            "/knowledge/locations",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def get_knowledge_location(
+        self,
+        location_id: str,
+    ) -> Resource[KnowledgeLocation]:
+        """Get a location.
+
+        One location.
+
+        Scope: `knowledge:read`.
+        """
+        return cast(Resource[KnowledgeLocation], await self._request(
+            "GET",
+            "/knowledge/locations/{location_id}",
+            path_parameters={"location_id": location_id},
+        ))
+
+    async def update_knowledge_location(
+        self,
+        location_id: str,
+        body: UpdateKnowledgeLocation,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeLocation]:
+        """Update a location.
+
+        Changes only the fields in the body.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeLocation], await self._request(
+            "PATCH",
+            "/knowledge/locations/{location_id}",
+            path_parameters={"location_id": location_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def delete_knowledge_location(
+        self,
+        location_id: str,
+    ) -> Resource[KnowledgeLocation]:
+        """Delete a location.
+
+        Deletes it for good and answers it as it was.
+
+        Scope: `knowledge:write`.
+        """
+        return cast(Resource[KnowledgeLocation], await self._request(
+            "DELETE",
+            "/knowledge/locations/{location_id}",
+            path_parameters={"location_id": location_id},
+        ))
+
+    async def list_knowledge_contacts(
+        self,
+    ) -> Page[KnowledgeContact]:
+        """List directory contacts.
+
+        Contact cards of the knowledge directory, by display name. These are not CRM contacts.
+
+        Scope: `knowledge:read`.
+        """
+        return cast(Page[KnowledgeContact], await self._request(
+            "GET",
+            "/knowledge/contacts",
+        ))
+
+    async def create_knowledge_contact(
+        self,
+        body: CreateKnowledgeContact,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeContact]:
+        """Create a directory contact.
+
+        Adds a contact card the agents can send to customers.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeContact], await self._request(
+            "POST",
+            "/knowledge/contacts",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def get_knowledge_contact(
+        self,
+        knowledge_contact_id: str,
+    ) -> Resource[KnowledgeContact]:
+        """Get a directory contact.
+
+        One contact card.
+
+        Scope: `knowledge:read`.
+        """
+        return cast(Resource[KnowledgeContact], await self._request(
+            "GET",
+            "/knowledge/contacts/{knowledge_contact_id}",
+            path_parameters={"knowledge_contact_id": knowledge_contact_id},
+        ))
+
+    async def update_knowledge_contact(
+        self,
+        knowledge_contact_id: str,
+        body: UpdateKnowledgeContact,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeContact]:
+        """Update a directory contact.
+
+        Changes only the fields in the body.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeContact], await self._request(
+            "PATCH",
+            "/knowledge/contacts/{knowledge_contact_id}",
+            path_parameters={"knowledge_contact_id": knowledge_contact_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def delete_knowledge_contact(
+        self,
+        knowledge_contact_id: str,
+    ) -> Resource[KnowledgeContact]:
+        """Delete a directory contact.
+
+        Deletes it for good and answers it as it was.
+
+        Scope: `knowledge:write`.
+        """
+        return cast(Resource[KnowledgeContact], await self._request(
+            "DELETE",
+            "/knowledge/contacts/{knowledge_contact_id}",
+            path_parameters={"knowledge_contact_id": knowledge_contact_id},
+        ))
+
+    async def list_knowledge_files(
+        self,
+    ) -> Page[KnowledgeFile]:
+        """List files.
+
+        Documents and images the agents can consult or send, newest first.
+
+        Scope: `knowledge:read`.
+        """
+        return cast(Page[KnowledgeFile], await self._request(
+            "GET",
+            "/knowledge/files",
+        ))
+
+    async def create_knowledge_file(
+        self,
+        body: CreateKnowledgeFile,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeFileUpload]:
+        """Upload a file.
+
+        Begins an upload in three steps: this call answers the file, `uploading`, and an `upload_url`; `PUT` the bytes there; then call `POST /knowledge/files/{file_id}/complete`.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeFileUpload], await self._request(
+            "POST",
+            "/knowledge/files",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def complete_knowledge_file(
+        self,
+        file_id: str,
+        body: CompleteKnowledgeFile,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeFile]:
+        """Complete an upload.
+
+        Checks the uploaded bytes against the declared type and size, reads the content for the agents and answers the file, `ready`. Reading a long PDF can take minutes. Completing a `ready` file changes nothing.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeFile], await self._request(
+            "POST",
+            "/knowledge/files/{file_id}/complete",
+            path_parameters={"file_id": file_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def get_knowledge_file(
+        self,
+        file_id: str,
+    ) -> Resource[KnowledgeFile]:
+        """Get a file.
+
+        One file; a `ready` one carries a `download_url`.
+
+        Scope: `knowledge:read`.
+        """
+        return cast(Resource[KnowledgeFile], await self._request(
+            "GET",
+            "/knowledge/files/{file_id}",
+            path_parameters={"file_id": file_id},
+        ))
+
+    async def update_knowledge_file(
+        self,
+        file_id: str,
+        body: UpdateKnowledgeFile,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeFile]:
+        """Update a file.
+
+        Changes its title, description or what the agents may do with it. Only a `ready` file changes; otherwise `409 conflict`.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeFile], await self._request(
+            "PATCH",
+            "/knowledge/files/{file_id}",
+            path_parameters={"file_id": file_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def delete_knowledge_file(
+        self,
+        file_id: str,
+    ) -> Resource[KnowledgeFile]:
+        """Delete a file.
+
+        Deletes it for good and answers it as it was. Copies already sent in conversations stay there.
+
+        Scope: `knowledge:write`.
+        """
+        return cast(Resource[KnowledgeFile], await self._request(
+            "DELETE",
+            "/knowledge/files/{file_id}",
+            path_parameters={"file_id": file_id},
         ))

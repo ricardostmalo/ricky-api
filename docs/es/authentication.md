@@ -59,6 +59,7 @@ Cada operación exige un permiso (scope). Una clave sin ese permiso recibe `403 
 | `webhooks:manage`     | Crear, listar y desactivar webhooks; consultar y reintentar sus entregas. |
 | `workflows:read`      | Leer workflows y sus ejecuciones.                                         |
 | `workflows:write`     | Crear, editar, activar, pausar y eliminar workflows.                      |
+| `reports:read`        | Leer los números de las páginas de Reportes.                              |
 
 La tabla siguiente sale del contrato de la API: es la lista exacta de operaciones y el permiso de cada una.
 
@@ -100,6 +101,14 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Activar un workflow](https://getricky.ai/docs/api/reference/workflows/activate-workflow) | `POST /workflows/{workflow_id}/activate` | `workflows:write` |
 | [Pausar un workflow](https://getricky.ai/docs/api/reference/workflows/pause-workflow) | `POST /workflows/{workflow_id}/pause` | `workflows:write` |
 | [Listar ejecuciones](https://getricky.ai/docs/api/reference/workflows/list-workflow-executions) | `GET /workflows/{workflow_id}/executions` | `workflows:read` |
+| [Consultar el panel en vivo](https://getricky.ai/docs/api/reference/reports/get-dashboard-report) | `GET /reports/dashboard` | `reports:read` |
+| [Consultar el reporte de conversaciones](https://getricky.ai/docs/api/reference/reports/get-conversations-report) | `GET /reports/conversations` | `reports:read` |
+| [Consultar el reporte de mensajes](https://getricky.ai/docs/api/reference/reports/get-messages-report) | `GET /reports/messages` | `reports:read` |
+| [Consultar el reporte de respuestas](https://getricky.ai/docs/api/reference/reports/get-responses-report) | `GET /reports/responses` | `reports:read` |
+| [Consultar el reporte de resoluciones](https://getricky.ai/docs/api/reference/reports/get-resolutions-report) | `GET /reports/resolutions` | `reports:read` |
+| [Consultar el reporte del equipo](https://getricky.ai/docs/api/reference/reports/get-team-report) | `GET /reports/team` | `reports:read` |
+| [Consultar el reporte de envíos masivos](https://getricky.ai/docs/api/reference/reports/get-broadcasts-report) | `GET /reports/broadcasts` | `reports:read` |
+| [Consultar el reporte de anuncios](https://getricky.ai/docs/api/reference/reports/get-ads-report) | `GET /reports/ads` | `reports:read` |
 
 ## Respuestas de autenticación
 
