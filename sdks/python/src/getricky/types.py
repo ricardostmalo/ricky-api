@@ -812,6 +812,261 @@ class BroadcastRecipient(TypedDict):
     """
 
 
+class Webhook(TypedDict):
+    """
+    A webhook subscription.
+    """
+
+    id: str
+    """
+    Webhook ID.
+    """
+    url: str
+    """
+    HTTPS endpoint Ricky posts to.
+    """
+    event_types: List[Literal["message.received", "message.sent", "message.delivered", "message.read", "message.failed", "conversation.opened", "conversation.closed", "conversation.assignment_changed", "contact.created", "contact.updated"]]
+    status: Literal["active", "disabled"]
+    created_at: str
+    """
+    When it was created.
+    """
+    disabled_at: Optional[str]
+    """
+    When it was disabled.
+    """
+
+
+class CreatedWebhook(TypedDict):
+    """
+    A new webhook subscription with its signing secret.
+    """
+
+    id: str
+    """
+    Webhook ID.
+    """
+    url: str
+    """
+    HTTPS endpoint Ricky posts to.
+    """
+    event_types: List[Literal["message.received", "message.sent", "message.delivered", "message.read", "message.failed", "conversation.opened", "conversation.closed", "conversation.assignment_changed", "contact.created", "contact.updated"]]
+    status: Literal["active", "disabled"]
+    created_at: str
+    """
+    When it was created.
+    """
+    disabled_at: Optional[str]
+    """
+    When it was disabled.
+    """
+    signing_secret: str
+    """
+    HMAC key for `X-Ricky-Signature`. Returned only here, once.
+    """
+
+
+class WebhookDelivery(TypedDict):
+    """
+    One webhook delivery.
+    """
+
+    id: str
+    """
+    Delivery ID; equals the event `id` and `X-Ricky-Delivery-Id`.
+    """
+    event_type: Literal["message.received", "message.sent", "message.delivered", "message.read", "message.failed", "conversation.opened", "conversation.closed", "conversation.assignment_changed", "contact.created", "contact.updated"]
+    status: Literal["pending", "processing", "delivered", "failed"]
+    attempts: int
+    """
+    Delivery attempts so far; Ricky makes at most ten.
+    """
+    last_response_status: Optional[int]
+    """
+    HTTP status of the last attempt.
+    """
+    last_error: Optional[str]
+    """
+    Why the last attempt failed.
+    """
+    created_at: str
+    """
+    When the event happened.
+    """
+    next_attempt_at: str
+    """
+    When Ricky tries next, while pending.
+    """
+    delivered_at: Optional[str]
+    """
+    When the endpoint answered 2xx.
+    """
+
+
+class WebhookEventData(TypedDict):
+    conversation_id: NotRequired[str]
+    """
+    Conversation, for `message.*` and `conversation.*` events.
+    """
+    message_id: NotRequired[str]
+    """
+    Message, for `message.*` events.
+    """
+    contact_id: NotRequired[str]
+    """
+    Contact, for `contact.*` events.
+    """
+    webhook_id: NotRequired[str]
+    """
+    Webhook, for `webhook.test`.
+    """
+
+
+class WebhookEvent(TypedDict):
+    """
+    The JSON body Ricky posts to a webhook endpoint.
+    """
+
+    id: str
+    """
+    Delivery ID. Deduplicate by it.
+    """
+    type: Literal["message.received", "message.sent", "message.delivered", "message.read", "message.failed", "conversation.opened", "conversation.closed", "conversation.assignment_changed", "contact.created", "contact.updated", "webhook.test"]
+    occurred_at: str
+    """
+    When it happened.
+    """
+    organization_id: str
+    """
+    Organization.
+    """
+    data: WebhookEventData
+
+
+class WebhookTestResult(TypedDict):
+    """
+    What the endpoint answered to a `webhook.test` event.
+    """
+
+    delivered: bool
+    """
+    True when the endpoint answered 2xx.
+    """
+    response_status: Optional[int]
+    """
+    HTTP status the endpoint answered; null if none.
+    """
+    error: Optional[str]
+    """
+    Why it failed: the HTTP status, a timeout or a refused destination.
+    """
+    duration_ms: int
+    """
+    Time until the endpoint answered.
+    """
+
+
+class ContactTagChange(TypedDict):
+    """
+    What a tag change did to one contact.
+    """
+
+    contact_id: str
+    """
+    Contact ID.
+    """
+    status: Literal["updated", "not_found", "failed"]
+    """
+    `updated`; `not_found` when the organization has no such contact; `failed` when Ricky could not save it, so retry that contact.
+    """
+    tags: Optional[List[Tag]]
+    """
+    The contact's tags after the change; null unless `updated`.
+    """
+
+
+class MessageSearchResultContact(TypedDict):
+    name: Optional[str]
+    """
+    Contact name, or the name on the channel.
+    """
+    external_id: str
+    """
+    Address on the channel.
+    """
+
+
+class MessageSearchResult(TypedDict):
+    """
+    A message whose text matches the search.
+    """
+
+    message_id: str
+    """
+    Message ID.
+    """
+    conversation_id: str
+    """
+    Conversation ID.
+    """
+    direction: Literal["inbound", "outbound"]
+    type: str
+    """
+    Message type: `text`, `image`, `audio`, `template`, …
+    """
+    text: str
+    """
+    The matching text: the message, or what Ricky derived from a voice note or file.
+    """
+    contact: MessageSearchResultContact
+    agent_name: Optional[str]
+    """
+    AI agent that wrote it; null otherwise.
+    """
+    messaged_at: str
+    """
+    When it was sent or received.
+    """
+
+
+class QuickReply(TypedDict):
+    """
+    A saved answer operators insert into a message.
+    """
+
+    id: str
+    """
+    Quick reply ID.
+    """
+    title: str
+    """
+    Name operators pick it by, unique in the organization regardless of case.
+    """
+    body: str
+    """
+    Text inserted into the message.
+    """
+
+
+class ConversationAssignmentResult(TypedDict):
+    """
+    What a bulk assignment did to one conversation.
+    """
+
+    conversation_id: str
+    """
+    Conversation ID.
+    """
+    assigned_user_id: str
+    """
+    Member it was to be assigned to.
+    """
+    status: Literal["assigned", "not_found", "failed"]
+    """
+    `assigned`; `not_found` when the organization has no such conversation; `failed` when Ricky could not save it, so retry that conversation.
+    """
+
+
 class KnowledgeLocation(TypedDict):
     """
     A branch or place the agents can send as a WhatsApp location.
@@ -1014,281 +1269,6 @@ class KnowledgeFileUpload(TypedDict):
     upload_url: str
     """
     Signed URL valid for two hours. `PUT` the file bytes to it with `Content-Type` set to `mime_type`, then call `POST /knowledge/files/{file_id}/complete`.
-    """
-
-
-class Webhook(TypedDict):
-    """
-    A webhook subscription.
-    """
-
-    id: str
-    """
-    Webhook ID.
-    """
-    url: str
-    """
-    HTTPS endpoint Ricky posts to.
-    """
-    event_types: List[Literal["message.received", "message.sent", "message.delivered", "message.read", "message.failed", "conversation.opened", "conversation.closed", "conversation.assignment_changed", "conversation.agent_changed", "conversation.handoff_requested", "conversation.handoff_resolved", "contact.created", "contact.updated", "contact.tags_changed", "broadcast.completed", "broadcast.failed", "template.status_changed", "workflow.execution_failed", "knowledge_file.ready"]]
-    status: Literal["active", "disabled"]
-    created_at: str
-    """
-    When it was created.
-    """
-    disabled_at: Optional[str]
-    """
-    When it was disabled.
-    """
-
-
-class CreatedWebhook(TypedDict):
-    """
-    A new webhook subscription with its signing secret.
-    """
-
-    id: str
-    """
-    Webhook ID.
-    """
-    url: str
-    """
-    HTTPS endpoint Ricky posts to.
-    """
-    event_types: List[Literal["message.received", "message.sent", "message.delivered", "message.read", "message.failed", "conversation.opened", "conversation.closed", "conversation.assignment_changed", "conversation.agent_changed", "conversation.handoff_requested", "conversation.handoff_resolved", "contact.created", "contact.updated", "contact.tags_changed", "broadcast.completed", "broadcast.failed", "template.status_changed", "workflow.execution_failed", "knowledge_file.ready"]]
-    status: Literal["active", "disabled"]
-    created_at: str
-    """
-    When it was created.
-    """
-    disabled_at: Optional[str]
-    """
-    When it was disabled.
-    """
-    signing_secret: str
-    """
-    HMAC key for `X-Ricky-Signature`. Returned only here, once.
-    """
-
-
-class WebhookDelivery(TypedDict):
-    """
-    One webhook delivery.
-    """
-
-    id: str
-    """
-    Delivery ID; equals the event `id` and `X-Ricky-Delivery-Id`.
-    """
-    event_type: Literal["message.received", "message.sent", "message.delivered", "message.read", "message.failed", "conversation.opened", "conversation.closed", "conversation.assignment_changed", "conversation.agent_changed", "conversation.handoff_requested", "conversation.handoff_resolved", "contact.created", "contact.updated", "contact.tags_changed", "broadcast.completed", "broadcast.failed", "template.status_changed", "workflow.execution_failed", "knowledge_file.ready"]
-    status: Literal["pending", "processing", "delivered", "failed"]
-    attempts: int
-    """
-    Delivery attempts so far; Ricky makes at most ten.
-    """
-    last_response_status: Optional[int]
-    """
-    HTTP status of the last attempt.
-    """
-    last_error: Optional[str]
-    """
-    Why the last attempt failed.
-    """
-    created_at: str
-    """
-    When the event happened.
-    """
-    next_attempt_at: str
-    """
-    When Ricky tries next, while pending.
-    """
-    delivered_at: Optional[str]
-    """
-    When the endpoint answered 2xx.
-    """
-
-
-class WebhookEventData(TypedDict):
-    conversation_id: NotRequired[str]
-    """
-    Conversation, for `message.*` and `conversation.*` events.
-    """
-    message_id: NotRequired[str]
-    """
-    Message, for `message.*` events.
-    """
-    contact_id: NotRequired[str]
-    """
-    Contact, for `contact.*` events.
-    """
-    broadcast_id: NotRequired[str]
-    """
-    Broadcast, for `broadcast.*` events.
-    """
-    template_id: NotRequired[str]
-    """
-    Template ID at Meta, for `template.status_changed`.
-    """
-    workflow_id: NotRequired[str]
-    """
-    Workflow, for `workflow.execution_failed`.
-    """
-    workflow_execution_id: NotRequired[str]
-    """
-    Execution, for `workflow.execution_failed`.
-    """
-    knowledge_file_id: NotRequired[str]
-    """
-    Knowledge file, for `knowledge_file.ready`.
-    """
-    webhook_id: NotRequired[str]
-    """
-    Webhook, for `webhook.test`.
-    """
-
-
-class WebhookEvent(TypedDict):
-    """
-    The JSON body Ricky posts to a webhook endpoint.
-    """
-
-    id: str
-    """
-    Delivery ID. Deduplicate by it.
-    """
-    type: Literal["message.received", "message.sent", "message.delivered", "message.read", "message.failed", "conversation.opened", "conversation.closed", "conversation.assignment_changed", "conversation.agent_changed", "conversation.handoff_requested", "conversation.handoff_resolved", "contact.created", "contact.updated", "contact.tags_changed", "broadcast.completed", "broadcast.failed", "template.status_changed", "workflow.execution_failed", "knowledge_file.ready", "webhook.test"]
-    occurred_at: str
-    """
-    When it happened.
-    """
-    organization_id: str
-    """
-    Organization.
-    """
-    data: WebhookEventData
-
-
-class WebhookTestResult(TypedDict):
-    """
-    What the endpoint answered to a `webhook.test` event.
-    """
-
-    delivered: bool
-    """
-    True when the endpoint answered 2xx.
-    """
-    response_status: Optional[int]
-    """
-    HTTP status the endpoint answered; null if none.
-    """
-    error: Optional[str]
-    """
-    Why it failed: the HTTP status, a timeout or a refused destination.
-    """
-    duration_ms: int
-    """
-    Time until the endpoint answered.
-    """
-
-
-class ContactTagChange(TypedDict):
-    """
-    What a tag change did to one contact.
-    """
-
-    contact_id: str
-    """
-    Contact ID.
-    """
-    status: Literal["updated", "not_found", "failed"]
-    """
-    `updated`; `not_found` when the organization has no such contact; `failed` when Ricky could not save it, so retry that contact.
-    """
-    tags: Optional[List[Tag]]
-    """
-    The contact's tags after the change; null unless `updated`.
-    """
-
-
-class MessageSearchResultContact(TypedDict):
-    name: Optional[str]
-    """
-    Contact name, or the name on the channel.
-    """
-    external_id: str
-    """
-    Address on the channel.
-    """
-
-
-class MessageSearchResult(TypedDict):
-    """
-    A message whose text matches the search.
-    """
-
-    message_id: str
-    """
-    Message ID.
-    """
-    conversation_id: str
-    """
-    Conversation ID.
-    """
-    direction: Literal["inbound", "outbound"]
-    type: str
-    """
-    Message type: `text`, `image`, `audio`, `template`, …
-    """
-    text: str
-    """
-    The matching text: the message, or what Ricky derived from a voice note or file.
-    """
-    contact: MessageSearchResultContact
-    agent_name: Optional[str]
-    """
-    AI agent that wrote it; null otherwise.
-    """
-    messaged_at: str
-    """
-    When it was sent or received.
-    """
-
-
-class QuickReply(TypedDict):
-    """
-    A saved answer operators insert into a message.
-    """
-
-    id: str
-    """
-    Quick reply ID.
-    """
-    title: str
-    """
-    Name operators pick it by, unique in the organization regardless of case.
-    """
-    body: str
-    """
-    Text inserted into the message.
-    """
-
-
-class ConversationAssignmentResult(TypedDict):
-    """
-    What a bulk assignment did to one conversation.
-    """
-
-    conversation_id: str
-    """
-    Conversation ID.
-    """
-    assigned_user_id: str
-    """
-    Member it was to be assigned to.
-    """
-    status: Literal["assigned", "not_found", "failed"]
-    """
-    `assigned`; `not_found` when the organization has no such conversation; `failed` when Ricky could not save it, so retry that conversation.
     """
 
 
@@ -3583,7 +3563,7 @@ class CreateWebhook(TypedDict, closed=True):
     """
     Public HTTPS endpoint.
     """
-    event_types: List[Literal["message.received", "message.sent", "message.delivered", "message.read", "message.failed", "conversation.opened", "conversation.closed", "conversation.assignment_changed", "conversation.agent_changed", "conversation.handoff_requested", "conversation.handoff_resolved", "contact.created", "contact.updated", "contact.tags_changed", "broadcast.completed", "broadcast.failed", "template.status_changed", "workflow.execution_failed", "knowledge_file.ready"]]
+    event_types: List[Literal["message.received", "message.sent", "message.delivered", "message.read", "message.failed", "conversation.opened", "conversation.closed", "conversation.assignment_changed", "contact.created", "contact.updated"]]
 
 
 class RotateWebhookSecret(TypedDict, closed=True):
