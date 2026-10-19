@@ -3,7 +3,8 @@ name: Release SDKs
 # Publishes each SDK whose version is not on its registry yet. npm and PyPI
 # trust this workflow through OpenID Connect (trusted publishing), so the
 # repository holds no registry token. The version moves when the SDK code
-# generated from openapi.json changes.
+# generated from openapi.json changes. After both registries have it, the
+# release v<version> is created on GitHub once.
 on:
   push:
     branches: [main]
@@ -88,3 +89,36 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: sdks/python/dist
+
+  github-release:
+    name: GitHub release
+    needs: [npm, pypi]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Create the release
+        run: |
+          version="$(node -p "require('./sdks/typescript/package.json').version")"
+          tag="v$version"
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$tag" >/dev/null 2>&1; then
+            echo "$tag already exists."
+            exit 0
+          fi
+          gh release create "$tag" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "$tag" \
+            --generate-notes \
+            --notes "getricky $version shipped to both registries:
+
+          - TypeScript: [getricky@$version on npm](https://www.npmjs.com/package/getricky/v/$version)
+          - Python: [getricky $version on PyPI](https://pypi.org/project/getricky/$version/)
+
+          API changes are in [CHANGELOG.md](https://github.com/$GITHUB_REPOSITORY/blob/$tag/CHANGELOG.md)."
