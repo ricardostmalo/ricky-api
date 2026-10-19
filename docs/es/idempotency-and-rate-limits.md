@@ -20,7 +20,7 @@ Recomendamos enviarla en todo envío de mensajes. Estas operaciones la aceptan:
 | [Cerrar una conversación](https://getricky.ai/docs/api/reference/conversations/close-conversation) | `POST /conversations/{conversation_id}/close` | `conversations:write` |
 | [Reabrir una conversación](https://getricky.ai/docs/api/reference/conversations/reopen-conversation) | `POST /conversations/{conversation_id}/reopen` | `conversations:write` |
 | [Enviar un mensaje](https://getricky.ai/docs/api/reference/messages/send-message) | `POST /conversations/{conversation_id}/messages` | `messages:send` |
-| [Crear una etiqueta](https://getricky.ai/docs/api/reference/catalogs/create-tag) | `POST /tags` | `contacts:write` |
+| [Crear una etiqueta](https://getricky.ai/docs/api/reference/catalogs/create-tag) | `POST /tags` | `tags:write` o, en claves anteriores, `contacts:write` |
 | [Crear un workflow](https://getricky.ai/docs/api/reference/workflows/create-workflow) | `POST /workflows` | `workflows:write` |
 | [Actualizar un workflow](https://getricky.ai/docs/api/reference/workflows/update-workflow) | `PATCH /workflows/{workflow_id}` | `workflows:write` |
 | [Crear un agente](https://getricky.ai/docs/api/reference/agents/create-agent) | `POST /agents` | `agents:write` |
@@ -33,6 +33,16 @@ Recomendamos enviarla en todo envío de mensajes. Estas operaciones la aceptan:
 | [Subir un archivo](https://getricky.ai/docs/api/reference/knowledge/create-knowledge-file) | `POST /knowledge/files` | `knowledge:write` |
 | [Completar una carga](https://getricky.ai/docs/api/reference/knowledge/complete-knowledge-file) | `POST /knowledge/files/{file_id}/complete` | `knowledge:write` |
 | [Actualizar un archivo](https://getricky.ai/docs/api/reference/knowledge/update-knowledge-file) | `PATCH /knowledge/files/{file_id}` | `knowledge:write` |
+| [Cambiar etiquetas de muchos contactos](https://getricky.ai/docs/api/reference/contacts/change-contacts-tags) | `POST /contacts/tags` | `contacts:write` |
+| [Crear un campo de contacto](https://getricky.ai/docs/api/reference/contacts/create-contact-field) | `POST /contact-fields` | `contacts:write` |
+| [Eliminar un campo de contacto](https://getricky.ai/docs/api/reference/contacts/delete-contact-field) | `DELETE /contact-fields/{field_id}` | `contacts:write` |
+| [Actualizar una etiqueta](https://getricky.ai/docs/api/reference/catalogs/update-tag) | `PATCH /tags/{tag_id}` | `tags:write` |
+| [Eliminar una etiqueta](https://getricky.ai/docs/api/reference/catalogs/delete-tag) | `DELETE /tags/{tag_id}` | `tags:write` |
+| [Cambiar las etiquetas de una conversación](https://getricky.ai/docs/api/reference/conversations/change-conversation-tags) | `PATCH /conversations/{conversation_id}/tags` | `contacts:write` |
+| [Marcar una conversación como leída](https://getricky.ai/docs/api/reference/conversations/mark-conversation-read) | `POST /conversations/{conversation_id}/read` | `conversations:write` |
+| [Crear una respuesta rápida](https://getricky.ai/docs/api/reference/quick-replies/create-quick-reply) | `POST /quick-replies` | `quick_replies:write` |
+| [Actualizar una respuesta rápida](https://getricky.ai/docs/api/reference/quick-replies/update-quick-reply) | `PATCH /quick-replies/{quick_reply_id}` | `quick_replies:write` |
+| [Eliminar una respuesta rápida](https://getricky.ai/docs/api/reference/quick-replies/delete-quick-reply) | `DELETE /quick-replies/{quick_reply_id}` | `quick_replies:write` |
 
 Crear o desactivar un webhook y reintentar una entrega no usan esta cabecera.
 

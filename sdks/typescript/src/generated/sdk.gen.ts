@@ -2,7 +2,7 @@
 
 import { client } from './client.gen.js';
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client/index.js';
-import type { ActivateWorkflowData, ActivateWorkflowErrors, ActivateWorkflowResponses, AddContactNoteData, AddContactNoteErrors, AddContactNoteResponses, ArchiveAgentData, ArchiveAgentErrors, ArchiveAgentResponses, AssignConversationAgentData, AssignConversationAgentErrors, AssignConversationAgentResponses, AssignConversationData, AssignConversationErrors, AssignConversationResponses, ChangeContactsTagsData, ChangeContactsTagsErrors, ChangeContactsTagsResponses, ChangeConversationTagsData, ChangeConversationTagsErrors, ChangeConversationTagsResponses, CloseConversationData, CloseConversationErrors, CloseConversationResponses, CompleteKnowledgeFileData, CompleteKnowledgeFileErrors, CompleteKnowledgeFileResponses, CreateAgentData, CreateAgentErrors, CreateAgentResponses, CreateContactData, CreateContactErrors, CreateContactFieldData, CreateContactFieldErrors, CreateContactFieldResponses, CreateContactResponses, CreateKnowledgeContactData, CreateKnowledgeContactErrors, CreateKnowledgeContactResponses, CreateKnowledgeFileData, CreateKnowledgeFileErrors, CreateKnowledgeFileResponses, CreateKnowledgeLocationData, CreateKnowledgeLocationErrors, CreateKnowledgeLocationResponses, CreateQuickReplyData, CreateQuickReplyErrors, CreateQuickReplyResponses, CreateTagData, CreateTagErrors, CreateTagResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, CreateWorkflowData, CreateWorkflowErrors, CreateWorkflowResponses, DeleteContactFieldData, DeleteContactFieldErrors, DeleteContactFieldResponses, DeleteKnowledgeContactData, DeleteKnowledgeContactErrors, DeleteKnowledgeContactResponses, DeleteKnowledgeFileData, DeleteKnowledgeFileErrors, DeleteKnowledgeFileResponses, DeleteKnowledgeLocationData, DeleteKnowledgeLocationErrors, DeleteKnowledgeLocationResponses, DeleteQuickReplyData, DeleteQuickReplyErrors, DeleteQuickReplyResponses, DeleteTagData, DeleteTagErrors, DeleteTagResponses, DeleteWorkflowData, DeleteWorkflowErrors, DeleteWorkflowResponses, DisableWebhookData, DisableWebhookErrors, DisableWebhookResponses, GetAdsReportData, GetAdsReportErrors, GetAdsReportResponses, GetAgentData, GetAgentErrors, GetAgentOptionsData, GetAgentOptionsErrors, GetAgentOptionsResponses, GetAgentResponses, GetBroadcastsReportData, GetBroadcastsReportErrors, GetBroadcastsReportResponses, GetContactData, GetContactErrors, GetContactResponses, GetConversationData, GetConversationErrors, GetConversationResponses, GetConversationsReportData, GetConversationsReportErrors, GetConversationsReportResponses, GetDashboardReportData, GetDashboardReportErrors, GetDashboardReportResponses, GetKnowledgeContactData, GetKnowledgeContactErrors, GetKnowledgeContactResponses, GetKnowledgeFileData, GetKnowledgeFileErrors, GetKnowledgeFileResponses, GetKnowledgeLocationData, GetKnowledgeLocationErrors, GetKnowledgeLocationResponses, GetMessageData, GetMessageErrors, GetMessageResponses, GetMessagesReportData, GetMessagesReportErrors, GetMessagesReportResponses, GetQuickReplyData, GetQuickReplyErrors, GetQuickReplyResponses, GetResolutionsReportData, GetResolutionsReportErrors, GetResolutionsReportResponses, GetResponsesReportData, GetResponsesReportErrors, GetResponsesReportResponses, GetSendData, GetSendErrors, GetSendResponses, GetTeamReportData, GetTeamReportErrors, GetTeamReportResponses, GetWorkflowData, GetWorkflowErrors, GetWorkflowResponses, ListAgentsData, ListAgentsErrors, ListAgentsResponses, ListChannelsData, ListChannelsErrors, ListChannelsResponses, ListContactFieldsData, ListContactFieldsErrors, ListContactFieldsResponses, ListContactsData, ListContactsErrors, ListContactsResponses, ListConversationsData, ListConversationsErrors, ListConversationsResponses, ListKnowledgeContactsData, ListKnowledgeContactsErrors, ListKnowledgeContactsResponses, ListKnowledgeFilesData, ListKnowledgeFilesErrors, ListKnowledgeFilesResponses, ListKnowledgeLocationsData, ListKnowledgeLocationsErrors, ListKnowledgeLocationsResponses, ListMembersData, ListMembersErrors, ListMembersResponses, ListMessagesData, ListMessagesErrors, ListMessagesResponses, ListQuickRepliesData, ListQuickRepliesErrors, ListQuickRepliesResponses, ListTagsData, ListTagsErrors, ListTagsResponses, ListTemplatesData, ListTemplatesErrors, ListTemplatesResponses, ListWebhookDeliveriesData, ListWebhookDeliveriesErrors, ListWebhookDeliveriesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, ListWorkflowExecutionsData, ListWorkflowExecutionsErrors, ListWorkflowExecutionsResponses, ListWorkflowsData, ListWorkflowsErrors, ListWorkflowsResponses, MarkConversationReadData, MarkConversationReadErrors, MarkConversationReadResponses, PauseWorkflowData, PauseWorkflowErrors, PauseWorkflowResponses, ReopenConversationData, ReopenConversationErrors, ReopenConversationResponses, RetryWebhookDeliveryData, RetryWebhookDeliveryErrors, RetryWebhookDeliveryResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SearchConversationsData, SearchConversationsErrors, SearchConversationsResponses, SearchMessagesData, SearchMessagesErrors, SearchMessagesResponses, SendMessageData, SendMessageErrors, SendMessageResponses, StartConversationData, StartConversationErrors, StartConversationResponses, TestWebhookData, TestWebhookErrors, TestWebhookResponses, UpdateAgentData, UpdateAgentErrors, UpdateAgentResponses, UpdateContactData, UpdateContactErrors, UpdateContactResponses, UpdateKnowledgeContactData, UpdateKnowledgeContactErrors, UpdateKnowledgeContactResponses, UpdateKnowledgeFileData, UpdateKnowledgeFileErrors, UpdateKnowledgeFileResponses, UpdateKnowledgeLocationData, UpdateKnowledgeLocationErrors, UpdateKnowledgeLocationResponses, UpdateQuickReplyData, UpdateQuickReplyErrors, UpdateQuickReplyResponses, UpdateTagData, UpdateTagErrors, UpdateTagResponses, UpdateWorkflowData, UpdateWorkflowErrors, UpdateWorkflowResponses } from './types.gen.js';
+import type { ActivateWorkflowData, ActivateWorkflowErrors, ActivateWorkflowResponses, AddContactNoteData, AddContactNoteErrors, AddContactNoteResponses, ArchiveAgentData, ArchiveAgentErrors, ArchiveAgentResponses, AssignConversationAgentData, AssignConversationAgentErrors, AssignConversationAgentResponses, AssignConversationData, AssignConversationErrors, AssignConversationResponses, ChangeContactsTagsData, ChangeContactsTagsErrors, ChangeContactsTagsResponses, ChangeConversationTagsData, ChangeConversationTagsErrors, ChangeConversationTagsResponses, CloseConversationData, CloseConversationErrors, CloseConversationResponses, CompleteKnowledgeFileData, CompleteKnowledgeFileErrors, CompleteKnowledgeFileResponses, CreateAgentData, CreateAgentErrors, CreateAgentResponses, CreateContactData, CreateContactErrors, CreateContactFieldData, CreateContactFieldErrors, CreateContactFieldResponses, CreateContactResponses, CreateKnowledgeContactData, CreateKnowledgeContactErrors, CreateKnowledgeContactResponses, CreateKnowledgeFileData, CreateKnowledgeFileErrors, CreateKnowledgeFileResponses, CreateKnowledgeLocationData, CreateKnowledgeLocationErrors, CreateKnowledgeLocationResponses, CreateQuickReplyData, CreateQuickReplyErrors, CreateQuickReplyResponses, CreateTagData, CreateTagErrors, CreateTagResponses, CreateTemplateData, CreateTemplateErrors, CreateTemplateResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, CreateWorkflowData, CreateWorkflowErrors, CreateWorkflowResponses, DeleteContactFieldData, DeleteContactFieldErrors, DeleteContactFieldResponses, DeleteKnowledgeContactData, DeleteKnowledgeContactErrors, DeleteKnowledgeContactResponses, DeleteKnowledgeFileData, DeleteKnowledgeFileErrors, DeleteKnowledgeFileResponses, DeleteKnowledgeLocationData, DeleteKnowledgeLocationErrors, DeleteKnowledgeLocationResponses, DeleteQuickReplyData, DeleteQuickReplyErrors, DeleteQuickReplyResponses, DeleteTagData, DeleteTagErrors, DeleteTagResponses, DeleteTemplateData, DeleteTemplateErrors, DeleteTemplateResponses, DeleteWorkflowData, DeleteWorkflowErrors, DeleteWorkflowResponses, DisableWebhookData, DisableWebhookErrors, DisableWebhookResponses, GetAdsReportData, GetAdsReportErrors, GetAdsReportResponses, GetAgentData, GetAgentErrors, GetAgentOptionsData, GetAgentOptionsErrors, GetAgentOptionsResponses, GetAgentResponses, GetBroadcastsReportData, GetBroadcastsReportErrors, GetBroadcastsReportResponses, GetContactData, GetContactErrors, GetContactResponses, GetConversationData, GetConversationErrors, GetConversationResponses, GetConversationsReportData, GetConversationsReportErrors, GetConversationsReportResponses, GetDashboardReportData, GetDashboardReportErrors, GetDashboardReportResponses, GetKnowledgeContactData, GetKnowledgeContactErrors, GetKnowledgeContactResponses, GetKnowledgeFileData, GetKnowledgeFileErrors, GetKnowledgeFileResponses, GetKnowledgeLocationData, GetKnowledgeLocationErrors, GetKnowledgeLocationResponses, GetMessageData, GetMessageErrors, GetMessageResponses, GetMessagesReportData, GetMessagesReportErrors, GetMessagesReportResponses, GetQuickReplyData, GetQuickReplyErrors, GetQuickReplyResponses, GetResolutionsReportData, GetResolutionsReportErrors, GetResolutionsReportResponses, GetResponsesReportData, GetResponsesReportErrors, GetResponsesReportResponses, GetSendData, GetSendErrors, GetSendResponses, GetTeamReportData, GetTeamReportErrors, GetTeamReportResponses, GetTemplateData, GetTemplateErrors, GetTemplateResponses, GetWhatsAppNumberData, GetWhatsAppNumberErrors, GetWhatsAppNumberResponses, GetWorkflowData, GetWorkflowErrors, GetWorkflowResponses, ListAgentsData, ListAgentsErrors, ListAgentsResponses, ListChannelsData, ListChannelsErrors, ListChannelsResponses, ListContactFieldsData, ListContactFieldsErrors, ListContactFieldsResponses, ListContactsData, ListContactsErrors, ListContactsResponses, ListConversationsData, ListConversationsErrors, ListConversationsResponses, ListKnowledgeContactsData, ListKnowledgeContactsErrors, ListKnowledgeContactsResponses, ListKnowledgeFilesData, ListKnowledgeFilesErrors, ListKnowledgeFilesResponses, ListKnowledgeLocationsData, ListKnowledgeLocationsErrors, ListKnowledgeLocationsResponses, ListMembersData, ListMembersErrors, ListMembersResponses, ListMessagesData, ListMessagesErrors, ListMessagesResponses, ListQuickRepliesData, ListQuickRepliesErrors, ListQuickRepliesResponses, ListTagsData, ListTagsErrors, ListTagsResponses, ListTemplatesData, ListTemplatesErrors, ListTemplatesResponses, ListWebhookDeliveriesData, ListWebhookDeliveriesErrors, ListWebhookDeliveriesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, ListWhatsAppNumbersData, ListWhatsAppNumbersErrors, ListWhatsAppNumbersResponses, ListWorkflowExecutionsData, ListWorkflowExecutionsErrors, ListWorkflowExecutionsResponses, ListWorkflowsData, ListWorkflowsErrors, ListWorkflowsResponses, MarkConversationReadData, MarkConversationReadErrors, MarkConversationReadResponses, PauseWorkflowData, PauseWorkflowErrors, PauseWorkflowResponses, ReopenConversationData, ReopenConversationErrors, ReopenConversationResponses, RetryWebhookDeliveryData, RetryWebhookDeliveryErrors, RetryWebhookDeliveryResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SearchConversationsData, SearchConversationsErrors, SearchConversationsResponses, SearchMessagesData, SearchMessagesErrors, SearchMessagesResponses, SendMessageData, SendMessageErrors, SendMessageResponses, StartConversationData, StartConversationErrors, StartConversationResponses, TestWebhookData, TestWebhookErrors, TestWebhookResponses, UpdateAgentData, UpdateAgentErrors, UpdateAgentResponses, UpdateContactData, UpdateContactErrors, UpdateContactResponses, UpdateKnowledgeContactData, UpdateKnowledgeContactErrors, UpdateKnowledgeContactResponses, UpdateKnowledgeFileData, UpdateKnowledgeFileErrors, UpdateKnowledgeFileResponses, UpdateKnowledgeLocationData, UpdateKnowledgeLocationErrors, UpdateKnowledgeLocationResponses, UpdateQuickReplyData, UpdateQuickReplyErrors, UpdateQuickReplyResponses, UpdateTagData, UpdateTagErrors, UpdateTagResponses, UpdateTemplateData, UpdateTemplateErrors, UpdateTemplateResponses, UpdateWorkflowData, UpdateWorkflowErrors, UpdateWorkflowResponses, ValidateTemplateData, ValidateTemplateErrors, ValidateTemplateResponses } from './types.gen.js';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -426,22 +426,6 @@ export class RickyApi extends HeyApiClient {
                 'Content-Type': 'application/json',
                 ...options.headers
             }
-        });
-    }
-    
-    /**
-     * List templates
-     *
-     * WhatsApp templates of every connected business account, read live from Meta.
-     *
-     * Scope: `templates:read`.
-     */
-    public listTemplates<ThrowOnError extends boolean = true>(options?: Options<ListTemplatesData, ThrowOnError>): RequestResult<ListTemplatesResponses, ListTemplatesErrors, ThrowOnError, 'data'> {
-        return (options?.client ?? this.client).get<ListTemplatesResponses, ListTemplatesErrors, ThrowOnError, 'data'>({
-            responseStyle: 'data',
-            security: [{ scheme: 'bearer', type: 'http' }],
-            url: '/templates',
-            ...options
         });
     }
     
@@ -1462,6 +1446,146 @@ export class RickyApi extends HeyApiClient {
                 'Content-Type': 'application/json',
                 ...options.headers
             }
+        });
+    }
+    
+    /**
+     * List templates
+     *
+     * WhatsApp templates of every connected business account, read live from Meta.
+     *
+     * Scope: `templates:read`.
+     */
+    public listTemplates<ThrowOnError extends boolean = true>(options?: Options<ListTemplatesData, ThrowOnError>): RequestResult<ListTemplatesResponses, ListTemplatesErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<ListTemplatesResponses, ListTemplatesErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/templates',
+            ...options
+        });
+    }
+    
+    /**
+     * Create a template
+     *
+     * Submits a template to Meta for review from the business account of `channel_id`. It answers the template as Meta has it, usually `PENDING`; follow it with `GET /templates/{template_id}`. A draft that breaks a rule answers `400` with the first problem; Meta refusing it answers `422 rule_violation` with its reason.
+     *
+     * Scope: `templates:write`.
+     */
+    public createTemplate<ThrowOnError extends boolean = true>(options: Options<CreateTemplateData, ThrowOnError>): RequestResult<CreateTemplateResponses, CreateTemplateErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<CreateTemplateResponses, CreateTemplateErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/templates',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Delete a template
+     *
+     * Deletes the template at Meta. Meta deletes it in every language that shares its name, and the name cannot be used again for 30 days.
+     *
+     * Scope: `templates:write`.
+     */
+    public deleteTemplate<ThrowOnError extends boolean = true>(options: Options<DeleteTemplateData, ThrowOnError>): RequestResult<DeleteTemplateResponses, DeleteTemplateErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).delete<DeleteTemplateResponses, DeleteTemplateErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/templates/{template_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Get a template
+     *
+     * One template, read live from Meta, with its review `status`: `PENDING` while Meta reviews it, then `APPROVED`, `REJECTED` or `PAUSED`. Read it again to follow Meta's review.
+     *
+     * Scope: `templates:read`.
+     */
+    public getTemplate<ThrowOnError extends boolean = true>(options: Options<GetTemplateData, ThrowOnError>): RequestResult<GetTemplateResponses, GetTemplateErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).get<GetTemplateResponses, GetTemplateErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/templates/{template_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Edit a template
+     *
+     * Changes the category or content of a template and sends it to Meta for review again. Meta allows it only for `APPROVED`, `REJECTED` and `PAUSED` templates, and limits how often an approved one can change; otherwise it answers `422 rule_violation`. Templates with a media header, or with buttons and components Ricky’s editor does not build, cannot be edited here.
+     *
+     * Scope: `templates:write`.
+     */
+    public updateTemplate<ThrowOnError extends boolean = true>(options: Options<UpdateTemplateData, ThrowOnError>): RequestResult<UpdateTemplateResponses, UpdateTemplateErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).patch<UpdateTemplateResponses, UpdateTemplateErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/templates/{template_id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Validate a template draft
+     *
+     * Checks a draft with the rules of Ricky’s template editor and answers every problem found, without submitting anything to Meta. A body that is not a draft answers `400`; a draft that breaks a rule answers `200` with `valid: false`. Meta can still reject a valid draft in its review.
+     *
+     * Scope: `templates:read`.
+     */
+    public validateTemplate<ThrowOnError extends boolean = true>(options: Options<ValidateTemplateData, ThrowOnError>): RequestResult<ValidateTemplateResponses, ValidateTemplateErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<ValidateTemplateResponses, ValidateTemplateErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/templates/validate',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * List WhatsApp numbers
+     *
+     * Every WhatsApp number of the organization, also disconnected ones, with its status, quality rating and messaging limit as Ricky last read them from Meta.
+     *
+     * Scope: `conversations:read`.
+     */
+    public listWhatsAppNumbers<ThrowOnError extends boolean = true>(options?: Options<ListWhatsAppNumbersData, ThrowOnError>): RequestResult<ListWhatsAppNumbersResponses, ListWhatsAppNumbersErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<ListWhatsAppNumbersResponses, ListWhatsAppNumbersErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/whatsapp-numbers',
+            ...options
+        });
+    }
+    
+    /**
+     * Get a WhatsApp number
+     *
+     * One WhatsApp number by its channel ID.
+     *
+     * Scope: `conversations:read`.
+     */
+    public getWhatsAppNumber<ThrowOnError extends boolean = true>(options: Options<GetWhatsAppNumberData, ThrowOnError>): RequestResult<GetWhatsAppNumberResponses, GetWhatsAppNumberErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).get<GetWhatsAppNumberResponses, GetWhatsAppNumberErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/whatsapp-numbers/{channel_id}',
+            ...options
         });
     }
 }

@@ -29,10 +29,12 @@ from .types import (
     CreateKnowledgeLocation,
     CreateQuickReply,
     CreateTag,
+    CreateTemplate,
     CreateWebhook,
     CreateWorkflow,
     CreatedWebhook,
     DashboardReport,
+    DeletedTemplate,
     KnowledgeContact,
     KnowledgeFile,
     KnowledgeFileUpload,
@@ -51,6 +53,7 @@ from .types import (
     Tag,
     TeamReport,
     Template,
+    TemplateValidation,
     UpdateAgent,
     UpdateContact,
     UpdateKnowledgeContact,
@@ -58,10 +61,13 @@ from .types import (
     UpdateKnowledgeLocation,
     UpdateQuickReply,
     UpdateTag,
+    UpdateTemplate,
     UpdateWorkflow,
+    ValidateTemplate,
     Webhook,
     WebhookDelivery,
     WebhookTestResult,
+    WhatsAppNumber,
     Workflow,
     WorkflowExecution,
 )
@@ -511,20 +517,6 @@ class SyncOperations:
             body=body,
             idempotent=True,
             idempotency_key=idempotency_key,
-        ))
-
-    def list_templates(
-        self,
-    ) -> Page[Template]:
-        """List templates.
-
-        WhatsApp templates of every connected business account, read live from Meta.
-
-        Scope: `templates:read`.
-        """
-        return cast(Page[Template], self._request(
-            "GET",
-            "/templates",
         ))
 
     def list_webhooks(
@@ -1697,6 +1689,153 @@ class SyncOperations:
             idempotency_key=idempotency_key,
         ))
 
+    def list_templates(
+        self,
+    ) -> Page[Template]:
+        """List templates.
+
+        WhatsApp templates of every connected business account, read live from Meta.
+
+        Scope: `templates:read`.
+        """
+        return cast(Page[Template], self._request(
+            "GET",
+            "/templates",
+        ))
+
+    def create_template(
+        self,
+        body: CreateTemplate,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Template]:
+        """Create a template.
+
+        Submits a template to Meta for review from the business account of `channel_id`. It answers the template as Meta has it, usually `PENDING`; follow it with `GET /templates/{template_id}`. A draft that breaks a rule answers `400` with the first problem; Meta refusing it answers `422 rule_violation` with its reason.
+
+        Scope: `templates:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Template], self._request(
+            "POST",
+            "/templates",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def get_template(
+        self,
+        template_id: str,
+    ) -> Resource[Template]:
+        """Get a template.
+
+        One template, read live from Meta, with its review `status`: `PENDING` while Meta reviews it, then `APPROVED`, `REJECTED` or `PAUSED`. Read it again to follow Meta's review.
+
+        Scope: `templates:read`.
+        """
+        return cast(Resource[Template], self._request(
+            "GET",
+            "/templates/{template_id}",
+            path_parameters={"template_id": template_id},
+        ))
+
+    def update_template(
+        self,
+        template_id: str,
+        body: UpdateTemplate,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Template]:
+        """Edit a template.
+
+        Changes the category or content of a template and sends it to Meta for review again. Meta allows it only for `APPROVED`, `REJECTED` and `PAUSED` templates, and limits how often an approved one can change; otherwise it answers `422 rule_violation`. Templates with a media header, or with buttons and components Ricky’s editor does not build, cannot be edited here.
+
+        Scope: `templates:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Template], self._request(
+            "PATCH",
+            "/templates/{template_id}",
+            path_parameters={"template_id": template_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def delete_template(
+        self,
+        template_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[DeletedTemplate]:
+        """Delete a template.
+
+        Deletes the template at Meta. Meta deletes it in every language that shares its name, and the name cannot be used again for 30 days.
+
+        Scope: `templates:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[DeletedTemplate], self._request(
+            "DELETE",
+            "/templates/{template_id}",
+            path_parameters={"template_id": template_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def validate_template(
+        self,
+        body: ValidateTemplate,
+    ) -> Resource[TemplateValidation]:
+        """Validate a template draft.
+
+        Checks a draft with the rules of Ricky’s template editor and answers every problem found, without submitting anything to Meta. A body that is not a draft answers `400`; a draft that breaks a rule answers `200` with `valid: false`. Meta can still reject a valid draft in its review.
+
+        Scope: `templates:read`.
+        """
+        return cast(Resource[TemplateValidation], self._request(
+            "POST",
+            "/templates/validate",
+            body=body,
+        ))
+
+    def list_whats_app_numbers(
+        self,
+    ) -> Page[WhatsAppNumber]:
+        """List WhatsApp numbers.
+
+        Every WhatsApp number of the organization, also disconnected ones, with its status, quality rating and messaging limit as Ricky last read them from Meta.
+
+        Scope: `conversations:read`.
+        """
+        return cast(Page[WhatsAppNumber], self._request(
+            "GET",
+            "/whatsapp-numbers",
+        ))
+
+    def get_whats_app_number(
+        self,
+        channel_id: str,
+    ) -> Resource[WhatsAppNumber]:
+        """Get a WhatsApp number.
+
+        One WhatsApp number by its channel ID.
+
+        Scope: `conversations:read`.
+        """
+        return cast(Resource[WhatsAppNumber], self._request(
+            "GET",
+            "/whatsapp-numbers/{channel_id}",
+            path_parameters={"channel_id": channel_id},
+        ))
+
 
 class AsyncOperations:
     """Every operation of the Ricky API, awaitable."""
@@ -2142,20 +2281,6 @@ class AsyncOperations:
             body=body,
             idempotent=True,
             idempotency_key=idempotency_key,
-        ))
-
-    async def list_templates(
-        self,
-    ) -> Page[Template]:
-        """List templates.
-
-        WhatsApp templates of every connected business account, read live from Meta.
-
-        Scope: `templates:read`.
-        """
-        return cast(Page[Template], await self._request(
-            "GET",
-            "/templates",
         ))
 
     async def list_webhooks(
@@ -3326,4 +3451,151 @@ class AsyncOperations:
             path_parameters={"quick_reply_id": quick_reply_id},
             idempotent=True,
             idempotency_key=idempotency_key,
+        ))
+
+    async def list_templates(
+        self,
+    ) -> Page[Template]:
+        """List templates.
+
+        WhatsApp templates of every connected business account, read live from Meta.
+
+        Scope: `templates:read`.
+        """
+        return cast(Page[Template], await self._request(
+            "GET",
+            "/templates",
+        ))
+
+    async def create_template(
+        self,
+        body: CreateTemplate,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Template]:
+        """Create a template.
+
+        Submits a template to Meta for review from the business account of `channel_id`. It answers the template as Meta has it, usually `PENDING`; follow it with `GET /templates/{template_id}`. A draft that breaks a rule answers `400` with the first problem; Meta refusing it answers `422 rule_violation` with its reason.
+
+        Scope: `templates:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Template], await self._request(
+            "POST",
+            "/templates",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def get_template(
+        self,
+        template_id: str,
+    ) -> Resource[Template]:
+        """Get a template.
+
+        One template, read live from Meta, with its review `status`: `PENDING` while Meta reviews it, then `APPROVED`, `REJECTED` or `PAUSED`. Read it again to follow Meta's review.
+
+        Scope: `templates:read`.
+        """
+        return cast(Resource[Template], await self._request(
+            "GET",
+            "/templates/{template_id}",
+            path_parameters={"template_id": template_id},
+        ))
+
+    async def update_template(
+        self,
+        template_id: str,
+        body: UpdateTemplate,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Template]:
+        """Edit a template.
+
+        Changes the category or content of a template and sends it to Meta for review again. Meta allows it only for `APPROVED`, `REJECTED` and `PAUSED` templates, and limits how often an approved one can change; otherwise it answers `422 rule_violation`. Templates with a media header, or with buttons and components Ricky’s editor does not build, cannot be edited here.
+
+        Scope: `templates:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Template], await self._request(
+            "PATCH",
+            "/templates/{template_id}",
+            path_parameters={"template_id": template_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def delete_template(
+        self,
+        template_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[DeletedTemplate]:
+        """Delete a template.
+
+        Deletes the template at Meta. Meta deletes it in every language that shares its name, and the name cannot be used again for 30 days.
+
+        Scope: `templates:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[DeletedTemplate], await self._request(
+            "DELETE",
+            "/templates/{template_id}",
+            path_parameters={"template_id": template_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def validate_template(
+        self,
+        body: ValidateTemplate,
+    ) -> Resource[TemplateValidation]:
+        """Validate a template draft.
+
+        Checks a draft with the rules of Ricky’s template editor and answers every problem found, without submitting anything to Meta. A body that is not a draft answers `400`; a draft that breaks a rule answers `200` with `valid: false`. Meta can still reject a valid draft in its review.
+
+        Scope: `templates:read`.
+        """
+        return cast(Resource[TemplateValidation], await self._request(
+            "POST",
+            "/templates/validate",
+            body=body,
+        ))
+
+    async def list_whats_app_numbers(
+        self,
+    ) -> Page[WhatsAppNumber]:
+        """List WhatsApp numbers.
+
+        Every WhatsApp number of the organization, also disconnected ones, with its status, quality rating and messaging limit as Ricky last read them from Meta.
+
+        Scope: `conversations:read`.
+        """
+        return cast(Page[WhatsAppNumber], await self._request(
+            "GET",
+            "/whatsapp-numbers",
+        ))
+
+    async def get_whats_app_number(
+        self,
+        channel_id: str,
+    ) -> Resource[WhatsAppNumber]:
+        """Get a WhatsApp number.
+
+        One WhatsApp number by its channel ID.
+
+        Scope: `conversations:read`.
+        """
+        return cast(Resource[WhatsAppNumber], await self._request(
+            "GET",
+            "/whatsapp-numbers/{channel_id}",
+            path_parameters={"channel_id": channel_id},
         ))

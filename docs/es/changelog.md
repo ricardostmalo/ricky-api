@@ -25,6 +25,15 @@ Esta página registra los cambios de la API. Un cambio incompatible solo llega e
 * **Agente de una conversación.** `PATCH /conversations/{conversation_id}/agent` pone un agente a responder una conversación o, con `null`, apaga la IA. Exige `conversations:write`.
 * **Conocimiento.** `/knowledge/locations` y `/knowledge/contacts` crean, consultan, actualizan y eliminan ubicaciones y contactos del directorio. `/knowledge/files` sube archivos en tres pasos, los consulta, los actualiza y los elimina. Exigen `knowledge:read` o `knowledge:write`. Consulta [Agentes y conocimiento](./agents-and-knowledge.md).
 
+**Etiquetas, campos de contacto, búsqueda, lectura y respuestas rápidas.** Cambios compatibles con la v1.
+
+* **Etiquetas.** `PATCH` y `DELETE /tags/{tag_id}` renombran, cambian de color y borran una etiqueta en todos los contactos. Exigen el permiso nuevo `tags:write`, que `POST /tags` ahora también acepta además de `contacts:write`.
+* **Etiquetas en muchos contactos.** `POST /contacts/tags` agrega y quita las mismas etiquetas en hasta 100 contactos. `PATCH /conversations/{conversation_id}/tags` cambia las etiquetas del contacto de una conversación.
+* **Campos de contacto.** `POST /contact-fields` y `DELETE /contact-fields/{field_id}` crean y borran campos personalizados.
+* **Búsqueda.** `GET /conversations/search` y `GET /messages/search` buscan por texto. Los contactos se buscan con `GET /contacts?query=`.
+* **Lectura.** `POST /conversations/{conversation_id}/read` marca una conversación como leída, como al abrirla en el inbox.
+* **Respuestas rápidas.** `GET` y `POST /quick-replies`, `GET`, `PATCH` y `DELETE /quick-replies/{quick_reply_id}`, con los permisos nuevos `quick_replies:read` y `quick_replies:write`. Consulta [Etiquetas, campos, búsqueda y respuestas rápidas](./crm-and-inbox.md).
+
 ## 15 de octubre de 2026
 
 **Webhooks inmediatos, eventos nuevos, archivos, mensajes sueltos, etiquetas y notas.** Cambios compatibles con la v1.

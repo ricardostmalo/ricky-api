@@ -44,26 +44,29 @@ To rotate a key, create the new one, deploy it to your server and revoke the old
 
 ## Scopes
 
-Each operation requires one scope. A key without it gets `403 insufficient_scope`.
+Each operation requires one scope. A key without it gets `403 insufficient_scope`. `POST /tags` also accepts `contacts:write`, the scope it required before `tags:write` existed.
 
-| Scope                 | Allows                                                                       |
-| --------------------- | ---------------------------------------------------------------------------- |
-| `contacts:read`       | Read contacts and contact fields.                                            |
-| `contacts:write`      | Create and update contacts, add notes to them and create tags.               |
-| `conversations:read`  | Read conversations, messages and channels.                                   |
-| `conversations:write` | Assign, close and reopen conversations, and set their AI agent.              |
-| `messages:send`       | Start conversations, send messages and read sends.                           |
-| `templates:read`      | Read WhatsApp templates.                                                     |
-| `members:read`        | Read the members of the organization.                                        |
-| `tags:read`           | Read contact tags.                                                           |
-| `webhooks:manage`     | Create, list and disable webhooks; read and retry their deliveries.          |
-| `workflows:read`      | Read workflows and their executions.                                         |
-| `workflows:write`     | Create, edit, activate, pause and delete workflows.                          |
-| `reports:read`        | Read the numbers of the Reports pages.                                       |
-| `agents:read`         | Read agents and their configuration options.                                 |
-| `agents:write`        | Create, update and archive agents.                                           |
-| `knowledge:read`      | Read knowledge locations, directory contacts and files.                      |
-| `knowledge:write`     | Create, update and delete knowledge locations, directory contacts and files. |
+| Scope                 | Allows                                                                                                  |
+| --------------------- | ------------------------------------------------------------------------------------------------------- |
+| `contacts:read`       | Read contacts and contact fields.                                                                       |
+| `contacts:write`      | Create and update contacts, add notes to them, change their tags, and create and delete contact fields. |
+| `conversations:read`  | Read and search conversations, messages and channels.                                                   |
+| `conversations:write` | Assign, close, reopen and mark conversations read, and set their AI agent.                              |
+| `messages:send`       | Start conversations, send messages and read sends.                                                      |
+| `templates:read`      | Read WhatsApp templates.                                                                                |
+| `members:read`        | Read the members of the organization.                                                                   |
+| `tags:read`           | Read contact tags.                                                                                      |
+| `webhooks:manage`     | Create, list and disable webhooks; read and retry their deliveries.                                     |
+| `workflows:read`      | Read workflows and their executions.                                                                    |
+| `workflows:write`     | Create, edit, activate, pause and delete workflows.                                                     |
+| `reports:read`        | Read the numbers of the Reports pages.                                                                  |
+| `agents:read`         | Read agents and their configuration options.                                                            |
+| `agents:write`        | Create, update and archive agents.                                                                      |
+| `knowledge:read`      | Read knowledge locations, directory contacts and files.                                                 |
+| `knowledge:write`     | Create, update and delete knowledge locations, directory contacts and files.                            |
+| `tags:write`          | Create, edit and delete tags.                                                                           |
+| `quick_replies:read`  | Read quick replies.                                                                                     |
+| `quick_replies:write` | Create, update and delete quick replies.                                                                |
 
 The table below is generated from the API contract: it is the exact list of operations and the scope each one requires.
 
@@ -88,7 +91,7 @@ The table below is generated from the API contract: it is the exact list of oper
 | [List channels](https://getricky.ai/en/docs/api/reference/catalogs/list-channels) | `GET /channels` | `conversations:read` |
 | [List members](https://getricky.ai/en/docs/api/reference/catalogs/list-members) | `GET /members` | `members:read` |
 | [List tags](https://getricky.ai/en/docs/api/reference/catalogs/list-tags) | `GET /tags` | `tags:read` |
-| [Create a tag](https://getricky.ai/en/docs/api/reference/catalogs/create-tag) | `POST /tags` | `contacts:write` |
+| [Create a tag](https://getricky.ai/en/docs/api/reference/catalogs/create-tag) | `POST /tags` | `tags:write` or, on older keys, `contacts:write` |
 | [List templates](https://getricky.ai/en/docs/api/reference/catalogs/list-templates) | `GET /templates` | `templates:read` |
 | [List webhooks](https://getricky.ai/en/docs/api/reference/webhooks/list-webhooks) | `GET /webhooks` | `webhooks:manage` |
 | [Create a webhook](https://getricky.ai/en/docs/api/reference/webhooks/create-webhook) | `POST /webhooks` | `webhooks:manage` |
@@ -136,6 +139,20 @@ The table below is generated from the API contract: it is the exact list of oper
 | [Get a file](https://getricky.ai/en/docs/api/reference/knowledge/get-knowledge-file) | `GET /knowledge/files/{file_id}` | `knowledge:read` |
 | [Update a file](https://getricky.ai/en/docs/api/reference/knowledge/update-knowledge-file) | `PATCH /knowledge/files/{file_id}` | `knowledge:write` |
 | [Delete a file](https://getricky.ai/en/docs/api/reference/knowledge/delete-knowledge-file) | `DELETE /knowledge/files/{file_id}` | `knowledge:write` |
+| [Change tags on many contacts](https://getricky.ai/en/docs/api/reference/contacts/change-contacts-tags) | `POST /contacts/tags` | `contacts:write` |
+| [Create a contact field](https://getricky.ai/en/docs/api/reference/contacts/create-contact-field) | `POST /contact-fields` | `contacts:write` |
+| [Delete a contact field](https://getricky.ai/en/docs/api/reference/contacts/delete-contact-field) | `DELETE /contact-fields/{field_id}` | `contacts:write` |
+| [Update a tag](https://getricky.ai/en/docs/api/reference/catalogs/update-tag) | `PATCH /tags/{tag_id}` | `tags:write` |
+| [Delete a tag](https://getricky.ai/en/docs/api/reference/catalogs/delete-tag) | `DELETE /tags/{tag_id}` | `tags:write` |
+| [Search conversations](https://getricky.ai/en/docs/api/reference/conversations/search-conversations) | `GET /conversations/search` | `conversations:read` |
+| [Change a conversation's tags](https://getricky.ai/en/docs/api/reference/conversations/change-conversation-tags) | `PATCH /conversations/{conversation_id}/tags` | `contacts:write` |
+| [Mark a conversation read](https://getricky.ai/en/docs/api/reference/conversations/mark-conversation-read) | `POST /conversations/{conversation_id}/read` | `conversations:write` |
+| [Search messages](https://getricky.ai/en/docs/api/reference/messages/search-messages) | `GET /messages/search` | `conversations:read` |
+| [List quick replies](https://getricky.ai/en/docs/api/reference/quick-replies/list-quick-replies) | `GET /quick-replies` | `quick_replies:read` |
+| [Create a quick reply](https://getricky.ai/en/docs/api/reference/quick-replies/create-quick-reply) | `POST /quick-replies` | `quick_replies:write` |
+| [Get a quick reply](https://getricky.ai/en/docs/api/reference/quick-replies/get-quick-reply) | `GET /quick-replies/{quick_reply_id}` | `quick_replies:read` |
+| [Update a quick reply](https://getricky.ai/en/docs/api/reference/quick-replies/update-quick-reply) | `PATCH /quick-replies/{quick_reply_id}` | `quick_replies:write` |
+| [Delete a quick reply](https://getricky.ai/en/docs/api/reference/quick-replies/delete-quick-reply) | `DELETE /quick-replies/{quick_reply_id}` | `quick_replies:write` |
 
 ## Authentication responses
 

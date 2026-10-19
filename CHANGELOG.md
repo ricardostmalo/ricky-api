@@ -32,6 +32,13 @@ This page records changes to the API. A breaking change only ships in a new path
 - **Read marks.** `POST /conversations/{conversation_id}/read` marks a conversation read, as opening it in the inbox does.
 - **Quick replies.** `GET` and `POST /quick-replies`, `GET`, `PATCH` and `DELETE /quick-replies/{quick_reply_id}`, with the new `quick_replies:read` and `quick_replies:write` scopes. See [Tags, fields, search and quick replies](https://getricky.ai/en/docs/api/crm-and-inbox).
 
+**WhatsApp templates and numbers.** Compatible changes to v1.
+
+- **Manage templates.** `POST /templates` submits a template to Meta's review; `GET`, `PATCH` and `DELETE /templates/{template_id}` read it with its review status, edit it and delete it. `POST /templates/validate` checks a draft with the template editor's rules without submitting it. See [WhatsApp templates and numbers](https://getricky.ai/en/docs/api/whatsapp).
+- **WhatsApp numbers.** `GET /whatsapp-numbers` and `GET /whatsapp-numbers/{channel_id}` answer each number's status, quality rating and messaging limit. They need `conversations:read`.
+- **Components in Meta's format.** Templates carry `components` with Meta's keys, for example `example.body_text`. Before, nested keys came in camelCase.
+- **New scope.** `templates:write`.
+
 ## October 15, 2026
 
 **Immediate webhooks, new events, files, single messages, tags and notes.** Compatible changes to v1.

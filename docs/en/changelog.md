@@ -25,6 +25,15 @@ This page records changes to the API. A breaking change only ships in a new path
 * **The agent of a conversation.** `PATCH /conversations/{conversation_id}/agent` makes an agent answer a conversation or, with `null`, turns the AI off. It requires `conversations:write`.
 * **Knowledge.** `/knowledge/locations` and `/knowledge/contacts` create, read, update and delete locations and directory contacts. `/knowledge/files` uploads files in three steps, reads, updates and deletes them. They require `knowledge:read` or `knowledge:write`. See [Agents and knowledge](https://getricky.ai/docs/api/agents-and-knowledge).
 
+**Tags, contact fields, search, read marks and quick replies.** Compatible changes to v1.
+
+* **Tags.** `PATCH` and `DELETE /tags/{tag_id}` rename, recolor and delete a tag on every contact. They require the new `tags:write` scope, which `POST /tags` now also accepts besides `contacts:write`.
+* **Tags on many contacts.** `POST /contacts/tags` adds and removes the same tags on up to 100 contacts. `PATCH /conversations/{conversation_id}/tags` changes the tags of a conversation's contact.
+* **Contact fields.** `POST /contact-fields` and `DELETE /contact-fields/{field_id}` create and delete custom fields.
+* **Search.** `GET /conversations/search` and `GET /messages/search` search by text. Contacts are searched with `GET /contacts?query=`.
+* **Read marks.** `POST /conversations/{conversation_id}/read` marks a conversation read, as opening it in the inbox does.
+* **Quick replies.** `GET` and `POST /quick-replies`, `GET`, `PATCH` and `DELETE /quick-replies/{quick_reply_id}`, with the new `quick_replies:read` and `quick_replies:write` scopes. See [Tags, fields, search and quick replies](./crm-and-inbox.md).
+
 ## October 15, 2026
 
 **Immediate webhooks, new events, files, single messages, tags and notes.** Compatible changes to v1.

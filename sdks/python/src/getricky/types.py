@@ -2275,6 +2275,119 @@ class ResolutionsReport(TypedDict):
     """
 
 
+class TemplateValidationError(TypedDict):
+    param: str
+    """
+    The request field the problem is in.
+    """
+    message: str
+    """
+    What to change.
+    """
+
+
+class TemplateValidation(TypedDict):
+    """
+    The result of checking a template draft without submitting it.
+    """
+
+    valid: bool
+    """
+    Whether `POST /templates` would submit this draft to Meta.
+    """
+    errors: List[TemplateValidationError]
+    """
+    Every problem found; empty when the draft is valid.
+    """
+    components: Optional[List[Dict[str, Any]]]
+    """
+    The components Ricky would submit, in the WhatsApp Cloud API format; null when the draft is invalid.
+    """
+
+
+class DeletedTemplate(TypedDict):
+    """
+    A template Meta deleted.
+    """
+
+    id: str
+    """
+    Template ID at Meta.
+    """
+    deleted: Literal[True]
+
+
+class WhatsAppNumber(TypedDict):
+    """
+    A WhatsApp number, with its status, quality and messaging limit at Meta.
+    """
+
+    id: str
+    """
+    Channel ID.
+    """
+    name: str
+    """
+    Name shown in Ricky.
+    """
+    phone_number: Optional[str]
+    """
+    Phone in E.164.
+    """
+    verified_name: Optional[str]
+    """
+    Business name Meta approved for the number.
+    """
+    phone_number_id: Optional[str]
+    """
+    Phone number ID at Meta.
+    """
+    whatsapp_business_account_id: Optional[str]
+    """
+    WhatsApp Business Account that owns the number.
+    """
+    connection_mode: Optional[Literal["dedicated", "coexistence"]]
+    """
+    `coexistence` when the number also stays on the WhatsApp Business app; `dedicated` otherwise.
+    """
+    status: Optional[str]
+    """
+    Status of the number at Meta, as Meta reports it, for example `CONNECTED`.
+    """
+    disconnected_at: Optional[str]
+    """
+    When the number was disconnected from Ricky; null while connected.
+    """
+    messaging_health: Literal["available", "limited", "blocked"]
+    """
+    Whether Meta lets the number send: `available`, `limited` or `blocked`.
+    """
+    quality_rating: Optional[str]
+    """
+    Quality rating at Meta: `GREEN`, `YELLOW`, `RED` or `UNKNOWN`.
+    """
+    messaging_limit: Optional[str]
+    """
+    Messaging limit tier at Meta, for example `TIER_1K` or `TIER_UNLIMITED`.
+    """
+    inbound_processing_enabled: Optional[bool]
+    """
+    Whether Ricky receives the messages sent to the number.
+    """
+    calls_enabled: Optional[bool]
+    """
+    Whether customers can call the number and reach the AI agent.
+    """
+    connected_at: Optional[str]
+    """
+    When it was connected.
+    """
+    last_synced_at: Optional[str]
+    """
+    When Ricky last read its details from Meta.
+    """
+
+
 WorkflowDefinitionConditionBusinessHoursWeekday: TypeAlias = int
 
 
@@ -3575,6 +3688,317 @@ class UpdateKnowledgeFile(TypedDict, closed=True):
     send_enabled: NotRequired[bool]
     """
     Agents may send the file itself.
+    """
+
+
+class CreateTemplateHeaderText(TypedDict, closed=True):
+    """
+    `TEXT` or `LOCATION`. Send `null` for no header.
+    """
+
+    type: Literal["TEXT"]
+    text: str
+    """
+    Header text; at most one variable.
+    """
+    example: NotRequired[str]
+    """
+    Example value of the header variable; required when it has one.
+    """
+
+
+class CreateTemplateHeaderLocation(TypedDict, closed=True):
+    """
+    `TEXT` or `LOCATION`. Send `null` for no header.
+    """
+
+    type: Literal["LOCATION"]
+
+
+class CreateTemplateBody(TypedDict, closed=True):
+    """
+    The message text.
+    """
+
+    text: str
+    """
+    Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end.
+    """
+    examples: NotRequired[Dict[str, str]]
+    """
+    An example value for every variable, keyed by its number or name without braces. Meta reviews them.
+    """
+
+
+class CreateTemplateButtonQuickReply(TypedDict, closed=True):
+    type: Literal["QUICK_REPLY"]
+    text: str
+
+
+class CreateTemplateButtonUrl(TypedDict, closed=True):
+    type: Literal["URL"]
+    text: str
+    url: str
+    """
+    Link the button opens; it may end in the variable `{{1}}`.
+    """
+    example: NotRequired[str]
+    """
+    Example URL for a link with `{{1}}`; required when it has one.
+    """
+
+
+class CreateTemplateButtonPhoneNumber(TypedDict, closed=True):
+    type: Literal["PHONE_NUMBER"]
+    text: str
+    phone_number: str
+    """
+    Phone the button calls, with country code.
+    """
+
+
+class CreateTemplate(TypedDict, closed=True):
+    """
+    A template draft. Ricky checks it as `POST /templates/validate` does, then submits it.
+    """
+
+    channel_id: str
+    """
+    WhatsApp channel whose business account will own the template.
+    """
+    name: str
+    """
+    Lowercase letters, digits and underscores, starting with a letter.
+    """
+    language: str
+    """
+    Language code, for example `es` or `en_US`.
+    """
+    category: Literal["MARKETING", "UTILITY"]
+    """
+    `UTILITY` for updates on something the customer asked for; `MARKETING` otherwise.
+    """
+    parameter_format: NotRequired[Literal["NAMED", "POSITIONAL"]]
+    """
+    How variables are written: `{{first_name}}` or `{{1}}`. It cannot change later.
+    """
+    header: NotRequired[Optional[Union[CreateTemplateHeaderText, CreateTemplateHeaderLocation]]]
+    """
+    `TEXT` or `LOCATION`. Send `null` for no header.
+    """
+    body: CreateTemplateBody
+    """
+    The message text.
+    """
+    footer: NotRequired[Optional[str]]
+    """
+    Footer text, without variables.
+    """
+    buttons: NotRequired[List[Union[CreateTemplateButtonQuickReply, CreateTemplateButtonUrl, CreateTemplateButtonPhoneNumber]]]
+    """
+    Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.
+    """
+
+
+class ValidateTemplateHeaderText(TypedDict, closed=True):
+    """
+    `TEXT` or `LOCATION`. Send `null` for no header.
+    """
+
+    type: Literal["TEXT"]
+    text: str
+    """
+    Header text; at most one variable.
+    """
+    example: NotRequired[str]
+    """
+    Example value of the header variable; required when it has one.
+    """
+
+
+class ValidateTemplateHeaderLocation(TypedDict, closed=True):
+    """
+    `TEXT` or `LOCATION`. Send `null` for no header.
+    """
+
+    type: Literal["LOCATION"]
+
+
+class ValidateTemplateBody(TypedDict, closed=True):
+    """
+    The message text.
+    """
+
+    text: str
+    """
+    Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end.
+    """
+    examples: NotRequired[Dict[str, str]]
+    """
+    An example value for every variable, keyed by its number or name without braces. Meta reviews them.
+    """
+
+
+class ValidateTemplateButtonQuickReply(TypedDict, closed=True):
+    type: Literal["QUICK_REPLY"]
+    text: str
+
+
+class ValidateTemplateButtonUrl(TypedDict, closed=True):
+    type: Literal["URL"]
+    text: str
+    url: str
+    """
+    Link the button opens; it may end in the variable `{{1}}`.
+    """
+    example: NotRequired[str]
+    """
+    Example URL for a link with `{{1}}`; required when it has one.
+    """
+
+
+class ValidateTemplateButtonPhoneNumber(TypedDict, closed=True):
+    type: Literal["PHONE_NUMBER"]
+    text: str
+    phone_number: str
+    """
+    Phone the button calls, with country code.
+    """
+
+
+class ValidateTemplate(TypedDict, closed=True):
+    """
+    The body of `POST /templates`; `channel_id` is optional here.
+    """
+
+    channel_id: NotRequired[str]
+    """
+    WhatsApp channel whose business account will own the template.
+    """
+    name: str
+    """
+    Lowercase letters, digits and underscores, starting with a letter.
+    """
+    language: str
+    """
+    Language code, for example `es` or `en_US`.
+    """
+    category: Literal["MARKETING", "UTILITY"]
+    """
+    `UTILITY` for updates on something the customer asked for; `MARKETING` otherwise.
+    """
+    parameter_format: NotRequired[Literal["NAMED", "POSITIONAL"]]
+    """
+    How variables are written: `{{first_name}}` or `{{1}}`. It cannot change later.
+    """
+    header: NotRequired[Optional[Union[ValidateTemplateHeaderText, ValidateTemplateHeaderLocation]]]
+    """
+    `TEXT` or `LOCATION`. Send `null` for no header.
+    """
+    body: ValidateTemplateBody
+    """
+    The message text.
+    """
+    footer: NotRequired[Optional[str]]
+    """
+    Footer text, without variables.
+    """
+    buttons: NotRequired[List[Union[ValidateTemplateButtonQuickReply, ValidateTemplateButtonUrl, ValidateTemplateButtonPhoneNumber]]]
+    """
+    Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.
+    """
+
+
+class UpdateTemplateHeaderText(TypedDict, closed=True):
+    """
+    `TEXT` or `LOCATION`. Send `null` for no header.
+    """
+
+    type: Literal["TEXT"]
+    text: str
+    """
+    Header text; at most one variable.
+    """
+    example: NotRequired[str]
+    """
+    Example value of the header variable; required when it has one.
+    """
+
+
+class UpdateTemplateHeaderLocation(TypedDict, closed=True):
+    """
+    `TEXT` or `LOCATION`. Send `null` for no header.
+    """
+
+    type: Literal["LOCATION"]
+
+
+class UpdateTemplateBody(TypedDict, closed=True):
+    """
+    The message text.
+    """
+
+    text: str
+    """
+    Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end.
+    """
+    examples: NotRequired[Dict[str, str]]
+    """
+    An example value for every variable, keyed by its number or name without braces. Meta reviews them.
+    """
+
+
+class UpdateTemplateButtonQuickReply(TypedDict, closed=True):
+    type: Literal["QUICK_REPLY"]
+    text: str
+
+
+class UpdateTemplateButtonUrl(TypedDict, closed=True):
+    type: Literal["URL"]
+    text: str
+    url: str
+    """
+    Link the button opens; it may end in the variable `{{1}}`.
+    """
+    example: NotRequired[str]
+    """
+    Example URL for a link with `{{1}}`; required when it has one.
+    """
+
+
+class UpdateTemplateButtonPhoneNumber(TypedDict, closed=True):
+    type: Literal["PHONE_NUMBER"]
+    text: str
+    phone_number: str
+    """
+    Phone the button calls, with country code.
+    """
+
+
+class UpdateTemplate(TypedDict, closed=True):
+    """
+    Only the parts you send change; `buttons` replaces every button. Name, language and `parameter_format` cannot change.
+    """
+
+    category: NotRequired[Literal["MARKETING", "UTILITY"]]
+    """
+    `UTILITY` for updates on something the customer asked for; `MARKETING` otherwise.
+    """
+    header: NotRequired[Optional[Union[UpdateTemplateHeaderText, UpdateTemplateHeaderLocation]]]
+    """
+    `TEXT` or `LOCATION`. Send `null` for no header.
+    """
+    body: NotRequired[UpdateTemplateBody]
+    """
+    The message text.
+    """
+    footer: NotRequired[Optional[str]]
+    """
+    Footer text, without variables.
+    """
+    buttons: NotRequired[List[Union[UpdateTemplateButtonQuickReply, UpdateTemplateButtonUrl, UpdateTemplateButtonPhoneNumber]]]
+    """
+    Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.
     """
 
 

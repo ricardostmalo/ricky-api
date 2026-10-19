@@ -5,6 +5,7 @@ export const idempotentOperations: ReadonlySet<string> = new Set([
     'DELETE /contact-fields/{field_id}',
     'DELETE /quick-replies/{quick_reply_id}',
     'DELETE /tags/{tag_id}',
+    'DELETE /templates/{template_id}',
     'PATCH /agents/{agent_id}',
     'PATCH /contacts/{contact_id}',
     'PATCH /conversations/{conversation_id}/agent',
@@ -15,6 +16,7 @@ export const idempotentOperations: ReadonlySet<string> = new Set([
     'PATCH /knowledge/locations/{location_id}',
     'PATCH /quick-replies/{quick_reply_id}',
     'PATCH /tags/{tag_id}',
+    'PATCH /templates/{template_id}',
     'PATCH /workflows/{workflow_id}',
     'POST /agents',
     'POST /contact-fields',
@@ -32,5 +34,6 @@ export const idempotentOperations: ReadonlySet<string> = new Set([
     'POST /knowledge/locations',
     'POST /quick-replies',
     'POST /tags',
+    'POST /templates',
     'POST /workflows',
 ]);
