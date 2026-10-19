@@ -12,6 +12,7 @@ from .types import (
     AssignConversationAgent,
     AssignConversations,
     Broadcast,
+    BroadcastAudiencePreview,
     BroadcastRecipient,
     BroadcastsReport,
     ChangeContactsTags,
@@ -48,7 +49,10 @@ from .types import (
     Message,
     MessageSearchResult,
     MessagesReport,
+    PreviewBroadcastAudience,
     QuickReply,
+    ReminderHistory,
+    ReminderPreview,
     ResolutionsReport,
     ResolveHandoff,
     ResponsesReport,
@@ -69,6 +73,7 @@ from .types import (
     UpdateTag,
     UpdateTemplate,
     UpdateWorkflow,
+    UploadWorkflowHeaderMedia,
     ValidateTemplate,
     Webhook,
     WebhookDelivery,
@@ -800,6 +805,77 @@ class SyncOperations:
             "/workflows/{workflow_id}/executions",
             path_parameters={"workflow_id": workflow_id},
             query={"page_size": page_size, "cursor": cursor},
+        ))
+
+    def upload_workflow_header_media(
+        self,
+        workflow_id: str,
+        body: UploadWorkflowHeaderMedia,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Workflow]:
+        """Set the header file of a scheduled workflow.
+
+        Downloads the file at `url` and stores it as the header every send of a scheduled workflow carries, replacing the previous one. The workflow’s template must have an image, video or document header, and the file must be that kind. Answers the workflow, with `has_header_image` true.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Workflow], self._request(
+            "POST",
+            "/workflows/{workflow_id}/header-media",
+            path_parameters={"workflow_id": workflow_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def preview_workflow_reminders(
+        self,
+        workflow_id: str,
+        *,
+        date: Optional[str] = None,
+        appointment_states: Optional[str] = None,
+    ) -> Resource[ReminderPreview]:
+        """Preview appointment reminders.
+
+        Reads the Odoo appointments an appointment-reminder workflow would message on `date` and says, for each, whether it would be sent and with what text. Sends nothing. Only for workflows with `source.kind` `odoo_appointments`, in an organization with Odoo connected; past days are in the history.
+
+        Scope: `workflows:read`.
+
+        Args:
+            date: Day the workflow would send, `YYYY-MM-DD` in its time zone: its next run or a later day.
+            appointment_states: Odoo states to remind instead of the workflow’s, comma-separated, to see what a change would do. Omit it to use the workflow’s.
+        """
+        return cast(Resource[ReminderPreview], self._request(
+            "GET",
+            "/workflows/{workflow_id}/reminders/preview",
+            path_parameters={"workflow_id": workflow_id},
+            query={"date": date, "appointment_states": appointment_states},
+        ))
+
+    def get_workflow_reminder_history(
+        self,
+        workflow_id: str,
+        *,
+        date: Optional[str] = None,
+    ) -> Resource[ReminderHistory]:
+        """Get appointment reminder history.
+
+        What an appointment-reminder workflow checked in Odoo and sent on `date`, from what Ricky recorded; it does not read Odoo.
+
+        Scope: `workflows:read`.
+
+        Args:
+            date: Day the workflow ran, `YYYY-MM-DD` in its time zone.
+        """
+        return cast(Resource[ReminderHistory], self._request(
+            "GET",
+            "/workflows/{workflow_id}/reminders/history",
+            path_parameters={"workflow_id": workflow_id},
+            query={"date": date},
         ))
 
     def get_dashboard_report(
@@ -2054,6 +2130,22 @@ class SyncOperations:
             path_parameters={"conversation_id": conversation_id, "message_id": message_id},
         ))
 
+    def preview_broadcast_audience(
+        self,
+        body: PreviewBroadcastAudience,
+    ) -> Resource[BroadcastAudiencePreview]:
+        """Preview a broadcast audience.
+
+        Counts the numbers an audience resolves to now, with the rules `POST /broadcasts` uses, without creating anything. The list can change before you create the broadcast.
+
+        Scope: `broadcasts:read`.
+        """
+        return cast(Resource[BroadcastAudiencePreview], self._request(
+            "POST",
+            "/broadcasts/preview",
+            body=body,
+        ))
+
 
 class AsyncOperations:
     """Every operation of the Ricky API, awaitable."""
@@ -2776,6 +2868,77 @@ class AsyncOperations:
             "/workflows/{workflow_id}/executions",
             path_parameters={"workflow_id": workflow_id},
             query={"page_size": page_size, "cursor": cursor},
+        ))
+
+    async def upload_workflow_header_media(
+        self,
+        workflow_id: str,
+        body: UploadWorkflowHeaderMedia,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[Workflow]:
+        """Set the header file of a scheduled workflow.
+
+        Downloads the file at `url` and stores it as the header every send of a scheduled workflow carries, replacing the previous one. The workflow’s template must have an image, video or document header, and the file must be that kind. Answers the workflow, with `has_header_image` true.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[Workflow], await self._request(
+            "POST",
+            "/workflows/{workflow_id}/header-media",
+            path_parameters={"workflow_id": workflow_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def preview_workflow_reminders(
+        self,
+        workflow_id: str,
+        *,
+        date: Optional[str] = None,
+        appointment_states: Optional[str] = None,
+    ) -> Resource[ReminderPreview]:
+        """Preview appointment reminders.
+
+        Reads the Odoo appointments an appointment-reminder workflow would message on `date` and says, for each, whether it would be sent and with what text. Sends nothing. Only for workflows with `source.kind` `odoo_appointments`, in an organization with Odoo connected; past days are in the history.
+
+        Scope: `workflows:read`.
+
+        Args:
+            date: Day the workflow would send, `YYYY-MM-DD` in its time zone: its next run or a later day.
+            appointment_states: Odoo states to remind instead of the workflow’s, comma-separated, to see what a change would do. Omit it to use the workflow’s.
+        """
+        return cast(Resource[ReminderPreview], await self._request(
+            "GET",
+            "/workflows/{workflow_id}/reminders/preview",
+            path_parameters={"workflow_id": workflow_id},
+            query={"date": date, "appointment_states": appointment_states},
+        ))
+
+    async def get_workflow_reminder_history(
+        self,
+        workflow_id: str,
+        *,
+        date: Optional[str] = None,
+    ) -> Resource[ReminderHistory]:
+        """Get appointment reminder history.
+
+        What an appointment-reminder workflow checked in Odoo and sent on `date`, from what Ricky recorded; it does not read Odoo.
+
+        Scope: `workflows:read`.
+
+        Args:
+            date: Day the workflow ran, `YYYY-MM-DD` in its time zone.
+        """
+        return cast(Resource[ReminderHistory], await self._request(
+            "GET",
+            "/workflows/{workflow_id}/reminders/history",
+            path_parameters={"workflow_id": workflow_id},
+            query={"date": date},
         ))
 
     async def get_dashboard_report(
@@ -4028,4 +4191,20 @@ class AsyncOperations:
             "POST",
             "/conversations/{conversation_id}/messages/{message_id}/media",
             path_parameters={"conversation_id": conversation_id, "message_id": message_id},
+        ))
+
+    async def preview_broadcast_audience(
+        self,
+        body: PreviewBroadcastAudience,
+    ) -> Resource[BroadcastAudiencePreview]:
+        """Preview a broadcast audience.
+
+        Counts the numbers an audience resolves to now, with the rules `POST /broadcasts` uses, without creating anything. The list can change before you create the broadcast.
+
+        Scope: `broadcasts:read`.
+        """
+        return cast(Resource[BroadcastAudiencePreview], await self._request(
+            "POST",
+            "/broadcasts/preview",
+            body=body,
         ))

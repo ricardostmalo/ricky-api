@@ -755,6 +755,20 @@ export type BroadcastRecipient = {
 };
 
 /**
+ * How many numbers an audience resolves to now.
+ */
+export type BroadcastAudiencePreview = {
+    /**
+     * Numbers a broadcast to this audience would go to now, at most 5,000.
+     */
+    recipients: number;
+    /**
+     * Contacts or numbers left out because they have no valid WhatsApp number.
+     */
+    skipped: number;
+};
+
+/**
  * A branch or place the agents can send as a WhatsApp location.
  */
 export type KnowledgeLocation = {
@@ -2306,113 +2320,147 @@ export type ResolutionsReport = {
 };
 
 /**
- * The result of checking a template draft without submitting it.
+ * The Odoo appointments a reminder workflow would message on a coming day.
  */
-export type TemplateValidation = {
+export type ReminderPreview = {
     /**
-     * Whether `POST /templates` would submit this draft to Meta.
+     * Day the workflow sends these reminders, in its time zone.
      */
-    valid: boolean;
+    date: string;
     /**
-     * Every problem found; empty when the draft is valid.
+     * IANA time zone of the workflow.
      */
-    errors: Array<{
+    timezone: string;
+    /**
+     * When Ricky read the appointments from Odoo.
+     */
+    checked_at: string;
+    /**
+     * Every appointment state the Odoo installation has.
+     */
+    appointment_states: Array<{
         /**
-         * The request field the problem is in.
+         * State as Odoo stores it.
          */
-        param: string;
+        value: string;
         /**
-         * What to change.
+         * State as Odoo shows it.
          */
-        message: string;
+        label: string;
     }>;
     /**
-     * The components Ricky would submit, in the WhatsApp Cloud API format; null when the draft is invalid.
+     * Each appointment of that day in Odoo, in start order.
      */
-    components: Array<{
-        [key: string]: unknown;
-    }> | null;
+    reminders: Array<{
+        /**
+         * Appointment ID in Odoo.
+         */
+        appointment_id: string;
+        /**
+         * Appointment state in Odoo.
+         */
+        appointment_state: string;
+        /**
+         * Customer first name in Odoo.
+         */
+        customer_first_name: string | null;
+        /**
+         * Phone in Odoo.
+         */
+        phone: string | null;
+        /**
+         * Branch in Odoo.
+         */
+        branch_name: string | null;
+        /**
+         * When the appointment starts.
+         */
+        starts_at: string;
+        /**
+         * Why it is not sent: its Odoo state is not one the workflow reminds (`state`), or it has no customer name (`name`), branch (`branch`) or valid phone (`phone`); null when it is sent.
+         */
+        excluded_because: 'state' | 'name' | 'branch' | 'phone' | null;
+        /**
+         * The message the template would send, with this appointment’s values.
+         */
+        message: string;
+        /**
+         * The send already recorded for this appointment and day; null if none.
+         */
+        delivery: {
+            /**
+             * `pending` or `processing` while queued; `accepted` once WhatsApp took it; then `sent`, `delivered` and `read` as WhatsApp reports them; `failed` for good; `superseded` when a newer send replaced it; `unknown` when Ricky cannot tell.
+             */
+            status: 'pending' | 'processing' | 'accepted' | 'sent' | 'delivered' | 'read' | 'failed' | 'superseded' | 'unknown';
+            /**
+             * Why it failed; null otherwise.
+             */
+            error: string | null;
+        } | null;
+    }>;
 };
 
 /**
- * A template Meta deleted.
+ * What a reminder workflow checked and sent on a past day.
  */
-export type DeletedTemplate = {
+export type ReminderHistory = {
     /**
-     * Template ID at Meta.
+     * Day the workflow ran, in its time zone.
      */
-    id: string;
-    deleted: true;
-};
-
-/**
- * A WhatsApp number, with its status, quality and messaging limit at Meta.
- */
-export type WhatsAppNumber = {
+    date: string;
     /**
-     * Channel ID.
+     * IANA time zone of the workflow.
      */
-    id: string;
+    timezone: string;
     /**
-     * Name shown in Ricky.
+     * Times the workflow checked Odoo that day; 0 for days before Ricky recorded them.
      */
-    name: string;
+    evaluations_recorded: number;
     /**
-     * Phone in E.164.
+     * Each appointment the workflow checked or sent that day, oldest first.
      */
-    phone_number: string | null;
-    /**
-     * Business name Meta approved for the number.
-     */
-    verified_name: string | null;
-    /**
-     * Phone number ID at Meta.
-     */
-    phone_number_id: string | null;
-    /**
-     * WhatsApp Business Account that owns the number.
-     */
-    whatsapp_business_account_id: string | null;
-    /**
-     * `coexistence` when the number also stays on the WhatsApp Business app; `dedicated` otherwise.
-     */
-    connection_mode: 'dedicated' | 'coexistence' | null;
-    /**
-     * Status of the number at Meta, as Meta reports it, for example `CONNECTED`.
-     */
-    status: string | null;
-    /**
-     * When the number was disconnected from Ricky; null while connected.
-     */
-    disconnected_at: string | null;
-    /**
-     * Whether Meta lets the number send: `available`, `limited` or `blocked`.
-     */
-    messaging_health: 'available' | 'limited' | 'blocked';
-    /**
-     * Quality rating at Meta: `green`, `yellow`, `red`, `not_yet_determined` or `unknown`.
-     */
-    quality_rating: string | null;
-    /**
-     * Messaging limit tier at Meta, for example `TIER_1K` or `TIER_UNLIMITED`; `UNKNOWN` when Meta has not reported it.
-     */
-    messaging_limit: string | null;
-    /**
-     * Whether Ricky receives the messages sent to the number.
-     */
-    inbound_processing_enabled: boolean | null;
-    /**
-     * Whether customers can call the number and reach the AI agent.
-     */
-    calls_enabled: boolean | null;
-    /**
-     * When it was connected.
-     */
-    connected_at: string | null;
-    /**
-     * When Ricky last read its details from Meta.
-     */
-    last_synced_at: string | null;
+    reminders: Array<{
+        /**
+         * Customer first name in Odoo.
+         */
+        customer_first_name: string | null;
+        /**
+         * Phone in Odoo.
+         */
+        phone: string | null;
+        /**
+         * Branch in Odoo.
+         */
+        branch_name: string | null;
+        /**
+         * When the appointment started; null if not recorded.
+         */
+        starts_at: string | null;
+        /**
+         * Why it is not sent: its Odoo state is not one the workflow reminds (`state`), or it has no customer name (`name`), branch (`branch`) or valid phone (`phone`); null when it is sent.
+         */
+        excluded_because: 'state' | 'name' | 'branch' | 'phone' | null;
+        /**
+         * The message sent; null when nothing was sent.
+         */
+        message: string | null;
+        /**
+         * When the workflow last checked the appointment before sending; null if not recorded.
+         */
+        evaluated_at: string | null;
+        /**
+         * When the send was queued; null when nothing was sent.
+         */
+        queued_at: string | null;
+        /**
+         * Where the send stands, with the values of a preview’s `delivery.status`; null when nothing was sent.
+         */
+        status: 'pending' | 'processing' | 'accepted' | 'sent' | 'delivered' | 'read' | 'failed' | 'superseded' | 'unknown' | null;
+        /**
+         * Why it failed; null otherwise.
+         */
+        error: string | null;
+    }>;
 };
 
 /**
@@ -2738,6 +2786,116 @@ export type WorkflowExecution = {
      * When it finished, failed or was superseded.
      */
     processed_at: string | null;
+};
+
+/**
+ * The result of checking a template draft without submitting it.
+ */
+export type TemplateValidation = {
+    /**
+     * Whether `POST /templates` would submit this draft to Meta.
+     */
+    valid: boolean;
+    /**
+     * Every problem found; empty when the draft is valid.
+     */
+    errors: Array<{
+        /**
+         * The request field the problem is in.
+         */
+        param: string;
+        /**
+         * What to change.
+         */
+        message: string;
+    }>;
+    /**
+     * The components Ricky would submit, in the WhatsApp Cloud API format; null when the draft is invalid.
+     */
+    components: Array<{
+        [key: string]: unknown;
+    }> | null;
+};
+
+/**
+ * A template Meta deleted.
+ */
+export type DeletedTemplate = {
+    /**
+     * Template ID at Meta.
+     */
+    id: string;
+    deleted: true;
+};
+
+/**
+ * A WhatsApp number, with its status, quality and messaging limit at Meta.
+ */
+export type WhatsAppNumber = {
+    /**
+     * Channel ID.
+     */
+    id: string;
+    /**
+     * Name shown in Ricky.
+     */
+    name: string;
+    /**
+     * Phone in E.164.
+     */
+    phone_number: string | null;
+    /**
+     * Business name Meta approved for the number.
+     */
+    verified_name: string | null;
+    /**
+     * Phone number ID at Meta.
+     */
+    phone_number_id: string | null;
+    /**
+     * WhatsApp Business Account that owns the number.
+     */
+    whatsapp_business_account_id: string | null;
+    /**
+     * `coexistence` when the number also stays on the WhatsApp Business app; `dedicated` otherwise.
+     */
+    connection_mode: 'dedicated' | 'coexistence' | null;
+    /**
+     * Status of the number at Meta, as Meta reports it, for example `CONNECTED`.
+     */
+    status: string | null;
+    /**
+     * When the number was disconnected from Ricky; null while connected.
+     */
+    disconnected_at: string | null;
+    /**
+     * Whether Meta lets the number send: `available`, `limited` or `blocked`.
+     */
+    messaging_health: 'available' | 'limited' | 'blocked';
+    /**
+     * Quality rating at Meta: `green`, `yellow`, `red`, `not_yet_determined` or `unknown`.
+     */
+    quality_rating: string | null;
+    /**
+     * Messaging limit tier at Meta, for example `TIER_1K` or `TIER_UNLIMITED`; `UNKNOWN` when Meta has not reported it.
+     */
+    messaging_limit: string | null;
+    /**
+     * Whether Ricky receives the messages sent to the number.
+     */
+    inbound_processing_enabled: boolean | null;
+    /**
+     * Whether customers can call the number and reach the AI agent.
+     */
+    calls_enabled: boolean | null;
+    /**
+     * When it was connected.
+     */
+    connected_at: string | null;
+    /**
+     * When Ricky last read its details from Meta.
+     */
+    last_synced_at: string | null;
 };
 
 /**
@@ -3244,9 +3402,74 @@ export type CreateBroadcast = {
         phones: Array<string>;
     };
     /**
+     * Fills template variables per recipient from their contact, as the broadcast composer does. Ricky saves them on the template, replacing the ones it had, so later broadcasts of the template use them too; omit it to keep the saved ones, send `[]` to clear them. A recipient without a contact, or without a value in the field, receives the text you sent in `template.components`.
+     */
+    mappings?: Array<{
+        /**
+         * Where the variable is: the header, the body, or a URL button.
+         */
+        component: 'header' | 'body' | 'button';
+        /**
+         * The variable: its number (`1`) or its name in a header or body; for a button, the button’s index (`0`).
+         */
+        key: string;
+        /**
+         * Where each recipient’s value comes from.
+         */
+        source: {
+            type: 'contact';
+            /**
+             * A field of the contact.
+             */
+            field: 'birthday' | 'city' | 'company' | 'country' | 'first_name' | 'job_title' | 'last_name' | 'lead_status' | 'lifecycle_stage' | 'linkedin_url' | 'notes' | 'postal_code' | 'primary_email' | 'primary_phone' | 'region' | 'source' | 'street_address' | 'website_url';
+        } | {
+            type: 'custom_field';
+            /**
+             * A custom contact field. See `GET /contact-fields`.
+             */
+            field_id: string;
+        };
+    }>;
+    /**
      * When to start sending, up to 7 days ahead. Omit it to send now.
      */
     scheduled_at?: string;
+};
+
+/**
+ * The audience to count, as you would send it to `POST /broadcasts`.
+ */
+export type PreviewBroadcastAudience = {
+    /**
+     * Who receives it. `filter` takes every contact matching all the filters you send (no filter: every contact); `contacts` and `phones` take the ones you list. Ricky uses each contact’s phone, or its WhatsApp number, skips contacts without one and sends once per number, up to 5,000.
+     */
+    audience: {
+        type: 'filter';
+        /**
+         * Only contacts with this tag.
+         */
+        tag_id?: string;
+        /**
+         * Only contacts at this stage.
+         */
+        lifecycle_stage?: 'subscriber' | 'lead' | 'marketing_qualified' | 'sales_qualified' | 'opportunity' | 'customer' | 'evangelist' | 'other';
+        /**
+         * Only contacts whose name, phone, email or company contains it.
+         */
+        query?: string;
+    } | {
+        type: 'contacts';
+        /**
+         * Contacts of the organization.
+         */
+        contact_ids: Array<string>;
+    } | {
+        type: 'phones';
+        /**
+         * Numbers with country code, for example `+50760001234`.
+         */
+        phones: Array<string>;
+    };
 };
 
 /**
@@ -3621,245 +3844,17 @@ export type UpdateKnowledgeFile = {
 };
 
 /**
- * A template draft. Ricky checks it as `POST /templates/validate` does, then submits it.
+ * The file every send of the workflow carries in its template header.
  */
-export type CreateTemplate = {
+export type UploadWorkflowHeaderMedia = {
     /**
-     * WhatsApp channel whose business account will own the template.
+     * Public HTTPS address Ricky downloads the file from. It must not redirect or resolve to a private address, and its `Content-Type` must be the kind the template header takes (image, video or document) within WhatsApp’s size limit for it.
      */
-    channel_id: string;
+    url: string;
     /**
-     * Lowercase letters, digits and underscores, starting with a letter.
+     * Name to keep for the file; defaults to the last part of the URL.
      */
-    name: string;
-    /**
-     * Language code, for example `es` or `en_US`.
-     */
-    language: string;
-    /**
-     * `UTILITY` for updates on something the customer asked for; `MARKETING` otherwise.
-     */
-    category: 'MARKETING' | 'UTILITY';
-    /**
-     * How variables are written: `{{first_name}}` or `{{1}}`. It cannot change later.
-     */
-    parameter_format?: 'NAMED' | 'POSITIONAL';
-    /**
-     * `TEXT` or `LOCATION`. Send `null` for no header.
-     */
-    header?: {
-        type: 'TEXT';
-        /**
-         * Header text; at most one variable.
-         */
-        text: string;
-        /**
-         * Example value of the header variable; required when it has one.
-         */
-        example?: string;
-    } | {
-        type: 'LOCATION';
-    } | null;
-    /**
-     * The message text.
-     */
-    body: {
-        /**
-         * Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end.
-         */
-        text: string;
-        /**
-         * An example value for every variable, keyed by its number or name without braces. Meta reviews them.
-         */
-        examples?: {
-            [key: string]: string;
-        };
-    };
-    /**
-     * Footer text, without variables.
-     */
-    footer?: string | null;
-    /**
-     * Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.
-     */
-    buttons?: Array<{
-        type: 'QUICK_REPLY';
-        text: string;
-    } | {
-        type: 'URL';
-        text: string;
-        /**
-         * Link the button opens; it may end in the variable `{{1}}`.
-         */
-        url: string;
-        /**
-         * Example URL for a link with `{{1}}`; required when it has one.
-         */
-        example?: string;
-    } | {
-        type: 'PHONE_NUMBER';
-        text: string;
-        /**
-         * Phone the button calls, with country code.
-         */
-        phone_number: string;
-    }>;
-};
-
-/**
- * The body of `POST /templates`; `channel_id` is optional here.
- */
-export type ValidateTemplate = {
-    /**
-     * WhatsApp channel whose business account will own the template.
-     */
-    channel_id?: string;
-    /**
-     * Lowercase letters, digits and underscores, starting with a letter.
-     */
-    name: string;
-    /**
-     * Language code, for example `es` or `en_US`.
-     */
-    language: string;
-    /**
-     * `UTILITY` for updates on something the customer asked for; `MARKETING` otherwise.
-     */
-    category: 'MARKETING' | 'UTILITY';
-    /**
-     * How variables are written: `{{first_name}}` or `{{1}}`. It cannot change later.
-     */
-    parameter_format?: 'NAMED' | 'POSITIONAL';
-    /**
-     * `TEXT` or `LOCATION`. Send `null` for no header.
-     */
-    header?: {
-        type: 'TEXT';
-        /**
-         * Header text; at most one variable.
-         */
-        text: string;
-        /**
-         * Example value of the header variable; required when it has one.
-         */
-        example?: string;
-    } | {
-        type: 'LOCATION';
-    } | null;
-    /**
-     * The message text.
-     */
-    body: {
-        /**
-         * Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end.
-         */
-        text: string;
-        /**
-         * An example value for every variable, keyed by its number or name without braces. Meta reviews them.
-         */
-        examples?: {
-            [key: string]: string;
-        };
-    };
-    /**
-     * Footer text, without variables.
-     */
-    footer?: string | null;
-    /**
-     * Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.
-     */
-    buttons?: Array<{
-        type: 'QUICK_REPLY';
-        text: string;
-    } | {
-        type: 'URL';
-        text: string;
-        /**
-         * Link the button opens; it may end in the variable `{{1}}`.
-         */
-        url: string;
-        /**
-         * Example URL for a link with `{{1}}`; required when it has one.
-         */
-        example?: string;
-    } | {
-        type: 'PHONE_NUMBER';
-        text: string;
-        /**
-         * Phone the button calls, with country code.
-         */
-        phone_number: string;
-    }>;
-};
-
-/**
- * Only the parts you send change; `buttons` replaces every button. Name, language and `parameter_format` cannot change.
- */
-export type UpdateTemplate = {
-    /**
-     * `UTILITY` for updates on something the customer asked for; `MARKETING` otherwise.
-     */
-    category?: 'MARKETING' | 'UTILITY';
-    /**
-     * `TEXT` or `LOCATION`. Send `null` for no header.
-     */
-    header?: {
-        type: 'TEXT';
-        /**
-         * Header text; at most one variable.
-         */
-        text: string;
-        /**
-         * Example value of the header variable; required when it has one.
-         */
-        example?: string;
-    } | {
-        type: 'LOCATION';
-    } | null;
-    /**
-     * The message text.
-     */
-    body?: {
-        /**
-         * Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end.
-         */
-        text: string;
-        /**
-         * An example value for every variable, keyed by its number or name without braces. Meta reviews them.
-         */
-        examples?: {
-            [key: string]: string;
-        };
-    };
-    /**
-     * Footer text, without variables.
-     */
-    footer?: string | null;
-    /**
-     * Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.
-     */
-    buttons?: Array<{
-        type: 'QUICK_REPLY';
-        text: string;
-    } | {
-        type: 'URL';
-        text: string;
-        /**
-         * Link the button opens; it may end in the variable `{{1}}`.
-         */
-        url: string;
-        /**
-         * Example URL for a link with `{{1}}`; required when it has one.
-         */
-        example?: string;
-    } | {
-        type: 'PHONE_NUMBER';
-        text: string;
-        /**
-         * Phone the button calls, with country code.
-         */
-        phone_number: string;
-    }>;
+    file_name?: string;
 };
 
 /**
@@ -4312,6 +4307,248 @@ export type UpdateWorkflow = {
             }>;
         };
     };
+};
+
+/**
+ * A template draft. Ricky checks it as `POST /templates/validate` does, then submits it.
+ */
+export type CreateTemplate = {
+    /**
+     * WhatsApp channel whose business account will own the template.
+     */
+    channel_id: string;
+    /**
+     * Lowercase letters, digits and underscores, starting with a letter.
+     */
+    name: string;
+    /**
+     * Language code, for example `es` or `en_US`.
+     */
+    language: string;
+    /**
+     * `UTILITY` for updates on something the customer asked for; `MARKETING` otherwise.
+     */
+    category: 'MARKETING' | 'UTILITY';
+    /**
+     * How variables are written: `{{first_name}}` or `{{1}}`. It cannot change later.
+     */
+    parameter_format?: 'NAMED' | 'POSITIONAL';
+    /**
+     * `TEXT` or `LOCATION`. Send `null` for no header.
+     */
+    header?: {
+        type: 'TEXT';
+        /**
+         * Header text; at most one variable.
+         */
+        text: string;
+        /**
+         * Example value of the header variable; required when it has one.
+         */
+        example?: string;
+    } | {
+        type: 'LOCATION';
+    } | null;
+    /**
+     * The message text.
+     */
+    body: {
+        /**
+         * Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end.
+         */
+        text: string;
+        /**
+         * An example value for every variable, keyed by its number or name without braces. Meta reviews them.
+         */
+        examples?: {
+            [key: string]: string;
+        };
+    };
+    /**
+     * Footer text, without variables.
+     */
+    footer?: string | null;
+    /**
+     * Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.
+     */
+    buttons?: Array<{
+        type: 'QUICK_REPLY';
+        text: string;
+    } | {
+        type: 'URL';
+        text: string;
+        /**
+         * Link the button opens; it may end in the variable `{{1}}`.
+         */
+        url: string;
+        /**
+         * Example URL for a link with `{{1}}`; required when it has one.
+         */
+        example?: string;
+    } | {
+        type: 'PHONE_NUMBER';
+        text: string;
+        /**
+         * Phone the button calls, with country code.
+         */
+        phone_number: string;
+    }>;
+};
+
+/**
+ * The body of `POST /templates`; `channel_id` is optional here.
+ */
+export type ValidateTemplate = {
+    /**
+     * WhatsApp channel whose business account will own the template.
+     */
+    channel_id?: string;
+    /**
+     * Lowercase letters, digits and underscores, starting with a letter.
+     */
+    name: string;
+    /**
+     * Language code, for example `es` or `en_US`.
+     */
+    language: string;
+    /**
+     * `UTILITY` for updates on something the customer asked for; `MARKETING` otherwise.
+     */
+    category: 'MARKETING' | 'UTILITY';
+    /**
+     * How variables are written: `{{first_name}}` or `{{1}}`. It cannot change later.
+     */
+    parameter_format?: 'NAMED' | 'POSITIONAL';
+    /**
+     * `TEXT` or `LOCATION`. Send `null` for no header.
+     */
+    header?: {
+        type: 'TEXT';
+        /**
+         * Header text; at most one variable.
+         */
+        text: string;
+        /**
+         * Example value of the header variable; required when it has one.
+         */
+        example?: string;
+    } | {
+        type: 'LOCATION';
+    } | null;
+    /**
+     * The message text.
+     */
+    body: {
+        /**
+         * Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end.
+         */
+        text: string;
+        /**
+         * An example value for every variable, keyed by its number or name without braces. Meta reviews them.
+         */
+        examples?: {
+            [key: string]: string;
+        };
+    };
+    /**
+     * Footer text, without variables.
+     */
+    footer?: string | null;
+    /**
+     * Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.
+     */
+    buttons?: Array<{
+        type: 'QUICK_REPLY';
+        text: string;
+    } | {
+        type: 'URL';
+        text: string;
+        /**
+         * Link the button opens; it may end in the variable `{{1}}`.
+         */
+        url: string;
+        /**
+         * Example URL for a link with `{{1}}`; required when it has one.
+         */
+        example?: string;
+    } | {
+        type: 'PHONE_NUMBER';
+        text: string;
+        /**
+         * Phone the button calls, with country code.
+         */
+        phone_number: string;
+    }>;
+};
+
+/**
+ * Only the parts you send change; `buttons` replaces every button. Name, language and `parameter_format` cannot change.
+ */
+export type UpdateTemplate = {
+    /**
+     * `UTILITY` for updates on something the customer asked for; `MARKETING` otherwise.
+     */
+    category?: 'MARKETING' | 'UTILITY';
+    /**
+     * `TEXT` or `LOCATION`. Send `null` for no header.
+     */
+    header?: {
+        type: 'TEXT';
+        /**
+         * Header text; at most one variable.
+         */
+        text: string;
+        /**
+         * Example value of the header variable; required when it has one.
+         */
+        example?: string;
+    } | {
+        type: 'LOCATION';
+    } | null;
+    /**
+     * The message text.
+     */
+    body?: {
+        /**
+         * Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end.
+         */
+        text: string;
+        /**
+         * An example value for every variable, keyed by its number or name without braces. Meta reviews them.
+         */
+        examples?: {
+            [key: string]: string;
+        };
+    };
+    /**
+     * Footer text, without variables.
+     */
+    footer?: string | null;
+    /**
+     * Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.
+     */
+    buttons?: Array<{
+        type: 'QUICK_REPLY';
+        text: string;
+    } | {
+        type: 'URL';
+        text: string;
+        /**
+         * Link the button opens; it may end in the variable `{{1}}`.
+         */
+        url: string;
+        /**
+         * Example URL for a link with `{{1}}`; required when it has one.
+         */
+        example?: string;
+    } | {
+        type: 'PHONE_NUMBER';
+        text: string;
+        /**
+         * Phone the button calls, with country code.
+         */
+        phone_number: string;
+    }>;
 };
 
 /**
@@ -6503,6 +6740,218 @@ export type ListWorkflowExecutionsResponses = {
 };
 
 export type ListWorkflowExecutionsResponse = ListWorkflowExecutionsResponses[keyof ListWorkflowExecutionsResponses];
+
+export type UploadWorkflowHeaderMediaData = {
+    body: UploadWorkflowHeaderMedia;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query?: never;
+    url: '/workflows/{workflow_id}/header-media';
+};
+
+export type UploadWorkflowHeaderMediaErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type UploadWorkflowHeaderMediaError = UploadWorkflowHeaderMediaErrors[keyof UploadWorkflowHeaderMediaErrors];
+
+export type UploadWorkflowHeaderMediaResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Workflow;
+    };
+};
+
+export type UploadWorkflowHeaderMediaResponse = UploadWorkflowHeaderMediaResponses[keyof UploadWorkflowHeaderMediaResponses];
+
+export type PreviewWorkflowRemindersData = {
+    body?: never;
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query: {
+        /**
+         * Day the workflow would send, `YYYY-MM-DD` in its time zone: its next run or a later day.
+         */
+        date: string;
+        /**
+         * Odoo states to remind instead of the workflow’s, comma-separated, to see what a change would do. Omit it to use the workflow’s.
+         */
+        appointment_states?: string;
+    };
+    url: '/workflows/{workflow_id}/reminders/preview';
+};
+
+export type PreviewWorkflowRemindersErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type PreviewWorkflowRemindersError = PreviewWorkflowRemindersErrors[keyof PreviewWorkflowRemindersErrors];
+
+export type PreviewWorkflowRemindersResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: ReminderPreview;
+    };
+};
+
+export type PreviewWorkflowRemindersResponse = PreviewWorkflowRemindersResponses[keyof PreviewWorkflowRemindersResponses];
+
+export type GetWorkflowReminderHistoryData = {
+    body?: never;
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query: {
+        /**
+         * Day the workflow ran, `YYYY-MM-DD` in its time zone.
+         */
+        date: string;
+    };
+    url: '/workflows/{workflow_id}/reminders/history';
+};
+
+export type GetWorkflowReminderHistoryErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetWorkflowReminderHistoryError = GetWorkflowReminderHistoryErrors[keyof GetWorkflowReminderHistoryErrors];
+
+export type GetWorkflowReminderHistoryResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: ReminderHistory;
+    };
+};
+
+export type GetWorkflowReminderHistoryResponse = GetWorkflowReminderHistoryResponses[keyof GetWorkflowReminderHistoryResponses];
 
 export type GetDashboardReportData = {
     body?: never;
@@ -10191,6 +10640,63 @@ export type FetchMessageMediaResponses = {
 };
 
 export type FetchMessageMediaResponse = FetchMessageMediaResponses[keyof FetchMessageMediaResponses];
+
+export type PreviewBroadcastAudienceData = {
+    body: PreviewBroadcastAudience;
+    path?: never;
+    query?: never;
+    url: '/broadcasts/preview';
+};
+
+export type PreviewBroadcastAudienceErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type PreviewBroadcastAudienceError = PreviewBroadcastAudienceErrors[keyof PreviewBroadcastAudienceErrors];
+
+export type PreviewBroadcastAudienceResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: BroadcastAudiencePreview;
+    };
+};
+
+export type PreviewBroadcastAudienceResponse = PreviewBroadcastAudienceResponses[keyof PreviewBroadcastAudienceResponses];
 
 export type WebhookMessageReceivedWebhookPayload = WebhookEvent;
 

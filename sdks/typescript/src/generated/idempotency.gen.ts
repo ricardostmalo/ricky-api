@@ -41,4 +41,5 @@ export const idempotentOperations: ReadonlySet<string> = new Set([
     'POST /tags',
     'POST /templates',
     'POST /workflows',
+    'POST /workflows/{workflow_id}/header-media',
 ]);

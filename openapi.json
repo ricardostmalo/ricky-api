@@ -4908,6 +4908,480 @@
         }
       }
     },
+    "/workflows/{workflow_id}/header-media": {
+      "post": {
+        "operationId": "uploadWorkflowHeaderMedia",
+        "tags": [
+          "Workflows"
+        ],
+        "summary": "Set the header file of a scheduled workflow",
+        "description": "Downloads the file at `url` and stores it as the header every send of a scheduled workflow carries, replacing the previous one. The workflow’s template must have an image, video or document header, and the file must be that kind. Answers the workflow, with `has_header_image` true.\n\nScope: `workflows:write`.",
+        "parameters": [
+          {
+            "name": "workflow_id",
+            "in": "path",
+            "required": true,
+            "description": "Workflow ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadWorkflowHeaderMedia"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Workflow"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workflows/{workflow_id}/reminders/preview": {
+      "get": {
+        "operationId": "previewWorkflowReminders",
+        "tags": [
+          "Workflows"
+        ],
+        "summary": "Preview appointment reminders",
+        "description": "Reads the Odoo appointments an appointment-reminder workflow would message on `date` and says, for each, whether it would be sent and with what text. Sends nothing. Only for workflows with `source.kind` `odoo_appointments`, in an organization with Odoo connected; past days are in the history.\n\nScope: `workflows:read`.",
+        "parameters": [
+          {
+            "name": "workflow_id",
+            "in": "path",
+            "required": true,
+            "description": "Workflow ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "description": "Day the workflow would send, `YYYY-MM-DD` in its time zone: its next run or a later day.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          {
+            "name": "appointment_states",
+            "in": "query",
+            "required": false,
+            "description": "Odoo states to remind instead of the workflow’s, comma-separated, to see what a change would do. Omit it to use the workflow’s.",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ReminderPreview"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workflows/{workflow_id}/reminders/history": {
+      "get": {
+        "operationId": "getWorkflowReminderHistory",
+        "tags": [
+          "Workflows"
+        ],
+        "summary": "Get appointment reminder history",
+        "description": "What an appointment-reminder workflow checked in Odoo and sent on `date`, from what Ricky recorded; it does not read Odoo.\n\nScope: `workflows:read`.",
+        "parameters": [
+          {
+            "name": "workflow_id",
+            "in": "path",
+            "required": true,
+            "description": "Workflow ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "description": "Day the workflow ran, `YYYY-MM-DD` in its time zone.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ReminderHistory"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/reports/dashboard": {
       "get": {
         "operationId": "getDashboardReport",
@@ -12948,6 +13422,140 @@
           }
         }
       }
+    },
+    "/broadcasts/preview": {
+      "post": {
+        "operationId": "previewBroadcastAudience",
+        "tags": [
+          "Broadcasts"
+        ],
+        "summary": "Preview a broadcast audience",
+        "description": "Counts the numbers an audience resolves to now, with the rules `POST /broadcasts` uses, without creating anything. The list can change before you create the broadcast.\n\nScope: `broadcasts:read`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewBroadcastAudience"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/BroadcastAudiencePreview"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds 64 KiB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "webhooks": {
@@ -16150,6 +16758,34 @@
           "status_updated_at"
         ],
         "description": "One number of a broadcast and where its message stands."
+      },
+      "BroadcastAudiencePreview": {
+        "type": "object",
+        "properties": {
+          "recipients": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "Numbers a broadcast to this audience would go to now, at most 5,000."
+          },
+          "skipped": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "Contacts or numbers left out because they have no valid WhatsApp number."
+          }
+        },
+        "required": [
+          "recipients",
+          "skipped"
+        ],
+        "description": "How many numbers an audience resolves to now.",
+        "examples": [
+          {
+            "recipients": 118,
+            "skipped": 3
+          }
+        ]
       },
       "KnowledgeLocation": {
         "type": "object",
@@ -19789,286 +20425,402 @@
         ],
         "description": "How long conversations stay open before someone closes them. Every close in the period counts, dated when it happened; resolution time runs from the opening of that span to the close. Conversations without a single message are left out."
       },
-      "TemplateValidation": {
+      "ReminderPreview": {
         "type": "object",
         "properties": {
-          "valid": {
-            "type": "boolean",
-            "description": "Whether `POST /templates` would submit this draft to Meta."
+          "date": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "Day the workflow sends these reminders, in its time zone.",
+            "examples": [
+              "2026-10-20"
+            ]
           },
-          "errors": {
+          "timezone": {
+            "type": "string",
+            "description": "IANA time zone of the workflow.",
+            "examples": [
+              "America/Panama"
+            ]
+          },
+          "checked_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When Ricky read the appointments from Odoo.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          },
+          "appointment_states": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "param": {
+                "value": {
                   "type": "string",
-                  "description": "The request field the problem is in."
+                  "description": "State as Odoo stores it.",
+                  "examples": [
+                    "confirmed"
+                  ]
                 },
-                "message": {
+                "label": {
                   "type": "string",
-                  "description": "What to change."
+                  "description": "State as Odoo shows it.",
+                  "examples": [
+                    "Confirmada"
+                  ]
                 }
               },
               "required": [
-                "param",
-                "message"
+                "value",
+                "label"
               ]
             },
-            "description": "Every problem found; empty when the draft is valid.",
-            "examples": [
-              [
-                {
-                  "param": "body.examples.1",
-                  "message": "Example required for {{1}}."
+            "description": "Every appointment state the Odoo installation has."
+          },
+          "reminders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "appointment_id": {
+                  "type": "string",
+                  "description": "Appointment ID in Odoo.",
+                  "examples": [
+                    "48213"
+                  ]
+                },
+                "appointment_state": {
+                  "type": "string",
+                  "description": "Appointment state in Odoo.",
+                  "examples": [
+                    "confirmed"
+                  ]
+                },
+                "customer_first_name": {
+                  "description": "Customer first name in Odoo.",
+                  "examples": [
+                    "Ana"
+                  ],
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "phone": {
+                  "description": "Phone in Odoo.",
+                  "examples": [
+                    "+50760001234"
+                  ],
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "branch_name": {
+                  "description": "Branch in Odoo.",
+                  "examples": [
+                    "Albrook Mall"
+                  ],
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "starts_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                  "description": "When the appointment starts.",
+                  "examples": [
+                    "2026-10-14T15:30:00.000Z"
+                  ]
+                },
+                "excluded_because": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "state",
+                        "name",
+                        "branch",
+                        "phone"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Why it is not sent: its Odoo state is not one the workflow reminds (`state`), or it has no customer name (`name`), branch (`branch`) or valid phone (`phone`); null when it is sent."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "The message the template would send, with this appointment’s values.",
+                  "examples": [
+                    "Hola Ana, te recordamos tu cita de mañana a las 10:00 en Albrook Mall."
+                  ]
+                },
+                "delivery": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "pending",
+                            "processing",
+                            "accepted",
+                            "sent",
+                            "delivered",
+                            "read",
+                            "failed",
+                            "superseded",
+                            "unknown"
+                          ],
+                          "description": "`pending` or `processing` while queued; `accepted` once WhatsApp took it; then `sent`, `delivered` and `read` as WhatsApp reports them; `failed` for good; `superseded` when a newer send replaced it; `unknown` when Ricky cannot tell."
+                        },
+                        "error": {
+                          "description": "Why it failed; null otherwise.",
+                          "examples": [
+                            null
+                          ],
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "The send already recorded for this appointment and day; null if none."
                 }
+              },
+              "required": [
+                "appointment_id",
+                "appointment_state",
+                "customer_first_name",
+                "phone",
+                "branch_name",
+                "starts_at",
+                "excluded_because",
+                "message",
+                "delivery"
               ]
+            },
+            "description": "Each appointment of that day in Odoo, in start order."
+          }
+        },
+        "required": [
+          "date",
+          "timezone",
+          "checked_at",
+          "appointment_states",
+          "reminders"
+        ],
+        "description": "The Odoo appointments a reminder workflow would message on a coming day."
+      },
+      "ReminderHistory": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "Day the workflow ran, in its time zone.",
+            "examples": [
+              "2026-10-20"
             ]
           },
-          "components": {
-            "anyOf": [
-              {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "propertyNames": {
-                    "type": "string"
-                  },
-                  "additionalProperties": {}
+          "timezone": {
+            "type": "string",
+            "description": "IANA time zone of the workflow.",
+            "examples": [
+              "America/Panama"
+            ]
+          },
+          "evaluations_recorded": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "Times the workflow checked Odoo that day; 0 for days before Ricky recorded them."
+          },
+          "reminders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "customer_first_name": {
+                  "description": "Customer first name in Odoo.",
+                  "examples": [
+                    "Ana"
+                  ],
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "phone": {
+                  "description": "Phone in Odoo.",
+                  "examples": [
+                    "+50760001234"
+                  ],
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "branch_name": {
+                  "description": "Branch in Odoo.",
+                  "examples": [
+                    "Albrook Mall"
+                  ],
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "starts_at": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "When the appointment started; null if not recorded.",
+                  "examples": [
+                    "2026-10-14T15:30:00.000Z"
+                  ]
+                },
+                "excluded_because": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "state",
+                        "name",
+                        "branch",
+                        "phone"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Why it is not sent: its Odoo state is not one the workflow reminds (`state`), or it has no customer name (`name`), branch (`branch`) or valid phone (`phone`); null when it is sent."
+                },
+                "message": {
+                  "description": "The message sent; null when nothing was sent.",
+                  "examples": [
+                    null
+                  ],
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "evaluated_at": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "When the workflow last checked the appointment before sending; null if not recorded.",
+                  "examples": [
+                    "2026-10-14T15:30:00.000Z"
+                  ]
+                },
+                "queued_at": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "When the send was queued; null when nothing was sent.",
+                  "examples": [
+                    "2026-10-14T15:30:00.000Z"
+                  ]
+                },
+                "status": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "processing",
+                        "accepted",
+                        "sent",
+                        "delivered",
+                        "read",
+                        "failed",
+                        "superseded",
+                        "unknown"
+                      ],
+                      "description": "`pending` or `processing` while queued; `accepted` once WhatsApp took it; then `sent`, `delivered` and `read` as WhatsApp reports them; `failed` for good; `superseded` when a newer send replaced it; `unknown` when Ricky cannot tell."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Where the send stands, with the values of a preview’s `delivery.status`; null when nothing was sent."
+                },
+                "error": {
+                  "description": "Why it failed; null otherwise.",
+                  "examples": [
+                    null
+                  ],
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 }
               },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "The components Ricky would submit, in the WhatsApp Cloud API format; null when the draft is invalid.",
-            "examples": [
-              null
-            ]
+              "required": [
+                "customer_first_name",
+                "phone",
+                "branch_name",
+                "starts_at",
+                "excluded_because",
+                "message",
+                "evaluated_at",
+                "queued_at",
+                "status",
+                "error"
+              ]
+            },
+            "description": "Each appointment the workflow checked or sent that day, oldest first."
           }
         },
         "required": [
-          "valid",
-          "errors",
-          "components"
+          "date",
+          "timezone",
+          "evaluations_recorded",
+          "reminders"
         ],
-        "description": "The result of checking a template draft without submitting it."
-      },
-      "DeletedTemplate": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Template ID at Meta.",
-            "examples": [
-              "1234567890123456"
-            ]
-          },
-          "deleted": {
-            "type": "boolean",
-            "const": true
-          }
-        },
-        "required": [
-          "id",
-          "deleted"
-        ],
-        "description": "A template Meta deleted."
-      },
-      "WhatsAppNumber": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Channel ID.",
-            "examples": [
-              "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f"
-            ]
-          },
-          "name": {
-            "type": "string",
-            "description": "Name shown in Ricky.",
-            "examples": [
-              "Casa Nativa"
-            ]
-          },
-          "phone_number": {
-            "description": "Phone in E.164.",
-            "examples": [
-              "+50760001234"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "verified_name": {
-            "description": "Business name Meta approved for the number.",
-            "examples": [
-              "Casa Nativa"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "phone_number_id": {
-            "description": "Phone number ID at Meta.",
-            "examples": [
-              "109876543210987"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "whatsapp_business_account_id": {
-            "description": "WhatsApp Business Account that owns the number.",
-            "examples": [
-              "102030405060708"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "connection_mode": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "dedicated",
-                  "coexistence"
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "`coexistence` when the number also stays on the WhatsApp Business app; `dedicated` otherwise."
-          },
-          "status": {
-            "description": "Status of the number at Meta, as Meta reports it, for example `CONNECTED`.",
-            "examples": [
-              "CONNECTED"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "disconnected_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time",
-                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "When the number was disconnected from Ricky; null while connected.",
-            "examples": [
-              null
-            ]
-          },
-          "messaging_health": {
-            "type": "string",
-            "enum": [
-              "available",
-              "limited",
-              "blocked"
-            ],
-            "description": "Whether Meta lets the number send: `available`, `limited` or `blocked`."
-          },
-          "quality_rating": {
-            "description": "Quality rating at Meta: `green`, `yellow`, `red`, `not_yet_determined` or `unknown`.",
-            "examples": [
-              "green"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "messaging_limit": {
-            "description": "Messaging limit tier at Meta, for example `TIER_1K` or `TIER_UNLIMITED`; `UNKNOWN` when Meta has not reported it.",
-            "examples": [
-              "TIER_1K"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "inbound_processing_enabled": {
-            "description": "Whether Ricky receives the messages sent to the number.",
-            "type": [
-              "boolean",
-              "null"
-            ]
-          },
-          "calls_enabled": {
-            "description": "Whether customers can call the number and reach the AI agent.",
-            "type": [
-              "boolean",
-              "null"
-            ]
-          },
-          "connected_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time",
-                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "When it was connected.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          },
-          "last_synced_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time",
-                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "When Ricky last read its details from Meta.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          }
-        },
-        "required": [
-          "id",
-          "name",
-          "phone_number",
-          "verified_name",
-          "phone_number_id",
-          "whatsapp_business_account_id",
-          "connection_mode",
-          "status",
-          "disconnected_at",
-          "messaging_health",
-          "quality_rating",
-          "messaging_limit",
-          "inbound_processing_enabled",
-          "calls_enabled",
-          "connected_at",
-          "last_synced_at"
-        ],
-        "description": "A WhatsApp number, with its status, quality and messaging limit at Meta."
+        "description": "What a reminder workflow checked and sent on a past day."
       },
       "Workflow": {
         "type": "object",
@@ -20983,6 +21735,287 @@
           "processed_at"
         ],
         "description": "One queued run of a workflow, or one template send of a scheduled workflow. Its status does not confirm each message's delivery."
+      },
+      "TemplateValidation": {
+        "type": "object",
+        "properties": {
+          "valid": {
+            "type": "boolean",
+            "description": "Whether `POST /templates` would submit this draft to Meta."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "param": {
+                  "type": "string",
+                  "description": "The request field the problem is in."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "What to change."
+                }
+              },
+              "required": [
+                "param",
+                "message"
+              ]
+            },
+            "description": "Every problem found; empty when the draft is valid.",
+            "examples": [
+              [
+                {
+                  "param": "body.examples.1",
+                  "message": "Example required for {{1}}."
+                }
+              ]
+            ]
+          },
+          "components": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The components Ricky would submit, in the WhatsApp Cloud API format; null when the draft is invalid.",
+            "examples": [
+              null
+            ]
+          }
+        },
+        "required": [
+          "valid",
+          "errors",
+          "components"
+        ],
+        "description": "The result of checking a template draft without submitting it."
+      },
+      "DeletedTemplate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Template ID at Meta.",
+            "examples": [
+              "1234567890123456"
+            ]
+          },
+          "deleted": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "id",
+          "deleted"
+        ],
+        "description": "A template Meta deleted."
+      },
+      "WhatsAppNumber": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Channel ID.",
+            "examples": [
+              "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "Name shown in Ricky.",
+            "examples": [
+              "Casa Nativa"
+            ]
+          },
+          "phone_number": {
+            "description": "Phone in E.164.",
+            "examples": [
+              "+50760001234"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "verified_name": {
+            "description": "Business name Meta approved for the number.",
+            "examples": [
+              "Casa Nativa"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "phone_number_id": {
+            "description": "Phone number ID at Meta.",
+            "examples": [
+              "109876543210987"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "whatsapp_business_account_id": {
+            "description": "WhatsApp Business Account that owns the number.",
+            "examples": [
+              "102030405060708"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "connection_mode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "dedicated",
+                  "coexistence"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "`coexistence` when the number also stays on the WhatsApp Business app; `dedicated` otherwise."
+          },
+          "status": {
+            "description": "Status of the number at Meta, as Meta reports it, for example `CONNECTED`.",
+            "examples": [
+              "CONNECTED"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "disconnected_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When the number was disconnected from Ricky; null while connected.",
+            "examples": [
+              null
+            ]
+          },
+          "messaging_health": {
+            "type": "string",
+            "enum": [
+              "available",
+              "limited",
+              "blocked"
+            ],
+            "description": "Whether Meta lets the number send: `available`, `limited` or `blocked`."
+          },
+          "quality_rating": {
+            "description": "Quality rating at Meta: `green`, `yellow`, `red`, `not_yet_determined` or `unknown`.",
+            "examples": [
+              "green"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "messaging_limit": {
+            "description": "Messaging limit tier at Meta, for example `TIER_1K` or `TIER_UNLIMITED`; `UNKNOWN` when Meta has not reported it.",
+            "examples": [
+              "TIER_1K"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "inbound_processing_enabled": {
+            "description": "Whether Ricky receives the messages sent to the number.",
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "calls_enabled": {
+            "description": "Whether customers can call the number and reach the AI agent.",
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "connected_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When it was connected.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          },
+          "last_synced_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When Ricky last read its details from Meta.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "phone_number",
+          "verified_name",
+          "phone_number_id",
+          "whatsapp_business_account_id",
+          "connection_mode",
+          "status",
+          "disconnected_at",
+          "messaging_health",
+          "quality_rating",
+          "messaging_limit",
+          "inbound_processing_enabled",
+          "calls_enabled",
+          "connected_at",
+          "last_synced_at"
+        ],
+        "description": "A WhatsApp number, with its status, quality and messaging limit at Meta."
       },
       "CreateAgent": {
         "type": "object",
@@ -22573,6 +23606,100 @@
             ],
             "description": "Who receives it. `filter` takes every contact matching all the filters you send (no filter: every contact); `contacts` and `phones` take the ones you list. Ricky uses each contact’s phone, or its WhatsApp number, skips contacts without one and sends once per number, up to 5,000."
           },
+          "mappings": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "component": {
+                  "type": "string",
+                  "enum": [
+                    "header",
+                    "body",
+                    "button"
+                  ],
+                  "description": "Where the variable is: the header, the body, or a URL button."
+                },
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100,
+                  "description": "The variable: its number (`1`) or its name in a header or body; for a button, the button’s index (`0`)."
+                },
+                "source": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "contact"
+                        },
+                        "field": {
+                          "type": "string",
+                          "enum": [
+                            "birthday",
+                            "city",
+                            "company",
+                            "country",
+                            "first_name",
+                            "job_title",
+                            "last_name",
+                            "lead_status",
+                            "lifecycle_stage",
+                            "linkedin_url",
+                            "notes",
+                            "postal_code",
+                            "primary_email",
+                            "primary_phone",
+                            "region",
+                            "source",
+                            "street_address",
+                            "website_url"
+                          ],
+                          "description": "A field of the contact."
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "field"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "custom_field"
+                        },
+                        "field_id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "A custom contact field. See `GET /contact-fields`."
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "field_id"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "Where each recipient’s value comes from."
+                }
+              },
+              "required": [
+                "component",
+                "key",
+                "source"
+              ],
+              "additionalProperties": false,
+              "description": "One template variable filled from each recipient’s contact."
+            },
+            "description": "Fills template variables per recipient from their contact, as the broadcast composer does. Ricky saves them on the template, replacing the ones it had, so later broadcasts of the template use them too; omit it to keep the saved ones, send `[]` to clear them. A recipient without a contact, or without a value in the field, receives the text you sent in `template.components`."
+          },
           "scheduled_at": {
             "description": "When to start sending, up to 7 days ahead. Omit it to send now.",
             "type": "string",
@@ -22609,6 +23736,115 @@
               "tag_id": "5c6d7e8f-9a0b-4c1d-8e2f-3a4b5c6d7e8f"
             },
             "scheduled_at": "2026-10-20T14:00:00Z"
+          }
+        ]
+      },
+      "PreviewBroadcastAudience": {
+        "type": "object",
+        "properties": {
+          "audience": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "filter"
+                  },
+                  "tag_id": {
+                    "description": "Only contacts with this tag.",
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "lifecycle_stage": {
+                    "description": "Only contacts at this stage.",
+                    "type": "string",
+                    "enum": [
+                      "subscriber",
+                      "lead",
+                      "marketing_qualified",
+                      "sales_qualified",
+                      "opportunity",
+                      "customer",
+                      "evangelist",
+                      "other"
+                    ]
+                  },
+                  "query": {
+                    "description": "Only contacts whose name, phone, email or company contains it.",
+                    "type": "string",
+                    "maxLength": 200
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "contacts"
+                  },
+                  "contact_ids": {
+                    "minItems": 1,
+                    "maxItems": 1000,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "description": "Contacts of the organization."
+                  }
+                },
+                "required": [
+                  "type",
+                  "contact_ids"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "phones"
+                  },
+                  "phones": {
+                    "minItems": 1,
+                    "maxItems": 2000,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    },
+                    "description": "Numbers with country code, for example `+50760001234`."
+                  }
+                },
+                "required": [
+                  "type",
+                  "phones"
+                ],
+                "additionalProperties": false
+              }
+            ],
+            "description": "Who receives it. `filter` takes every contact matching all the filters you send (no filter: every contact); `contacts` and `phones` take the ones you list. Ricky uses each contact’s phone, or its WhatsApp number, skips contacts without one and sends once per number, up to 5,000."
+          }
+        },
+        "required": [
+          "audience"
+        ],
+        "additionalProperties": false,
+        "description": "The audience to count, as you would send it to `POST /broadcasts`.",
+        "examples": [
+          {
+            "audience": {
+              "type": "filter",
+              "tag_id": "5c6d7e8f-9a0b-4c1d-8e2f-3a4b5c6d7e8f"
+            }
           }
         ]
       },
@@ -23592,690 +24828,30 @@
           }
         ]
       },
-      "CreateTemplate": {
+      "UploadWorkflowHeaderMedia": {
         "type": "object",
         "properties": {
-          "channel_id": {
+          "url": {
             "type": "string",
-            "format": "uuid",
-            "description": "WhatsApp channel whose business account will own the template."
+            "maxLength": 2048,
+            "format": "uri",
+            "description": "Public HTTPS address Ricky downloads the file from. It must not redirect or resolve to a private address, and its `Content-Type` must be the kind the template header takes (image, video or document) within WhatsApp’s size limit for it."
           },
-          "name": {
+          "file_name": {
+            "description": "Name to keep for the file; defaults to the last part of the URL.",
             "type": "string",
-            "maxLength": 512,
-            "pattern": "^[a-z][a-z0-9_]*$",
-            "description": "Lowercase letters, digits and underscores, starting with a letter."
-          },
-          "language": {
-            "type": "string",
-            "pattern": "^[a-z]{2,3}(?:_[A-Z]{2})?$",
-            "description": "Language code, for example `es` or `en_US`."
-          },
-          "category": {
-            "type": "string",
-            "enum": [
-              "MARKETING",
-              "UTILITY"
-            ],
-            "description": "`UTILITY` for updates on something the customer asked for; `MARKETING` otherwise."
-          },
-          "parameter_format": {
-            "default": "NAMED",
-            "description": "How variables are written: `{{first_name}}` or `{{1}}`. It cannot change later.",
-            "type": "string",
-            "enum": [
-              "NAMED",
-              "POSITIONAL"
-            ]
-          },
-          "header": {
-            "description": "`TEXT` or `LOCATION`. Send `null` for no header.",
-            "anyOf": [
-              {
-                "oneOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "const": "TEXT"
-                      },
-                      "text": {
-                        "type": "string",
-                        "minLength": 1,
-                        "maxLength": 60,
-                        "description": "Header text; at most one variable."
-                      },
-                      "example": {
-                        "description": "Example value of the header variable; required when it has one.",
-                        "type": "string",
-                        "maxLength": 1024
-                      }
-                    },
-                    "required": [
-                      "type",
-                      "text"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "const": "LOCATION"
-                      }
-                    },
-                    "required": [
-                      "type"
-                    ],
-                    "additionalProperties": false
-                  }
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "body": {
-            "type": "object",
-            "properties": {
-              "text": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 1024,
-                "description": "Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end."
-              },
-              "examples": {
-                "description": "An example value for every variable, keyed by its number or name without braces. Meta reviews them.",
-                "type": "object",
-                "propertyNames": {
-                  "type": "string"
-                },
-                "additionalProperties": {
-                  "type": "string",
-                  "maxLength": 1024
-                }
-              }
-            },
-            "required": [
-              "text"
-            ],
-            "additionalProperties": false,
-            "description": "The message text."
-          },
-          "footer": {
-            "description": "Footer text, without variables.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 60
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "buttons": {
-            "description": "Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.",
-            "maxItems": 10,
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "const": "QUICK_REPLY"
-                    },
-                    "text": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 25
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "text"
-                  ],
-                  "additionalProperties": false
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "const": "URL"
-                    },
-                    "text": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 25
-                    },
-                    "url": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 2000,
-                      "description": "Link the button opens; it may end in the variable `{{1}}`."
-                    },
-                    "example": {
-                      "description": "Example URL for a link with `{{1}}`; required when it has one.",
-                      "type": "string",
-                      "maxLength": 2000
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "text",
-                    "url"
-                  ],
-                  "additionalProperties": false
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "const": "PHONE_NUMBER"
-                    },
-                    "text": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 25
-                    },
-                    "phone_number": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 20,
-                      "description": "Phone the button calls, with country code."
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "text",
-                    "phone_number"
-                  ],
-                  "additionalProperties": false
-                }
-              ]
-            }
+            "minLength": 1,
+            "maxLength": 240
           }
         },
         "required": [
-          "channel_id",
-          "name",
-          "language",
-          "category",
-          "body"
+          "url"
         ],
         "additionalProperties": false,
-        "description": "A template draft. Ricky checks it as `POST /templates/validate` does, then submits it.",
+        "description": "The file every send of the workflow carries in its template header.",
         "examples": [
           {
-            "channel_id": "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f",
-            "name": "pedido_listo",
-            "language": "es",
-            "category": "UTILITY",
-            "parameter_format": "POSITIONAL",
-            "body": {
-              "text": "Hola {{1}}, tu pedido {{2}} está listo para retirar.",
-              "examples": {
-                "1": "Ana",
-                "2": "10482"
-              }
-            },
-            "footer": "Casa Nativa",
-            "buttons": [
-              {
-                "type": "QUICK_REPLY",
-                "text": "Gracias"
-              }
-            ]
-          }
-        ]
-      },
-      "ValidateTemplate": {
-        "type": "object",
-        "properties": {
-          "channel_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "WhatsApp channel whose business account will own the template."
-          },
-          "name": {
-            "type": "string",
-            "maxLength": 512,
-            "pattern": "^[a-z][a-z0-9_]*$",
-            "description": "Lowercase letters, digits and underscores, starting with a letter."
-          },
-          "language": {
-            "type": "string",
-            "pattern": "^[a-z]{2,3}(?:_[A-Z]{2})?$",
-            "description": "Language code, for example `es` or `en_US`."
-          },
-          "category": {
-            "type": "string",
-            "enum": [
-              "MARKETING",
-              "UTILITY"
-            ],
-            "description": "`UTILITY` for updates on something the customer asked for; `MARKETING` otherwise."
-          },
-          "parameter_format": {
-            "default": "NAMED",
-            "description": "How variables are written: `{{first_name}}` or `{{1}}`. It cannot change later.",
-            "type": "string",
-            "enum": [
-              "NAMED",
-              "POSITIONAL"
-            ]
-          },
-          "header": {
-            "description": "`TEXT` or `LOCATION`. Send `null` for no header.",
-            "anyOf": [
-              {
-                "oneOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "const": "TEXT"
-                      },
-                      "text": {
-                        "type": "string",
-                        "minLength": 1,
-                        "maxLength": 60,
-                        "description": "Header text; at most one variable."
-                      },
-                      "example": {
-                        "description": "Example value of the header variable; required when it has one.",
-                        "type": "string",
-                        "maxLength": 1024
-                      }
-                    },
-                    "required": [
-                      "type",
-                      "text"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "const": "LOCATION"
-                      }
-                    },
-                    "required": [
-                      "type"
-                    ],
-                    "additionalProperties": false
-                  }
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "body": {
-            "type": "object",
-            "properties": {
-              "text": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 1024,
-                "description": "Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end."
-              },
-              "examples": {
-                "description": "An example value for every variable, keyed by its number or name without braces. Meta reviews them.",
-                "type": "object",
-                "propertyNames": {
-                  "type": "string"
-                },
-                "additionalProperties": {
-                  "type": "string",
-                  "maxLength": 1024
-                }
-              }
-            },
-            "required": [
-              "text"
-            ],
-            "additionalProperties": false,
-            "description": "The message text."
-          },
-          "footer": {
-            "description": "Footer text, without variables.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 60
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "buttons": {
-            "description": "Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.",
-            "maxItems": 10,
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "const": "QUICK_REPLY"
-                    },
-                    "text": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 25
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "text"
-                  ],
-                  "additionalProperties": false
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "const": "URL"
-                    },
-                    "text": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 25
-                    },
-                    "url": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 2000,
-                      "description": "Link the button opens; it may end in the variable `{{1}}`."
-                    },
-                    "example": {
-                      "description": "Example URL for a link with `{{1}}`; required when it has one.",
-                      "type": "string",
-                      "maxLength": 2000
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "text",
-                    "url"
-                  ],
-                  "additionalProperties": false
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "const": "PHONE_NUMBER"
-                    },
-                    "text": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 25
-                    },
-                    "phone_number": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 20,
-                      "description": "Phone the button calls, with country code."
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "text",
-                    "phone_number"
-                  ],
-                  "additionalProperties": false
-                }
-              ]
-            }
-          }
-        },
-        "required": [
-          "name",
-          "language",
-          "category",
-          "body"
-        ],
-        "additionalProperties": false,
-        "description": "The body of `POST /templates`; `channel_id` is optional here.",
-        "examples": [
-          {
-            "channel_id": "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f",
-            "name": "pedido_listo",
-            "language": "es",
-            "category": "UTILITY",
-            "parameter_format": "POSITIONAL",
-            "body": {
-              "text": "Hola {{1}}, tu pedido {{2}} está listo para retirar.",
-              "examples": {
-                "1": "Ana",
-                "2": "10482"
-              }
-            },
-            "footer": "Casa Nativa",
-            "buttons": [
-              {
-                "type": "QUICK_REPLY",
-                "text": "Gracias"
-              }
-            ]
-          }
-        ]
-      },
-      "UpdateTemplate": {
-        "type": "object",
-        "properties": {
-          "category": {
-            "type": "string",
-            "enum": [
-              "MARKETING",
-              "UTILITY"
-            ],
-            "description": "`UTILITY` for updates on something the customer asked for; `MARKETING` otherwise."
-          },
-          "header": {
-            "description": "`TEXT` or `LOCATION`. Send `null` for no header.",
-            "anyOf": [
-              {
-                "oneOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "const": "TEXT"
-                      },
-                      "text": {
-                        "type": "string",
-                        "minLength": 1,
-                        "maxLength": 60,
-                        "description": "Header text; at most one variable."
-                      },
-                      "example": {
-                        "description": "Example value of the header variable; required when it has one.",
-                        "type": "string",
-                        "maxLength": 1024
-                      }
-                    },
-                    "required": [
-                      "type",
-                      "text"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "const": "LOCATION"
-                      }
-                    },
-                    "required": [
-                      "type"
-                    ],
-                    "additionalProperties": false
-                  }
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "body": {
-            "type": "object",
-            "properties": {
-              "text": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 1024,
-                "description": "Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end."
-              },
-              "examples": {
-                "description": "An example value for every variable, keyed by its number or name without braces. Meta reviews them.",
-                "type": "object",
-                "propertyNames": {
-                  "type": "string"
-                },
-                "additionalProperties": {
-                  "type": "string",
-                  "maxLength": 1024
-                }
-              }
-            },
-            "required": [
-              "text"
-            ],
-            "additionalProperties": false,
-            "description": "The message text."
-          },
-          "footer": {
-            "description": "Footer text, without variables.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 60
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "buttons": {
-            "description": "Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.",
-            "maxItems": 10,
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "const": "QUICK_REPLY"
-                    },
-                    "text": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 25
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "text"
-                  ],
-                  "additionalProperties": false
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "const": "URL"
-                    },
-                    "text": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 25
-                    },
-                    "url": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 2000,
-                      "description": "Link the button opens; it may end in the variable `{{1}}`."
-                    },
-                    "example": {
-                      "description": "Example URL for a link with `{{1}}`; required when it has one.",
-                      "type": "string",
-                      "maxLength": 2000
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "text",
-                    "url"
-                  ],
-                  "additionalProperties": false
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "const": "PHONE_NUMBER"
-                    },
-                    "text": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 25
-                    },
-                    "phone_number": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 20,
-                      "description": "Phone the button calls, with country code."
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "text",
-                    "phone_number"
-                  ],
-                  "additionalProperties": false
-                }
-              ]
-            }
-          }
-        },
-        "additionalProperties": false,
-        "description": "Only the parts you send change; `buttons` replaces every button. Name, language and `parameter_format` cannot change.",
-        "examples": [
-          {
-            "body": {
-              "text": "Hola {{1}}, tu pedido {{2}} ya está listo. Te esperamos.",
-              "examples": {
-                "1": "Ana",
-                "2": "10482"
-              }
-            }
+            "url": "https://example.com/recordatorio.jpg"
           }
         ]
       },
@@ -25558,6 +26134,693 @@
         "examples": [
           {
             "name": "Fuera de horario (Albrook)"
+          }
+        ]
+      },
+      "CreateTemplate": {
+        "type": "object",
+        "properties": {
+          "channel_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "WhatsApp channel whose business account will own the template."
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 512,
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "description": "Lowercase letters, digits and underscores, starting with a letter."
+          },
+          "language": {
+            "type": "string",
+            "pattern": "^[a-z]{2,3}(?:_[A-Z]{2})?$",
+            "description": "Language code, for example `es` or `en_US`."
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "MARKETING",
+              "UTILITY"
+            ],
+            "description": "`UTILITY` for updates on something the customer asked for; `MARKETING` otherwise."
+          },
+          "parameter_format": {
+            "default": "NAMED",
+            "description": "How variables are written: `{{first_name}}` or `{{1}}`. It cannot change later.",
+            "type": "string",
+            "enum": [
+              "NAMED",
+              "POSITIONAL"
+            ]
+          },
+          "header": {
+            "description": "`TEXT` or `LOCATION`. Send `null` for no header.",
+            "anyOf": [
+              {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "TEXT"
+                      },
+                      "text": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60,
+                        "description": "Header text; at most one variable."
+                      },
+                      "example": {
+                        "description": "Example value of the header variable; required when it has one.",
+                        "type": "string",
+                        "maxLength": 1024
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "text"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "LOCATION"
+                      }
+                    },
+                    "required": [
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024,
+                "description": "Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end."
+              },
+              "examples": {
+                "description": "An example value for every variable, keyed by its number or name without braces. Meta reviews them.",
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "string",
+                  "maxLength": 1024
+                }
+              }
+            },
+            "required": [
+              "text"
+            ],
+            "additionalProperties": false,
+            "description": "The message text."
+          },
+          "footer": {
+            "description": "Footer text, without variables.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 60
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "buttons": {
+            "description": "Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.",
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "QUICK_REPLY"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "URL"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    },
+                    "url": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000,
+                      "description": "Link the button opens; it may end in the variable `{{1}}`."
+                    },
+                    "example": {
+                      "description": "Example URL for a link with `{{1}}`; required when it has one.",
+                      "type": "string",
+                      "maxLength": 2000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text",
+                    "url"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "PHONE_NUMBER"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    },
+                    "phone_number": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20,
+                      "description": "Phone the button calls, with country code."
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text",
+                    "phone_number"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "channel_id",
+          "name",
+          "language",
+          "category",
+          "body"
+        ],
+        "additionalProperties": false,
+        "description": "A template draft. Ricky checks it as `POST /templates/validate` does, then submits it.",
+        "examples": [
+          {
+            "channel_id": "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f",
+            "name": "pedido_listo",
+            "language": "es",
+            "category": "UTILITY",
+            "parameter_format": "POSITIONAL",
+            "body": {
+              "text": "Hola {{1}}, tu pedido {{2}} está listo para retirar.",
+              "examples": {
+                "1": "Ana",
+                "2": "10482"
+              }
+            },
+            "footer": "Casa Nativa",
+            "buttons": [
+              {
+                "type": "QUICK_REPLY",
+                "text": "Gracias"
+              }
+            ]
+          }
+        ]
+      },
+      "ValidateTemplate": {
+        "type": "object",
+        "properties": {
+          "channel_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "WhatsApp channel whose business account will own the template."
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 512,
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "description": "Lowercase letters, digits and underscores, starting with a letter."
+          },
+          "language": {
+            "type": "string",
+            "pattern": "^[a-z]{2,3}(?:_[A-Z]{2})?$",
+            "description": "Language code, for example `es` or `en_US`."
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "MARKETING",
+              "UTILITY"
+            ],
+            "description": "`UTILITY` for updates on something the customer asked for; `MARKETING` otherwise."
+          },
+          "parameter_format": {
+            "default": "NAMED",
+            "description": "How variables are written: `{{first_name}}` or `{{1}}`. It cannot change later.",
+            "type": "string",
+            "enum": [
+              "NAMED",
+              "POSITIONAL"
+            ]
+          },
+          "header": {
+            "description": "`TEXT` or `LOCATION`. Send `null` for no header.",
+            "anyOf": [
+              {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "TEXT"
+                      },
+                      "text": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60,
+                        "description": "Header text; at most one variable."
+                      },
+                      "example": {
+                        "description": "Example value of the header variable; required when it has one.",
+                        "type": "string",
+                        "maxLength": 1024
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "text"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "LOCATION"
+                      }
+                    },
+                    "required": [
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024,
+                "description": "Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end."
+              },
+              "examples": {
+                "description": "An example value for every variable, keyed by its number or name without braces. Meta reviews them.",
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "string",
+                  "maxLength": 1024
+                }
+              }
+            },
+            "required": [
+              "text"
+            ],
+            "additionalProperties": false,
+            "description": "The message text."
+          },
+          "footer": {
+            "description": "Footer text, without variables.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 60
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "buttons": {
+            "description": "Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.",
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "QUICK_REPLY"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "URL"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    },
+                    "url": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000,
+                      "description": "Link the button opens; it may end in the variable `{{1}}`."
+                    },
+                    "example": {
+                      "description": "Example URL for a link with `{{1}}`; required when it has one.",
+                      "type": "string",
+                      "maxLength": 2000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text",
+                    "url"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "PHONE_NUMBER"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    },
+                    "phone_number": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20,
+                      "description": "Phone the button calls, with country code."
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text",
+                    "phone_number"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "name",
+          "language",
+          "category",
+          "body"
+        ],
+        "additionalProperties": false,
+        "description": "The body of `POST /templates`; `channel_id` is optional here.",
+        "examples": [
+          {
+            "channel_id": "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f",
+            "name": "pedido_listo",
+            "language": "es",
+            "category": "UTILITY",
+            "parameter_format": "POSITIONAL",
+            "body": {
+              "text": "Hola {{1}}, tu pedido {{2}} está listo para retirar.",
+              "examples": {
+                "1": "Ana",
+                "2": "10482"
+              }
+            },
+            "footer": "Casa Nativa",
+            "buttons": [
+              {
+                "type": "QUICK_REPLY",
+                "text": "Gracias"
+              }
+            ]
+          }
+        ]
+      },
+      "UpdateTemplate": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "MARKETING",
+              "UTILITY"
+            ],
+            "description": "`UTILITY` for updates on something the customer asked for; `MARKETING` otherwise."
+          },
+          "header": {
+            "description": "`TEXT` or `LOCATION`. Send `null` for no header.",
+            "anyOf": [
+              {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "TEXT"
+                      },
+                      "text": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60,
+                        "description": "Header text; at most one variable."
+                      },
+                      "example": {
+                        "description": "Example value of the header variable; required when it has one.",
+                        "type": "string",
+                        "maxLength": 1024
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "text"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "LOCATION"
+                      }
+                    },
+                    "required": [
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024,
+                "description": "Body text. Variables are `{{1}}`, `{{2}}`… for `POSITIONAL` and `{{first_name}}` for `NAMED`; not at the very start or end."
+              },
+              "examples": {
+                "description": "An example value for every variable, keyed by its number or name without braces. Meta reviews them.",
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "string",
+                  "maxLength": 1024
+                }
+              }
+            },
+            "required": [
+              "text"
+            ],
+            "additionalProperties": false,
+            "description": "The message text."
+          },
+          "footer": {
+            "description": "Footer text, without variables.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 60
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "buttons": {
+            "description": "Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.",
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "QUICK_REPLY"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "URL"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    },
+                    "url": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000,
+                      "description": "Link the button opens; it may end in the variable `{{1}}`."
+                    },
+                    "example": {
+                      "description": "Example URL for a link with `{{1}}`; required when it has one.",
+                      "type": "string",
+                      "maxLength": 2000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text",
+                    "url"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "PHONE_NUMBER"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 25
+                    },
+                    "phone_number": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20,
+                      "description": "Phone the button calls, with country code."
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text",
+                    "phone_number"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          }
+        },
+        "additionalProperties": false,
+        "description": "Only the parts you send change; `buttons` replaces every button. Name, language and `parameter_format` cannot change.",
+        "examples": [
+          {
+            "body": {
+              "text": "Hola {{1}}, tu pedido {{2}} ya está listo. Te esperamos.",
+              "examples": {
+                "1": "Ana",
+                "2": "10482"
+              }
+            }
           }
         ]
       }
