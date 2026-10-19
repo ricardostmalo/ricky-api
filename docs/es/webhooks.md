@@ -47,20 +47,36 @@ Ricky vuelve a comprobar la URL en cada entrega y no sigue redirecciones.
 
 ## Eventos
 
-| Evento                            | Ocurre cuando                                                        | `data`                          |
-| --------------------------------- | -------------------------------------------------------------------- | ------------------------------- |
-| `message.received`                | Un contacto envía un mensaje.                                        | `conversation_id`, `message_id` |
-| `message.sent`                    | El proveedor acepta un mensaje de la organización.                   | `conversation_id`, `message_id` |
-| `message.delivered`               | Un mensaje saliente llega al teléfono del destinatario.              | `conversation_id`, `message_id` |
-| `message.read`                    | El destinatario lee un mensaje saliente.                             | `conversation_id`, `message_id` |
-| `message.failed`                  | Un mensaje saliente falla de forma definitiva.                       | `conversation_id`, `message_id` |
-| `conversation.opened`             | Se crea o se reabre una conversación.                                | `conversation_id`               |
-| `conversation.closed`             | Se cierra una conversación.                                          | `conversation_id`               |
-| `conversation.assignment_changed` | Se asigna, se reasigna o se quita la asignación de una conversación. | `conversation_id`               |
-| `contact.created`                 | Se crea un contacto: en Ricky, por la API o con su primer mensaje.   | `contact_id`                    |
-| `contact.updated`                 | Se guardan los campos, las etiquetas o los valores de un contacto.   | `contact_id`                    |
+| Evento                            | Ocurre cuando                                                                                     | `data`                                 |
+| --------------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| `message.received`                | Un contacto envía un mensaje.                                                                     | `conversation_id`, `message_id`        |
+| `message.sent`                    | El proveedor acepta un mensaje de la organización.                                                | `conversation_id`, `message_id`        |
+| `message.delivered`               | Un mensaje saliente llega al teléfono del destinatario.                                           | `conversation_id`, `message_id`        |
+| `message.read`                    | El destinatario lee un mensaje saliente.                                                          | `conversation_id`, `message_id`        |
+| `message.failed`                  | Un mensaje saliente falla de forma definitiva.                                                    | `conversation_id`, `message_id`        |
+| `conversation.opened`             | Se crea o se reabre una conversación.                                                             | `conversation_id`                      |
+| `conversation.closed`             | Se cierra una conversación.                                                                       | `conversation_id`                      |
+| `conversation.assignment_changed` | Se asigna, se reasigna o se quita la asignación de una conversación.                              | `conversation_id`                      |
+| `conversation.agent_changed`      | Se asigna, se cambia o se quita el agente de IA que responde una conversación.                    | `conversation_id`                      |
+| `conversation.handoff_requested`  | Un agente de IA pasa una conversación a una persona.                                              | `conversation_id`                      |
+| `conversation.handoff_resolved`   | Una persona resuelve el traspaso: la conversación sigue con una persona o vuelve al agente de IA. | `conversation_id`                      |
+| `contact.created`                 | Se crea un contacto: en Ricky, por la API o con su primer mensaje.                                | `contact_id`                           |
+| `contact.updated`                 | Se guarda un contacto: sus campos, etiquetas o valores.                                           | `contact_id`                           |
+| `contact.tags_changed`            | Un contacto gana o pierde una etiqueta.                                                           | `contact_id`                           |
+| `broadcast.completed`             | Una campaña entrega su último mensaje a WhatsApp.                                                 | `broadcast_id`                         |
+| `broadcast.failed`                | Una campaña termina y todos sus destinatarios fallaron.                                           | `broadcast_id`                         |
+| `template.status_changed`         | Meta cambia el estado de una plantilla de WhatsApp: aprobada, rechazada, pausada y otros.         | `template_id`                          |
+| `workflow.execution_failed`       | Una ejecución de un workflow falla de forma definitiva.                                           | `workflow_id`, `workflow_execution_id` |
+| `knowledge_file.ready`            | Ricky termina de leer un archivo de conocimiento subido.                                          | `knowledge_file_id`                    |
 
-`message.sent` llega por cada mensaje saliente, no solo por los enviados con la API. Los mensajes que trae una importación de historial no generan eventos `message.*`. Para la causa de un `message.failed`, lee el mensaje.
+`message.sent` llega por cada mensaje saliente, no solo por los enviados con la API. Una importación de historial no genera eventos `message.*`, ni cambios de agente, traspasos o cambios de etiquetas. Para la causa de un `message.failed`, lee el mensaje.
+
+* **Asignación y agente.** Un cambio del agente de IA genera `conversation.assignment_changed` y `conversation.agent_changed`. Un cambio entre personas genera solo el primero.
+* **Etiquetas.** Las etiquetas son del contacto, también cuando las cambias en una conversación. Todas las etiquetas que cambia un mismo guardado son un solo `contact.tags_changed`. Cada guardado genera además `contact.updated`, aunque no cambie nada.
+* **Campañas.** Una campaña genera uno de los dos, una sola vez. `broadcast.completed` no significa entregada: algunos destinatarios pueden seguir esperando a WhatsApp. Para los conteos, consulta la campaña.
+* **Plantillas.** El evento llega a cada organización cuyo número de WhatsApp usa la cuenta de negocio de la plantilla. Consulta el estado con `GET /templates/{template_id}`.
+* **Workflows.** Una ejecución es una fila de `GET /workflows/{workflow_id}/executions`; su `last_error` dice por qué falló.
+* **Archivos de conocimiento.** Un archivo que Ricky no pudo leer también queda listo, con `extraction_error`; no hay evento de fallo.
 
 El evento solo trae IDs. Para el contenido, lee el recurso con la API: [Get a conversation](https://getricky.ai/docs/api/reference/conversations/get-conversation) o [List messages](https://getricky.ai/docs/api/reference/messages/list-messages).
 
@@ -84,13 +100,13 @@ X-Ricky-Signature: v1=c4a06466fda49cd8401f485eb542ba41573b96f321758a2376acbffdd4
 | `X-Ricky-Timestamp`   | Hora Unix, en segundos, de este intento. Cambia en cada reintento. |
 | `X-Ricky-Signature`   | `v1=` seguido del HMAC-SHA256 en hexadecimal.                      |
 
-| Campo del cuerpo  | Descripción                                                                                                                        |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `id`              | ID de la entrega. Úsalo para descartar duplicados.                                                                                 |
-| `type`            | Tipo de evento.                                                                                                                    |
-| `occurred_at`     | Cuándo ocurrió, en ISO 8601 UTC.                                                                                                   |
-| `organization_id` | Organización del evento.                                                                                                           |
-| `data`            | `conversation_id` en los eventos `message.*` y `conversation.*`; `message_id` en los `message.*`; `contact_id` en los `contact.*`. |
+| Campo del cuerpo  | Descripción                                                                        |
+| ----------------- | ---------------------------------------------------------------------------------- |
+| `id`              | ID de la entrega. Úsalo para descartar duplicados.                                 |
+| `type`            | Tipo de evento.                                                                    |
+| `occurred_at`     | Cuándo ocurrió, en ISO 8601 UTC.                                                   |
+| `organization_id` | Organización del evento.                                                           |
+| `data`            | Los IDs de aquello de lo que trata el evento, como los indica [Eventos](#eventos). |
 
 ## Verifica la firma
 

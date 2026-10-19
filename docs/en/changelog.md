@@ -17,6 +17,12 @@ This page records changes to the API. A breaking change only ships in a new path
 * **Quote a message.** `POST /conversations/{conversation_id}/messages` accepts `reply_to_message_id` on WhatsApp text and files.
 * **Received files.** `POST /conversations/{conversation_id}/messages/{message_id}/media` stores the file of a received message now and answers its `url`.
 
+**Webhooks.** Compatible changes to v1.
+
+* **New events.** `conversation.agent_changed`, `conversation.handoff_requested`, `conversation.handoff_resolved`, `contact.tags_changed`, `broadcast.completed`, `broadcast.failed`, `template.status_changed`, `workflow.execution_failed` and `knowledge_file.ready`. See [Webhooks](./webhooks.md#events).
+* **New `data` fields.** `broadcast_id`, `template_id`, `workflow_id`, `workflow_execution_id` and `knowledge_file_id`, each only on its events.
+* **More event types per webhook.** A webhook accepts all 19 event types at once.
+
 **Broadcasts.** Compatible changes to v1.
 
 * **Broadcasts.** `GET /broadcasts`, `POST /broadcasts` and `GET /broadcasts/{broadcast_id}` list, create and read WhatsApp broadcasts with how many recipients are in each delivery status. A broadcast sends now or at `scheduled_at`, up to 7 days ahead, to a contact filter, chosen contacts or phone numbers. See [Broadcasts](./broadcasts.md).

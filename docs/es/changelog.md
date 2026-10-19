@@ -17,6 +17,12 @@ Esta página registra los cambios de la API. Un cambio incompatible solo llega e
 * **Citar un mensaje.** `POST /conversations/{conversation_id}/messages` acepta `reply_to_message_id` en texto y archivos de WhatsApp.
 * **Archivos recibidos.** `POST /conversations/{conversation_id}/messages/{message_id}/media` guarda en ese momento el archivo de un mensaje recibido y responde con su `url`.
 
+**Webhooks.** Cambios compatibles con la v1.
+
+* **Eventos nuevos.** `conversation.agent_changed`, `conversation.handoff_requested`, `conversation.handoff_resolved`, `contact.tags_changed`, `broadcast.completed`, `broadcast.failed`, `template.status_changed`, `workflow.execution_failed` y `knowledge_file.ready`. Consulta [Webhooks](./webhooks.md#eventos).
+* **Campos nuevos en `data`.** `broadcast_id`, `template_id`, `workflow_id`, `workflow_execution_id` y `knowledge_file_id`, cada uno solo en sus eventos.
+* **Más tipos de evento por webhook.** Un webhook acepta los 19 tipos de evento a la vez.
+
 **Campañas.** Cambios compatibles con la v1.
 
 * **Campañas.** `GET /broadcasts`, `POST /broadcasts` y `GET /broadcasts/{broadcast_id}` listan, crean y consultan campañas de WhatsApp con cuántos destinatarios hay en cada estado de entrega. Una campaña se envía ahora o en `scheduled_at`, hasta 7 días después, a un filtro de contactos, a contactos elegidos o a números. Consulta [Campañas](./broadcasts.md).

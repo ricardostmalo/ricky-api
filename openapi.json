@@ -13359,6 +13359,159 @@
         }
       }
     },
+    "conversation.agent_changed": {
+      "post": {
+        "operationId": "webhook_conversation_agent_changed",
+        "summary": "conversation.agent_changed",
+        "description": "The AI agent answering a conversation changed: one was assigned, replaced or removed.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "parameters": [
+          {
+            "name": "X-Ricky-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "description": "Delivery ID; equals the body `id`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Timestamp",
+            "in": "header",
+            "required": true,
+            "description": "Unix time of the attempt.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Signature",
+            "in": "header",
+            "required": true,
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Received."
+          }
+        }
+      }
+    },
+    "conversation.handoff_requested": {
+      "post": {
+        "operationId": "webhook_conversation_handoff_requested",
+        "summary": "conversation.handoff_requested",
+        "description": "An AI agent handed a conversation to a person.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "parameters": [
+          {
+            "name": "X-Ricky-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "description": "Delivery ID; equals the body `id`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Timestamp",
+            "in": "header",
+            "required": true,
+            "description": "Unix time of the attempt.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Signature",
+            "in": "header",
+            "required": true,
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Received."
+          }
+        }
+      }
+    },
+    "conversation.handoff_resolved": {
+      "post": {
+        "operationId": "webhook_conversation_handoff_resolved",
+        "summary": "conversation.handoff_resolved",
+        "description": "A person resolved a handoff: the conversation stays with a person or goes back to the AI agent.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "parameters": [
+          {
+            "name": "X-Ricky-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "description": "Delivery ID; equals the body `id`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Timestamp",
+            "in": "header",
+            "required": true,
+            "description": "Unix time of the attempt.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Signature",
+            "in": "header",
+            "required": true,
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Received."
+          }
+        }
+      }
+    },
     "contact.created": {
       "post": {
         "operationId": "webhook_contact_created",
@@ -13415,6 +13568,312 @@
         "operationId": "webhook_contact_updated",
         "summary": "contact.updated",
         "description": "A contact's fields, tags or custom values were saved.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "parameters": [
+          {
+            "name": "X-Ricky-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "description": "Delivery ID; equals the body `id`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Timestamp",
+            "in": "header",
+            "required": true,
+            "description": "Unix time of the attempt.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Signature",
+            "in": "header",
+            "required": true,
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Received."
+          }
+        }
+      }
+    },
+    "contact.tags_changed": {
+      "post": {
+        "operationId": "webhook_contact_tags_changed",
+        "summary": "contact.tags_changed",
+        "description": "A contact's tags changed. Every change in one save is one event; `contact.updated` fires too.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "parameters": [
+          {
+            "name": "X-Ricky-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "description": "Delivery ID; equals the body `id`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Timestamp",
+            "in": "header",
+            "required": true,
+            "description": "Unix time of the attempt.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Signature",
+            "in": "header",
+            "required": true,
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Received."
+          }
+        }
+      }
+    },
+    "broadcast.completed": {
+      "post": {
+        "operationId": "webhook_broadcast_completed",
+        "summary": "broadcast.completed",
+        "description": "A broadcast handed its last message to WhatsApp. Some recipients may still be waiting for WhatsApp to answer; read the broadcast for its counts.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "parameters": [
+          {
+            "name": "X-Ricky-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "description": "Delivery ID; equals the body `id`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Timestamp",
+            "in": "header",
+            "required": true,
+            "description": "Unix time of the attempt.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Signature",
+            "in": "header",
+            "required": true,
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Received."
+          }
+        }
+      }
+    },
+    "broadcast.failed": {
+      "post": {
+        "operationId": "webhook_broadcast_failed",
+        "summary": "broadcast.failed",
+        "description": "A broadcast finished and every recipient had failed; read its recipients for the reasons.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "parameters": [
+          {
+            "name": "X-Ricky-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "description": "Delivery ID; equals the body `id`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Timestamp",
+            "in": "header",
+            "required": true,
+            "description": "Unix time of the attempt.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Signature",
+            "in": "header",
+            "required": true,
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Received."
+          }
+        }
+      }
+    },
+    "template.status_changed": {
+      "post": {
+        "operationId": "webhook_template_status_changed",
+        "summary": "template.status_changed",
+        "description": "Meta changed a WhatsApp template's status, for example approved, rejected or paused; read the template for it.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "parameters": [
+          {
+            "name": "X-Ricky-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "description": "Delivery ID; equals the body `id`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Timestamp",
+            "in": "header",
+            "required": true,
+            "description": "Unix time of the attempt.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Signature",
+            "in": "header",
+            "required": true,
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Received."
+          }
+        }
+      }
+    },
+    "workflow.execution_failed": {
+      "post": {
+        "operationId": "webhook_workflow_execution_failed",
+        "summary": "workflow.execution_failed",
+        "description": "A workflow execution failed for good; read the workflow executions for the error.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
+        "parameters": [
+          {
+            "name": "X-Ricky-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "description": "Delivery ID; equals the body `id`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Timestamp",
+            "in": "header",
+            "required": true,
+            "description": "Unix time of the attempt.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Ricky-Signature",
+            "in": "header",
+            "required": true,
+            "description": "`v1=` and the hex HMAC-SHA256; two comma-separated values during a secret rotation.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Received."
+          }
+        }
+      }
+    },
+    "knowledge_file.ready": {
+      "post": {
+        "operationId": "webhook_knowledge_file_ready",
+        "summary": "knowledge_file.ready",
+        "description": "A knowledge file finished uploading and Ricky read it. A file Ricky could not read is ready too, with `extraction_error`.\n\nRicky signs every delivery: `X-Ricky-Signature: v1=<hex>` is the HMAC-SHA256 of `<X-Ricky-Timestamp>.<raw body>` keyed with the webhook `signing_secret`. After a secret rotation the header carries two comma-separated signatures, new first, until the previous secret expires: accept the event if any `v1=` value matches. Ricky sends it within seconds of the event. Answer any 2xx within 10 seconds; Ricky makes up to ten attempts with growing waits and may deliver an event twice, so deduplicate by `id`.",
         "parameters": [
           {
             "name": "X-Ricky-Delivery-Id",
@@ -15692,638 +16151,6 @@
         ],
         "description": "One number of a broadcast and where its message stands."
       },
-      "Webhook": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Webhook ID.",
-            "examples": [
-              "e1f2a3b4-c5d6-4e7f-8a9b-0c1d2e3f4a5b"
-            ]
-          },
-          "url": {
-            "type": "string",
-            "description": "HTTPS endpoint Ricky posts to.",
-            "examples": [
-              "https://example.com/ricky/webhooks"
-            ]
-          },
-          "event_types": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "message.received",
-                "message.sent",
-                "message.delivered",
-                "message.read",
-                "message.failed",
-                "conversation.opened",
-                "conversation.closed",
-                "conversation.assignment_changed",
-                "contact.created",
-                "contact.updated"
-              ]
-            }
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "active",
-              "disabled"
-            ]
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
-            "description": "When it was created.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          },
-          "disabled_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time",
-                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "When it was disabled.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          }
-        },
-        "required": [
-          "id",
-          "url",
-          "event_types",
-          "status",
-          "created_at",
-          "disabled_at"
-        ],
-        "description": "A webhook subscription."
-      },
-      "CreatedWebhook": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Webhook ID.",
-            "examples": [
-              "e1f2a3b4-c5d6-4e7f-8a9b-0c1d2e3f4a5b"
-            ]
-          },
-          "url": {
-            "type": "string",
-            "description": "HTTPS endpoint Ricky posts to.",
-            "examples": [
-              "https://example.com/ricky/webhooks"
-            ]
-          },
-          "event_types": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "message.received",
-                "message.sent",
-                "message.delivered",
-                "message.read",
-                "message.failed",
-                "conversation.opened",
-                "conversation.closed",
-                "conversation.assignment_changed",
-                "contact.created",
-                "contact.updated"
-              ]
-            }
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "active",
-              "disabled"
-            ]
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
-            "description": "When it was created.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          },
-          "disabled_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time",
-                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "When it was disabled.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          },
-          "signing_secret": {
-            "type": "string",
-            "description": "HMAC key for `X-Ricky-Signature`. Returned only here, once.",
-            "examples": [
-              "whsec_7Yb2kQ9…"
-            ]
-          }
-        },
-        "required": [
-          "id",
-          "url",
-          "event_types",
-          "status",
-          "created_at",
-          "disabled_at",
-          "signing_secret"
-        ],
-        "description": "A new webhook subscription with its signing secret."
-      },
-      "WebhookDelivery": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Delivery ID; equals the event `id` and `X-Ricky-Delivery-Id`.",
-            "examples": [
-              "b5c6d7e8-f9a0-4b1c-9d2e-3f4a5b6c7d8e"
-            ]
-          },
-          "event_type": {
-            "type": "string",
-            "enum": [
-              "message.received",
-              "message.sent",
-              "message.delivered",
-              "message.read",
-              "message.failed",
-              "conversation.opened",
-              "conversation.closed",
-              "conversation.assignment_changed",
-              "contact.created",
-              "contact.updated"
-            ]
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "pending",
-              "processing",
-              "delivered",
-              "failed"
-            ]
-          },
-          "attempts": {
-            "type": "integer",
-            "minimum": -9007199254740991,
-            "maximum": 9007199254740991,
-            "description": "Delivery attempts so far; Ricky makes at most ten."
-          },
-          "last_response_status": {
-            "anyOf": [
-              {
-                "type": "integer",
-                "minimum": -9007199254740991,
-                "maximum": 9007199254740991
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "HTTP status of the last attempt.",
-            "examples": [
-              200
-            ]
-          },
-          "last_error": {
-            "description": "Why the last attempt failed.",
-            "examples": [
-              null
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
-            "description": "When the event happened.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          },
-          "next_attempt_at": {
-            "type": "string",
-            "format": "date-time",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
-            "description": "When Ricky tries next, while pending.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          },
-          "delivered_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time",
-                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "When the endpoint answered 2xx.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          }
-        },
-        "required": [
-          "id",
-          "event_type",
-          "status",
-          "attempts",
-          "last_response_status",
-          "last_error",
-          "created_at",
-          "next_attempt_at",
-          "delivered_at"
-        ],
-        "description": "One webhook delivery."
-      },
-      "WebhookEvent": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Delivery ID. Deduplicate by it.",
-            "examples": [
-              "b5c6d7e8-f9a0-4b1c-9d2e-3f4a5b6c7d8e"
-            ]
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "message.received",
-              "message.sent",
-              "message.delivered",
-              "message.read",
-              "message.failed",
-              "conversation.opened",
-              "conversation.closed",
-              "conversation.assignment_changed",
-              "contact.created",
-              "contact.updated",
-              "webhook.test"
-            ]
-          },
-          "occurred_at": {
-            "type": "string",
-            "format": "date-time",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
-            "description": "When it happened.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          },
-          "organization_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Organization.",
-            "examples": [
-              "d9e0f1a2-b3c4-4d5e-8f6a-7b8c9d0e1f2a"
-            ]
-          },
-          "data": {
-            "type": "object",
-            "properties": {
-              "conversation_id": {
-                "type": "string",
-                "format": "uuid",
-                "description": "Conversation, for `message.*` and `conversation.*` events.",
-                "examples": [
-                  "9b2e4c61-7a3f-4d18-b5c2-6e0f1a2b3c4d"
-                ]
-              },
-              "message_id": {
-                "type": "string",
-                "format": "uuid",
-                "description": "Message, for `message.*` events.",
-                "examples": [
-                  "c41d7e2a-5b6f-4a89-8c3d-0e1f2a3b4c5d"
-                ]
-              },
-              "contact_id": {
-                "type": "string",
-                "format": "uuid",
-                "description": "Contact, for `contact.*` events.",
-                "examples": [
-                  "3f6c2b1e-8d4a-4b7e-9a51-2c7d8e9f0a1b"
-                ]
-              },
-              "webhook_id": {
-                "type": "string",
-                "format": "uuid",
-                "description": "Webhook, for `webhook.test`.",
-                "examples": [
-                  "e1f2a3b4-c5d6-4e7f-8a9b-0c1d2e3f4a5b"
-                ]
-              }
-            }
-          }
-        },
-        "required": [
-          "id",
-          "type",
-          "occurred_at",
-          "organization_id",
-          "data"
-        ],
-        "description": "The JSON body Ricky posts to a webhook endpoint."
-      },
-      "WebhookTestResult": {
-        "type": "object",
-        "properties": {
-          "delivered": {
-            "type": "boolean",
-            "description": "True when the endpoint answered 2xx."
-          },
-          "response_status": {
-            "anyOf": [
-              {
-                "type": "integer",
-                "minimum": -9007199254740991,
-                "maximum": 9007199254740991
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "HTTP status the endpoint answered; null if none.",
-            "examples": [
-              200
-            ]
-          },
-          "error": {
-            "description": "Why it failed: the HTTP status, a timeout or a refused destination.",
-            "examples": [
-              null
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "duration_ms": {
-            "type": "integer",
-            "minimum": -9007199254740991,
-            "maximum": 9007199254740991,
-            "description": "Time until the endpoint answered.",
-            "examples": [
-              184
-            ]
-          }
-        },
-        "required": [
-          "delivered",
-          "response_status",
-          "error",
-          "duration_ms"
-        ],
-        "description": "What the endpoint answered to a `webhook.test` event."
-      },
-      "ContactTagChange": {
-        "type": "object",
-        "properties": {
-          "contact_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Contact ID.",
-            "examples": [
-              "3f6c2b1e-8d4a-4b7e-9a51-2c7d8e9f0a1b"
-            ]
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "updated",
-              "not_found",
-              "failed"
-            ],
-            "description": "`updated`; `not_found` when the organization has no such contact; `failed` when Ricky could not save it, so retry that contact."
-          },
-          "tags": {
-            "anyOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Tag"
-                }
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "The contact's tags after the change; null unless `updated`."
-          }
-        },
-        "required": [
-          "contact_id",
-          "status",
-          "tags"
-        ],
-        "description": "What a tag change did to one contact."
-      },
-      "MessageSearchResult": {
-        "type": "object",
-        "properties": {
-          "message_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Message ID.",
-            "examples": [
-              "c41d7e2a-5b6f-4a89-8c3d-0e1f2a3b4c5d"
-            ]
-          },
-          "conversation_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Conversation ID.",
-            "examples": [
-              "9b2e4c61-7a3f-4d18-b5c2-6e0f1a2b3c4d"
-            ]
-          },
-          "direction": {
-            "type": "string",
-            "enum": [
-              "inbound",
-              "outbound"
-            ]
-          },
-          "type": {
-            "type": "string",
-            "description": "Message type: `text`, `image`, `audio`, `template`, …",
-            "examples": [
-              "text"
-            ]
-          },
-          "text": {
-            "type": "string",
-            "description": "The matching text: the message, or what Ricky derived from a voice note or file.",
-            "examples": [
-              "¿Ya están mis lentes?"
-            ]
-          },
-          "contact": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "description": "Contact name, or the name on the channel.",
-                "examples": [
-                  "Ana Pérez"
-                ],
-                "type": [
-                  "string",
-                  "null"
-                ]
-              },
-              "external_id": {
-                "type": "string",
-                "description": "Address on the channel.",
-                "examples": [
-                  "50760001234"
-                ]
-              }
-            },
-            "required": [
-              "name",
-              "external_id"
-            ]
-          },
-          "agent_name": {
-            "description": "AI agent that wrote it; null otherwise.",
-            "examples": [
-              null
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "messaged_at": {
-            "type": "string",
-            "format": "date-time",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
-            "description": "When it was sent or received.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          }
-        },
-        "required": [
-          "message_id",
-          "conversation_id",
-          "direction",
-          "type",
-          "text",
-          "contact",
-          "agent_name",
-          "messaged_at"
-        ],
-        "description": "A message whose text matches the search."
-      },
-      "QuickReply": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Quick reply ID.",
-            "examples": [
-              "0f1e2d3c-4b5a-4968-8776-a5b4c3d2e1f0"
-            ]
-          },
-          "title": {
-            "type": "string",
-            "description": "Name operators pick it by, unique in the organization regardless of case.",
-            "examples": [
-              "Horario"
-            ]
-          },
-          "body": {
-            "type": "string",
-            "description": "Text inserted into the message.",
-            "examples": [
-              "Abrimos de lunes a sábado, de 9:00 a. m. a 6:00 p. m."
-            ]
-          }
-        },
-        "required": [
-          "id",
-          "title",
-          "body"
-        ],
-        "description": "A saved answer operators insert into a message."
-      },
-      "ConversationAssignmentResult": {
-        "type": "object",
-        "properties": {
-          "conversation_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Conversation ID.",
-            "examples": [
-              "9b2e4c61-7a3f-4d18-b5c2-6e0f1a2b3c4d"
-            ]
-          },
-          "assigned_user_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Member it was to be assigned to.",
-            "examples": [
-              "2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b"
-            ]
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "assigned",
-              "not_found",
-              "failed"
-            ],
-            "description": "`assigned`; `not_found` when the organization has no such conversation; `failed` when Ricky could not save it, so retry that conversation."
-          }
-        },
-        "required": [
-          "conversation_id",
-          "assigned_user_id",
-          "status"
-        ],
-        "description": "What a bulk assignment did to one conversation."
-      },
       "KnowledgeLocation": {
         "type": "object",
         "properties": {
@@ -16801,6 +16628,713 @@
           "upload_url"
         ],
         "description": "A file waiting for its bytes, and where to put them."
+      },
+      "Webhook": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Webhook ID.",
+            "examples": [
+              "e1f2a3b4-c5d6-4e7f-8a9b-0c1d2e3f4a5b"
+            ]
+          },
+          "url": {
+            "type": "string",
+            "description": "HTTPS endpoint Ricky posts to.",
+            "examples": [
+              "https://example.com/ricky/webhooks"
+            ]
+          },
+          "event_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "message.received",
+                "message.sent",
+                "message.delivered",
+                "message.read",
+                "message.failed",
+                "conversation.opened",
+                "conversation.closed",
+                "conversation.assignment_changed",
+                "conversation.agent_changed",
+                "conversation.handoff_requested",
+                "conversation.handoff_resolved",
+                "contact.created",
+                "contact.updated",
+                "contact.tags_changed",
+                "broadcast.completed",
+                "broadcast.failed",
+                "template.status_changed",
+                "workflow.execution_failed",
+                "knowledge_file.ready"
+              ]
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "disabled"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When it was created.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          },
+          "disabled_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When it was disabled.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "url",
+          "event_types",
+          "status",
+          "created_at",
+          "disabled_at"
+        ],
+        "description": "A webhook subscription."
+      },
+      "CreatedWebhook": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Webhook ID.",
+            "examples": [
+              "e1f2a3b4-c5d6-4e7f-8a9b-0c1d2e3f4a5b"
+            ]
+          },
+          "url": {
+            "type": "string",
+            "description": "HTTPS endpoint Ricky posts to.",
+            "examples": [
+              "https://example.com/ricky/webhooks"
+            ]
+          },
+          "event_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "message.received",
+                "message.sent",
+                "message.delivered",
+                "message.read",
+                "message.failed",
+                "conversation.opened",
+                "conversation.closed",
+                "conversation.assignment_changed",
+                "conversation.agent_changed",
+                "conversation.handoff_requested",
+                "conversation.handoff_resolved",
+                "contact.created",
+                "contact.updated",
+                "contact.tags_changed",
+                "broadcast.completed",
+                "broadcast.failed",
+                "template.status_changed",
+                "workflow.execution_failed",
+                "knowledge_file.ready"
+              ]
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "disabled"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When it was created.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          },
+          "disabled_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When it was disabled.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          },
+          "signing_secret": {
+            "type": "string",
+            "description": "HMAC key for `X-Ricky-Signature`. Returned only here, once.",
+            "examples": [
+              "whsec_7Yb2kQ9…"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "url",
+          "event_types",
+          "status",
+          "created_at",
+          "disabled_at",
+          "signing_secret"
+        ],
+        "description": "A new webhook subscription with its signing secret."
+      },
+      "WebhookDelivery": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Delivery ID; equals the event `id` and `X-Ricky-Delivery-Id`.",
+            "examples": [
+              "b5c6d7e8-f9a0-4b1c-9d2e-3f4a5b6c7d8e"
+            ]
+          },
+          "event_type": {
+            "type": "string",
+            "enum": [
+              "message.received",
+              "message.sent",
+              "message.delivered",
+              "message.read",
+              "message.failed",
+              "conversation.opened",
+              "conversation.closed",
+              "conversation.assignment_changed",
+              "conversation.agent_changed",
+              "conversation.handoff_requested",
+              "conversation.handoff_resolved",
+              "contact.created",
+              "contact.updated",
+              "contact.tags_changed",
+              "broadcast.completed",
+              "broadcast.failed",
+              "template.status_changed",
+              "workflow.execution_failed",
+              "knowledge_file.ready"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "processing",
+              "delivered",
+              "failed"
+            ]
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "Delivery attempts so far; Ricky makes at most ten."
+          },
+          "last_response_status": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "HTTP status of the last attempt.",
+            "examples": [
+              200
+            ]
+          },
+          "last_error": {
+            "description": "Why the last attempt failed.",
+            "examples": [
+              null
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When the event happened.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          },
+          "next_attempt_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When Ricky tries next, while pending.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          },
+          "delivered_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When the endpoint answered 2xx.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "event_type",
+          "status",
+          "attempts",
+          "last_response_status",
+          "last_error",
+          "created_at",
+          "next_attempt_at",
+          "delivered_at"
+        ],
+        "description": "One webhook delivery."
+      },
+      "WebhookEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Delivery ID. Deduplicate by it.",
+            "examples": [
+              "b5c6d7e8-f9a0-4b1c-9d2e-3f4a5b6c7d8e"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "message.received",
+              "message.sent",
+              "message.delivered",
+              "message.read",
+              "message.failed",
+              "conversation.opened",
+              "conversation.closed",
+              "conversation.assignment_changed",
+              "conversation.agent_changed",
+              "conversation.handoff_requested",
+              "conversation.handoff_resolved",
+              "contact.created",
+              "contact.updated",
+              "contact.tags_changed",
+              "broadcast.completed",
+              "broadcast.failed",
+              "template.status_changed",
+              "workflow.execution_failed",
+              "knowledge_file.ready",
+              "webhook.test"
+            ]
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When it happened.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Organization.",
+            "examples": [
+              "d9e0f1a2-b3c4-4d5e-8f6a-7b8c9d0e1f2a"
+            ]
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "conversation_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Conversation, for `message.*` and `conversation.*` events.",
+                "examples": [
+                  "9b2e4c61-7a3f-4d18-b5c2-6e0f1a2b3c4d"
+                ]
+              },
+              "message_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Message, for `message.*` events.",
+                "examples": [
+                  "c41d7e2a-5b6f-4a89-8c3d-0e1f2a3b4c5d"
+                ]
+              },
+              "contact_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Contact, for `contact.*` events.",
+                "examples": [
+                  "3f6c2b1e-8d4a-4b7e-9a51-2c7d8e9f0a1b"
+                ]
+              },
+              "broadcast_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Broadcast, for `broadcast.*` events.",
+                "examples": [
+                  "0c1d2e3f-4a5b-4c6d-8e7f-9a0b1c2d3e4f"
+                ]
+              },
+              "template_id": {
+                "type": "string",
+                "description": "Template ID at Meta, for `template.status_changed`.",
+                "examples": [
+                  "1234567890123456"
+                ]
+              },
+              "workflow_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Workflow, for `workflow.execution_failed`.",
+                "examples": [
+                  "a3b4c5d6-e7f8-4a9b-8c0d-2e3f4a5b6c7d"
+                ]
+              },
+              "workflow_execution_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Execution, for `workflow.execution_failed`.",
+                "examples": [
+                  "f2a3b4c5-d6e7-4f8a-9b0c-1d2e3f4a5b6c"
+                ]
+              },
+              "knowledge_file_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Knowledge file, for `knowledge_file.ready`.",
+                "examples": [
+                  "f1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c"
+                ]
+              },
+              "webhook_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Webhook, for `webhook.test`.",
+                "examples": [
+                  "e1f2a3b4-c5d6-4e7f-8a9b-0c1d2e3f4a5b"
+                ]
+              }
+            }
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "occurred_at",
+          "organization_id",
+          "data"
+        ],
+        "description": "The JSON body Ricky posts to a webhook endpoint."
+      },
+      "WebhookTestResult": {
+        "type": "object",
+        "properties": {
+          "delivered": {
+            "type": "boolean",
+            "description": "True when the endpoint answered 2xx."
+          },
+          "response_status": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "HTTP status the endpoint answered; null if none.",
+            "examples": [
+              200
+            ]
+          },
+          "error": {
+            "description": "Why it failed: the HTTP status, a timeout or a refused destination.",
+            "examples": [
+              null
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "duration_ms": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "Time until the endpoint answered.",
+            "examples": [
+              184
+            ]
+          }
+        },
+        "required": [
+          "delivered",
+          "response_status",
+          "error",
+          "duration_ms"
+        ],
+        "description": "What the endpoint answered to a `webhook.test` event."
+      },
+      "ContactTagChange": {
+        "type": "object",
+        "properties": {
+          "contact_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Contact ID.",
+            "examples": [
+              "3f6c2b1e-8d4a-4b7e-9a51-2c7d8e9f0a1b"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "updated",
+              "not_found",
+              "failed"
+            ],
+            "description": "`updated`; `not_found` when the organization has no such contact; `failed` when Ricky could not save it, so retry that contact."
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Tag"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The contact's tags after the change; null unless `updated`."
+          }
+        },
+        "required": [
+          "contact_id",
+          "status",
+          "tags"
+        ],
+        "description": "What a tag change did to one contact."
+      },
+      "MessageSearchResult": {
+        "type": "object",
+        "properties": {
+          "message_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Message ID.",
+            "examples": [
+              "c41d7e2a-5b6f-4a89-8c3d-0e1f2a3b4c5d"
+            ]
+          },
+          "conversation_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Conversation ID.",
+            "examples": [
+              "9b2e4c61-7a3f-4d18-b5c2-6e0f1a2b3c4d"
+            ]
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "inbound",
+              "outbound"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "Message type: `text`, `image`, `audio`, `template`, …",
+            "examples": [
+              "text"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "description": "The matching text: the message, or what Ricky derived from a voice note or file.",
+            "examples": [
+              "¿Ya están mis lentes?"
+            ]
+          },
+          "contact": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "Contact name, or the name on the channel.",
+                "examples": [
+                  "Ana Pérez"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "external_id": {
+                "type": "string",
+                "description": "Address on the channel.",
+                "examples": [
+                  "50760001234"
+                ]
+              }
+            },
+            "required": [
+              "name",
+              "external_id"
+            ]
+          },
+          "agent_name": {
+            "description": "AI agent that wrote it; null otherwise.",
+            "examples": [
+              null
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "messaged_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When it was sent or received.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "message_id",
+          "conversation_id",
+          "direction",
+          "type",
+          "text",
+          "contact",
+          "agent_name",
+          "messaged_at"
+        ],
+        "description": "A message whose text matches the search."
+      },
+      "QuickReply": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Quick reply ID.",
+            "examples": [
+              "0f1e2d3c-4b5a-4968-8776-a5b4c3d2e1f0"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "description": "Name operators pick it by, unique in the organization regardless of case.",
+            "examples": [
+              "Horario"
+            ]
+          },
+          "body": {
+            "type": "string",
+            "description": "Text inserted into the message.",
+            "examples": [
+              "Abrimos de lunes a sábado, de 9:00 a. m. a 6:00 p. m."
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "body"
+        ],
+        "description": "A saved answer operators insert into a message."
+      },
+      "ConversationAssignmentResult": {
+        "type": "object",
+        "properties": {
+          "conversation_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Conversation ID.",
+            "examples": [
+              "9b2e4c61-7a3f-4d18-b5c2-6e0f1a2b3c4d"
+            ]
+          },
+          "assigned_user_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Member it was to be assigned to.",
+            "examples": [
+              "2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "assigned",
+              "not_found",
+              "failed"
+            ],
+            "description": "`assigned`; `not_found` when the organization has no such conversation; `failed` when Ricky could not save it, so retry that conversation."
+          }
+        },
+        "required": [
+          "conversation_id",
+          "assigned_user_id",
+          "status"
+        ],
+        "description": "What a bulk assignment did to one conversation."
       },
       "ReportPeriod": {
         "type": "object",
@@ -21876,7 +22410,7 @@
           },
           "event_types": {
             "minItems": 1,
-            "maxItems": 10,
+            "maxItems": 19,
             "type": "array",
             "items": {
               "type": "string",
@@ -21889,8 +22423,17 @@
                 "conversation.opened",
                 "conversation.closed",
                 "conversation.assignment_changed",
+                "conversation.agent_changed",
+                "conversation.handoff_requested",
+                "conversation.handoff_resolved",
                 "contact.created",
-                "contact.updated"
+                "contact.updated",
+                "contact.tags_changed",
+                "broadcast.completed",
+                "broadcast.failed",
+                "template.status_changed",
+                "workflow.execution_failed",
+                "knowledge_file.ready"
               ]
             }
           }
