@@ -8,6 +8,15 @@ Esta página registra los cambios de la API. Un cambio incompatible solo llega e
 
 ## 19 de octubre de 2026
 
+**Inbox.** Cambios compatibles con la v1.
+
+* **Filtros del inbox.** `GET /conversations` acepta `channel_id`, `tag_id`, `unread`, `pending_handoff`, `last_message_from`, `agent_id` y `unassigned`. Cada conversación trae `unread` y `active_handoff`. Consulta [Inbox](./inbox.md).
+* **Asignar en lote.** `POST /conversations/assignments` asigna hasta 100 conversaciones y responde un resultado por conversación.
+* **Traspasos.** `POST /conversations/{conversation_id}/handoff/resolve` devuelve la conversación al agente de IA o la deja con el miembro.
+* **No leída.** `DELETE /conversations/{conversation_id}/read` marca una conversación como no leída.
+* **Citar un mensaje.** `POST /conversations/{conversation_id}/messages` acepta `reply_to_message_id` en texto y archivos de WhatsApp.
+* **Archivos recibidos.** `POST /conversations/{conversation_id}/messages/{message_id}/media` guarda en ese momento el archivo de un mensaje recibido y responde con su `url`.
+
 **Campañas.** Cambios compatibles con la v1.
 
 * **Campañas.** `GET /broadcasts`, `POST /broadcasts` y `GET /broadcasts/{broadcast_id}` listan, crean y consultan campañas de WhatsApp con cuántos destinatarios hay en cada estado de entrega. Una campaña se envía ahora o en `scheduled_at`, hasta 7 días después, a un filtro de contactos, a contactos elegidos o a números. Consulta [Campañas](./broadcasts.md).

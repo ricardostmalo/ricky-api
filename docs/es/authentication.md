@@ -168,6 +168,10 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Consultar una campaña](https://getricky.ai/docs/api/reference/broadcasts/get-broadcast) | `GET /broadcasts/{broadcast_id}` | `broadcasts:read` |
 | [Cancelar una campaña programada](https://getricky.ai/docs/api/reference/broadcasts/cancel-broadcast) | `POST /broadcasts/{broadcast_id}/cancel` | `broadcasts:write` |
 | [Listar destinatarios de una campaña](https://getricky.ai/docs/api/reference/broadcasts/list-broadcast-recipients) | `GET /broadcasts/{broadcast_id}/recipients` | `broadcasts:read` |
+| [Asignar muchas conversaciones](https://getricky.ai/docs/api/reference/conversations/assign-conversations) | `POST /conversations/assignments` | `conversations:write` |
+| [Resolver un traspaso](https://getricky.ai/docs/api/reference/conversations/resolve-conversation-handoff) | `POST /conversations/{conversation_id}/handoff/resolve` | `conversations:write` |
+| [Marcar una conversación como no leída](https://getricky.ai/docs/api/reference/conversations/mark-conversation-unread) | `DELETE /conversations/{conversation_id}/read` | `conversations:write` |
+| [Obtener el archivo de un mensaje](https://getricky.ai/docs/api/reference/messages/fetch-message-media) | `POST /conversations/{conversation_id}/messages/{message_id}/media` | `conversations:read` |
 
 ## Respuestas de autenticación
 

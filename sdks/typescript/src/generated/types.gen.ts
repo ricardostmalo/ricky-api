@@ -4,7 +4,7 @@ export type ClientOptions = {
     baseUrl: 'https://getricky.ai/api/v1' | (string & {});
 };
 
-export type Webhooks = WebhookMessageReceivedWebhookRequest | WebhookMessageSentWebhookRequest | WebhookMessageDeliveredWebhookRequest | WebhookMessageReadWebhookRequest | WebhookMessageFailedWebhookRequest | WebhookConversationOpenedWebhookRequest | WebhookConversationClosedWebhookRequest | WebhookConversationAssignmentChangedWebhookRequest | WebhookContactCreatedWebhookRequest | WebhookContactUpdatedWebhookRequest | WebhookWebhookTestWebhookRequest;
+export type Webhooks = WebhookMessageReceivedWebhookRequest | WebhookMessageSentWebhookRequest | WebhookMessageDeliveredWebhookRequest | WebhookMessageReadWebhookRequest | WebhookMessageFailedWebhookRequest | WebhookConversationOpenedWebhookRequest | WebhookConversationClosedWebhookRequest | WebhookConversationAssignmentChangedWebhookRequest | WebhookConversationAgentChangedWebhookRequest | WebhookConversationHandoffRequestedWebhookRequest | WebhookConversationHandoffResolvedWebhookRequest | WebhookContactCreatedWebhookRequest | WebhookContactUpdatedWebhookRequest | WebhookContactTagsChangedWebhookRequest | WebhookBroadcastCompletedWebhookRequest | WebhookBroadcastFailedWebhookRequest | WebhookTemplateStatusChangedWebhookRequest | WebhookWorkflowExecutionFailedWebhookRequest | WebhookKnowledgeFileReadyWebhookRequest | WebhookWebhookTestWebhookRequest;
 
 /**
  * Every non-2xx response.
@@ -755,248 +755,6 @@ export type BroadcastRecipient = {
 };
 
 /**
- * A webhook subscription.
- */
-export type Webhook = {
-    /**
-     * Webhook ID.
-     */
-    id: string;
-    /**
-     * HTTPS endpoint Ricky posts to.
-     */
-    url: string;
-    event_types: Array<'message.received' | 'message.sent' | 'message.delivered' | 'message.read' | 'message.failed' | 'conversation.opened' | 'conversation.closed' | 'conversation.assignment_changed' | 'contact.created' | 'contact.updated'>;
-    status: 'active' | 'disabled';
-    /**
-     * When it was created.
-     */
-    created_at: string;
-    /**
-     * When it was disabled.
-     */
-    disabled_at: string | null;
-};
-
-/**
- * A new webhook subscription with its signing secret.
- */
-export type CreatedWebhook = {
-    /**
-     * Webhook ID.
-     */
-    id: string;
-    /**
-     * HTTPS endpoint Ricky posts to.
-     */
-    url: string;
-    event_types: Array<'message.received' | 'message.sent' | 'message.delivered' | 'message.read' | 'message.failed' | 'conversation.opened' | 'conversation.closed' | 'conversation.assignment_changed' | 'contact.created' | 'contact.updated'>;
-    status: 'active' | 'disabled';
-    /**
-     * When it was created.
-     */
-    created_at: string;
-    /**
-     * When it was disabled.
-     */
-    disabled_at: string | null;
-    /**
-     * HMAC key for `X-Ricky-Signature`. Returned only here, once.
-     */
-    signing_secret: string;
-};
-
-/**
- * One webhook delivery.
- */
-export type WebhookDelivery = {
-    /**
-     * Delivery ID; equals the event `id` and `X-Ricky-Delivery-Id`.
-     */
-    id: string;
-    event_type: 'message.received' | 'message.sent' | 'message.delivered' | 'message.read' | 'message.failed' | 'conversation.opened' | 'conversation.closed' | 'conversation.assignment_changed' | 'contact.created' | 'contact.updated';
-    status: 'pending' | 'processing' | 'delivered' | 'failed';
-    /**
-     * Delivery attempts so far; Ricky makes at most ten.
-     */
-    attempts: number;
-    /**
-     * HTTP status of the last attempt.
-     */
-    last_response_status: number | null;
-    /**
-     * Why the last attempt failed.
-     */
-    last_error: string | null;
-    /**
-     * When the event happened.
-     */
-    created_at: string;
-    /**
-     * When Ricky tries next, while pending.
-     */
-    next_attempt_at: string;
-    /**
-     * When the endpoint answered 2xx.
-     */
-    delivered_at: string | null;
-};
-
-/**
- * The JSON body Ricky posts to a webhook endpoint.
- */
-export type WebhookEvent = {
-    /**
-     * Delivery ID. Deduplicate by it.
-     */
-    id: string;
-    type: 'message.received' | 'message.sent' | 'message.delivered' | 'message.read' | 'message.failed' | 'conversation.opened' | 'conversation.closed' | 'conversation.assignment_changed' | 'contact.created' | 'contact.updated' | 'webhook.test';
-    /**
-     * When it happened.
-     */
-    occurred_at: string;
-    /**
-     * Organization.
-     */
-    organization_id: string;
-    data: {
-        /**
-         * Conversation, for `message.*` and `conversation.*` events.
-         */
-        conversation_id?: string;
-        /**
-         * Message, for `message.*` events.
-         */
-        message_id?: string;
-        /**
-         * Contact, for `contact.*` events.
-         */
-        contact_id?: string;
-        /**
-         * Webhook, for `webhook.test`.
-         */
-        webhook_id?: string;
-    };
-};
-
-/**
- * What the endpoint answered to a `webhook.test` event.
- */
-export type WebhookTestResult = {
-    /**
-     * True when the endpoint answered 2xx.
-     */
-    delivered: boolean;
-    /**
-     * HTTP status the endpoint answered; null if none.
-     */
-    response_status: number | null;
-    /**
-     * Why it failed: the HTTP status, a timeout or a refused destination.
-     */
-    error: string | null;
-    /**
-     * Time until the endpoint answered.
-     */
-    duration_ms: number;
-};
-
-/**
- * What a tag change did to one contact.
- */
-export type ContactTagChange = {
-    /**
-     * Contact ID.
-     */
-    contact_id: string;
-    /**
-     * `updated`; `not_found` when the organization has no such contact; `failed` when Ricky could not save it, so retry that contact.
-     */
-    status: 'updated' | 'not_found' | 'failed';
-    /**
-     * The contact's tags after the change; null unless `updated`.
-     */
-    tags: Array<Tag> | null;
-};
-
-/**
- * A message whose text matches the search.
- */
-export type MessageSearchResult = {
-    /**
-     * Message ID.
-     */
-    message_id: string;
-    /**
-     * Conversation ID.
-     */
-    conversation_id: string;
-    direction: 'inbound' | 'outbound';
-    /**
-     * Message type: `text`, `image`, `audio`, `template`, …
-     */
-    type: string;
-    /**
-     * The matching text: the message, or what Ricky derived from a voice note or file.
-     */
-    text: string;
-    contact: {
-        /**
-         * Contact name, or the name on the channel.
-         */
-        name: string | null;
-        /**
-         * Address on the channel.
-         */
-        external_id: string;
-    };
-    /**
-     * AI agent that wrote it; null otherwise.
-     */
-    agent_name: string | null;
-    /**
-     * When it was sent or received.
-     */
-    messaged_at: string;
-};
-
-/**
- * A saved answer operators insert into a message.
- */
-export type QuickReply = {
-    /**
-     * Quick reply ID.
-     */
-    id: string;
-    /**
-     * Name operators pick it by, unique in the organization regardless of case.
-     */
-    title: string;
-    /**
-     * Text inserted into the message.
-     */
-    body: string;
-};
-
-/**
- * What a bulk assignment did to one conversation.
- */
-export type ConversationAssignmentResult = {
-    /**
-     * Conversation ID.
-     */
-    conversation_id: string;
-    /**
-     * Member it was to be assigned to.
-     */
-    assigned_user_id: string;
-    /**
-     * `assigned`; `not_found` when the organization has no such conversation; `failed` when Ricky could not save it, so retry that conversation.
-     */
-    status: 'assigned' | 'not_found' | 'failed';
-};
-
-/**
  * A branch or place the agents can send as a WhatsApp location.
  */
 export type KnowledgeLocation = {
@@ -1195,6 +953,268 @@ export type KnowledgeFileUpload = {
      * Signed URL valid for two hours. `PUT` the file bytes to it with `Content-Type` set to `mime_type`, then call `POST /knowledge/files/{file_id}/complete`.
      */
     upload_url: string;
+};
+
+/**
+ * A webhook subscription.
+ */
+export type Webhook = {
+    /**
+     * Webhook ID.
+     */
+    id: string;
+    /**
+     * HTTPS endpoint Ricky posts to.
+     */
+    url: string;
+    event_types: Array<'message.received' | 'message.sent' | 'message.delivered' | 'message.read' | 'message.failed' | 'conversation.opened' | 'conversation.closed' | 'conversation.assignment_changed' | 'conversation.agent_changed' | 'conversation.handoff_requested' | 'conversation.handoff_resolved' | 'contact.created' | 'contact.updated' | 'contact.tags_changed' | 'broadcast.completed' | 'broadcast.failed' | 'template.status_changed' | 'workflow.execution_failed' | 'knowledge_file.ready'>;
+    status: 'active' | 'disabled';
+    /**
+     * When it was created.
+     */
+    created_at: string;
+    /**
+     * When it was disabled.
+     */
+    disabled_at: string | null;
+};
+
+/**
+ * A new webhook subscription with its signing secret.
+ */
+export type CreatedWebhook = {
+    /**
+     * Webhook ID.
+     */
+    id: string;
+    /**
+     * HTTPS endpoint Ricky posts to.
+     */
+    url: string;
+    event_types: Array<'message.received' | 'message.sent' | 'message.delivered' | 'message.read' | 'message.failed' | 'conversation.opened' | 'conversation.closed' | 'conversation.assignment_changed' | 'conversation.agent_changed' | 'conversation.handoff_requested' | 'conversation.handoff_resolved' | 'contact.created' | 'contact.updated' | 'contact.tags_changed' | 'broadcast.completed' | 'broadcast.failed' | 'template.status_changed' | 'workflow.execution_failed' | 'knowledge_file.ready'>;
+    status: 'active' | 'disabled';
+    /**
+     * When it was created.
+     */
+    created_at: string;
+    /**
+     * When it was disabled.
+     */
+    disabled_at: string | null;
+    /**
+     * HMAC key for `X-Ricky-Signature`. Returned only here, once.
+     */
+    signing_secret: string;
+};
+
+/**
+ * One webhook delivery.
+ */
+export type WebhookDelivery = {
+    /**
+     * Delivery ID; equals the event `id` and `X-Ricky-Delivery-Id`.
+     */
+    id: string;
+    event_type: 'message.received' | 'message.sent' | 'message.delivered' | 'message.read' | 'message.failed' | 'conversation.opened' | 'conversation.closed' | 'conversation.assignment_changed' | 'conversation.agent_changed' | 'conversation.handoff_requested' | 'conversation.handoff_resolved' | 'contact.created' | 'contact.updated' | 'contact.tags_changed' | 'broadcast.completed' | 'broadcast.failed' | 'template.status_changed' | 'workflow.execution_failed' | 'knowledge_file.ready';
+    status: 'pending' | 'processing' | 'delivered' | 'failed';
+    /**
+     * Delivery attempts so far; Ricky makes at most ten.
+     */
+    attempts: number;
+    /**
+     * HTTP status of the last attempt.
+     */
+    last_response_status: number | null;
+    /**
+     * Why the last attempt failed.
+     */
+    last_error: string | null;
+    /**
+     * When the event happened.
+     */
+    created_at: string;
+    /**
+     * When Ricky tries next, while pending.
+     */
+    next_attempt_at: string;
+    /**
+     * When the endpoint answered 2xx.
+     */
+    delivered_at: string | null;
+};
+
+/**
+ * The JSON body Ricky posts to a webhook endpoint.
+ */
+export type WebhookEvent = {
+    /**
+     * Delivery ID. Deduplicate by it.
+     */
+    id: string;
+    type: 'message.received' | 'message.sent' | 'message.delivered' | 'message.read' | 'message.failed' | 'conversation.opened' | 'conversation.closed' | 'conversation.assignment_changed' | 'conversation.agent_changed' | 'conversation.handoff_requested' | 'conversation.handoff_resolved' | 'contact.created' | 'contact.updated' | 'contact.tags_changed' | 'broadcast.completed' | 'broadcast.failed' | 'template.status_changed' | 'workflow.execution_failed' | 'knowledge_file.ready' | 'webhook.test';
+    /**
+     * When it happened.
+     */
+    occurred_at: string;
+    /**
+     * Organization.
+     */
+    organization_id: string;
+    data: {
+        /**
+         * Conversation, for `message.*` and `conversation.*` events.
+         */
+        conversation_id?: string;
+        /**
+         * Message, for `message.*` events.
+         */
+        message_id?: string;
+        /**
+         * Contact, for `contact.*` events.
+         */
+        contact_id?: string;
+        /**
+         * Broadcast, for `broadcast.*` events.
+         */
+        broadcast_id?: string;
+        /**
+         * Template ID at Meta, for `template.status_changed`.
+         */
+        template_id?: string;
+        /**
+         * Workflow, for `workflow.execution_failed`.
+         */
+        workflow_id?: string;
+        /**
+         * Execution, for `workflow.execution_failed`.
+         */
+        workflow_execution_id?: string;
+        /**
+         * Knowledge file, for `knowledge_file.ready`.
+         */
+        knowledge_file_id?: string;
+        /**
+         * Webhook, for `webhook.test`.
+         */
+        webhook_id?: string;
+    };
+};
+
+/**
+ * What the endpoint answered to a `webhook.test` event.
+ */
+export type WebhookTestResult = {
+    /**
+     * True when the endpoint answered 2xx.
+     */
+    delivered: boolean;
+    /**
+     * HTTP status the endpoint answered; null if none.
+     */
+    response_status: number | null;
+    /**
+     * Why it failed: the HTTP status, a timeout or a refused destination.
+     */
+    error: string | null;
+    /**
+     * Time until the endpoint answered.
+     */
+    duration_ms: number;
+};
+
+/**
+ * What a tag change did to one contact.
+ */
+export type ContactTagChange = {
+    /**
+     * Contact ID.
+     */
+    contact_id: string;
+    /**
+     * `updated`; `not_found` when the organization has no such contact; `failed` when Ricky could not save it, so retry that contact.
+     */
+    status: 'updated' | 'not_found' | 'failed';
+    /**
+     * The contact's tags after the change; null unless `updated`.
+     */
+    tags: Array<Tag> | null;
+};
+
+/**
+ * A message whose text matches the search.
+ */
+export type MessageSearchResult = {
+    /**
+     * Message ID.
+     */
+    message_id: string;
+    /**
+     * Conversation ID.
+     */
+    conversation_id: string;
+    direction: 'inbound' | 'outbound';
+    /**
+     * Message type: `text`, `image`, `audio`, `template`, …
+     */
+    type: string;
+    /**
+     * The matching text: the message, or what Ricky derived from a voice note or file.
+     */
+    text: string;
+    contact: {
+        /**
+         * Contact name, or the name on the channel.
+         */
+        name: string | null;
+        /**
+         * Address on the channel.
+         */
+        external_id: string;
+    };
+    /**
+     * AI agent that wrote it; null otherwise.
+     */
+    agent_name: string | null;
+    /**
+     * When it was sent or received.
+     */
+    messaged_at: string;
+};
+
+/**
+ * A saved answer operators insert into a message.
+ */
+export type QuickReply = {
+    /**
+     * Quick reply ID.
+     */
+    id: string;
+    /**
+     * Name operators pick it by, unique in the organization regardless of case.
+     */
+    title: string;
+    /**
+     * Text inserted into the message.
+     */
+    body: string;
+};
+
+/**
+ * What a bulk assignment did to one conversation.
+ */
+export type ConversationAssignmentResult = {
+    /**
+     * Conversation ID.
+     */
+    conversation_id: string;
+    /**
+     * Member it was to be assigned to.
+     */
+    assigned_user_id: string;
+    /**
+     * `assigned`; `not_found` when the organization has no such conversation; `failed` when Ricky could not save it, so retry that conversation.
+     */
+    status: 'assigned' | 'not_found' | 'failed';
 };
 
 /**
@@ -3174,7 +3194,7 @@ export type CreateWebhook = {
      * Public HTTPS endpoint.
      */
     url: string;
-    event_types: Array<'message.received' | 'message.sent' | 'message.delivered' | 'message.read' | 'message.failed' | 'conversation.opened' | 'conversation.closed' | 'conversation.assignment_changed' | 'contact.created' | 'contact.updated'>;
+    event_types: Array<'message.received' | 'message.sent' | 'message.delivered' | 'message.read' | 'message.failed' | 'conversation.opened' | 'conversation.closed' | 'conversation.assignment_changed' | 'conversation.agent_changed' | 'conversation.handoff_requested' | 'conversation.handoff_resolved' | 'contact.created' | 'contact.updated' | 'contact.tags_changed' | 'broadcast.completed' | 'broadcast.failed' | 'template.status_changed' | 'workflow.execution_failed' | 'knowledge_file.ready'>;
 };
 
 export type RotateWebhookSecret = {
@@ -10244,6 +10264,33 @@ export type WebhookConversationAssignmentChangedWebhookRequest = {
     query?: never;
 };
 
+export type WebhookConversationAgentChangedWebhookPayload = WebhookEvent;
+
+export type WebhookConversationAgentChangedWebhookRequest = {
+    body: WebhookConversationAgentChangedWebhookPayload;
+    key: 'conversation.agent_changed';
+    path?: never;
+    query?: never;
+};
+
+export type WebhookConversationHandoffRequestedWebhookPayload = WebhookEvent;
+
+export type WebhookConversationHandoffRequestedWebhookRequest = {
+    body: WebhookConversationHandoffRequestedWebhookPayload;
+    key: 'conversation.handoff_requested';
+    path?: never;
+    query?: never;
+};
+
+export type WebhookConversationHandoffResolvedWebhookPayload = WebhookEvent;
+
+export type WebhookConversationHandoffResolvedWebhookRequest = {
+    body: WebhookConversationHandoffResolvedWebhookPayload;
+    key: 'conversation.handoff_resolved';
+    path?: never;
+    query?: never;
+};
+
 export type WebhookContactCreatedWebhookPayload = WebhookEvent;
 
 export type WebhookContactCreatedWebhookRequest = {
@@ -10258,6 +10305,60 @@ export type WebhookContactUpdatedWebhookPayload = WebhookEvent;
 export type WebhookContactUpdatedWebhookRequest = {
     body: WebhookContactUpdatedWebhookPayload;
     key: 'contact.updated';
+    path?: never;
+    query?: never;
+};
+
+export type WebhookContactTagsChangedWebhookPayload = WebhookEvent;
+
+export type WebhookContactTagsChangedWebhookRequest = {
+    body: WebhookContactTagsChangedWebhookPayload;
+    key: 'contact.tags_changed';
+    path?: never;
+    query?: never;
+};
+
+export type WebhookBroadcastCompletedWebhookPayload = WebhookEvent;
+
+export type WebhookBroadcastCompletedWebhookRequest = {
+    body: WebhookBroadcastCompletedWebhookPayload;
+    key: 'broadcast.completed';
+    path?: never;
+    query?: never;
+};
+
+export type WebhookBroadcastFailedWebhookPayload = WebhookEvent;
+
+export type WebhookBroadcastFailedWebhookRequest = {
+    body: WebhookBroadcastFailedWebhookPayload;
+    key: 'broadcast.failed';
+    path?: never;
+    query?: never;
+};
+
+export type WebhookTemplateStatusChangedWebhookPayload = WebhookEvent;
+
+export type WebhookTemplateStatusChangedWebhookRequest = {
+    body: WebhookTemplateStatusChangedWebhookPayload;
+    key: 'template.status_changed';
+    path?: never;
+    query?: never;
+};
+
+export type WebhookWorkflowExecutionFailedWebhookPayload = WebhookEvent;
+
+export type WebhookWorkflowExecutionFailedWebhookRequest = {
+    body: WebhookWorkflowExecutionFailedWebhookPayload;
+    key: 'workflow.execution_failed';
+    path?: never;
+    query?: never;
+};
+
+export type WebhookKnowledgeFileReadyWebhookPayload = WebhookEvent;
+
+export type WebhookKnowledgeFileReadyWebhookRequest = {
+    body: WebhookKnowledgeFileReadyWebhookPayload;
+    key: 'knowledge_file.ready';
     path?: never;
     query?: never;
 };

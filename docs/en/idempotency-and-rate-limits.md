@@ -48,6 +48,9 @@ We recommend sending it with every message send. These operations accept it:
 | [Delete a template](https://getricky.ai/en/docs/api/reference/whats-app/delete-template) | `DELETE /templates/{template_id}` | `templates:write` |
 | [Create a broadcast](https://getricky.ai/en/docs/api/reference/broadcasts/create-broadcast) | `POST /broadcasts` | `broadcasts:write` |
 | [Cancel a scheduled broadcast](https://getricky.ai/en/docs/api/reference/broadcasts/cancel-broadcast) | `POST /broadcasts/{broadcast_id}/cancel` | `broadcasts:write` |
+| [Assign many conversations](https://getricky.ai/en/docs/api/reference/conversations/assign-conversations) | `POST /conversations/assignments` | `conversations:write` |
+| [Resolve a handoff](https://getricky.ai/en/docs/api/reference/conversations/resolve-conversation-handoff) | `POST /conversations/{conversation_id}/handoff/resolve` | `conversations:write` |
+| [Mark a conversation unread](https://getricky.ai/en/docs/api/reference/conversations/mark-conversation-unread) | `DELETE /conversations/{conversation_id}/read` | `conversations:write` |
 
 Creating or disabling a webhook and retrying a delivery do not use this header.
 

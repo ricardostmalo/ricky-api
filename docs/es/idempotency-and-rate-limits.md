@@ -48,6 +48,9 @@ Recomendamos enviarla en todo envío de mensajes. Estas operaciones la aceptan:
 | [Eliminar una plantilla](https://getricky.ai/docs/api/reference/whats-app/delete-template) | `DELETE /templates/{template_id}` | `templates:write` |
 | [Crear una campaña](https://getricky.ai/docs/api/reference/broadcasts/create-broadcast) | `POST /broadcasts` | `broadcasts:write` |
 | [Cancelar una campaña programada](https://getricky.ai/docs/api/reference/broadcasts/cancel-broadcast) | `POST /broadcasts/{broadcast_id}/cancel` | `broadcasts:write` |
+| [Asignar muchas conversaciones](https://getricky.ai/docs/api/reference/conversations/assign-conversations) | `POST /conversations/assignments` | `conversations:write` |
+| [Resolver un traspaso](https://getricky.ai/docs/api/reference/conversations/resolve-conversation-handoff) | `POST /conversations/{conversation_id}/handoff/resolve` | `conversations:write` |
+| [Marcar una conversación como no leída](https://getricky.ai/docs/api/reference/conversations/mark-conversation-unread) | `DELETE /conversations/{conversation_id}/read` | `conversations:write` |
 
 Crear o desactivar un webhook y reintentar una entrega no usan esta cabecera.
 

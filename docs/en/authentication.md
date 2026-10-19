@@ -168,6 +168,10 @@ The table below is generated from the API contract: it is the exact list of oper
 | [Get a broadcast](https://getricky.ai/en/docs/api/reference/broadcasts/get-broadcast) | `GET /broadcasts/{broadcast_id}` | `broadcasts:read` |
 | [Cancel a scheduled broadcast](https://getricky.ai/en/docs/api/reference/broadcasts/cancel-broadcast) | `POST /broadcasts/{broadcast_id}/cancel` | `broadcasts:write` |
 | [List broadcast recipients](https://getricky.ai/en/docs/api/reference/broadcasts/list-broadcast-recipients) | `GET /broadcasts/{broadcast_id}/recipients` | `broadcasts:read` |
+| [Assign many conversations](https://getricky.ai/en/docs/api/reference/conversations/assign-conversations) | `POST /conversations/assignments` | `conversations:write` |
+| [Resolve a handoff](https://getricky.ai/en/docs/api/reference/conversations/resolve-conversation-handoff) | `POST /conversations/{conversation_id}/handoff/resolve` | `conversations:write` |
+| [Mark a conversation unread](https://getricky.ai/en/docs/api/reference/conversations/mark-conversation-unread) | `DELETE /conversations/{conversation_id}/read` | `conversations:write` |
+| [Fetch a message's file](https://getricky.ai/en/docs/api/reference/messages/fetch-message-media) | `POST /conversations/{conversation_id}/messages/{message_id}/media` | `conversations:read` |
 
 ## Authentication responses
 
