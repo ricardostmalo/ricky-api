@@ -6,12 +6,6 @@ This page records changes to the API. A breaking change only ships in a new path
 
 ## October 19, 2026
 
-**Broadcasts.** Compatible changes to v1.
-
-- **Broadcasts.** `GET /broadcasts`, `POST /broadcasts` and `GET /broadcasts/{broadcast_id}` list, create and read WhatsApp broadcasts with how many recipients are in each delivery status. A broadcast sends now or at `scheduled_at`, up to 7 days ahead, to a contact filter, chosen contacts or phone numbers. See [Broadcasts](https://getricky.ai/en/docs/api/broadcasts).
-- **Cancel and follow.** `POST /broadcasts/{broadcast_id}/cancel` cancels a scheduled broadcast before it starts. `GET /broadcasts/{broadcast_id}/recipients` lists each number and where its message stands.
-- **New scopes.** `broadcasts:read` and `broadcasts:write`.
-
 **Workflows.** Compatible changes to v1.
 
 - **Manage workflows.** `GET /workflows`, `POST /workflows`, `GET`, `PATCH` and `DELETE /workflows/{workflow_id}`, `POST /workflows/{workflow_id}/activate` and `POST /workflows/{workflow_id}/pause`. Ricky checks each definition with the rules of the workflow editor. See [Workflows](https://getricky.ai/en/docs/api/workflows).
