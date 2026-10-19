@@ -2532,11 +2532,11 @@ class WhatsAppNumber(TypedDict):
     """
     quality_rating: Optional[str]
     """
-    Quality rating at Meta: `GREEN`, `YELLOW`, `RED` or `UNKNOWN`.
+    Quality rating at Meta: `green`, `yellow`, `red`, `not_yet_determined` or `unknown`.
     """
     messaging_limit: Optional[str]
     """
-    Messaging limit tier at Meta, for example `TIER_1K` or `TIER_UNLIMITED`.
+    Messaging limit tier at Meta, for example `TIER_1K` or `TIER_UNLIMITED`; `UNKNOWN` when Meta has not reported it.
     """
     inbound_processing_enabled: Optional[bool]
     """

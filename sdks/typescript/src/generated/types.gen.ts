@@ -2313,11 +2313,11 @@ export type WhatsAppNumber = {
      */
     messaging_health: 'available' | 'limited' | 'blocked';
     /**
-     * Quality rating at Meta: `GREEN`, `YELLOW`, `RED` or `UNKNOWN`.
+     * Quality rating at Meta: `green`, `yellow`, `red`, `not_yet_determined` or `unknown`.
      */
     quality_rating: string | null;
     /**
-     * Messaging limit tier at Meta, for example `TIER_1K` or `TIER_UNLIMITED`.
+     * Messaging limit tier at Meta, for example `TIER_1K` or `TIER_UNLIMITED`; `UNKNOWN` when Meta has not reported it.
      */
     messaging_limit: string | null;
     /**

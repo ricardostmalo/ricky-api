@@ -18639,9 +18639,9 @@
             "description": "Whether Meta lets the number send: `available`, `limited` or `blocked`."
           },
           "quality_rating": {
-            "description": "Quality rating at Meta: `GREEN`, `YELLOW`, `RED` or `UNKNOWN`.",
+            "description": "Quality rating at Meta: `green`, `yellow`, `red`, `not_yet_determined` or `unknown`.",
             "examples": [
-              "GREEN"
+              "green"
             ],
             "type": [
               "string",
@@ -18649,7 +18649,7 @@
             ]
           },
           "messaging_limit": {
-            "description": "Messaging limit tier at Meta, for example `TIER_1K` or `TIER_UNLIMITED`.",
+            "description": "Messaging limit tier at Meta, for example `TIER_1K` or `TIER_UNLIMITED`; `UNKNOWN` when Meta has not reported it.",
             "examples": [
               "TIER_1K"
             ],
