@@ -46,6 +46,8 @@ Recomendamos enviarla en todo envío de mensajes. Estas operaciones la aceptan:
 | [Crear una plantilla](https://getricky.ai/docs/api/reference/whats-app/create-template) | `POST /templates` | `templates:write` |
 | [Editar una plantilla](https://getricky.ai/docs/api/reference/whats-app/update-template) | `PATCH /templates/{template_id}` | `templates:write` |
 | [Eliminar una plantilla](https://getricky.ai/docs/api/reference/whats-app/delete-template) | `DELETE /templates/{template_id}` | `templates:write` |
+| [Crear una campaña](https://getricky.ai/docs/api/reference/broadcasts/create-broadcast) | `POST /broadcasts` | `broadcasts:write` |
+| [Cancelar una campaña programada](https://getricky.ai/docs/api/reference/broadcasts/cancel-broadcast) | `POST /broadcasts/{broadcast_id}/cancel` | `broadcasts:write` |
 
 Crear o desactivar un webhook y reintentar una entrega no usan esta cabecera.
 

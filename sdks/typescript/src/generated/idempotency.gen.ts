@@ -19,6 +19,8 @@ export const idempotentOperations: ReadonlySet<string> = new Set([
     'PATCH /templates/{template_id}',
     'PATCH /workflows/{workflow_id}',
     'POST /agents',
+    'POST /broadcasts',
+    'POST /broadcasts/{broadcast_id}/cancel',
     'POST /contact-fields',
     'POST /contacts',
     'POST /contacts/tags',

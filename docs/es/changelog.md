@@ -8,6 +8,12 @@ Esta página registra los cambios de la API. Un cambio incompatible solo llega e
 
 ## 19 de octubre de 2026
 
+**Campañas.** Cambios compatibles con la v1.
+
+* **Campañas.** `GET /broadcasts`, `POST /broadcasts` y `GET /broadcasts/{broadcast_id}` listan, crean y consultan campañas de WhatsApp con cuántos destinatarios hay en cada estado de entrega. Una campaña se envía ahora o en `scheduled_at`, hasta 7 días después, a un filtro de contactos, a contactos elegidos o a números. Consulta [Campañas](./broadcasts.md).
+* **Cancelar y seguir.** `POST /broadcasts/{broadcast_id}/cancel` cancela una campaña programada antes de que empiece. `GET /broadcasts/{broadcast_id}/recipients` lista cada número y el estado de su mensaje.
+* **Permisos nuevos.** `broadcasts:read` y `broadcasts:write`.
+
 **Workflows.** Cambios compatibles con la v1.
 
 * **Gestionar workflows.** `GET /workflows`, `POST /workflows`, `GET`, `PATCH` y `DELETE /workflows/{workflow_id}`, `POST /workflows/{workflow_id}/activate` y `POST /workflows/{workflow_id}/pause`. Ricky revisa cada definición con las reglas del editor de workflows. Consulta [Workflows](./workflows.md).

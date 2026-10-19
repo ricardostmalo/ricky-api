@@ -68,6 +68,8 @@ Cada operación exige un permiso (scope). Una clave sin ese permiso recibe `403 
 | `tags:write`          | Crear, editar y borrar etiquetas.                                                                           |
 | `quick_replies:read`  | Leer respuestas rápidas.                                                                                    |
 | `quick_replies:write` | Crear, actualizar y borrar respuestas rápidas.                                                              |
+| `broadcasts:read`     | Leer campañas, sus conteos y el estado de entrega de cada destinatario.                                     |
+| `broadcasts:write`    | Crear, programar y cancelar campañas.                                                                       |
 
 La tabla siguiente sale del contrato de la API: es la lista exacta de operaciones y el permiso de cada una.
 
@@ -161,6 +163,11 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Eliminar una plantilla](https://getricky.ai/docs/api/reference/whats-app/delete-template) | `DELETE /templates/{template_id}` | `templates:write` |
 | [Listar números de WhatsApp](https://getricky.ai/docs/api/reference/whats-app/list-whats-app-numbers) | `GET /whatsapp-numbers` | `conversations:read` |
 | [Consultar un número de WhatsApp](https://getricky.ai/docs/api/reference/whats-app/get-whats-app-number) | `GET /whatsapp-numbers/{channel_id}` | `conversations:read` |
+| [Listar campañas](https://getricky.ai/docs/api/reference/broadcasts/list-broadcasts) | `GET /broadcasts` | `broadcasts:read` |
+| [Crear una campaña](https://getricky.ai/docs/api/reference/broadcasts/create-broadcast) | `POST /broadcasts` | `broadcasts:write` |
+| [Consultar una campaña](https://getricky.ai/docs/api/reference/broadcasts/get-broadcast) | `GET /broadcasts/{broadcast_id}` | `broadcasts:read` |
+| [Cancelar una campaña programada](https://getricky.ai/docs/api/reference/broadcasts/cancel-broadcast) | `POST /broadcasts/{broadcast_id}/cancel` | `broadcasts:write` |
+| [Listar destinatarios de una campaña](https://getricky.ai/docs/api/reference/broadcasts/list-broadcast-recipients) | `GET /broadcasts/{broadcast_id}/recipients` | `broadcasts:read` |
 
 ## Respuestas de autenticación
 

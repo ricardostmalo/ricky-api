@@ -68,6 +68,8 @@ Each operation requires one scope. A key without it gets `403 insufficient_scope
 | `tags:write`          | Create, edit and delete tags.                                                                           |
 | `quick_replies:read`  | Read quick replies.                                                                                     |
 | `quick_replies:write` | Create, update and delete quick replies.                                                                |
+| `broadcasts:read`     | Read broadcasts, their counts and each recipient's delivery status.                                     |
+| `broadcasts:write`    | Create, schedule and cancel broadcasts.                                                                 |
 
 The table below is generated from the API contract: it is the exact list of operations and the scope each one requires.
 
@@ -161,6 +163,11 @@ The table below is generated from the API contract: it is the exact list of oper
 | [Delete a template](https://getricky.ai/en/docs/api/reference/whats-app/delete-template) | `DELETE /templates/{template_id}` | `templates:write` |
 | [List WhatsApp numbers](https://getricky.ai/en/docs/api/reference/whats-app/list-whats-app-numbers) | `GET /whatsapp-numbers` | `conversations:read` |
 | [Get a WhatsApp number](https://getricky.ai/en/docs/api/reference/whats-app/get-whats-app-number) | `GET /whatsapp-numbers/{channel_id}` | `conversations:read` |
+| [List broadcasts](https://getricky.ai/en/docs/api/reference/broadcasts/list-broadcasts) | `GET /broadcasts` | `broadcasts:read` |
+| [Create a broadcast](https://getricky.ai/en/docs/api/reference/broadcasts/create-broadcast) | `POST /broadcasts` | `broadcasts:write` |
+| [Get a broadcast](https://getricky.ai/en/docs/api/reference/broadcasts/get-broadcast) | `GET /broadcasts/{broadcast_id}` | `broadcasts:read` |
+| [Cancel a scheduled broadcast](https://getricky.ai/en/docs/api/reference/broadcasts/cancel-broadcast) | `POST /broadcasts/{broadcast_id}/cancel` | `broadcasts:write` |
+| [List broadcast recipients](https://getricky.ai/en/docs/api/reference/broadcasts/list-broadcast-recipients) | `GET /broadcasts/{broadcast_id}/recipients` | `broadcasts:read` |
 
 ## Authentication responses
 
