@@ -39,7 +39,7 @@ We recommend sending it with every message send. These operations accept it:
 | [Delete a contact field](https://getricky.ai/en/docs/api/reference/contacts/delete-contact-field) | `DELETE /contact-fields/{field_id}` | `contacts:write` |
 | [Update a tag](https://getricky.ai/en/docs/api/reference/catalogs/update-tag) | `PATCH /tags/{tag_id}` | `tags:write` |
 | [Delete a tag](https://getricky.ai/en/docs/api/reference/catalogs/delete-tag) | `DELETE /tags/{tag_id}` | `tags:write` |
-| [Change a conversation's tags](https://getricky.ai/en/docs/api/reference/conversations/change-conversation-tags) | `PATCH /conversations/{conversation_id}/tags` | `contacts:write` |
+| [Change the tags of a conversation's contact](https://getricky.ai/en/docs/api/reference/conversations/change-conversation-tags) | `PATCH /conversations/{conversation_id}/tags` | `contacts:write` |
 | [Mark a conversation read](https://getricky.ai/en/docs/api/reference/conversations/mark-conversation-read) | `POST /conversations/{conversation_id}/read` | `conversations:write` |
 | [Create a quick reply](https://getricky.ai/en/docs/api/reference/quick-replies/create-quick-reply) | `POST /quick-replies` | `quick_replies:write` |
 | [Update a quick reply](https://getricky.ai/en/docs/api/reference/quick-replies/update-quick-reply) | `PATCH /quick-replies/{quick_reply_id}` | `quick_replies:write` |

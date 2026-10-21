@@ -18,7 +18,7 @@ Ricky inicia cada ejecución por un evento. No hay una operación para iniciar u
 | `conversation` | `first_message_received` | Llega el primer mensaje del contacto en una conversación. |
 | `scheduled`    | `{ "kind": "daily" }`    | Cada día a una hora, con las citas o cumpleaños de Odoo.  |
 
-La API crea y edita workflows de conversación. Los workflows programados se crean en Ricky; la API los lee, les cambia el nombre, los activa, los pausa y los elimina, define su archivo de encabezado, y previsualiza y revisa los recordatorios de citas ([más abajo](#workflows-programados)).
+La API crea y edita workflows de conversación. Los workflows programados se crean en Ricky; la API los lee, les cambia el nombre, los activa, los pausa y los elimina, define su archivo de encabezado, y previsualiza y revisa los recordatorios de citas y sus estados de Odoo ([más abajo](#workflows-programados)).
 
 Un workflow de conversación puede tener `condition` para ejecutarse solo dentro o fuera del horario de atención.
 
@@ -155,7 +155,11 @@ Ricky lee Odoo en ese momento y responde cada cita que el workflow recordaría e
 
 `GET /workflows/{workflow_id}/reminders/history?date=2026-10-14` responde lo que el workflow revisó y envió un día pasado, según lo que Ricky registró: cada cita con su exclusión, el mensaje, cuándo se puso en cola y el `status` de su entrega. No lee Odoo.
 
-La vista previa y el historial son solo para workflows de recordatorios de citas; un workflow de cumpleaños recibe `422 rule_violation`. Ambos exigen `workflows:read`.
+### Estados de cita
+
+`GET /workflows/{workflow_id}/reminders/state-options` lee de Odoo, en ese momento, todos los estados de cita que tiene su instalación, cada uno con su `value` y su `label`: los valores que toman `source.appointment_states` y el `appointment_states` de la vista previa. Necesita Odoo conectado; si no, `422 rule_violation`.
+
+La vista previa, el historial y los estados son solo para workflows de recordatorios de citas; un workflow de cumpleaños recibe `422 rule_violation`. Los tres exigen `workflows:read`.
 
 ## Ejemplo: pedido listo con recordatorio
 

@@ -18,7 +18,7 @@ Ricky starts every execution from an event. There is no operation to start a wor
 | `conversation` | `first_message_received` | The contact's first message in a conversation arrives.        |
 | `scheduled`    | `{ "kind": "daily" }`    | Every day at a set time, with Odoo appointments or birthdays. |
 
-The API creates and edits conversation workflows. Scheduled workflows are created in Ricky; the API reads, renames, activates, pauses and deletes them, sets their header file, and previews and reviews appointment reminders ([below](#scheduled-workflows)).
+The API creates and edits conversation workflows. Scheduled workflows are created in Ricky; the API reads, renames, activates, pauses and deletes them, sets their header file, and previews and reviews appointment reminders and their Odoo states ([below](#scheduled-workflows)).
 
 A conversation workflow can have a `condition` so it runs only inside or outside business hours.
 
@@ -155,7 +155,11 @@ Ricky reads Odoo now and answers each appointment the workflow would remind on t
 
 `GET /workflows/{workflow_id}/reminders/history?date=2026-10-14` answers what the workflow checked and sent on a past day, from what Ricky recorded: each appointment with its exclusion, the message, when it was queued and its delivery `status`. It does not read Odoo.
 
-Preview and history are only for appointment reminder workflows; a birthday workflow gets `422 rule_violation`. Both require `workflows:read`.
+### Appointment states
+
+`GET /workflows/{workflow_id}/reminders/state-options` reads from Odoo, now, every appointment state its installation has, each with its `value` and `label`: the values `source.appointment_states` and the preview's `appointment_states` take. It needs Odoo connected; otherwise `422 rule_violation`.
+
+Preview, history and states are only for appointment reminder workflows; a birthday workflow gets `422 rule_violation`. All three require `workflows:read`.
 
 ## Example: order ready with a reminder
 

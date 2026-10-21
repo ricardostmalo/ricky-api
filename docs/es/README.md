@@ -4,7 +4,7 @@ URL: https://getricky.ai/docs/api
 
 > Conecta tus sistemas con los contactos, las conversaciones y los mensajes de tu organización.
 
-La API de Ricky es una API REST sobre HTTPS. Cada clave pertenece a una organización y solo ve sus datos. Con ella puedes leer y actualizar contactos, iniciar conversaciones de WhatsApp con plantillas, enviar mensajes y recibir eventos por webhook.
+La API de Ricky es una API REST sobre HTTPS. Cada clave pertenece a una organización y solo ve sus datos. Con ella puedes trabajar con contactos, conversaciones y mensajes, gestionar plantillas, números, campañas, workflows, agentes de IA y su conocimiento, leer los reportes y recibir eventos por webhook.
 
 ## URL base
 
@@ -35,14 +35,22 @@ Un cambio incompatible solo llega en una versión nueva de la ruta. Ricky lo anu
 
 ## Recursos
 
-| Recurso        | Contenido                                                                    | Referencia                                                            |
-| -------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| Contactos      | Personas del CRM y sus campos personalizados.                                | [Contacts](https://getricky.ai/docs/api/reference/contacts/list-contacts)                |
-| Conversaciones | Hilos con un contacto en un canal: iniciar, leer, asignar, cerrar y reabrir. | [Conversations](https://getricky.ai/docs/api/reference/conversations/list-conversations) |
-| Mensajes       | Leer y enviar mensajes, y seguir cada envío.                                 | [Messages](https://getricky.ai/docs/api/reference/messages/list-messages)                |
-| Catálogos      | Canales, miembros, etiquetas y plantillas que otras operaciones usan por ID. | [Catalogs](https://getricky.ai/docs/api/reference/catalogs/list-channels)                |
-| Webhooks       | Suscripciones a eventos y el registro de sus entregas.                       | [Webhooks](https://getricky.ai/docs/api/reference/webhooks/list-webhooks)                |
-| Reportes       | Los números de las páginas de Reportes, por período y con sus filtros.       | [Reports](https://getricky.ai/docs/api/reference/reports/get-dashboard-report)           |
+Cada familia de operaciones tiene una guía y su referencia.
+
+| Familia                          | Qué haces                                                                                        | Guía                                                     | Referencia                                                            |
+| -------------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------- | --------------------------------------------------------------------- |
+| Contactos                        | Leer, crear y actualizar personas del CRM, sus campos, etiquetas y notas.                        | [Etiquetas, campos y búsqueda](./crm-and-inbox.md)  | [Contacts](https://getricky.ai/docs/api/reference/contacts/list-contacts)                |
+| Conversaciones                   | Iniciar, leer, filtrar, asignar, cerrar y reabrir conversaciones, y resolver traspasos.          | [Inbox](./inbox.md)                                 | [Conversations](https://getricky.ai/docs/api/reference/conversations/list-conversations) |
+| Mensajes                         | Leer y enviar mensajes, plantillas y archivos, y seguir cada envío.                              | [Enviar mensajes](./sending-messages.md)            | [Messages](https://getricky.ai/docs/api/reference/messages/list-messages)                |
+| Catálogos                        | Canales, miembros y etiquetas que otras operaciones usan por ID.                                 | [Etiquetas, campos y búsqueda](./crm-and-inbox.md)  | [Catalogs](https://getricky.ai/docs/api/reference/catalogs/list-channels)                |
+| Respuestas rápidas               | Crear y mantener las respuestas guardadas del equipo.                                            | [Etiquetas, campos y búsqueda](./crm-and-inbox.md)  | [Quick replies](https://getricky.ai/docs/api/reference/quick-replies/list-quick-replies) |
+| Plantillas y números de WhatsApp | Crear y editar plantillas, seguir la revisión de Meta y gestionar los números.                   | [Plantillas y números](./whatsapp.md)               | [WhatsApp](https://getricky.ai/docs/api/reference/whats-app/list-templates)              |
+| Campañas                         | Enviar una plantilla a muchos números, ahora o más tarde, y seguir cada entrega.                 | [Campañas](./broadcasts.md)                         | [Broadcasts](https://getricky.ai/docs/api/reference/broadcasts/list-broadcasts)          |
+| Workflows                        | Crear, editar, activar y pausar workflows, revisar sus ejecuciones y sus recordatorios de citas. | [Workflows](./workflows.md)                         | [Workflows](https://getricky.ai/docs/api/reference/workflows/list-workflows)             |
+| Agentes                          | Crear agentes de IA y ponerlos en conversaciones.                                                | [Agentes y conocimiento](./agents-and-knowledge.md) | [Agents](https://getricky.ai/docs/api/reference/agents/list-agents)                      |
+| Conocimiento                     | Archivos, sucursales y tarjetas de contacto que los agentes consultan y envían.                  | [Agentes y conocimiento](./agents-and-knowledge.md) | [Knowledge](https://getricky.ai/docs/api/reference/knowledge/list-knowledge-files)       |
+| Reportes                         | Los números de las páginas de Reportes, por período y con sus filtros.                           | [Reportes](./reports.md)                            | [Reports](https://getricky.ai/docs/api/reference/reports/get-dashboard-report)           |
+| Webhooks                         | Suscribirte a eventos y revisar el registro de sus entregas.                                     | [Webhooks](./webhooks.md)                           | [Webhooks](https://getricky.ai/docs/api/reference/webhooks/list-webhooks)                |
 
 La referencia sale del contrato de la API. El documento OpenAPI 3.1 completo está en [`https://getricky.ai/openapi.json`](https://getricky.ai/openapi.json). Puedes usarlo para generar un cliente o importarlo en tu herramienta de pruebas.
 
@@ -150,6 +158,6 @@ for contact in ricky.paginate(ricky.list_contacts):
 ## Siguientes pasos
 
 - [Autenticación](./authentication.md): Claves, permisos y vencimiento.
-- [Enviar mensajes](./sending-messages.md): Plantillas, respuestas y seguimiento de cada envío.
-- [Webhooks](./webhooks.md): Eventos firmados con HMAC y reintentos.
 - [Errores](./errors.md): Forma del error y catálogo de códigos.
+- [Paginación](./pagination.md): Recorre listas con page_size, cursor y next_cursor.
+- [Idempotencia, límites y reintentos](./idempotency-and-rate-limits.md): Repite escrituras sin duplicar efectos y respeta el límite.

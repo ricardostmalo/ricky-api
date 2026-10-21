@@ -113,6 +113,7 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Definir el archivo del encabezado de una automatización programada](https://getricky.ai/docs/api/reference/workflows/upload-workflow-header-media) | `POST /workflows/{workflow_id}/header-media` | `workflows:write` |
 | [Previsualizar recordatorios de citas](https://getricky.ai/docs/api/reference/workflows/preview-workflow-reminders) | `GET /workflows/{workflow_id}/reminders/preview` | `workflows:read` |
 | [Consultar el historial de recordatorios de citas](https://getricky.ai/docs/api/reference/workflows/get-workflow-reminder-history) | `GET /workflows/{workflow_id}/reminders/history` | `workflows:read` |
+| [Listar los estados de cita de Odoo](https://getricky.ai/docs/api/reference/workflows/list-workflow-reminder-states) | `GET /workflows/{workflow_id}/reminders/state-options` | `workflows:read` |
 | [Consultar el panel en vivo](https://getricky.ai/docs/api/reference/reports/get-dashboard-report) | `GET /reports/dashboard` | `reports:read` |
 | [Consultar el reporte de conversaciones](https://getricky.ai/docs/api/reference/reports/get-conversations-report) | `GET /reports/conversations` | `reports:read` |
 | [Consultar el reporte de mensajes](https://getricky.ai/docs/api/reference/reports/get-messages-report) | `GET /reports/messages` | `reports:read` |
@@ -150,7 +151,7 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Actualizar una etiqueta](https://getricky.ai/docs/api/reference/catalogs/update-tag) | `PATCH /tags/{tag_id}` | `tags:write` |
 | [Eliminar una etiqueta](https://getricky.ai/docs/api/reference/catalogs/delete-tag) | `DELETE /tags/{tag_id}` | `tags:write` |
 | [Buscar conversaciones](https://getricky.ai/docs/api/reference/conversations/search-conversations) | `GET /conversations/search` | `conversations:read` |
-| [Cambiar las etiquetas de una conversación](https://getricky.ai/docs/api/reference/conversations/change-conversation-tags) | `PATCH /conversations/{conversation_id}/tags` | `contacts:write` |
+| [Cambiar las etiquetas del contacto de una conversación](https://getricky.ai/docs/api/reference/conversations/change-conversation-tags) | `PATCH /conversations/{conversation_id}/tags` | `contacts:write` |
 | [Marcar una conversación como leída](https://getricky.ai/docs/api/reference/conversations/mark-conversation-read) | `POST /conversations/{conversation_id}/read` | `conversations:write` |
 | [Buscar mensajes](https://getricky.ai/docs/api/reference/messages/search-messages) | `GET /messages/search` | `conversations:read` |
 | [Listar respuestas rápidas](https://getricky.ai/docs/api/reference/quick-replies/list-quick-replies) | `GET /quick-replies` | `quick_replies:read` |

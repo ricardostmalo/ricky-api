@@ -72,11 +72,11 @@ Ricky checks the URL again on every delivery and does not follow redirects.
 `message.sent` fires for every outbound message, not only the ones sent through the API. A history import fires no `message.*` event, and no agent change, handoff or tag change. For the cause of a `message.failed`, read the message.
 
 * **Assignment and agent.** A change of the AI agent fires both `conversation.assignment_changed` and `conversation.agent_changed`. A change between people fires only the first.
-* **Tags.** Tags belong to the contact, also when you change them on a conversation. All the tags one save changes are one `contact.tags_changed`. Every save also fires `contact.updated`, even when nothing changed.
+* **Tags.** Tags belong to the contact, also when you change them on a conversation: `PATCH /conversations/{id}/tags` changes the contact's tags, and there is no `conversation.*` tag event. All the tags one save changes are one `contact.tags_changed`. Every save also fires `contact.updated`, even when nothing changed.
 * **Broadcasts.** A broadcast fires one of the two, once. `broadcast.completed` does not mean delivered: some recipients may still be waiting for WhatsApp. For the counts, read the broadcast.
 * **Templates.** The event reaches each organization whose WhatsApp number uses the template's business account. Read the status with `GET /templates/{template_id}`.
 * **Workflows.** An execution is a row of `GET /workflows/{workflow_id}/executions`; its `last_error` says why it failed.
-* **Knowledge files.** A file Ricky could not read is ready too, with `extraction_error`; there is no failure event.
+* **Knowledge files.** A file Ricky could not read is ready too; there is no failure event and Ricky does not set `failed`. On `knowledge_file.ready`, read the file with `GET /knowledge/files/{file_id}`: a non-null `extraction_error` means Ricky read no useful content and says why. Agents can still send that file but cannot consult it (`consult_enabled` stays `false`).
 
 The event carries only IDs. For the content, read the resource through the API: [Get a conversation](https://getricky.ai/en/docs/api/reference/conversations/get-conversation) or [List messages](https://getricky.ai/en/docs/api/reference/messages/list-messages).
 

@@ -113,6 +113,7 @@ The table below is generated from the API contract: it is the exact list of oper
 | [Set the header file of a scheduled workflow](https://getricky.ai/en/docs/api/reference/workflows/upload-workflow-header-media) | `POST /workflows/{workflow_id}/header-media` | `workflows:write` |
 | [Preview appointment reminders](https://getricky.ai/en/docs/api/reference/workflows/preview-workflow-reminders) | `GET /workflows/{workflow_id}/reminders/preview` | `workflows:read` |
 | [Get appointment reminder history](https://getricky.ai/en/docs/api/reference/workflows/get-workflow-reminder-history) | `GET /workflows/{workflow_id}/reminders/history` | `workflows:read` |
+| [List the Odoo appointment states](https://getricky.ai/en/docs/api/reference/workflows/list-workflow-reminder-states) | `GET /workflows/{workflow_id}/reminders/state-options` | `workflows:read` |
 | [Get the live dashboard](https://getricky.ai/en/docs/api/reference/reports/get-dashboard-report) | `GET /reports/dashboard` | `reports:read` |
 | [Get the conversations report](https://getricky.ai/en/docs/api/reference/reports/get-conversations-report) | `GET /reports/conversations` | `reports:read` |
 | [Get the messages report](https://getricky.ai/en/docs/api/reference/reports/get-messages-report) | `GET /reports/messages` | `reports:read` |
@@ -150,7 +151,7 @@ The table below is generated from the API contract: it is the exact list of oper
 | [Update a tag](https://getricky.ai/en/docs/api/reference/catalogs/update-tag) | `PATCH /tags/{tag_id}` | `tags:write` |
 | [Delete a tag](https://getricky.ai/en/docs/api/reference/catalogs/delete-tag) | `DELETE /tags/{tag_id}` | `tags:write` |
 | [Search conversations](https://getricky.ai/en/docs/api/reference/conversations/search-conversations) | `GET /conversations/search` | `conversations:read` |
-| [Change a conversation's tags](https://getricky.ai/en/docs/api/reference/conversations/change-conversation-tags) | `PATCH /conversations/{conversation_id}/tags` | `contacts:write` |
+| [Change the tags of a conversation's contact](https://getricky.ai/en/docs/api/reference/conversations/change-conversation-tags) | `PATCH /conversations/{conversation_id}/tags` | `contacts:write` |
 | [Mark a conversation read](https://getricky.ai/en/docs/api/reference/conversations/mark-conversation-read) | `POST /conversations/{conversation_id}/read` | `conversations:write` |
 | [Search messages](https://getricky.ai/en/docs/api/reference/messages/search-messages) | `GET /messages/search` | `conversations:read` |
 | [List quick replies](https://getricky.ai/en/docs/api/reference/quick-replies/list-quick-replies) | `GET /quick-replies` | `quick_replies:read` |

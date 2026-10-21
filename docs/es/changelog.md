@@ -8,6 +8,8 @@ Esta página registra los cambios de la API. Un cambio incompatible solo llega e
 
 ## 19 de octubre de 2026
 
+**Estados de cita.** Cambio compatible con la v1. `GET /workflows/{workflow_id}/reminders/state-options` lista los estados de cita de Odoo que puede recordar un workflow de recordatorios. Consulta [Workflows](./workflows.md#estados-de-cita).
+
 **Encabezados multimedia, asignación de variables y ajustes de números de WhatsApp.** Cambios compatibles con la v1.
 
 * **Encabezados multimedia.** Las plantillas aceptan encabezados `IMAGE`, `VIDEO` y `DOCUMENT`. `POST /templates/media` y `POST /templates/media/complete` suben la muestra que revisa Meta y responden su `handle`. Una edición que mantiene un encabezado multimedia lo envía otra vez con un `handle` nuevo. Consulta [Plantillas y números de WhatsApp](./whatsapp.md#encabezados-de-imagen-video-y-documento).

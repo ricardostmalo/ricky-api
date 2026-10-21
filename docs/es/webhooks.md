@@ -72,11 +72,11 @@ Ricky vuelve a comprobar la URL en cada entrega y no sigue redirecciones.
 `message.sent` llega por cada mensaje saliente, no solo por los enviados con la API. Una importación de historial no genera eventos `message.*`, ni cambios de agente, traspasos o cambios de etiquetas. Para la causa de un `message.failed`, lee el mensaje.
 
 * **Asignación y agente.** Un cambio del agente de IA genera `conversation.assignment_changed` y `conversation.agent_changed`. Un cambio entre personas genera solo el primero.
-* **Etiquetas.** Las etiquetas son del contacto, también cuando las cambias en una conversación. Todas las etiquetas que cambia un mismo guardado son un solo `contact.tags_changed`. Cada guardado genera además `contact.updated`, aunque no cambie nada.
+* **Etiquetas.** Las etiquetas son del contacto, también cuando las cambias en una conversación: `PATCH /conversations/{id}/tags` cambia las etiquetas del contacto, y no hay evento `conversation.*` de etiquetas. Todas las etiquetas que cambia un mismo guardado son un solo `contact.tags_changed`. Cada guardado genera además `contact.updated`, aunque no cambie nada.
 * **Campañas.** Una campaña genera uno de los dos, una sola vez. `broadcast.completed` no significa entregada: algunos destinatarios pueden seguir esperando a WhatsApp. Para los conteos, consulta la campaña.
 * **Plantillas.** El evento llega a cada organización cuyo número de WhatsApp usa la cuenta de negocio de la plantilla. Consulta el estado con `GET /templates/{template_id}`.
 * **Workflows.** Una ejecución es una fila de `GET /workflows/{workflow_id}/executions`; su `last_error` dice por qué falló.
-* **Archivos de conocimiento.** Un archivo que Ricky no pudo leer también queda listo, con `extraction_error`; no hay evento de fallo.
+* **Archivos de conocimiento.** Un archivo que Ricky no pudo leer también queda listo; no hay evento de fallo y Ricky no asigna `failed`. Con `knowledge_file.ready`, lee el archivo con `GET /knowledge/files/{file_id}`: un `extraction_error` que no es null significa que Ricky no leyó contenido útil y dice por qué. Los agentes pueden enviar ese archivo, pero no consultarlo (`consult_enabled` queda en `false`).
 
 El evento solo trae IDs. Para el contenido, lee el recurso con la API: [Get a conversation](https://getricky.ai/docs/api/reference/conversations/get-conversation) o [List messages](https://getricky.ai/docs/api/reference/messages/list-messages).
 
