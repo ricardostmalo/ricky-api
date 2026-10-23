@@ -1109,7 +1109,7 @@ class SyncOperations:
     ) -> Resource[Agent]:
         """Create an agent.
 
-        Creates an AI agent with its instructions, model, voice and capabilities. It answers no conversation until you assign it to one or make it a channel default in Ricky.
+        Creates an AI agent with its instructions, voice and capabilities. It answers no conversation until you assign it to one or make it a channel default in Ricky.
 
         Scope: `agents:write`.
 
@@ -1186,7 +1186,7 @@ class SyncOperations:
     ) -> Resource[AgentOptions]:
         """Get agent options.
 
-        The models, voices and capabilities an agent can be configured with.
+        The voices and capabilities an agent can be configured with.
 
         Scope: `agents:read`.
         """
@@ -3423,7 +3423,7 @@ class AsyncOperations:
     ) -> Resource[Agent]:
         """Create an agent.
 
-        Creates an AI agent with its instructions, model, voice and capabilities. It answers no conversation until you assign it to one or make it a channel default in Ricky.
+        Creates an AI agent with its instructions, voice and capabilities. It answers no conversation until you assign it to one or make it a channel default in Ricky.
 
         Scope: `agents:write`.
 
@@ -3500,7 +3500,7 @@ class AsyncOperations:
     ) -> Resource[AgentOptions]:
         """Get agent options.
 
-        The models, voices and capabilities an agent can be configured with.
+        The voices and capabilities an agent can be configured with.
 
         Scope: `agents:read`.
         """

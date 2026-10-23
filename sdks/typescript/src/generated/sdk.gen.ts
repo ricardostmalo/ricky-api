@@ -900,7 +900,7 @@ export class RickyApi extends HeyApiClient {
     /**
      * Create an agent
      *
-     * Creates an AI agent with its instructions, model, voice and capabilities. It answers no conversation until you assign it to one or make it a channel default in Ricky.
+     * Creates an AI agent with its instructions, voice and capabilities. It answers no conversation until you assign it to one or make it a channel default in Ricky.
      *
      * Scope: `agents:write`.
      */
@@ -972,7 +972,7 @@ export class RickyApi extends HeyApiClient {
     /**
      * Get agent options
      *
-     * The models, voices and capabilities an agent can be configured with.
+     * The voices and capabilities an agent can be configured with.
      *
      * Scope: `agents:read`.
      */

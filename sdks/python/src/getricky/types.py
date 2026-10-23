@@ -56,10 +56,6 @@ class Agent(TypedDict):
     """
     How the agent answers customers.
     """
-    model: Optional[str]
-    """
-    Model that writes its replies; one `id` of `GET /agent-options`.
-    """
     voice: str
     """
     Voice on calls; one of `GET /agent-options`.
@@ -83,21 +79,6 @@ class Agent(TypedDict):
     archived_at: Optional[str]
     """
     When it was archived; null while active.
-    """
-
-
-class AgentOptionsModel(TypedDict):
-    id: str
-    """
-    Model ID, the value of `model`.
-    """
-    label: str
-    """
-    Display name.
-    """
-    input: List[Literal["text", "image"]]
-    """
-    What the model reads.
     """
 
 
@@ -125,14 +106,6 @@ class AgentOptions(TypedDict):
     What an agent can be configured with.
     """
 
-    models: List[AgentOptionsModel]
-    """
-    Models an agent can use.
-    """
-    default_model: str
-    """
-    Model of an agent created without one.
-    """
     voices: List[str]
     """
     Voices an agent can use.
@@ -3417,10 +3390,6 @@ class CreateAgent(TypedDict, closed=True):
     """
     How the agent answers customers.
     """
-    model: NotRequired[str]
-    """
-    A model `id` of `GET /agent-options`. Without one, the default model.
-    """
     voice: NotRequired[str]
     """
     A voice of `GET /agent-options`. Without one, the default voice.
@@ -3454,10 +3423,6 @@ class UpdateAgent(TypedDict, closed=True):
     instructions: NotRequired[Optional[str]]
     """
     How the agent answers customers.
-    """
-    model: NotRequired[str]
-    """
-    A model `id` of `GET /agent-options`. Without one, the default model.
     """
     voice: NotRequired[str]
     """

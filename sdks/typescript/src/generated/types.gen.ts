@@ -51,10 +51,6 @@ export type Agent = {
      */
     instructions: string | null;
     /**
-     * Model that writes its replies; one `id` of `GET /agent-options`.
-     */
-    model: string | null;
-    /**
      * Voice on calls; one of `GET /agent-options`.
      */
     voice: string;
@@ -84,27 +80,6 @@ export type Agent = {
  * What an agent can be configured with.
  */
 export type AgentOptions = {
-    /**
-     * Models an agent can use.
-     */
-    models: Array<{
-        /**
-         * Model ID, the value of `model`.
-         */
-        id: string;
-        /**
-         * Display name.
-         */
-        label: string;
-        /**
-         * What the model reads.
-         */
-        input: Array<'text' | 'image'>;
-    }>;
-    /**
-     * Model of an agent created without one.
-     */
-    default_model: string;
     /**
      * Voices an agent can use.
      */
@@ -3051,10 +3026,6 @@ export type CreateAgent = {
      */
     instructions?: string | null;
     /**
-     * A model `id` of `GET /agent-options`. Without one, the default model.
-     */
-    model?: string;
-    /**
      * A voice of `GET /agent-options`. Without one, the default voice.
      */
     voice?: string;
@@ -3084,10 +3055,6 @@ export type UpdateAgent = {
      * How the agent answers customers.
      */
     instructions?: string | null;
-    /**
-     * A model `id` of `GET /agent-options`. Without one, the default model.
-     */
-    model?: string;
     /**
      * A voice of `GET /agent-options`. Without one, the default voice.
      */

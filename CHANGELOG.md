@@ -4,6 +4,10 @@ Also at https://getricky.ai/en/docs/api/changelog.
 
 This page records changes to the API. A breaking change only ships in a new path version and is announced here.
 
+## October 23, 2026
+
+**No model on agents.** Ricky chooses each agent's model. Agents no longer answer `model`, `GET /agent-options` no longer answers `models` or `default_model`, and creating or updating an agent with `model` answers `400 invalid_input`. No integration used these fields.
+
 ## October 19, 2026
 
 **Appointment states.** Compatible change to v1. `GET /workflows/{workflow_id}/reminders/state-options` lists the Odoo appointment states an appointment reminder workflow can remind. See [Workflows](https://getricky.ai/en/docs/api/workflows#appointment-states).

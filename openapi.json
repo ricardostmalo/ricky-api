@@ -6632,7 +6632,7 @@
           "Agents"
         ],
         "summary": "Create an agent",
-        "description": "Creates an AI agent with its instructions, model, voice and capabilities. It answers no conversation until you assign it to one or make it a channel default in Ricky.\n\nScope: `agents:write`.",
+        "description": "Creates an AI agent with its instructions, voice and capabilities. It answers no conversation until you assign it to one or make it a channel default in Ricky.\n\nScope: `agents:write`.",
         "parameters": [
           {
             "$ref": "#/components/parameters/IdempotencyKey"
@@ -7158,7 +7158,7 @@
           "Agents"
         ],
         "summary": "Get agent options",
-        "description": "The models, voices and capabilities an agent can be configured with.\n\nScope: `agents:read`.",
+        "description": "The voices and capabilities an agent can be configured with.\n\nScope: `agents:read`.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -16574,16 +16574,6 @@
               "null"
             ]
           },
-          "model": {
-            "description": "Model that writes its replies; one `id` of `GET /agent-options`.",
-            "examples": [
-              "deepseek/deepseek-v4.1-flash"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
           "voice": {
             "type": "string",
             "description": "Voice on calls; one of `GET /agent-options`.",
@@ -16656,7 +16646,6 @@
           "name",
           "description",
           "instructions",
-          "model",
           "voice",
           "capabilities",
           "handoff_user_ids",
@@ -16669,58 +16658,6 @@
       "AgentOptions": {
         "type": "object",
         "properties": {
-          "models": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "description": "Model ID, the value of `model`.",
-                  "examples": [
-                    "deepseek/deepseek-v4.1-flash"
-                  ]
-                },
-                "label": {
-                  "type": "string",
-                  "description": "Display name.",
-                  "examples": [
-                    "DeepSeek V4.1 Flash"
-                  ]
-                },
-                "input": {
-                  "type": "array",
-                  "items": {
-                    "type": "string",
-                    "enum": [
-                      "text",
-                      "image"
-                    ]
-                  },
-                  "description": "What the model reads.",
-                  "examples": [
-                    [
-                      "text",
-                      "image"
-                    ]
-                  ]
-                }
-              },
-              "required": [
-                "id",
-                "label",
-                "input"
-              ]
-            },
-            "description": "Models an agent can use."
-          },
-          "default_model": {
-            "type": "string",
-            "description": "Model of an agent created without one.",
-            "examples": [
-              "deepseek/deepseek-v4.1-flash"
-            ]
-          },
           "voices": {
             "type": "array",
             "items": {
@@ -16794,8 +16731,6 @@
           }
         },
         "required": [
-          "models",
-          "default_model",
           "voices",
           "default_voice",
           "capabilities"
@@ -24290,11 +24225,6 @@
               }
             ]
           },
-          "model": {
-            "description": "A model `id` of `GET /agent-options`. Without one, the default model.",
-            "type": "string",
-            "maxLength": 200
-          },
           "voice": {
             "description": "A voice of `GET /agent-options`. Without one, the default voice.",
             "type": "string",
@@ -24369,11 +24299,6 @@
                 "type": "null"
               }
             ]
-          },
-          "model": {
-            "description": "A model `id` of `GET /agent-options`. Without one, the default model.",
-            "type": "string",
-            "maxLength": 200
           },
           "voice": {
             "description": "A voice of `GET /agent-options`. Without one, the default voice.",
