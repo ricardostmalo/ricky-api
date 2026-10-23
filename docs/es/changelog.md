@@ -6,6 +6,10 @@ URL: https://getricky.ai/docs/api/changelog
 
 Esta página registra los cambios de la API. Un cambio incompatible solo llega en una versión nueva de la ruta y se anuncia aquí.
 
+## 23 de octubre de 2026
+
+**Sin modelo en los agentes.** Ricky elige el modelo de cada agente. Los agentes ya no responden `model`, `GET /agent-options` ya no responde `models` ni `default_model`, y crear o editar un agente con `model` recibe `400 invalid_input`. Ninguna integración usaba estos campos.
+
 ## 19 de octubre de 2026
 
 **Estados de cita.** Cambio compatible con la v1. `GET /workflows/{workflow_id}/reminders/state-options` lista los estados de cita de Odoo que puede recordar un workflow de recordatorios. Consulta [Workflows](./workflows.md#estados-de-cita).

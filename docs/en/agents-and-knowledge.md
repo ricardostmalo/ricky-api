@@ -4,13 +4,13 @@ URL: https://getricky.ai/en/docs/api/agents-and-knowledge
 
 > Create AI agents, put them on conversations and keep the information they share up to date.
 
-An agent answers customers with its instructions, model and capabilities. The knowledge is what the organization's agents share: locations, directory contact cards and files.
+An agent answers customers with its instructions and capabilities. The knowledge is what the organization's agents share: locations, directory contact cards and files.
 
 Agents need `agents:read` and `agents:write`. Putting an agent on a conversation needs `conversations:write`. Knowledge needs `knowledge:read` and `knowledge:write`.
 
 ## 1. Read the options
 
-`GET /agent-options` lists the models, voices and capabilities Ricky accepts. Use only those values: anything else answers `400 invalid_input`.
+`GET /agent-options` lists the voices and capabilities Ricky accepts. Use only those values: anything else answers `400 invalid_input`.
 
 ```bash
 curl https://getricky.ai/api/v1/agent-options \
@@ -34,7 +34,7 @@ curl https://getricky.ai/api/v1/agents \
   }'
 ```
 
-Without `model` or `voice`, the agent gets the defaults of `GET /agent-options`. `PATCH /agents/{agent_id}` changes only the fields you send; `capabilities` and `handoff_user_ids` replace their whole sets. `DELETE /agents/{agent_id}` archives it: its conversations stop being answered by it and the workflows that assign it are paused.
+Without `voice`, the agent gets the default of `GET /agent-options`. `PATCH /agents/{agent_id}` changes only the fields you send; `capabilities` and `handoff_user_ids` replace their whole sets. `DELETE /agents/{agent_id}` archives it: its conversations stop being answered by it and the workflows that assign it are paused.
 
 ## 3. Put it on a conversation
 

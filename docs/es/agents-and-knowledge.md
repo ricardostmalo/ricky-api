@@ -4,13 +4,13 @@ URL: https://getricky.ai/docs/api/agents-and-knowledge
 
 > Crea agentes de IA, ponlos en conversaciones y mantén al día la información que comparten.
 
-Un agente responde a los clientes con sus instrucciones, su modelo y sus capacidades. El conocimiento es lo que comparten los agentes de la organización: ubicaciones, tarjetas de contacto del directorio y archivos.
+Un agente responde a los clientes con sus instrucciones y sus capacidades. El conocimiento es lo que comparten los agentes de la organización: ubicaciones, tarjetas de contacto del directorio y archivos.
 
 Los agentes exigen `agents:read` y `agents:write`. Poner un agente en una conversación exige `conversations:write`. El conocimiento exige `knowledge:read` y `knowledge:write`.
 
 ## 1. Consulta las opciones
 
-`GET /agent-options` lista los modelos, las voces y las capacidades que Ricky acepta. Usa solo esos valores: cualquier otro recibe `400 invalid_input`.
+`GET /agent-options` lista las voces y las capacidades que Ricky acepta. Usa solo esos valores: cualquier otro recibe `400 invalid_input`.
 
 ```bash
 curl https://getricky.ai/api/v1/agent-options \
@@ -34,7 +34,7 @@ curl https://getricky.ai/api/v1/agents \
   }'
 ```
 
-Sin `model` ni `voice`, el agente recibe los predeterminados de `GET /agent-options`. `PATCH /agents/{agent_id}` cambia solo los campos que envías; `capabilities` y `handoff_user_ids` reemplazan sus conjuntos completos. `DELETE /agents/{agent_id}` lo archiva: deja de responder sus conversaciones y se pausan los flujos que lo asignan.
+Sin `voice`, el agente recibe la predeterminada de `GET /agent-options`. `PATCH /agents/{agent_id}` cambia solo los campos que envías; `capabilities` y `handoff_user_ids` reemplazan sus conjuntos completos. `DELETE /agents/{agent_id}` lo archiva: deja de responder sus conversaciones y se pausan los flujos que lo asignan.
 
 ## 3. Ponlo en una conversación
 

@@ -16702,14 +16702,14 @@
                   "type": "string",
                   "description": "Display name in Ricky.",
                   "examples": [
-                    "Pasar a una persona"
+                    "Hand the conversation to a person"
                   ]
                 },
                 "description": {
                   "type": "string",
                   "description": "What it lets the agent do, as Ricky shows it.",
                   "examples": [
-                    "El agente puede pasar la conversación a una persona del equipo."
+                    "The agent can pause itself and hand the conversation to a person on the team, with a note explaining what the customer needs."
                   ]
                 },
                 "family": {
