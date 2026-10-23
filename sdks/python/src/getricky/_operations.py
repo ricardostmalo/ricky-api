@@ -112,7 +112,7 @@ class SyncOperations:
         tag_id: Optional[str] = None,
         owner_user_id: Optional[str] = None,
         lifecycle_stage: Optional[Literal["subscriber", "lead", "marketing_qualified", "sales_qualified", "opportunity", "customer", "evangelist", "other"]] = None,
-        channel: Optional[Literal["whatsapp", "instagram", "messenger"]] = None,
+        channel: Optional[Literal["whatsapp", "instagram", "messenger", "webchat"]] = None,
     ) -> Page[Contact]:
         """List contacts.
 
@@ -926,7 +926,7 @@ class SyncOperations:
         *,
         from_: Optional[str] = None,
         to: Optional[str] = None,
-        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger", "webchat"]] = None,
     ) -> Resource[ConversationsReport]:
         """Get the conversations report.
 
@@ -950,7 +950,7 @@ class SyncOperations:
         *,
         from_: Optional[str] = None,
         to: Optional[str] = None,
-        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger", "webchat"]] = None,
     ) -> Resource[MessagesReport]:
         """Get the messages report.
 
@@ -974,7 +974,7 @@ class SyncOperations:
         *,
         from_: Optional[str] = None,
         to: Optional[str] = None,
-        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger", "webchat"]] = None,
         responder: Optional[str] = None,
     ) -> Resource[ResponsesReport]:
         """Get the responses report.
@@ -1000,7 +1000,7 @@ class SyncOperations:
         *,
         from_: Optional[str] = None,
         to: Optional[str] = None,
-        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger", "webchat"]] = None,
     ) -> Resource[ResolutionsReport]:
         """Get the resolutions report.
 
@@ -1024,7 +1024,7 @@ class SyncOperations:
         *,
         from_: Optional[str] = None,
         to: Optional[str] = None,
-        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger", "webchat"]] = None,
     ) -> Resource[TeamReport]:
         """Get the team report.
 
@@ -2426,7 +2426,7 @@ class AsyncOperations:
         tag_id: Optional[str] = None,
         owner_user_id: Optional[str] = None,
         lifecycle_stage: Optional[Literal["subscriber", "lead", "marketing_qualified", "sales_qualified", "opportunity", "customer", "evangelist", "other"]] = None,
-        channel: Optional[Literal["whatsapp", "instagram", "messenger"]] = None,
+        channel: Optional[Literal["whatsapp", "instagram", "messenger", "webchat"]] = None,
     ) -> Page[Contact]:
         """List contacts.
 
@@ -3240,7 +3240,7 @@ class AsyncOperations:
         *,
         from_: Optional[str] = None,
         to: Optional[str] = None,
-        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger", "webchat"]] = None,
     ) -> Resource[ConversationsReport]:
         """Get the conversations report.
 
@@ -3264,7 +3264,7 @@ class AsyncOperations:
         *,
         from_: Optional[str] = None,
         to: Optional[str] = None,
-        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger", "webchat"]] = None,
     ) -> Resource[MessagesReport]:
         """Get the messages report.
 
@@ -3288,7 +3288,7 @@ class AsyncOperations:
         *,
         from_: Optional[str] = None,
         to: Optional[str] = None,
-        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger", "webchat"]] = None,
         responder: Optional[str] = None,
     ) -> Resource[ResponsesReport]:
         """Get the responses report.
@@ -3314,7 +3314,7 @@ class AsyncOperations:
         *,
         from_: Optional[str] = None,
         to: Optional[str] = None,
-        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger", "webchat"]] = None,
     ) -> Resource[ResolutionsReport]:
         """Get the resolutions report.
 
@@ -3338,7 +3338,7 @@ class AsyncOperations:
         *,
         from_: Optional[str] = None,
         to: Optional[str] = None,
-        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger"]] = None,
+        channel: Optional[Literal["all", "whatsapp", "instagram", "messenger", "webchat"]] = None,
     ) -> Resource[TeamReport]:
         """Get the team report.
 

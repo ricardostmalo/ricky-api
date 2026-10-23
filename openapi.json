@@ -165,7 +165,8 @@
               "enum": [
                 "whatsapp",
                 "instagram",
-                "messenger"
+                "messenger",
+                "webchat"
               ]
             }
           }
@@ -5646,7 +5647,8 @@
                 "all",
                 "whatsapp",
                 "instagram",
-                "messenger"
+                "messenger",
+                "webchat"
               ]
             }
           }
@@ -5780,7 +5782,8 @@
                 "all",
                 "whatsapp",
                 "instagram",
-                "messenger"
+                "messenger",
+                "webchat"
               ]
             }
           }
@@ -5914,7 +5917,8 @@
                 "all",
                 "whatsapp",
                 "instagram",
-                "messenger"
+                "messenger",
+                "webchat"
               ]
             }
           },
@@ -6071,7 +6075,8 @@
                 "all",
                 "whatsapp",
                 "instagram",
-                "messenger"
+                "messenger",
+                "webchat"
               ]
             }
           }
@@ -6205,7 +6210,8 @@
                 "all",
                 "whatsapp",
                 "instagram",
-                "messenger"
+                "messenger",
+                "webchat"
               ]
             }
           }
@@ -16795,7 +16801,8 @@
             "enum": [
               "whatsapp",
               "instagram",
-              "messenger"
+              "messenger",
+              "webchat"
             ],
             "description": "Channel this identity belongs to."
           },
@@ -17265,7 +17272,8 @@
             "enum": [
               "whatsapp",
               "instagram",
-              "messenger"
+              "messenger",
+              "webchat"
             ],
             "description": "Messaging channel."
           },
@@ -17435,7 +17443,8 @@
                 "enum": [
                   "whatsapp",
                   "instagram",
-                  "messenger"
+                  "messenger",
+                  "webchat"
                 ]
               }
             },
@@ -19896,7 +19905,8 @@
               "all",
               "whatsapp",
               "instagram",
-              "messenger"
+              "messenger",
+              "webchat"
             ],
             "description": "The channel filter the report applied."
           },
@@ -19982,7 +19992,8 @@
                   "enum": [
                     "whatsapp",
                     "instagram",
-                    "messenger"
+                    "messenger",
+                    "webchat"
                   ],
                   "description": "Channel."
                 },
@@ -20134,7 +20145,8 @@
               "all",
               "whatsapp",
               "instagram",
-              "messenger"
+              "messenger",
+              "webchat"
             ],
             "description": "The channel filter the report applied."
           },
@@ -20280,7 +20292,8 @@
                   "enum": [
                     "whatsapp",
                     "instagram",
-                    "messenger"
+                    "messenger",
+                    "webchat"
                   ],
                   "description": "Channel."
                 },
@@ -20538,7 +20551,8 @@
                   "enum": [
                     "whatsapp",
                     "instagram",
-                    "messenger"
+                    "messenger",
+                    "webchat"
                   ],
                   "description": "Channel."
                 },
@@ -20627,7 +20641,8 @@
                   "enum": [
                     "whatsapp",
                     "instagram",
-                    "messenger"
+                    "messenger",
+                    "webchat"
                   ],
                   "description": "Channel."
                 },
@@ -20706,7 +20721,8 @@
               "all",
               "whatsapp",
               "instagram",
-              "messenger"
+              "messenger",
+              "webchat"
             ],
             "description": "The channel filter the report applied."
           },
@@ -21408,7 +21424,8 @@
               "all",
               "whatsapp",
               "instagram",
-              "messenger"
+              "messenger",
+              "webchat"
             ],
             "description": "The channel filter the report applied."
           },
@@ -21736,7 +21753,8 @@
                   "enum": [
                     "whatsapp",
                     "instagram",
-                    "messenger"
+                    "messenger",
+                    "webchat"
                   ],
                   "description": "Channel."
                 },
@@ -21840,7 +21858,8 @@
                       "enum": [
                         "whatsapp",
                         "instagram",
-                        "messenger"
+                        "messenger",
+                        "webchat"
                       ],
                       "description": "Channel."
                     },
@@ -21948,7 +21967,8 @@
               "all",
               "whatsapp",
               "instagram",
-              "messenger"
+              "messenger",
+              "webchat"
             ],
             "description": "The channel filter the report applied."
           },
@@ -22135,7 +22155,8 @@
                   "enum": [
                     "whatsapp",
                     "instagram",
-                    "messenger"
+                    "messenger",
+                    "webchat"
                   ],
                   "description": "Channel."
                 },

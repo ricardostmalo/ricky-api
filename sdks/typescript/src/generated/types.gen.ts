@@ -140,7 +140,7 @@ export type ContactIdentity = {
     /**
      * Channel this identity belongs to.
      */
-    channel_type: 'whatsapp' | 'instagram' | 'messenger';
+    channel_type: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
     /**
      * Address on that channel: phone digits for WhatsApp, account ID otherwise.
      */
@@ -298,7 +298,7 @@ export type Channel = {
     /**
      * Messaging channel.
      */
-    type: 'whatsapp' | 'instagram' | 'messenger';
+    type: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
     /**
      * Name shown in Ricky.
      */
@@ -361,7 +361,7 @@ export type Conversation = {
          * Channel ID.
          */
         id: string;
-        type: 'whatsapp' | 'instagram' | 'messenger';
+        type: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
     };
     contact: {
         id: string | null;
@@ -1248,7 +1248,7 @@ export type ConversationsReport = {
     /**
      * The channel filter the report applied.
      */
-    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
     /**
      * The period.
      */
@@ -1298,7 +1298,7 @@ export type ConversationsReport = {
         /**
          * Channel.
          */
-        channel: 'whatsapp' | 'instagram' | 'messenger';
+        channel: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
         /**
          * Conversations with at least one customer message in the period.
          */
@@ -1365,7 +1365,7 @@ export type MessagesReport = {
     /**
      * The channel filter the report applied.
      */
-    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
     /**
      * The period.
      */
@@ -1449,7 +1449,7 @@ export type MessagesReport = {
         /**
          * Channel.
          */
-        channel: 'whatsapp' | 'instagram' | 'messenger';
+        channel: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
         /**
          * Messages customers sent.
          */
@@ -1574,7 +1574,7 @@ export type DashboardReport = {
         /**
          * Channel.
          */
-        channel: 'whatsapp' | 'instagram' | 'messenger';
+        channel: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
         /**
          * Open conversations.
          */
@@ -1616,7 +1616,7 @@ export type DashboardReport = {
         /**
          * Channel.
          */
-        channel: 'whatsapp' | 'instagram' | 'messenger';
+        channel: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
         /**
          * Name the channel reports for the customer.
          */
@@ -1648,7 +1648,7 @@ export type TeamReport = {
     /**
      * The channel filter the report applied.
      */
-    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
     /**
      * Every member and active AI agent, most messages and closes first.
      */
@@ -1967,7 +1967,7 @@ export type ResponsesReport = {
     /**
      * The channel filter the report applied.
      */
-    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
     /**
      * The responder filter the report applied: `all`, `humans`, `agents` or an ID.
      */
@@ -2095,7 +2095,7 @@ export type ResponsesReport = {
         /**
          * Channel.
          */
-        channel: 'whatsapp' | 'instagram' | 'messenger';
+        channel: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
         /**
          * Responses in the period.
          */
@@ -2136,7 +2136,7 @@ export type ResponsesReport = {
         /**
          * The app an `external` responder used; null otherwise.
          */
-        channel: 'whatsapp' | 'instagram' | 'messenger' | null;
+        channel: 'whatsapp' | 'instagram' | 'messenger' | 'webchat' | null;
         /**
          * Responses in the period.
          */
@@ -2172,7 +2172,7 @@ export type ResolutionsReport = {
     /**
      * The channel filter the report applied.
      */
-    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
     /**
      * The period.
      */
@@ -2247,7 +2247,7 @@ export type ResolutionsReport = {
         /**
          * Channel.
          */
-        channel: 'whatsapp' | 'instagram' | 'messenger';
+        channel: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
         /**
          * Closes in the period.
          */
@@ -4885,7 +4885,7 @@ export type ListContactsData = {
         /**
          * Only contacts reachable on this channel.
          */
-        channel?: 'whatsapp' | 'instagram' | 'messenger';
+        channel?: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
     };
     url: '/contacts';
 };
@@ -7365,7 +7365,7 @@ export type GetConversationsReportData = {
         /**
          * Only this channel.
          */
-        channel?: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+        channel?: 'all' | 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
     };
     url: '/reports/conversations';
 };
@@ -7421,7 +7421,7 @@ export type GetMessagesReportData = {
         /**
          * Only this channel.
          */
-        channel?: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+        channel?: 'all' | 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
     };
     url: '/reports/messages';
 };
@@ -7477,7 +7477,7 @@ export type GetResponsesReportData = {
         /**
          * Only this channel.
          */
-        channel?: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+        channel?: 'all' | 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
         /**
          * Only responses from people, in Ricky or in the channel's own app (`humans`), from AI agents (`agents`), or from one member or AI agent by ID.
          */
@@ -7537,7 +7537,7 @@ export type GetResolutionsReportData = {
         /**
          * Only this channel.
          */
-        channel?: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+        channel?: 'all' | 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
     };
     url: '/reports/resolutions';
 };
@@ -7593,7 +7593,7 @@ export type GetTeamReportData = {
         /**
          * Only this channel.
          */
-        channel?: 'all' | 'whatsapp' | 'instagram' | 'messenger';
+        channel?: 'all' | 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
     };
     url: '/reports/team';
 };

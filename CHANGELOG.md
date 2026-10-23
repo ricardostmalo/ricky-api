@@ -6,6 +6,8 @@ This page records changes to the API. A breaking change only ships in a new path
 
 ## October 23, 2026
 
+**Web chat.** Compatible change to v1. Channels, conversations, contact identities and reports can carry the channel type `webchat`: the chat a company puts on its website. Channel filters also accept `webchat`. If your integration treats channel types as a closed list, add this value.
+
 **No model on agents.** Ricky chooses each agent's model. Agents no longer answer `model`, `GET /agent-options` no longer answers `models` or `default_model`, and creating or updating an agent with `model` answers `400 invalid_input`. No integration used these fields.
 
 ## October 19, 2026

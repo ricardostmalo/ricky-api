@@ -148,7 +148,7 @@ class ContactIdentity(TypedDict):
     """
     Identity ID.
     """
-    channel_type: Literal["whatsapp", "instagram", "messenger"]
+    channel_type: Literal["whatsapp", "instagram", "messenger", "webchat"]
     """
     Channel this identity belongs to.
     """
@@ -307,7 +307,7 @@ class Channel(TypedDict):
     """
     Channel ID.
     """
-    type: Literal["whatsapp", "instagram", "messenger"]
+    type: Literal["whatsapp", "instagram", "messenger", "webchat"]
     """
     Messaging channel.
     """
@@ -366,7 +366,7 @@ class ConversationChannel(TypedDict):
     """
     Channel ID.
     """
-    type: Literal["whatsapp", "instagram", "messenger"]
+    type: Literal["whatsapp", "instagram", "messenger", "webchat"]
 
 
 class ConversationContact(TypedDict):
@@ -1341,7 +1341,7 @@ class ConversationsReportPrevious(TypedDict):
 
 
 class ConversationsReportByChannelItem(TypedDict):
-    channel: Literal["whatsapp", "instagram", "messenger"]
+    channel: Literal["whatsapp", "instagram", "messenger", "webchat"]
     """
     Channel.
     """
@@ -1400,7 +1400,7 @@ class ConversationsReport(TypedDict):
     """
 
     period: ReportPeriod
-    channel: Literal["all", "whatsapp", "instagram", "messenger"]
+    channel: Literal["all", "whatsapp", "instagram", "messenger", "webchat"]
     """
     The channel filter the report applied.
     """
@@ -1550,7 +1550,7 @@ class MessagesReportByChannelItemSentBy(TypedDict):
 
 
 class MessagesReportByChannelItem(TypedDict):
-    channel: Literal["whatsapp", "instagram", "messenger"]
+    channel: Literal["whatsapp", "instagram", "messenger", "webchat"]
     """
     Channel.
     """
@@ -1622,7 +1622,7 @@ class MessagesReport(TypedDict):
     """
 
     period: ReportPeriod
-    channel: Literal["all", "whatsapp", "instagram", "messenger"]
+    channel: Literal["all", "whatsapp", "instagram", "messenger", "webchat"]
     """
     The channel filter the report applied.
     """
@@ -1680,7 +1680,7 @@ class DashboardReportTotals(TypedDict):
 
 
 class DashboardReportByChannelItem(TypedDict):
-    channel: Literal["whatsapp", "instagram", "messenger"]
+    channel: Literal["whatsapp", "instagram", "messenger", "webchat"]
     """
     Channel.
     """
@@ -1718,7 +1718,7 @@ class DashboardReportLongestWaitingItem(TypedDict):
     """
     Conversation ID.
     """
-    channel: Literal["whatsapp", "instagram", "messenger"]
+    channel: Literal["whatsapp", "instagram", "messenger", "webchat"]
     """
     Channel.
     """
@@ -1827,7 +1827,7 @@ class TeamReport(TypedDict):
     """
 
     period: ReportPeriod
-    channel: Literal["all", "whatsapp", "instagram", "messenger"]
+    channel: Literal["all", "whatsapp", "instagram", "messenger", "webchat"]
     """
     The channel filter the report applied.
     """
@@ -2254,7 +2254,7 @@ class ResponsesReportResponsesPerConversation(TypedDict):
 
 
 class ResponsesReportByChannelItem(TypedDict):
-    channel: Literal["whatsapp", "instagram", "messenger"]
+    channel: Literal["whatsapp", "instagram", "messenger", "webchat"]
     """
     Channel.
     """
@@ -2293,7 +2293,7 @@ class ResponsesReportByResponderItem(TypedDict):
     """
     Name; null when it has none and for `external`.
     """
-    channel: Optional[Literal["whatsapp", "instagram", "messenger"]]
+    channel: Optional[Literal["whatsapp", "instagram", "messenger", "webchat"]]
     """
     The app an `external` responder used; null otherwise.
     """
@@ -2325,7 +2325,7 @@ class ResponsesReport(TypedDict):
     """
 
     period: ReportPeriod
-    channel: Literal["all", "whatsapp", "instagram", "messenger"]
+    channel: Literal["all", "whatsapp", "instagram", "messenger", "webchat"]
     """
     The channel filter the report applied.
     """
@@ -2429,7 +2429,7 @@ class ResolutionsReportSery(TypedDict):
 
 
 class ResolutionsReportByChannelItem(TypedDict):
-    channel: Literal["whatsapp", "instagram", "messenger"]
+    channel: Literal["whatsapp", "instagram", "messenger", "webchat"]
     """
     Channel.
     """
@@ -2476,7 +2476,7 @@ class ResolutionsReport(TypedDict):
     """
 
     period: ReportPeriod
-    channel: Literal["all", "whatsapp", "instagram", "messenger"]
+    channel: Literal["all", "whatsapp", "instagram", "messenger", "webchat"]
     """
     The channel filter the report applied.
     """
