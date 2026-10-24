@@ -1,4 +1,4 @@
-// The docs guide's TypeScript example (apps/web/content/docs/api/index*.mdx); only typechecked.
+// The docs guide's TypeScript example (apps/docs/content/docs/api/index*.mdx); only typechecked.
 import { Ricky } from 'getricky';
 
 export async function guideExample(): Promise<void> {

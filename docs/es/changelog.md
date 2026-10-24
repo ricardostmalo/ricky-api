@@ -8,6 +8,8 @@ Esta página registra los cambios de la API. Un cambio incompatible solo llega e
 
 ## 23 de octubre de 2026
 
+**Chat web.** Cambio compatible con la v1. Los canales, conversaciones, identidades de contactos y reportes pueden traer el tipo de canal `webchat`: el chat que una empresa pone en su sitio web. Los filtros por canal también aceptan `webchat`. Si tu integración trata los tipos de canal como una lista cerrada, agrega este valor.
+
 **Sin modelo en los agentes.** Ricky elige el modelo de cada agente. Los agentes ya no responden `model`, `GET /agent-options` ya no responde `models` ni `default_model`, y crear o editar un agente con `model` recibe `400 invalid_input`. Ninguna integración usaba estos campos.
 
 ## 19 de octubre de 2026
