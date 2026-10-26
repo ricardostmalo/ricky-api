@@ -1887,14 +1887,6 @@ export type AdsReport = {
          */
         spend: number | null;
         /**
-         * Impressions.
-         */
-        impressions: number | null;
-        /**
-         * Clicks.
-         */
-        clicks: number | null;
-        /**
          * Conversations ads brought.
          */
         conversations: number;
