@@ -21225,6 +21225,32 @@
                 ],
                 "description": "Spend."
               },
+              "impressions": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Impressions."
+              },
+              "clicks": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Clicks."
+              },
               "conversations": {
                 "type": "integer",
                 "minimum": 0,
@@ -21234,6 +21260,8 @@
             },
             "required": [
               "spend",
+              "impressions",
+              "clicks",
               "conversations"
             ],
             "description": "The previous period."

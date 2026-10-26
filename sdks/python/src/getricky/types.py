@@ -2025,6 +2025,14 @@ class AdsReportPrevious(TypedDict):
     """
     Spend.
     """
+    impressions: Optional[int]
+    """
+    Impressions.
+    """
+    clicks: Optional[int]
+    """
+    Clicks.
+    """
     conversations: int
     """
     Conversations ads brought.

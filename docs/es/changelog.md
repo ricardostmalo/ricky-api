@@ -6,6 +6,10 @@ URL: https://getricky.ai/docs/api/changelog
 
 Esta página registra los cambios de la API. Un cambio incompatible solo llega en una versión nueva de la ruta y se anuncia aquí.
 
+## 26 de octubre de 2026
+
+**Reporte de anuncios.** Cambio compatible con la v1. El período anterior (`previous`) de `GET /reports/ads` también responde `impressions` y `clicks`, para compararlos con el período como el gasto y las conversaciones.
+
 ## 23 de octubre de 2026
 
 **Chat web.** Cambio compatible con la v1. Los canales, conversaciones, identidades de contactos y reportes pueden traer el tipo de canal `webchat`: el chat que una empresa pone en su sitio web. Los filtros por canal también aceptan `webchat`. Si tu integración trata los tipos de canal como una lista cerrada, agrega este valor.

@@ -4,6 +4,10 @@ Also at https://getricky.ai/en/docs/api/changelog.
 
 This page records changes to the API. A breaking change only ships in a new path version and is announced here.
 
+## October 26, 2026
+
+**Ads report.** Compatible change to v1. The `previous` period of `GET /reports/ads` also answers `impressions` and `clicks`, so they compare with the period like spend and conversations.
+
 ## October 23, 2026
 
 **Web chat.** Compatible change to v1. Channels, conversations, contact identities and reports can carry the channel type `webchat`: the chat a company puts on its website. Channel filters also accept `webchat`. If your integration treats channel types as a closed list, add this value.
