@@ -1790,7 +1790,7 @@ class TeamReportMember(TypedDict):
     """
     closed: int
     """
-    Closes in the period while they held the conversation.
+    Closes in the period they made.
     """
     open_now: int
     """
@@ -1798,7 +1798,7 @@ class TeamReportMember(TypedDict):
     """
     median_first_response_seconds: Optional[float]
     """
-    For conversations opened in the period, median time from the opening to the first message a person or AI agent sent, counted for whoever sent it, in seconds. Not narrowed by `channel`.
+    Median wait of the messages customers sent in a row, started in the period, that they answered: from the first of those messages to their answer, in seconds.
     """
     median_resolution_seconds: Optional[float]
     """
@@ -2329,7 +2329,7 @@ class ResponsesReportByResponderItem(TypedDict):
 
 class ResponsesReport(TypedDict):
     """
-    How fast people and AI agents answer customers. A response is the first message sent to the customer, other than a reaction, right after a customer message that is not a reaction; its response time is the wait since that customer message. Later messages in a row are follow-ups, and automations and templates are not responses. Responses are dated when they were sent. Conversation openings, closes and assignments play no part.
+    How fast people and AI agents answer customers, by the definition of the Atención and Equipo tabs. A response is the answer to messages a customer sent in a row (reactions aside): the first message after them that a person in Ricky, an AI agent or a person in the app of the channel itself sent. Its response time is the wait since the first of those customer messages. Later messages are follow-ups; automations, broadcasts and templates are never responses. Responses are dated when they were sent. Conversation openings, closes and assignments play no part.
     """
 
     period: ReportPeriod

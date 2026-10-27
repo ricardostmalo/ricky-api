@@ -6,16 +6,16 @@ URL: https://getricky.ai/en/docs/api/reports
 
 Each report operation answers the numbers of one tab of **Reports** in Ricky. The API reads the same data with the same definitions, so for the same period and filters it shows what the page shows. The key needs the `reports:read` scope.
 
-| Operation                    | Tab           | Filters                              | What it answers                                                    |
-| ---------------------------- | ------------- | ------------------------------------ | ------------------------------------------------------------------ |
-| `GET /reports/dashboard`     | Now           | None: it is now                      | Open conversations, who holds them and who waits for a reply.      |
-| `GET /reports/conversations` | Conversations | `from`, `to`, `channel`              | Customers who wrote, new or returning, per channel, day and hour.  |
-| `GET /reports/messages`      | Messages      | `from`, `to`, `channel`              | Messages received and sent, and who sent them.                     |
-| `GET /reports/responses`     | Responses     | `from`, `to`, `channel`, `responder` | Response times and responses per conversation.                     |
-| `GET /reports/resolutions`   | Resolutions   | `from`, `to`, `channel`              | Closes and how long conversations were open.                       |
-| `GET /reports/team`          | Team          | `from`, `to`, `channel`              | Assignments, messages, closes and medians per member and AI agent. |
-| `GET /reports/broadcasts`    | Broadcasts    | `from`, `to`                         | WhatsApp broadcasts and their recipients' outcomes.                |
-| `GET /reports/ads`           | Ads           | `from`, `to`                         | Meta ad spend next to the conversations each ad brought.           |
+| Operation                    | Tab           | Filters                              | What it answers                                                                    |
+| ---------------------------- | ------------- | ------------------------------------ | ---------------------------------------------------------------------------------- |
+| `GET /reports/dashboard`     | Now           | None: it is now                      | Open conversations, who holds them and who waits for a reply.                      |
+| `GET /reports/conversations` | Conversations | `from`, `to`, `channel`              | Customers who wrote, new or returning, per channel, day and hour.                  |
+| `GET /reports/messages`      | Messages      | `from`, `to`, `channel`              | Messages received and sent, and who sent them.                                     |
+| `GET /reports/responses`     | Responses     | `from`, `to`, `channel`, `responder` | Response times and responses per conversation.                                     |
+| `GET /reports/resolutions`   | Resolutions   | `from`, `to`, `channel`              | Closes and how long conversations were open.                                       |
+| `GET /reports/team`          | Team          | `from`, `to`, `channel`              | Assignments, messages, closes (by who closed) and medians per member and AI agent. |
+| `GET /reports/broadcasts`    | Broadcasts    | `from`, `to`                         | WhatsApp broadcasts and their recipients' outcomes.                                |
+| `GET /reports/ads`           | Ads           | `from`, `to`                         | Meta ad spend next to the conversations each ad brought.                           |
 
 ## The period
 
@@ -76,8 +76,8 @@ The example is shortened. The [reference](https://getricky.ai/en/docs/api/refere
 ## Definitions
 
 * **Customer** (conversations report): a conversation with at least one customer message in the period. It is new when its first message ever falls in the period.
-* **Response** (responses report): the first message sent to the customer, other than a reaction, right after a customer message. Its time is the wait since that message. Follow-ups, automations and templates are not responses. `responder=humans` covers people in Ricky and in the channel's own app; `responder=agents`, the AI agents; a member or AI agent ID, only them.
+* **Response** (responses report): the same as in Atención and Equipo. It answers a customer message, or several in a row (reactions aside): the first message after them sent by a person in Ricky, an AI agent or a person in the channel's own app. Its time is the wait since the first of those messages. Follow-ups, automations, broadcasts and templates are not responses. `responder=humans` covers people in Ricky and in the channel's own app; `responder=agents`, the AI agents; a member or AI agent ID, only them.
 * **Resolution** (resolutions report): each close in the period, from the opening of that span to the close.
-* **Ads**: a conversation comes from an ad when a customer message carries a Meta ad referral. Spend comes from Meta for the ad account's own days, so a period's edges can differ by the time zones' offset.
+* **Ads**: a conversation comes from an ad when a customer message carries a Meta referral that names the ad, the same in Demanda, Atención and Anuncios. Spend comes from Meta for the ad account's own days, so a period's edges can differ by the time zones' offset.
 
 Reports are computed when you call them. The Reports pages keep each result for a few minutes, so a page opened earlier can show slightly older numbers.

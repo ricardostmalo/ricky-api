@@ -1884,7 +1884,7 @@ export class RickyApi extends HeyApiClient {
     /**
      * Create a broadcast
      *
-     * Sends an approved WhatsApp template to an audience, now or at `scheduled_at`. Ricky fixes the recipient list now and sends through each number’s conversation, as a template sent from the inbox; variables the template maps to contact fields in Ricky are filled per contact. Answers `201` with the broadcast `queued` or `scheduled`; follow it with `GET /broadcasts/{broadcast_id}`. An audience without any WhatsApp number answers `422 rule_violation`.
+     * Sends an approved WhatsApp template to an audience, now or at `scheduled_at`. Ricky fixes the recipient list now and sends through each number’s conversation, as a template sent from the inbox; variables the template maps to contact fields in Ricky are filled per contact. Answers `201` with the broadcast `queued` or `scheduled`; follow it with `GET /broadcasts/{broadcast_id}`. An audience without any WhatsApp number, or a number that is disconnected or lacks its Meta access, answers `422 rule_violation`.
      *
      * Scope: `broadcasts:write`.
      */

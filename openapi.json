@@ -14292,7 +14292,7 @@
           "Broadcasts"
         ],
         "summary": "Create a broadcast",
-        "description": "Sends an approved WhatsApp template to an audience, now or at `scheduled_at`. Ricky fixes the recipient list now and sends through each number’s conversation, as a template sent from the inbox; variables the template maps to contact fields in Ricky are filled per contact. Answers `201` with the broadcast `queued` or `scheduled`; follow it with `GET /broadcasts/{broadcast_id}`. An audience without any WhatsApp number answers `422 rule_violation`.\n\nScope: `broadcasts:write`.",
+        "description": "Sends an approved WhatsApp template to an audience, now or at `scheduled_at`. Ricky fixes the recipient list now and sends through each number’s conversation, as a template sent from the inbox; variables the template maps to contact fields in Ricky are filled per contact. Answers `201` with the broadcast `queued` or `scheduled`; follow it with `GET /broadcasts/{broadcast_id}`. An audience without any WhatsApp number, or a number that is disconnected or lacks its Meta access, answers `422 rule_violation`.\n\nScope: `broadcasts:write`.",
         "parameters": [
           {
             "$ref": "#/components/parameters/IdempotencyKey"
@@ -20767,7 +20767,7 @@
                   "type": "integer",
                   "minimum": 0,
                   "maximum": 9007199254740991,
-                  "description": "Closes in the period while they held the conversation."
+                  "description": "Closes in the period they made."
                 },
                 "open_now": {
                   "type": "integer",
@@ -20785,7 +20785,7 @@
                       "type": "null"
                     }
                   ],
-                  "description": "For conversations opened in the period, median time from the opening to the first message a person or AI agent sent, counted for whoever sent it, in seconds. Not narrowed by `channel`."
+                  "description": "Median wait of the messages customers sent in a row, started in the period, that they answered: from the first of those messages to their answer, in seconds."
                 },
                 "median_resolution_seconds": {
                   "anyOf": [
@@ -21981,7 +21981,7 @@
           "by_responder",
           "generated_at"
         ],
-        "description": "How fast people and AI agents answer customers. A response is the first message sent to the customer, other than a reaction, right after a customer message that is not a reaction; its response time is the wait since that customer message. Later messages in a row are follow-ups, and automations and templates are not responses. Responses are dated when they were sent. Conversation openings, closes and assignments play no part."
+        "description": "How fast people and AI agents answer customers, by the definition of the Atención and Equipo tabs. A response is the answer to messages a customer sent in a row (reactions aside): the first message after them that a person in Ricky, an AI agent or a person in the app of the channel itself sent. Its response time is the wait since the first of those customer messages. Later messages are follow-ups; automations, broadcasts and templates are never responses. Responses are dated when they were sent. Conversation openings, closes and assignments play no part."
       },
       "ResolutionsReport": {
         "type": "object",
