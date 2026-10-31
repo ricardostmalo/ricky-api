@@ -141,6 +141,25 @@
             }
           },
           {
+            "name": "lifecycle_stage",
+            "in": "query",
+            "required": false,
+            "description": "Only contacts at this stage.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "subscriber",
+                "lead",
+                "marketing_qualified",
+                "sales_qualified",
+                "opportunity",
+                "customer",
+                "evangelist",
+                "other"
+              ]
+            }
+          },
+          {
             "name": "channel",
             "in": "query",
             "required": false,
@@ -18353,6 +18372,30 @@
             ],
             "description": "Sales lead status."
           },
+          "lifecycle_stage": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "subscriber",
+                  "lead",
+                  "marketing_qualified",
+                  "sales_qualified",
+                  "opportunity",
+                  "customer",
+                  "evangelist",
+                  "other"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Lifecycle stage.",
+            "examples": [
+              "customer"
+            ]
+          },
           "custom_values": {
             "type": "object",
             "propertyNames": {
@@ -18472,6 +18515,7 @@
           "notes",
           "owner_user_id",
           "lead_status",
+          "lifecycle_stage",
           "custom_values",
           "identities",
           "tags",
@@ -19531,6 +19575,16 @@
                       }
                     ]
                   },
+                  "lifecycle_stage": {
+                    "description": "Only contacts at this stage; null for any.",
+                    "examples": [
+                      "customer"
+                    ],
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
                   "query": {
                     "description": "Only contacts whose name, phone, email or company contains it.",
                     "examples": [
@@ -19545,6 +19599,7 @@
                 "required": [
                   "type",
                   "tag_id",
+                  "lifecycle_stage",
                   "query"
                 ]
               },
@@ -19728,6 +19783,7 @@
             "audience": {
               "type": "filter",
               "tag_id": "5c6d7e8f-9a0b-4c1d-8e2f-3a4b5c6d7e8f",
+              "lifecycle_stage": null,
               "query": null
             },
             "status": "completed",
@@ -25041,6 +25097,7 @@
                             "country",
                             "website_url",
                             "linkedin_url",
+                            "lifecycle_stage",
                             "lead_status",
                             "source",
                             "notes"
@@ -25969,6 +26026,26 @@
               }
             ]
           },
+          "lifecycle_stage": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "subscriber",
+                  "lead",
+                  "marketing_qualified",
+                  "sales_qualified",
+                  "opportunity",
+                  "customer",
+                  "evangelist",
+                  "other"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "custom_values": {
             "description": "Values keyed by contact field ID. Keys you omit keep their value.",
             "type": "object",
@@ -26016,6 +26093,7 @@
             "last_name": "Pérez",
             "primary_phone": "+50760001234",
             "primary_email": "ana.perez@example.com",
+            "lifecycle_stage": "customer",
             "custom_values": {
               "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d": "Albrook Mall"
             },
@@ -26245,6 +26323,26 @@
                   "connected",
                   "unqualified",
                   "bad_timing"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lifecycle_stage": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "subscriber",
+                  "lead",
+                  "marketing_qualified",
+                  "sales_qualified",
+                  "opportunity",
+                  "customer",
+                  "evangelist",
+                  "other"
                 ]
               },
               {
@@ -26968,6 +27066,20 @@
                     "type": "string",
                     "format": "uuid"
                   },
+                  "lifecycle_stage": {
+                    "description": "Only contacts at this stage.",
+                    "type": "string",
+                    "enum": [
+                      "subscriber",
+                      "lead",
+                      "marketing_qualified",
+                      "sales_qualified",
+                      "opportunity",
+                      "customer",
+                      "evangelist",
+                      "other"
+                    ]
+                  },
                   "query": {
                     "description": "Only contacts whose name, phone, email or company contains it.",
                     "type": "string",
@@ -27072,6 +27184,7 @@
                             "job_title",
                             "last_name",
                             "lead_status",
+                            "lifecycle_stage",
                             "linkedin_url",
                             "notes",
                             "postal_code",
@@ -27179,6 +27292,20 @@
                     "description": "Only contacts with this tag.",
                     "type": "string",
                     "format": "uuid"
+                  },
+                  "lifecycle_stage": {
+                    "description": "Only contacts at this stage.",
+                    "type": "string",
+                    "enum": [
+                      "subscriber",
+                      "lead",
+                      "marketing_qualified",
+                      "sales_qualified",
+                      "opportunity",
+                      "customer",
+                      "evangelist",
+                      "other"
+                    ]
                   },
                   "query": {
                     "description": "Only contacts whose name, phone, email or company contains it.",
@@ -29666,6 +29793,7 @@
                             "country",
                             "website_url",
                             "linkedin_url",
+                            "lifecycle_stage",
                             "lead_status",
                             "source",
                             "notes"

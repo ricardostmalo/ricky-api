@@ -115,6 +115,7 @@ class SyncOperations:
         query: Optional[str] = None,
         tag_id: Optional[str] = None,
         owner_user_id: Optional[str] = None,
+        lifecycle_stage: Optional[Literal["subscriber", "lead", "marketing_qualified", "sales_qualified", "opportunity", "customer", "evangelist", "other"]] = None,
         channel: Optional[Literal["whatsapp", "instagram", "messenger", "webchat"]] = None,
     ) -> Page[Contact]:
         """List contacts.
@@ -129,12 +130,13 @@ class SyncOperations:
             query: Text contained in the name, phone, email or company.
             tag_id: Only contacts with this tag.
             owner_user_id: Only contacts this member owns.
+            lifecycle_stage: Only contacts at this stage.
             channel: Only contacts reachable on this channel.
         """
         return cast(Page[Contact], self._request(
             "GET",
             "/contacts",
-            query={"page_size": page_size, "cursor": cursor, "query": query, "tag_id": tag_id, "owner_user_id": owner_user_id, "channel": channel},
+            query={"page_size": page_size, "cursor": cursor, "query": query, "tag_id": tag_id, "owner_user_id": owner_user_id, "lifecycle_stage": lifecycle_stage, "channel": channel},
         ))
 
     def create_contact(
@@ -2531,6 +2533,7 @@ class AsyncOperations:
         query: Optional[str] = None,
         tag_id: Optional[str] = None,
         owner_user_id: Optional[str] = None,
+        lifecycle_stage: Optional[Literal["subscriber", "lead", "marketing_qualified", "sales_qualified", "opportunity", "customer", "evangelist", "other"]] = None,
         channel: Optional[Literal["whatsapp", "instagram", "messenger", "webchat"]] = None,
     ) -> Page[Contact]:
         """List contacts.
@@ -2545,12 +2548,13 @@ class AsyncOperations:
             query: Text contained in the name, phone, email or company.
             tag_id: Only contacts with this tag.
             owner_user_id: Only contacts this member owns.
+            lifecycle_stage: Only contacts at this stage.
             channel: Only contacts reachable on this channel.
         """
         return cast(Page[Contact], await self._request(
             "GET",
             "/contacts",
-            query={"page_size": page_size, "cursor": cursor, "query": query, "tag_id": tag_id, "owner_user_id": owner_user_id, "channel": channel},
+            query={"page_size": page_size, "cursor": cursor, "query": query, "tag_id": tag_id, "owner_user_id": owner_user_id, "lifecycle_stage": lifecycle_stage, "channel": channel},
         ))
 
     async def create_contact(
