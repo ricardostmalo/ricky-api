@@ -35,6 +35,369 @@ class Error(TypedDict):
     error: ErrorError
 
 
+class MetaAdsCampaignBudget(TypedDict):
+    """
+    Budget as Meta reports it, in the ad account currency.
+    """
+
+    daily: Optional[float]
+    """
+    Daily budget in the account currency; null when not set.
+    """
+    lifetime: Optional[float]
+    """
+    Lifetime budget in the account currency; null when not set.
+    """
+    remaining: Optional[float]
+    """
+    Budget left in the account currency.
+    """
+
+
+class MetaAdsCampaign(TypedDict):
+    """
+    A campaign of a connected ad account.
+    """
+
+    id: str
+    """
+    Campaign ID at Meta.
+    """
+    account_id: str
+    """
+    Ad account ID at Meta.
+    """
+    name: str
+    """
+    Name in Meta.
+    """
+    objective: Optional[str]
+    """
+    Objective, such as `OUTCOME_ENGAGEMENT`.
+    """
+    status: str
+    """
+    Status the advertiser set: `ACTIVE`, `PAUSED`, …
+    """
+    effective_status: str
+    """
+    Delivery status, including a parent paused: `ACTIVE`, `CAMPAIGN_PAUSED`, …
+    """
+    buying_type: Optional[str]
+    """
+    `AUCTION` or `RESERVED`.
+    """
+    bid_strategy: Optional[str]
+    """
+    Bid strategy, when the campaign sets one.
+    """
+    budget: MetaAdsCampaignBudget
+    """
+    Budget as Meta reports it, in the ad account currency.
+    """
+    start_time: Optional[str]
+    """
+    ISO 8601 time as Meta reports it; null if unset.
+    """
+    stop_time: Optional[str]
+    """
+    ISO 8601 time as Meta reports it; null if unset.
+    """
+    created_time: Optional[str]
+    """
+    ISO 8601 time as Meta reports it; null if unset.
+    """
+    updated_time: Optional[str]
+    """
+    ISO 8601 time as Meta reports it; null if unset.
+    """
+
+
+class MetaAdsAdSetBudget(TypedDict):
+    """
+    Budget as Meta reports it, in the ad account currency.
+    """
+
+    daily: Optional[float]
+    """
+    Daily budget in the account currency; null when not set.
+    """
+    lifetime: Optional[float]
+    """
+    Lifetime budget in the account currency; null when not set.
+    """
+    remaining: Optional[float]
+    """
+    Budget left in the account currency.
+    """
+
+
+class MetaAdsAdSet(TypedDict):
+    """
+    An ad set of a connected ad account.
+    """
+
+    id: str
+    """
+    Ad set ID at Meta.
+    """
+    account_id: str
+    """
+    Ad account ID at Meta.
+    """
+    campaign_id: str
+    """
+    Campaign ID at Meta.
+    """
+    name: str
+    """
+    Name in Meta.
+    """
+    status: str
+    """
+    Status the advertiser set: `ACTIVE`, `PAUSED`, …
+    """
+    effective_status: str
+    """
+    Delivery status, including a parent paused: `ACTIVE`, `CAMPAIGN_PAUSED`, …
+    """
+    optimization_goal: Optional[str]
+    """
+    What Meta optimizes delivery for.
+    """
+    billing_event: Optional[str]
+    """
+    What Meta charges for.
+    """
+    bid_strategy: Optional[str]
+    """
+    Bid strategy, when the campaign sets one.
+    """
+    budget: MetaAdsAdSetBudget
+    """
+    Budget as Meta reports it, in the ad account currency.
+    """
+    start_time: Optional[str]
+    """
+    ISO 8601 time as Meta reports it; null if unset.
+    """
+    end_time: Optional[str]
+    """
+    ISO 8601 time as Meta reports it; null if unset.
+    """
+    targeting: Any
+    """
+    Meta's targeting spec as Meta returns it: ages, locations, interests, …
+    """
+    created_time: Optional[str]
+    """
+    ISO 8601 time as Meta reports it; null if unset.
+    """
+    updated_time: Optional[str]
+    """
+    ISO 8601 time as Meta reports it; null if unset.
+    """
+
+
+class MetaAdsAdCreative(TypedDict):
+    """
+    The creative the ad runs; null when Meta returns none.
+    """
+
+    id: str
+    """
+    Creative ID at Meta.
+    """
+    title: Optional[str]
+    """
+    Headline.
+    """
+    body: Optional[str]
+    """
+    Primary text.
+    """
+    call_to_action_type: Optional[str]
+    """
+    Button, such as `LEARN_MORE`.
+    """
+    image_url: Optional[str]
+    """
+    Image URL Meta returns.
+    """
+    thumbnail_url: Optional[str]
+    """
+    Thumbnail URL Meta returns; it expires.
+    """
+    instagram_permalink_url: Optional[str]
+    """
+    The Instagram post it runs.
+    """
+    object_story_spec: Any
+    """
+    Meta's story spec as Meta returns it: page, link, message and media.
+    """
+
+
+class MetaAdsAd(TypedDict):
+    """
+    An ad of a connected ad account, with its creative copy.
+    """
+
+    id: str
+    """
+    Ad ID at Meta.
+    """
+    account_id: str
+    """
+    Ad account ID at Meta.
+    """
+    campaign_id: str
+    """
+    Campaign ID at Meta.
+    """
+    ad_set_id: str
+    """
+    Ad set ID at Meta.
+    """
+    name: str
+    """
+    Name in Meta.
+    """
+    status: str
+    """
+    Status the advertiser set: `ACTIVE`, `PAUSED`, …
+    """
+    effective_status: str
+    """
+    Delivery status, including a parent paused: `ACTIVE`, `CAMPAIGN_PAUSED`, …
+    """
+    creative: Optional[MetaAdsAdCreative]
+    """
+    The creative the ad runs; null when Meta returns none.
+    """
+    created_time: Optional[str]
+    """
+    ISO 8601 time as Meta reports it; null if unset.
+    """
+    updated_time: Optional[str]
+    """
+    ISO 8601 time as Meta reports it; null if unset.
+    """
+
+
+class MetaAdsInsightAction(TypedDict):
+    action_type: str
+    """
+    Meta's action type, such as `link_click` or `onsite_conversion.messaging_conversation_started_7d`.
+    """
+    value: float
+    """
+    Count, or cost in the account currency.
+    """
+
+
+class MetaAdsInsightCostPerActionItem(TypedDict):
+    action_type: str
+    """
+    Meta's action type, such as `link_click` or `onsite_conversion.messaging_conversation_started_7d`.
+    """
+    value: float
+    """
+    Count, or cost in the account currency.
+    """
+
+
+class MetaAdsInsight(TypedDict):
+    """
+    Performance Meta computed for one row of the requested level, period and breakdowns.
+    """
+
+    account_id: str
+    """
+    Ad account ID at Meta.
+    """
+    campaign_id: Optional[str]
+    """
+    Campaign ID, at campaign level or below.
+    """
+    campaign_name: Optional[str]
+    """
+    Campaign name, at campaign level or below.
+    """
+    ad_set_id: Optional[str]
+    """
+    Ad set ID, at ad set level or below.
+    """
+    ad_set_name: Optional[str]
+    """
+    Ad set name, at ad set level or below.
+    """
+    ad_id: Optional[str]
+    """
+    Ad ID, at ad level.
+    """
+    ad_name: Optional[str]
+    """
+    Ad name, at ad level.
+    """
+    date_start: str
+    """
+    First day of the row, in the ad account's time zone.
+    """
+    date_stop: str
+    """
+    Last day of the row, in the ad account's time zone.
+    """
+    breakdown: Dict[str, str]
+    """
+    The value of each requested breakdown for this row, such as `{"age": "25-34"}`.
+    """
+    currency_code: str
+    """
+    ISO 4217 currency of the ad account.
+    """
+    spend: Optional[float]
+    """
+    Spend in the account currency.
+    """
+    impressions: Optional[float]
+    """
+    Impressions.
+    """
+    reach: Optional[float]
+    """
+    People reached.
+    """
+    frequency: Optional[float]
+    """
+    Impressions per person reached.
+    """
+    clicks: Optional[float]
+    """
+    Clicks.
+    """
+    ctr: Optional[float]
+    """
+    Click-through rate, in percent.
+    """
+    cpc: Optional[float]
+    """
+    Cost per click.
+    """
+    cpm: Optional[float]
+    """
+    Cost per 1,000 impressions.
+    """
+    actions: List[MetaAdsInsightAction]
+    """
+    Actions Meta counted, per action type.
+    """
+    cost_per_action: List[MetaAdsInsightCostPerActionItem]
+    """
+    Cost of each action type.
+    """
+
+
 class Agent(TypedDict):
     """
     An AI agent that answers conversations alongside the team.

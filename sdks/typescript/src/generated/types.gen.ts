@@ -31,6 +31,345 @@ export type Error = {
 };
 
 /**
+ * A campaign of a connected ad account.
+ */
+export type MetaAdsCampaign = {
+    /**
+     * Campaign ID at Meta.
+     */
+    id: string;
+    /**
+     * Ad account ID at Meta.
+     */
+    account_id: string;
+    /**
+     * Name in Meta.
+     */
+    name: string;
+    /**
+     * Objective, such as `OUTCOME_ENGAGEMENT`.
+     */
+    objective: string | null;
+    /**
+     * Status the advertiser set: `ACTIVE`, `PAUSED`, …
+     */
+    status: string;
+    /**
+     * Delivery status, including a parent paused: `ACTIVE`, `CAMPAIGN_PAUSED`, …
+     */
+    effective_status: string;
+    /**
+     * `AUCTION` or `RESERVED`.
+     */
+    buying_type: string | null;
+    /**
+     * Bid strategy, when the campaign sets one.
+     */
+    bid_strategy: string | null;
+    /**
+     * Budget as Meta reports it, in the ad account currency.
+     */
+    budget: {
+        /**
+         * Daily budget in the account currency; null when not set.
+         */
+        daily: number | null;
+        /**
+         * Lifetime budget in the account currency; null when not set.
+         */
+        lifetime: number | null;
+        /**
+         * Budget left in the account currency.
+         */
+        remaining: number | null;
+    };
+    /**
+     * ISO 8601 time as Meta reports it; null if unset.
+     */
+    start_time: string | null;
+    /**
+     * ISO 8601 time as Meta reports it; null if unset.
+     */
+    stop_time: string | null;
+    /**
+     * ISO 8601 time as Meta reports it; null if unset.
+     */
+    created_time: string | null;
+    /**
+     * ISO 8601 time as Meta reports it; null if unset.
+     */
+    updated_time: string | null;
+};
+
+/**
+ * An ad set of a connected ad account.
+ */
+export type MetaAdsAdSet = {
+    /**
+     * Ad set ID at Meta.
+     */
+    id: string;
+    /**
+     * Ad account ID at Meta.
+     */
+    account_id: string;
+    /**
+     * Campaign ID at Meta.
+     */
+    campaign_id: string;
+    /**
+     * Name in Meta.
+     */
+    name: string;
+    /**
+     * Status the advertiser set: `ACTIVE`, `PAUSED`, …
+     */
+    status: string;
+    /**
+     * Delivery status, including a parent paused: `ACTIVE`, `CAMPAIGN_PAUSED`, …
+     */
+    effective_status: string;
+    /**
+     * What Meta optimizes delivery for.
+     */
+    optimization_goal: string | null;
+    /**
+     * What Meta charges for.
+     */
+    billing_event: string | null;
+    /**
+     * Bid strategy, when the campaign sets one.
+     */
+    bid_strategy: string | null;
+    /**
+     * Budget as Meta reports it, in the ad account currency.
+     */
+    budget: {
+        /**
+         * Daily budget in the account currency; null when not set.
+         */
+        daily: number | null;
+        /**
+         * Lifetime budget in the account currency; null when not set.
+         */
+        lifetime: number | null;
+        /**
+         * Budget left in the account currency.
+         */
+        remaining: number | null;
+    };
+    /**
+     * ISO 8601 time as Meta reports it; null if unset.
+     */
+    start_time: string | null;
+    /**
+     * ISO 8601 time as Meta reports it; null if unset.
+     */
+    end_time: string | null;
+    /**
+     * Meta's targeting spec as Meta returns it: ages, locations, interests, …
+     */
+    targeting: unknown;
+    /**
+     * ISO 8601 time as Meta reports it; null if unset.
+     */
+    created_time: string | null;
+    /**
+     * ISO 8601 time as Meta reports it; null if unset.
+     */
+    updated_time: string | null;
+};
+
+/**
+ * An ad of a connected ad account, with its creative copy.
+ */
+export type MetaAdsAd = {
+    /**
+     * Ad ID at Meta.
+     */
+    id: string;
+    /**
+     * Ad account ID at Meta.
+     */
+    account_id: string;
+    /**
+     * Campaign ID at Meta.
+     */
+    campaign_id: string;
+    /**
+     * Ad set ID at Meta.
+     */
+    ad_set_id: string;
+    /**
+     * Name in Meta.
+     */
+    name: string;
+    /**
+     * Status the advertiser set: `ACTIVE`, `PAUSED`, …
+     */
+    status: string;
+    /**
+     * Delivery status, including a parent paused: `ACTIVE`, `CAMPAIGN_PAUSED`, …
+     */
+    effective_status: string;
+    /**
+     * The creative the ad runs; null when Meta returns none.
+     */
+    creative: {
+        /**
+         * Creative ID at Meta.
+         */
+        id: string;
+        /**
+         * Headline.
+         */
+        title: string | null;
+        /**
+         * Primary text.
+         */
+        body: string | null;
+        /**
+         * Button, such as `LEARN_MORE`.
+         */
+        call_to_action_type: string | null;
+        /**
+         * Image URL Meta returns.
+         */
+        image_url: string | null;
+        /**
+         * Thumbnail URL Meta returns; it expires.
+         */
+        thumbnail_url: string | null;
+        /**
+         * The Instagram post it runs.
+         */
+        instagram_permalink_url: string | null;
+        /**
+         * Meta's story spec as Meta returns it: page, link, message and media.
+         */
+        object_story_spec: unknown;
+    } | null;
+    /**
+     * ISO 8601 time as Meta reports it; null if unset.
+     */
+    created_time: string | null;
+    /**
+     * ISO 8601 time as Meta reports it; null if unset.
+     */
+    updated_time: string | null;
+};
+
+/**
+ * Performance Meta computed for one row of the requested level, period and breakdowns.
+ */
+export type MetaAdsInsight = {
+    /**
+     * Ad account ID at Meta.
+     */
+    account_id: string;
+    /**
+     * Campaign ID, at campaign level or below.
+     */
+    campaign_id: string | null;
+    /**
+     * Campaign name, at campaign level or below.
+     */
+    campaign_name: string | null;
+    /**
+     * Ad set ID, at ad set level or below.
+     */
+    ad_set_id: string | null;
+    /**
+     * Ad set name, at ad set level or below.
+     */
+    ad_set_name: string | null;
+    /**
+     * Ad ID, at ad level.
+     */
+    ad_id: string | null;
+    /**
+     * Ad name, at ad level.
+     */
+    ad_name: string | null;
+    /**
+     * First day of the row, in the ad account's time zone.
+     */
+    date_start: string;
+    /**
+     * Last day of the row, in the ad account's time zone.
+     */
+    date_stop: string;
+    /**
+     * The value of each requested breakdown for this row, such as `{"age": "25-34"}`.
+     */
+    breakdown: {
+        [key: string]: string;
+    };
+    /**
+     * ISO 4217 currency of the ad account.
+     */
+    currency_code: string;
+    /**
+     * Spend in the account currency.
+     */
+    spend: number | null;
+    /**
+     * Impressions.
+     */
+    impressions: number | null;
+    /**
+     * People reached.
+     */
+    reach: number | null;
+    /**
+     * Impressions per person reached.
+     */
+    frequency: number | null;
+    /**
+     * Clicks.
+     */
+    clicks: number | null;
+    /**
+     * Click-through rate, in percent.
+     */
+    ctr: number | null;
+    /**
+     * Cost per click.
+     */
+    cpc: number | null;
+    /**
+     * Cost per 1,000 impressions.
+     */
+    cpm: number | null;
+    /**
+     * Actions Meta counted, per action type.
+     */
+    actions: Array<{
+        /**
+         * Meta's action type, such as `link_click` or `onsite_conversion.messaging_conversation_started_7d`.
+         */
+        action_type: string;
+        /**
+         * Count, or cost in the account currency.
+         */
+        value: number;
+    }>;
+    /**
+     * Cost of each action type.
+     */
+    cost_per_action: Array<{
+        /**
+         * Meta's action type, such as `link_click` or `onsite_conversion.messaging_conversation_started_7d`.
+         */
+        action_type: string;
+        /**
+         * Count, or cost in the account currency.
+         */
+        value: number;
+    }>;
+};
+
+/**
  * An AI agent that answers conversations alongside the team.
  */
 export type Agent = {
@@ -7745,6 +8084,286 @@ export type GetAdsReportResponses = {
 };
 
 export type GetAdsReportResponse = GetAdsReportResponses[keyof GetAdsReportResponses];
+
+export type ListMetaAdsCampaignsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Only this connected ad account.
+         */
+        account_id?: string;
+        /**
+         * `true` returns only what Meta is delivering now (effective status `ACTIVE`).
+         */
+        active_only?: 'true' | 'false';
+    };
+    url: '/ads/campaigns';
+};
+
+export type ListMetaAdsCampaignsErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `forbidden`: The organization does not allow the operation.
+     *
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListMetaAdsCampaignsError = ListMetaAdsCampaignsErrors[keyof ListMetaAdsCampaignsErrors];
+
+export type ListMetaAdsCampaignsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<MetaAdsCampaign>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListMetaAdsCampaignsResponse = ListMetaAdsCampaignsResponses[keyof ListMetaAdsCampaignsResponses];
+
+export type ListMetaAdsAdSetsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Only this connected ad account.
+         */
+        account_id?: string;
+        /**
+         * Only the ad sets of this campaign.
+         */
+        campaign_id?: string;
+        /**
+         * `true` returns only what Meta is delivering now (effective status `ACTIVE`).
+         */
+        active_only?: 'true' | 'false';
+    };
+    url: '/ads/ad-sets';
+};
+
+export type ListMetaAdsAdSetsErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `forbidden`: The organization does not allow the operation.
+     *
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListMetaAdsAdSetsError = ListMetaAdsAdSetsErrors[keyof ListMetaAdsAdSetsErrors];
+
+export type ListMetaAdsAdSetsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<MetaAdsAdSet>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListMetaAdsAdSetsResponse = ListMetaAdsAdSetsResponses[keyof ListMetaAdsAdSetsResponses];
+
+export type ListMetaAdsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Only this connected ad account.
+         */
+        account_id?: string;
+        /**
+         * Only the ads of this campaign.
+         */
+        campaign_id?: string;
+        /**
+         * Only the ads of this ad set.
+         */
+        ad_set_id?: string;
+        /**
+         * `true` returns only what Meta is delivering now (effective status `ACTIVE`).
+         */
+        active_only?: 'true' | 'false';
+    };
+    url: '/ads/ads';
+};
+
+export type ListMetaAdsErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `forbidden`: The organization does not allow the operation.
+     *
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListMetaAdsError = ListMetaAdsErrors[keyof ListMetaAdsErrors];
+
+export type ListMetaAdsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<MetaAdsAd>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListMetaAdsResponse = ListMetaAdsResponses[keyof ListMetaAdsResponses];
+
+export type GetMetaAdsInsightsData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * Only this connected ad account.
+         */
+        account_id?: string;
+        /**
+         * One row per ad account, campaign, ad set or ad.
+         */
+        level?: 'account' | 'campaign' | 'ad_set' | 'ad';
+        /**
+         * First day, `YYYY-MM-DD`, in the ad account's time zone.
+         */
+        from: string;
+        /**
+         * Last day, `YYYY-MM-DD`, inclusive. At most 400 days after `from`.
+         */
+        to: string;
+        /**
+         * Split rows by up to two of `age`, `gender`, `country`, `region`, `publisher_platform`, `platform_position`, `device_platform`, comma-separated.
+         */
+        breakdowns?: string;
+        /**
+         * `true` returns one row per day instead of one for the period.
+         */
+        daily?: 'true' | 'false';
+        /**
+         * Only this campaign, ad set or ad.
+         */
+        object_id?: string;
+    };
+    url: '/ads/insights';
+};
+
+export type GetMetaAdsInsightsErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `forbidden`: The organization does not allow the operation.
+     *
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetMetaAdsInsightsError = GetMetaAdsInsightsErrors[keyof GetMetaAdsInsightsErrors];
+
+export type GetMetaAdsInsightsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<MetaAdsInsight>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type GetMetaAdsInsightsResponse = GetMetaAdsInsightsResponses[keyof GetMetaAdsInsightsResponses];
 
 export type ListAgentsData = {
     body?: never;

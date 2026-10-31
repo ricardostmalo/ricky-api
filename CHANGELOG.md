@@ -4,6 +4,10 @@ Also at https://getricky.ai/en/docs/api/changelog.
 
 This page records changes to the API. A breaking change only ships in a new path version and is announced here.
 
+## October 31, 2026
+
+**Meta Ads, live.** Compatible change to v1. `GET /ads/campaigns`, `GET /ads/ad-sets`, `GET /ads/ads` and `GET /ads/insights` read the organization's connected Meta ad accounts live from Meta, read-only, with the `reports:read` scope. See [Reports](https://getricky.ai/en/docs/api/reports#meta-ads-live).
+
 ## October 26, 2026
 
 **Ads report.** Compatible change to v1. The `previous` period of `GET /reports/ads` also answers `impressions` and `clicks`, so they compare with the period like spend and conversations.

@@ -35,6 +35,7 @@ This repository is generated from the code that serves the API and updated on ev
 | Workflows | Create, edit, activate and pause workflows, review executions and appointment reminders | [Workflows](docs/en/workflows.md) |
 | Agents and knowledge | Create AI agents, put them on conversations, manage the files, branches and contact cards they use | [Agents and knowledge](docs/en/agents-and-knowledge.md) |
 | Reports | Read the numbers of the Reports pages for a period | [Reports](docs/en/reports.md) |
+| Meta Ads | Read the connected ad accounts' campaigns, ad sets, ads and insights live from Meta, read-only | [Reports](docs/en/reports.md) |
 | Webhooks | Subscribe to signed events and review deliveries | [Webhooks](docs/en/webhooks.md) |
 
 ## Quick start

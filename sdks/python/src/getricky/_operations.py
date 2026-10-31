@@ -56,6 +56,10 @@ from .types import (
     Message,
     MessageSearchResult,
     MessagesReport,
+    MetaAdsAd,
+    MetaAdsAdSet,
+    MetaAdsCampaign,
+    MetaAdsInsight,
     PreviewBroadcastAudience,
     QuickReply,
     ReminderHistory,
@@ -1085,6 +1089,110 @@ class SyncOperations:
             "GET",
             "/reports/ads",
             query={"from": from_, "to": to},
+        ))
+
+    def list_meta_ads_campaigns(
+        self,
+        *,
+        account_id: Optional[str] = None,
+        active_only: Optional[Literal["true", "false"]] = None,
+    ) -> Page[MetaAdsCampaign]:
+        """List Meta ad campaigns.
+
+        Campaigns of the connected Meta ad accounts, read live from Meta. Answers `rule_violation` when the organization has not connected Meta Ads, and `forbidden` when Meta no longer accepts its connection.
+
+        Scope: `reports:read`.
+
+        Args:
+            account_id: Only this connected ad account.
+            active_only: `true` returns only what Meta is delivering now (effective status `ACTIVE`).
+        """
+        return cast(Page[MetaAdsCampaign], self._request(
+            "GET",
+            "/ads/campaigns",
+            query={"account_id": account_id, "active_only": active_only},
+        ))
+
+    def list_meta_ads_ad_sets(
+        self,
+        *,
+        account_id: Optional[str] = None,
+        campaign_id: Optional[str] = None,
+        active_only: Optional[Literal["true", "false"]] = None,
+    ) -> Page[MetaAdsAdSet]:
+        """List Meta ad sets.
+
+        Ad sets of the connected Meta ad accounts with budget and targeting, read live from Meta. Answers `rule_violation` when the organization has not connected Meta Ads, and `forbidden` when Meta no longer accepts its connection.
+
+        Scope: `reports:read`.
+
+        Args:
+            account_id: Only this connected ad account.
+            campaign_id: Only the ad sets of this campaign.
+            active_only: `true` returns only what Meta is delivering now (effective status `ACTIVE`).
+        """
+        return cast(Page[MetaAdsAdSet], self._request(
+            "GET",
+            "/ads/ad-sets",
+            query={"account_id": account_id, "campaign_id": campaign_id, "active_only": active_only},
+        ))
+
+    def list_meta_ads(
+        self,
+        *,
+        account_id: Optional[str] = None,
+        campaign_id: Optional[str] = None,
+        ad_set_id: Optional[str] = None,
+        active_only: Optional[Literal["true", "false"]] = None,
+    ) -> Page[MetaAdsAd]:
+        """List Meta ads.
+
+        Ads of the connected Meta ad accounts with their creative copy, read live from Meta. Answers `rule_violation` when the organization has not connected Meta Ads, and `forbidden` when Meta no longer accepts its connection.
+
+        Scope: `reports:read`.
+
+        Args:
+            account_id: Only this connected ad account.
+            campaign_id: Only the ads of this campaign.
+            ad_set_id: Only the ads of this ad set.
+            active_only: `true` returns only what Meta is delivering now (effective status `ACTIVE`).
+        """
+        return cast(Page[MetaAdsAd], self._request(
+            "GET",
+            "/ads/ads",
+            query={"account_id": account_id, "campaign_id": campaign_id, "ad_set_id": ad_set_id, "active_only": active_only},
+        ))
+
+    def get_meta_ads_insights(
+        self,
+        *,
+        account_id: Optional[str] = None,
+        level: Optional[Literal["account", "campaign", "ad_set", "ad"]] = None,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+        breakdowns: Optional[str] = None,
+        daily: Optional[Literal["true", "false"]] = None,
+        object_id: Optional[str] = None,
+    ) -> Page[MetaAdsInsight]:
+        """Get Meta ads insights.
+
+        Spend, delivery and Meta's actions for the connected ad accounts over a period, per account, campaign, ad set or ad, computed live by Meta. Answers `rule_violation` when the organization has not connected Meta Ads, and `forbidden` when Meta no longer accepts its connection.
+
+        Scope: `reports:read`.
+
+        Args:
+            account_id: Only this connected ad account.
+            level: One row per ad account, campaign, ad set or ad.
+            from_: First day, `YYYY-MM-DD`, in the ad account's time zone.
+            to: Last day, `YYYY-MM-DD`, inclusive. At most 400 days after `from`.
+            breakdowns: Split rows by up to two of `age`, `gender`, `country`, `region`, `publisher_platform`, `platform_position`, `device_platform`, comma-separated.
+            daily: `true` returns one row per day instead of one for the period.
+            object_id: Only this campaign, ad set or ad.
+        """
+        return cast(Page[MetaAdsInsight], self._request(
+            "GET",
+            "/ads/insights",
+            query={"account_id": account_id, "level": level, "from": from_, "to": to, "breakdowns": breakdowns, "daily": daily, "object_id": object_id},
         ))
 
     def list_agents(
@@ -3399,6 +3507,110 @@ class AsyncOperations:
             "GET",
             "/reports/ads",
             query={"from": from_, "to": to},
+        ))
+
+    async def list_meta_ads_campaigns(
+        self,
+        *,
+        account_id: Optional[str] = None,
+        active_only: Optional[Literal["true", "false"]] = None,
+    ) -> Page[MetaAdsCampaign]:
+        """List Meta ad campaigns.
+
+        Campaigns of the connected Meta ad accounts, read live from Meta. Answers `rule_violation` when the organization has not connected Meta Ads, and `forbidden` when Meta no longer accepts its connection.
+
+        Scope: `reports:read`.
+
+        Args:
+            account_id: Only this connected ad account.
+            active_only: `true` returns only what Meta is delivering now (effective status `ACTIVE`).
+        """
+        return cast(Page[MetaAdsCampaign], await self._request(
+            "GET",
+            "/ads/campaigns",
+            query={"account_id": account_id, "active_only": active_only},
+        ))
+
+    async def list_meta_ads_ad_sets(
+        self,
+        *,
+        account_id: Optional[str] = None,
+        campaign_id: Optional[str] = None,
+        active_only: Optional[Literal["true", "false"]] = None,
+    ) -> Page[MetaAdsAdSet]:
+        """List Meta ad sets.
+
+        Ad sets of the connected Meta ad accounts with budget and targeting, read live from Meta. Answers `rule_violation` when the organization has not connected Meta Ads, and `forbidden` when Meta no longer accepts its connection.
+
+        Scope: `reports:read`.
+
+        Args:
+            account_id: Only this connected ad account.
+            campaign_id: Only the ad sets of this campaign.
+            active_only: `true` returns only what Meta is delivering now (effective status `ACTIVE`).
+        """
+        return cast(Page[MetaAdsAdSet], await self._request(
+            "GET",
+            "/ads/ad-sets",
+            query={"account_id": account_id, "campaign_id": campaign_id, "active_only": active_only},
+        ))
+
+    async def list_meta_ads(
+        self,
+        *,
+        account_id: Optional[str] = None,
+        campaign_id: Optional[str] = None,
+        ad_set_id: Optional[str] = None,
+        active_only: Optional[Literal["true", "false"]] = None,
+    ) -> Page[MetaAdsAd]:
+        """List Meta ads.
+
+        Ads of the connected Meta ad accounts with their creative copy, read live from Meta. Answers `rule_violation` when the organization has not connected Meta Ads, and `forbidden` when Meta no longer accepts its connection.
+
+        Scope: `reports:read`.
+
+        Args:
+            account_id: Only this connected ad account.
+            campaign_id: Only the ads of this campaign.
+            ad_set_id: Only the ads of this ad set.
+            active_only: `true` returns only what Meta is delivering now (effective status `ACTIVE`).
+        """
+        return cast(Page[MetaAdsAd], await self._request(
+            "GET",
+            "/ads/ads",
+            query={"account_id": account_id, "campaign_id": campaign_id, "ad_set_id": ad_set_id, "active_only": active_only},
+        ))
+
+    async def get_meta_ads_insights(
+        self,
+        *,
+        account_id: Optional[str] = None,
+        level: Optional[Literal["account", "campaign", "ad_set", "ad"]] = None,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+        breakdowns: Optional[str] = None,
+        daily: Optional[Literal["true", "false"]] = None,
+        object_id: Optional[str] = None,
+    ) -> Page[MetaAdsInsight]:
+        """Get Meta ads insights.
+
+        Spend, delivery and Meta's actions for the connected ad accounts over a period, per account, campaign, ad set or ad, computed live by Meta. Answers `rule_violation` when the organization has not connected Meta Ads, and `forbidden` when Meta no longer accepts its connection.
+
+        Scope: `reports:read`.
+
+        Args:
+            account_id: Only this connected ad account.
+            level: One row per ad account, campaign, ad set or ad.
+            from_: First day, `YYYY-MM-DD`, in the ad account's time zone.
+            to: Last day, `YYYY-MM-DD`, inclusive. At most 400 days after `from`.
+            breakdowns: Split rows by up to two of `age`, `gender`, `country`, `region`, `publisher_platform`, `platform_position`, `device_platform`, comma-separated.
+            daily: `true` returns one row per day instead of one for the period.
+            object_id: Only this campaign, ad set or ad.
+        """
+        return cast(Page[MetaAdsInsight], await self._request(
+            "GET",
+            "/ads/insights",
+            query={"account_id": account_id, "level": level, "from": from_, "to": to, "breakdowns": breakdowns, "daily": daily, "object_id": object_id},
         ))
 
     async def list_agents(
