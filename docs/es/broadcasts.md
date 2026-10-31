@@ -32,7 +32,7 @@ Para llenar una variable con los datos de cada destinatario, envía `mappings`, 
 
 ## 2. Elige la audiencia
 
-* `{ "type": "filter", "tag_id": "…", "lifecycle_stage": "customer", "query": "…" }`: todos los contactos que cumplen todos los filtros que envíes. Sin filtros, todos los contactos.
+* `{ "type": "filter", "tag_id": "…", "query": "…" }`: todos los contactos que cumplen todos los filtros que envíes. Sin filtros, todos los contactos.
 * `{ "type": "contacts", "contact_ids": ["…"] }`: los contactos que indiques, hasta 1.000. Un contacto de otra organización recibe `404 not_found`.
 * `{ "type": "phones", "phones": ["+50760001234"] }`: números con código de país, hasta 2.000.
 

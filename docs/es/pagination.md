@@ -42,11 +42,11 @@ curl "https://getricky.ai/api/v1/conversations?status=open&page_size=100&cursor=
 
 ## Listas paginadas
 
-| Operación                                       | Parámetros                                                                              | Orden                             |
-| ----------------------------------------------- | --------------------------------------------------------------------------------------- | --------------------------------- |
-| `GET /contacts`                                 | `page_size`, `cursor`, `query`, `tag_id`, `owner_user_id`, `lifecycle_stage`, `channel` | `updated_at` más reciente primero |
-| `GET /conversations`                            | `page_size`, `cursor`, `status`, `assigned_user_id`                                     | Actividad más reciente primero    |
-| `GET /conversations/{conversation_id}/messages` | `cursor`                                                                                | Mensaje más reciente primero      |
+| Operación                                       | Parámetros                                                           | Orden                          |
+| ----------------------------------------------- | -------------------------------------------------------------------- | ------------------------------ |
+| `GET /contacts`                                 | `page_size`, `cursor`, `query`, `tag_id`, `owner_user_id`, `channel` | Nombre, de la A a la Z         |
+| `GET /conversations`                            | `page_size`, `cursor`, `status`, `assigned_user_id`                  | Actividad más reciente primero |
+| `GET /conversations/{conversation_id}/messages` | `cursor`                                                             | Mensaje más reciente primero   |
 
 La lista de mensajes no acepta `page_size`: Ricky decide el tamaño de cada página.
 

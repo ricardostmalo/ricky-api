@@ -32,7 +32,7 @@ To fill a variable with each recipient's own data, send `mappings`, as the compo
 
 ## 2. Choose the audience
 
-* `{ "type": "filter", "tag_id": "…", "lifecycle_stage": "customer", "query": "…" }`: every contact that matches all the filters you send. With no filter, every contact.
+* `{ "type": "filter", "tag_id": "…", "query": "…" }`: every contact that matches all the filters you send. With no filter, every contact.
 * `{ "type": "contacts", "contact_ids": ["…"] }`: the contacts you list, up to 1,000. A contact of another organization gets `404 not_found`.
 * `{ "type": "phones", "phones": ["+50760001234"] }`: numbers with country code, up to 2,000.
 

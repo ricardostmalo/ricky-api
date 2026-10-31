@@ -607,10 +607,6 @@ class Contact(TypedDict):
     """
     Sales lead status.
     """
-    lifecycle_stage: Optional[Literal["subscriber", "lead", "marketing_qualified", "sales_qualified", "opportunity", "customer", "evangelist", "other"]]
-    """
-    Lifecycle stage.
-    """
     custom_values: Dict[str, Optional[Union[str, float, bool, List[str]]]]
     """
     Custom field values keyed by contact field ID. See `GET /contact-fields`.
@@ -1006,10 +1002,6 @@ class BroadcastAudienceFilter(TypedDict):
 
     type: Literal["filter"]
     tag_id: Optional[str]
-    lifecycle_stage: Optional[str]
-    """
-    Only contacts at this stage; null for any.
-    """
     query: Optional[str]
     """
     Only contacts whose name, phone, email or company contains it.
@@ -3518,7 +3510,7 @@ class TemplateFieldMappingsMappingSource(TypedDict, closed=True):
     """
 
     kind: Literal["native"]
-    field: Literal["first_name", "last_name", "primary_phone", "primary_email", "company", "job_title", "birthday", "street_address", "city", "region", "postal_code", "country", "website_url", "linkedin_url", "lifecycle_stage", "lead_status", "source", "notes"]
+    field: Literal["first_name", "last_name", "primary_phone", "primary_email", "company", "job_title", "birthday", "street_address", "city", "region", "postal_code", "country", "website_url", "linkedin_url", "lead_status", "source", "notes"]
     """
     A field every contact has.
     """
@@ -3923,7 +3915,6 @@ class CreateContact(TypedDict, closed=True):
     Member who owns the contact.
     """
     lead_status: NotRequired[Optional[Literal["new", "open", "in_progress", "attempted", "connected", "unqualified", "bad_timing"]]]
-    lifecycle_stage: NotRequired[Optional[Literal["subscriber", "lead", "marketing_qualified", "sales_qualified", "opportunity", "customer", "evangelist", "other"]]]
     custom_values: NotRequired[Dict[str, Optional[Union[str, float, bool, List[str]]]]]
     """
     Values keyed by contact field ID. Keys you omit keep their value.
@@ -4008,7 +3999,6 @@ class UpdateContact(TypedDict, closed=True):
     Member who owns the contact.
     """
     lead_status: NotRequired[Optional[Literal["new", "open", "in_progress", "attempted", "connected", "unqualified", "bad_timing"]]]
-    lifecycle_stage: NotRequired[Optional[Literal["subscriber", "lead", "marketing_qualified", "sales_qualified", "opportunity", "customer", "evangelist", "other"]]]
     custom_values: NotRequired[Dict[str, Optional[Union[str, float, bool, List[str]]]]]
     """
     Values keyed by contact field ID. Keys you omit keep their value.
@@ -4273,10 +4263,6 @@ class CreateBroadcastAudienceFilter(TypedDict, closed=True):
     """
     Only contacts with this tag.
     """
-    lifecycle_stage: NotRequired[Literal["subscriber", "lead", "marketing_qualified", "sales_qualified", "opportunity", "customer", "evangelist", "other"]]
-    """
-    Only contacts at this stage.
-    """
     query: NotRequired[str]
     """
     Only contacts whose name, phone, email or company contains it.
@@ -4316,7 +4302,7 @@ class CreateBroadcastMappingSourceContact(TypedDict, closed=True):
     """
 
     type: Literal["contact"]
-    field: Literal["birthday", "city", "company", "country", "first_name", "job_title", "last_name", "lead_status", "lifecycle_stage", "linkedin_url", "notes", "postal_code", "primary_email", "primary_phone", "region", "source", "street_address", "website_url"]
+    field: Literal["birthday", "city", "company", "country", "first_name", "job_title", "last_name", "lead_status", "linkedin_url", "notes", "postal_code", "primary_email", "primary_phone", "region", "source", "street_address", "website_url"]
     """
     A field of the contact.
     """
@@ -4386,10 +4372,6 @@ class PreviewBroadcastAudienceAudienceFilter(TypedDict, closed=True):
     tag_id: NotRequired[str]
     """
     Only contacts with this tag.
-    """
-    lifecycle_stage: NotRequired[Literal["subscriber", "lead", "marketing_qualified", "sales_qualified", "opportunity", "customer", "evangelist", "other"]]
-    """
-    Only contacts at this stage.
     """
     query: NotRequired[str]
     """
@@ -5492,7 +5474,7 @@ class ReplaceTemplateFieldMappingsMappingSource(TypedDict, closed=True):
     """
 
     kind: Literal["native"]
-    field: Literal["first_name", "last_name", "primary_phone", "primary_email", "company", "job_title", "birthday", "street_address", "city", "region", "postal_code", "country", "website_url", "linkedin_url", "lifecycle_stage", "lead_status", "source", "notes"]
+    field: Literal["first_name", "last_name", "primary_phone", "primary_email", "company", "job_title", "birthday", "street_address", "city", "region", "postal_code", "country", "website_url", "linkedin_url", "lead_status", "source", "notes"]
     """
     A field every contact has.
     """

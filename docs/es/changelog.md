@@ -8,6 +8,8 @@ Esta página registra los cambios de la API. Un cambio incompatible solo llega e
 
 ## 31 de octubre de 2026
 
+**Sin etapas en los contactos.** Los contactos ya no responden `lifecycle_stage`, `GET /contacts` ya no filtra por `lifecycle_stage` y la audiencia `filter` de un envío ya no lo acepta ni lo responde; enviarlo al crear o editar un contacto o un envío recibe `400 invalid_input`. Ningún cliente usaba las etapas. `GET /contacts` ahora ordena por nombre, de la A a la Z.
+
 **Meta Ads, en vivo.** Cambio compatible con la v1. `GET /ads/campaigns`, `GET /ads/ad-sets`, `GET /ads/ads` y `GET /ads/insights` leen en vivo de Meta las cuentas publicitarias conectadas de la organización, solo lectura, con el permiso `reports:read`. Consulta [Reportes](./reports.md#meta-ads-en-vivo).
 
 ## 26 de octubre de 2026

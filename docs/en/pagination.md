@@ -42,11 +42,11 @@ curl "https://getricky.ai/api/v1/conversations?status=open&page_size=100&cursor=
 
 ## Paginated lists
 
-| Operation                                       | Parameters                                                                              | Order                     |
-| ----------------------------------------------- | --------------------------------------------------------------------------------------- | ------------------------- |
-| `GET /contacts`                                 | `page_size`, `cursor`, `query`, `tag_id`, `owner_user_id`, `lifecycle_stage`, `channel` | Latest `updated_at` first |
-| `GET /conversations`                            | `page_size`, `cursor`, `status`, `assigned_user_id`                                     | Latest activity first     |
-| `GET /conversations/{conversation_id}/messages` | `cursor`                                                                                | Newest message first      |
+| Operation                                       | Parameters                                                           | Order                 |
+| ----------------------------------------------- | -------------------------------------------------------------------- | --------------------- |
+| `GET /contacts`                                 | `page_size`, `cursor`, `query`, `tag_id`, `owner_user_id`, `channel` | Name, A to Z          |
+| `GET /conversations`                            | `page_size`, `cursor`, `status`, `assigned_user_id`                  | Latest activity first |
+| `GET /conversations/{conversation_id}/messages` | `cursor`                                                             | Newest message first  |
 
 The message list does not take `page_size`: Ricky sets the size of each page.
 
