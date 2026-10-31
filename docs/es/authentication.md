@@ -122,6 +122,10 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Consultar el reporte del equipo](https://getricky.ai/docs/api/reference/reports/get-team-report) | `GET /reports/team` | `reports:read` |
 | [Consultar el reporte de envíos masivos](https://getricky.ai/docs/api/reference/reports/get-broadcasts-report) | `GET /reports/broadcasts` | `reports:read` |
 | [Consultar el reporte de anuncios](https://getricky.ai/docs/api/reference/reports/get-ads-report) | `GET /reports/ads` | `reports:read` |
+| [Listar las campañas de Meta](https://getricky.ai/docs/api/reference/ads/list-meta-ads-campaigns) | `GET /ads/campaigns` | `reports:read` |
+| [Listar los conjuntos de anuncios de Meta](https://getricky.ai/docs/api/reference/ads/list-meta-ads-ad-sets) | `GET /ads/ad-sets` | `reports:read` |
+| [Listar los anuncios de Meta](https://getricky.ai/docs/api/reference/ads/list-meta-ads) | `GET /ads/ads` | `reports:read` |
+| [Consultar los resultados de los anuncios de Meta](https://getricky.ai/docs/api/reference/ads/get-meta-ads-insights) | `GET /ads/insights` | `reports:read` |
 | [Listar agentes](https://getricky.ai/docs/api/reference/agents/list-agents) | `GET /agents` | `agents:read` |
 | [Crear un agente](https://getricky.ai/docs/api/reference/agents/create-agent) | `POST /agents` | `agents:write` |
 | [Consultar un agente](https://getricky.ai/docs/api/reference/agents/get-agent) | `GET /agents/{agent_id}` | `agents:read` |

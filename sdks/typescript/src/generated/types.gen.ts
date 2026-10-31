@@ -572,10 +572,6 @@ export type Contact = {
      */
     lead_status: 'new' | 'open' | 'in_progress' | 'attempted' | 'connected' | 'unqualified' | 'bad_timing' | null;
     /**
-     * Lifecycle stage.
-     */
-    lifecycle_stage: 'subscriber' | 'lead' | 'marketing_qualified' | 'sales_qualified' | 'opportunity' | 'customer' | 'evangelist' | 'other' | null;
-    /**
      * Custom field values keyed by contact field ID. See `GET /contact-fields`.
      */
     custom_values: {
@@ -967,10 +963,6 @@ export type Broadcast = {
     audience: {
         type: 'filter';
         tag_id: string | null;
-        /**
-         * Only contacts at this stage; null for any.
-         */
-        lifecycle_stage: string | null;
         /**
          * Only contacts whose name, phone, email or company contains it.
          */
@@ -3184,7 +3176,7 @@ export type TemplateFieldMappings = {
             /**
              * A field every contact has.
              */
-            field: 'first_name' | 'last_name' | 'primary_phone' | 'primary_email' | 'company' | 'job_title' | 'birthday' | 'street_address' | 'city' | 'region' | 'postal_code' | 'country' | 'website_url' | 'linkedin_url' | 'lifecycle_stage' | 'lead_status' | 'source' | 'notes';
+            field: 'first_name' | 'last_name' | 'primary_phone' | 'primary_email' | 'company' | 'job_title' | 'birthday' | 'street_address' | 'city' | 'region' | 'postal_code' | 'country' | 'website_url' | 'linkedin_url' | 'lead_status' | 'source' | 'notes';
         } | {
             kind: 'custom';
             /**
@@ -3525,7 +3517,6 @@ export type CreateContact = {
      */
     owner_user_id?: string | null;
     lead_status?: 'new' | 'open' | 'in_progress' | 'attempted' | 'connected' | 'unqualified' | 'bad_timing' | null;
-    lifecycle_stage?: 'subscriber' | 'lead' | 'marketing_qualified' | 'sales_qualified' | 'opportunity' | 'customer' | 'evangelist' | 'other' | null;
     /**
      * Values keyed by contact field ID. Keys you omit keep their value.
      */
@@ -3611,7 +3602,6 @@ export type UpdateContact = {
      */
     owner_user_id?: string | null;
     lead_status?: 'new' | 'open' | 'in_progress' | 'attempted' | 'connected' | 'unqualified' | 'bad_timing' | null;
-    lifecycle_stage?: 'subscriber' | 'lead' | 'marketing_qualified' | 'sales_qualified' | 'opportunity' | 'customer' | 'evangelist' | 'other' | null;
     /**
      * Values keyed by contact field ID. Keys you omit keep their value.
      */
@@ -3831,10 +3821,6 @@ export type CreateBroadcast = {
          */
         tag_id?: string;
         /**
-         * Only contacts at this stage.
-         */
-        lifecycle_stage?: 'subscriber' | 'lead' | 'marketing_qualified' | 'sales_qualified' | 'opportunity' | 'customer' | 'evangelist' | 'other';
-        /**
          * Only contacts whose name, phone, email or company contains it.
          */
         query?: string;
@@ -3871,7 +3857,7 @@ export type CreateBroadcast = {
             /**
              * A field of the contact.
              */
-            field: 'birthday' | 'city' | 'company' | 'country' | 'first_name' | 'job_title' | 'last_name' | 'lead_status' | 'lifecycle_stage' | 'linkedin_url' | 'notes' | 'postal_code' | 'primary_email' | 'primary_phone' | 'region' | 'source' | 'street_address' | 'website_url';
+            field: 'birthday' | 'city' | 'company' | 'country' | 'first_name' | 'job_title' | 'last_name' | 'lead_status' | 'linkedin_url' | 'notes' | 'postal_code' | 'primary_email' | 'primary_phone' | 'region' | 'source' | 'street_address' | 'website_url';
         } | {
             type: 'custom_field';
             /**
@@ -3899,10 +3885,6 @@ export type PreviewBroadcastAudience = {
          * Only contacts with this tag.
          */
         tag_id?: string;
-        /**
-         * Only contacts at this stage.
-         */
-        lifecycle_stage?: 'subscriber' | 'lead' | 'marketing_qualified' | 'sales_qualified' | 'opportunity' | 'customer' | 'evangelist' | 'other';
         /**
          * Only contacts whose name, phone, email or company contains it.
          */
@@ -4815,7 +4797,7 @@ export type ReplaceTemplateFieldMappings = {
             /**
              * A field every contact has.
              */
-            field: 'first_name' | 'last_name' | 'primary_phone' | 'primary_email' | 'company' | 'job_title' | 'birthday' | 'street_address' | 'city' | 'region' | 'postal_code' | 'country' | 'website_url' | 'linkedin_url' | 'lifecycle_stage' | 'lead_status' | 'source' | 'notes';
+            field: 'first_name' | 'last_name' | 'primary_phone' | 'primary_email' | 'company' | 'job_title' | 'birthday' | 'street_address' | 'city' | 'region' | 'postal_code' | 'country' | 'website_url' | 'linkedin_url' | 'lead_status' | 'source' | 'notes';
         } | {
             kind: 'custom';
             /**
@@ -5225,10 +5207,6 @@ export type ListContactsData = {
          * Only contacts this member owns.
          */
         owner_user_id?: string;
-        /**
-         * Only contacts at this stage.
-         */
-        lifecycle_stage?: 'subscriber' | 'lead' | 'marketing_qualified' | 'sales_qualified' | 'opportunity' | 'customer' | 'evangelist' | 'other';
         /**
          * Only contacts reachable on this channel.
          */

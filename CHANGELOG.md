@@ -6,6 +6,8 @@ This page records changes to the API. A breaking change only ships in a new path
 
 ## October 31, 2026
 
+**No stages on contacts.** Contacts no longer return `lifecycle_stage`, `GET /contacts` no longer filters by `lifecycle_stage`, and a broadcast's `filter` audience no longer accepts or returns it; sending it when creating or editing a contact or a broadcast gets `400 invalid_input`. No customer used stages. `GET /contacts` now sorts by name, A to Z.
+
 **Meta Ads, live.** Compatible change to v1. `GET /ads/campaigns`, `GET /ads/ad-sets`, `GET /ads/ads` and `GET /ads/insights` read the organization's connected Meta ad accounts live from Meta, read-only, with the `reports:read` scope. See [Reports](https://getricky.ai/en/docs/api/reports#meta-ads-live).
 
 ## October 26, 2026

@@ -122,6 +122,10 @@ The table below is generated from the API contract: it is the exact list of oper
 | [Get the team report](https://getricky.ai/en/docs/api/reference/reports/get-team-report) | `GET /reports/team` | `reports:read` |
 | [Get the broadcasts report](https://getricky.ai/en/docs/api/reference/reports/get-broadcasts-report) | `GET /reports/broadcasts` | `reports:read` |
 | [Get the ads report](https://getricky.ai/en/docs/api/reference/reports/get-ads-report) | `GET /reports/ads` | `reports:read` |
+| [List Meta ad campaigns](https://getricky.ai/en/docs/api/reference/ads/list-meta-ads-campaigns) | `GET /ads/campaigns` | `reports:read` |
+| [List Meta ad sets](https://getricky.ai/en/docs/api/reference/ads/list-meta-ads-ad-sets) | `GET /ads/ad-sets` | `reports:read` |
+| [List Meta ads](https://getricky.ai/en/docs/api/reference/ads/list-meta-ads) | `GET /ads/ads` | `reports:read` |
+| [Get Meta ads insights](https://getricky.ai/en/docs/api/reference/ads/get-meta-ads-insights) | `GET /ads/insights` | `reports:read` |
 | [List agents](https://getricky.ai/en/docs/api/reference/agents/list-agents) | `GET /agents` | `agents:read` |
 | [Create an agent](https://getricky.ai/en/docs/api/reference/agents/create-agent) | `POST /agents` | `agents:write` |
 | [Get an agent](https://getricky.ai/en/docs/api/reference/agents/get-agent) | `GET /agents/{agent_id}` | `agents:read` |

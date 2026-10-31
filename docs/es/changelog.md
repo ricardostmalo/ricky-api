@@ -6,6 +6,10 @@ URL: https://getricky.ai/docs/api/changelog
 
 Esta página registra los cambios de la API. Un cambio incompatible solo llega en una versión nueva de la ruta y se anuncia aquí.
 
+## 31 de octubre de 2026
+
+**Meta Ads, en vivo.** Cambio compatible con la v1. `GET /ads/campaigns`, `GET /ads/ad-sets`, `GET /ads/ads` y `GET /ads/insights` leen en vivo de Meta las cuentas publicitarias conectadas de la organización, solo lectura, con el permiso `reports:read`. Consulta [Reportes](./reports.md#meta-ads-en-vivo).
+
 ## 26 de octubre de 2026
 
 **Reporte de anuncios.** Cambio compatible con la v1. El período anterior (`previous`) de `GET /reports/ads` también responde `impressions` y `clicks`, para compararlos con el período como el gasto y las conversaciones.

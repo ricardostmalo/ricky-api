@@ -73,6 +73,21 @@ curl "https://getricky.ai/api/v1/reports/responses?from=2026-10-01&to=2026-10-14
 
 The example is shortened. The [reference](https://getricky.ai/en/docs/api/reference/reports/get-responses-report) lists every field and defines what each one counts.
 
+## Meta Ads, live
+
+The ads report counts the conversations each ad brought into Ricky. To see the ad accounts themselves, four operations read the organization's connected Meta ad accounts live from Meta. They only read: nothing changes in Meta. They need `reports:read`, and answer `422 rule_violation` while Meta Ads is not connected and `403 forbidden` when Meta no longer accepts the connection.
+
+| Operation            | What it answers                                                                                           |
+| -------------------- | --------------------------------------------------------------------------------------------------------- |
+| `GET /ads/campaigns` | Campaigns: objective, status, delivery status, budget and schedule.                                       |
+| `GET /ads/ad-sets`   | Ad sets: optimization goal, budget, schedule and Meta's targeting.                                        |
+| `GET /ads/ads`       | Ads with their creative: text, headline, button and image.                                                |
+| `GET /ads/insights`  | Spend, impressions, reach, clicks, CTR, CPC, CPM and Meta's actions, per account, campaign, ad set or ad. |
+
+* `account_id` reads one connected ad account; without it every connected account is read. `active_only=true` keeps what Meta is delivering now.
+* Budgets are in the ad account's currency. A daily or lifetime budget the object does not use is `null`.
+* `/ads/insights` takes `from` and `to` in the ad account's time zone (at most 400 days), `level`, up to two `breakdowns` such as `age,gender`, and `daily=true` for one row per day.
+
 ## Definitions
 
 * **Customer** (conversations report): a conversation with at least one customer message in the period. It is new when its first message ever falls in the period.

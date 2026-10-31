@@ -73,6 +73,21 @@ curl "https://getricky.ai/api/v1/reports/responses?from=2026-10-01&to=2026-10-14
 
 El ejemplo está recortado. La [referencia](https://getricky.ai/docs/api/reference/reports/get-responses-report) lista cada campo y define qué cuenta cada uno.
 
+## Meta Ads, en vivo
+
+El reporte de anuncios cuenta las conversaciones que cada anuncio trajo a Ricky. Para ver las cuentas publicitarias en sí, cuatro operaciones leen en vivo de Meta las cuentas publicitarias conectadas de la organización. Solo leen: nada cambia en Meta. Necesitan `reports:read`, y responden `422 rule_violation` mientras Meta Ads no está conectado y `403 forbidden` cuando Meta ya no acepta la conexión.
+
+| Operación            | Qué responde                                                                                                   |
+| -------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `GET /ads/campaigns` | Campañas: objetivo, estado, estado de entrega, presupuesto y fechas.                                           |
+| `GET /ads/ad-sets`   | Conjuntos de anuncios: objetivo de optimización, presupuesto, fechas y segmentación de Meta.                   |
+| `GET /ads/ads`       | Anuncios con su creativo: texto, título, botón e imagen.                                                       |
+| `GET /ads/insights`  | Gasto, impresiones, alcance, clics, CTR, CPC, CPM y acciones de Meta, por cuenta, campaña, conjunto o anuncio. |
+
+* `account_id` lee una cuenta publicitaria conectada; sin él se leen todas. `active_only=true` deja solo lo que Meta está entregando ahora.
+* Los presupuestos van en la moneda de la cuenta publicitaria. Un presupuesto diario o total que el objeto no usa es `null`.
+* `/ads/insights` recibe `from` y `to` en la zona horaria de la cuenta publicitaria (como máximo 400 días), `level`, hasta dos `breakdowns` como `age,gender`, y `daily=true` para una fila por día.
+
 ## Definiciones
 
 * **Cliente** (reporte de conversaciones): una conversación con al menos un mensaje del cliente en el período. Es nuevo cuando su primer mensaje de todos cae en el período.
