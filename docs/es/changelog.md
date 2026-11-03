@@ -6,6 +6,10 @@ URL: https://getricky.ai/docs/api/changelog
 
 Esta página registra los cambios de la API. Un cambio incompatible solo llega en una versión nueva de la ruta y se anuncia aquí.
 
+## 3 de noviembre de 2026
+
+**La IA responde hasta que alguien tome el traspaso.** Cambio compatible con la v1. Mientras `active_handoff` siga abierto, el agente de IA sigue respondiendo aunque `assigned_user_id` ya sea el miembro. El traspaso también se cierra cuando un miembro le escribe al cliente o se asigna la conversación a sí mismo, y el webhook `conversation.handoff_resolved` llega en esos casos.
+
 ## 2 de noviembre de 2026
 
 **Texto completo de los archivos de conocimiento.** `GET /knowledge/files/{file_id}/reading` responde todo lo que Ricky leyó de un archivo `ready`, página por página si es un PDF, en Markdown: el texto que consultan los agentes. Los archivos ya no responden `preview`, el primer pedazo de ese texto; ninguna integración lo leía. Consulta [Agentes y conocimiento](./agents-and-knowledge.md#5-sube-un-archivo).

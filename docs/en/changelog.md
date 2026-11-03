@@ -6,6 +6,10 @@ URL: https://getricky.ai/en/docs/api/changelog
 
 This page records changes to the API. A breaking change only ships in a new path version and is announced here.
 
+## November 3, 2026
+
+**The AI answers until someone takes the handoff.** Compatible with v1. While `active_handoff` is open, the AI agent keeps answering even though `assigned_user_id` is already the member. A handoff also ends when a member writes to the customer or assigns the conversation to themselves, and the `conversation.handoff_resolved` webhook arrives in those cases.
+
 ## November 2, 2026
 
 **Full text of knowledge files.** `GET /knowledge/files/{file_id}/reading` answers everything Ricky read from a `ready` file, page by page for a PDF, in Markdown: the text the agents consult. Files no longer answer `preview`, the first piece of that text; no integration read it. See [Agents and knowledge](./agents-and-knowledge.md#5-upload-a-file).

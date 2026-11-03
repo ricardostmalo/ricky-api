@@ -51,10 +51,10 @@ La respuesta trae un resultado por conversación, en orden. `status` es `assigne
 
 ## Traspasos
 
-Cuando un agente de IA pide que una persona tome la conversación, `active_handoff` trae el motivo, el resumen y el miembro responsable. `POST /conversations/{id}/handoff/resolve` lo cierra:
+Cuando un agente de IA pide que una persona tome la conversación, `active_handoff` trae el motivo, el resumen y el miembro responsable. La conversación ya está asignada a ese miembro, y la IA sigue respondiendo mientras el traspaso esté abierto. Se cierra cuando un miembro le escribe al cliente, cuando se asigna la conversación a sí mismo o con `POST /conversations/{id}/handoff/resolve`:
 
 * `{"resolution": "returned_to_ai"}` devuelve la conversación al agente que pidió el traspaso y quita al miembro.
-* `{"resolution": "stayed_with_human"}` la deja con el miembro.
+* `{"resolution": "stayed_with_human"}` la deja con el miembro, y la IA deja de responder.
 
 Una conversación sin traspaso pendiente responde `422 rule_violation`, y también `returned_to_ai` cuando ningún agente de IA lo pidió. La respuesta es la conversación con `active_handoff: null`.
 

@@ -51,10 +51,10 @@ The answer has one result per conversation, in order. `status` is `assigned`, `n
 
 ## Handoffs
 
-When an AI agent asks for a person to take over, `active_handoff` carries the reason, the summary and the responsible member. `POST /conversations/{id}/handoff/resolve` ends it:
+When an AI agent asks for a person to take over, `active_handoff` carries the reason, the summary and the responsible member. The conversation is already assigned to that member, and the AI keeps answering while the handoff is open. It ends when a member writes to the customer, when one assigns the conversation to themselves, or with `POST /conversations/{id}/handoff/resolve`:
 
 * `{"resolution": "returned_to_ai"}` gives the conversation back to the agent that asked and unassigns the member.
-* `{"resolution": "stayed_with_human"}` leaves it with the member.
+* `{"resolution": "stayed_with_human"}` leaves it with the member, and the AI stops answering.
 
 A conversation with no handoff waiting answers `422 rule_violation`, and so does `returned_to_ai` when no AI agent asked for it. The answer is the conversation with `active_handoff: null`.
 
