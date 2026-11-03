@@ -1248,6 +1248,10 @@ export type KnowledgeFile = {
      */
     page_count: number | null;
     /**
+     * Start of the text Ricky read from it.
+     */
+    preview: string | null;
+    /**
      * Why Ricky could not read useful content; null when it could.
      */
     extraction_error: string | null;
@@ -1263,29 +1267,6 @@ export type KnowledgeFile = {
      * Last change.
      */
     updated_at: string;
-};
-
-/**
- * Everything Ricky read from a file, what the agents consult to answer.
- */
-export type KnowledgeFileReading = {
-    /**
-     * File ID.
-     */
-    file_id: string;
-    /**
-     * In page order. Empty when Ricky read no useful content (`extraction_error`).
-     */
-    sections: Array<{
-        /**
-         * PDF page it was read from; null for formats without pages.
-         */
-        page: number | null;
-        /**
-         * Everything Ricky read from that page, in Markdown: text in reading order, tables, and one line per picture saying what it shows.
-         */
-        text: string;
-    }>;
 };
 
 /**
@@ -9725,66 +9706,6 @@ export type UpdateKnowledgeFileResponses = {
 };
 
 export type UpdateKnowledgeFileResponse = UpdateKnowledgeFileResponses[keyof UpdateKnowledgeFileResponses];
-
-export type GetKnowledgeFileReadingData = {
-    body?: never;
-    path: {
-        /**
-         * File ID.
-         */
-        file_id: string;
-    };
-    query?: never;
-    url: '/knowledge/files/{file_id}/reading';
-};
-
-export type GetKnowledgeFileReadingErrors = {
-    /**
-     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
-     */
-    400: Error;
-    /**
-     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
-     */
-    401: Error;
-    /**
-     * `insufficient_scope`: The key lacks the scope this operation requires.
-     */
-    403: Error;
-    /**
-     * `not_found`: The resource does not exist in this organization.
-     */
-    404: Error;
-    /**
-     * `conflict`: The resource changed in a way that prevents the operation.
-     */
-    409: Error;
-    /**
-     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
-     */
-    429: Error;
-    /**
-     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
-     */
-    500: Error;
-    /**
-     * `upstream_error`: The messaging provider failed. Retry later.
-     */
-    502: Error;
-};
-
-export type GetKnowledgeFileReadingError = GetKnowledgeFileReadingErrors[keyof GetKnowledgeFileReadingErrors];
-
-export type GetKnowledgeFileReadingResponses = {
-    /**
-     * Success.
-     */
-    200: {
-        data: KnowledgeFileReading;
-    };
-};
-
-export type GetKnowledgeFileReadingResponse = GetKnowledgeFileReadingResponses[keyof GetKnowledgeFileReadingResponses];
 
 export type ChangeContactsTagsData = {
     body: ChangeContactsTags;

@@ -6,8 +6,6 @@ This page records changes to the API. A breaking change only ships in a new path
 
 ## November 2, 2026
 
-**Full text of knowledge files.** `GET /knowledge/files/{file_id}/reading` answers everything Ricky read from a `ready` file, page by page for a PDF, in Markdown: the text the agents consult. Files no longer answer `preview`, the first piece of that text; no integration read it. See [Agents and knowledge](https://getricky.ai/en/docs/api/agents-and-knowledge#5-upload-a-file).
-
 **No contact owner.** Compatible change to v1. Contacts no longer have an owner: the responsible member belongs to each conversation (`assigned_user_id`). A contact's `owner_user_id` is deprecated and always returns `null`; sending it when creating or editing a contact is accepted and ignored. The `owner_user_id` filter of `GET /contacts` is deprecated and returns no contacts. `sync_contact_owner` when assigning a conversation is deprecated and ignored; assigning one or many conversations no longer changes anything on the contact.
 
 ## October 31, 2026
