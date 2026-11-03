@@ -6,6 +6,10 @@ URL: https://getricky.ai/en/docs/api/changelog
 
 This page records changes to the API. A breaking change only ships in a new path version and is announced here.
 
+## November 2, 2026
+
+**No contact owner.** Compatible change to v1. Contacts no longer have an owner: the responsible member belongs to each conversation (`assigned_user_id`). A contact's `owner_user_id` is deprecated and always returns `null`; sending it when creating or editing a contact is accepted and ignored. The `owner_user_id` filter of `GET /contacts` is deprecated and returns no contacts. `sync_contact_owner` when assigning a conversation is deprecated and ignored; assigning one or many conversations no longer changes anything on the contact.
+
 ## October 31, 2026
 
 **No stages on contacts.** Contacts no longer return `lifecycle_stage`, `GET /contacts` no longer filters by `lifecycle_stage`, and a broadcast's `filter` audience no longer accepts or returns it; sending it when creating or editing a contact or a broadcast gets `400 invalid_input`. No customer used stages. `GET /contacts` now sorts by name, A to Z.

@@ -49,6 +49,7 @@ from .types import (
     DisplayNameRequest,
     KnowledgeContact,
     KnowledgeFile,
+    KnowledgeFileReading,
     KnowledgeFileUpload,
     KnowledgeLocation,
     MediaUpload,
@@ -1630,6 +1631,22 @@ class SyncOperations:
         return cast(Resource[KnowledgeFile], self._request(
             "DELETE",
             "/knowledge/files/{file_id}",
+            path_parameters={"file_id": file_id},
+        ))
+
+    def get_knowledge_file_reading(
+        self,
+        file_id: str,
+    ) -> Resource[KnowledgeFileReading]:
+        """Read what Ricky read.
+
+        The full text Ricky read from a `ready` file, page by page for a PDF. Agents read this text to answer. A file not yet `ready` answers `409 conflict`.
+
+        Scope: `knowledge:read`.
+        """
+        return cast(Resource[KnowledgeFileReading], self._request(
+            "GET",
+            "/knowledge/files/{file_id}/reading",
             path_parameters={"file_id": file_id},
         ))
 
@@ -4046,6 +4063,22 @@ class AsyncOperations:
         return cast(Resource[KnowledgeFile], await self._request(
             "DELETE",
             "/knowledge/files/{file_id}",
+            path_parameters={"file_id": file_id},
+        ))
+
+    async def get_knowledge_file_reading(
+        self,
+        file_id: str,
+    ) -> Resource[KnowledgeFileReading]:
+        """Read what Ricky read.
+
+        The full text Ricky read from a `ready` file, page by page for a PDF. Agents read this text to answer. A file not yet `ready` answers `409 conflict`.
+
+        Scope: `knowledge:read`.
+        """
+        return cast(Resource[KnowledgeFileReading], await self._request(
+            "GET",
+            "/knowledge/files/{file_id}/reading",
             path_parameters={"file_id": file_id},
         ))
 

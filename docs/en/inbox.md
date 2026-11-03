@@ -37,7 +37,7 @@ Each conversation carries `unread` and `active_handoff`, the handoff waiting or 
 
 ## Bulk assignment
 
-`POST /conversations/assignments` makes members responsible for up to 100 conversations, each once. Each member also becomes the contact's owner, as when assigning one at a time.
+`POST /conversations/assignments` makes members responsible for up to 100 conversations, each once.
 
 ```bash
 curl -X POST https://getricky.ai/api/v1/conversations/assignments \

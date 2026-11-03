@@ -6,6 +6,10 @@ URL: https://getricky.ai/docs/api/changelog
 
 Esta página registra los cambios de la API. Un cambio incompatible solo llega en una versión nueva de la ruta y se anuncia aquí.
 
+## 2 de noviembre de 2026
+
+**Sin responsable del contacto.** Cambio compatible con la v1. Los contactos ya no tienen responsable: el miembro responsable es el de cada conversación (`assigned_user_id`). `owner_user_id` de los contactos queda obsoleto y siempre responde `null`; enviarlo al crear o editar un contacto se acepta y se ignora. El filtro `owner_user_id` de `GET /contacts` queda obsoleto y no devuelve contactos. `sync_contact_owner` al asignar una conversación queda obsoleto y se ignora; asignar una o varias conversaciones ya no cambia nada del contacto.
+
 ## 31 de octubre de 2026
 
 **Sin etapas en los contactos.** Los contactos ya no responden `lifecycle_stage`, `GET /contacts` ya no filtra por `lifecycle_stage` y la audiencia `filter` de un envío ya no lo acepta ni lo responde; enviarlo al crear o editar un contacto o un envío recibe `400 invalid_input`. Ningún cliente usaba las etapas. `GET /contacts` ahora ordena por nombre, de la A a la Z.

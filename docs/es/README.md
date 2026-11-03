@@ -86,7 +86,7 @@ curl "https://getricky.ai/api/v1/contacts?page_size=1" \
       "linkedin_url": null,
       "source": "Tienda Costa del Este",
       "notes": null,
-      "owner_user_id": "2d4f6a8c-0e1b-4c3d-9e5f-7a9b1c3d5e7f",
+      "owner_user_id": null,
       "lead_status": null,
       "custom_values": {
         "6b5a4c3d-2e1f-4a0b-9c8d-7e6f5a4b3c2d": "Costa del Este"

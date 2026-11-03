@@ -37,7 +37,7 @@ Cada conversación trae `unread` y `active_handoff`, el traspaso pendiente o `nu
 
 ## Asignar en lote
 
-`POST /conversations/assignments` hace responsables a miembros de hasta 100 conversaciones, cada una una sola vez. Cada miembro pasa a ser también el responsable del contacto, como al asignar una por una.
+`POST /conversations/assignments` hace responsables a miembros de hasta 100 conversaciones, cada una una sola vez.
 
 ```bash
 curl -X POST https://getricky.ai/api/v1/conversations/assignments \
