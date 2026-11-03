@@ -10094,6 +10094,142 @@
         }
       }
     },
+    "/knowledge/files/{file_id}/reading": {
+      "get": {
+        "operationId": "getKnowledgeFileReading",
+        "tags": [
+          "Knowledge"
+        ],
+        "summary": "Read what Ricky read",
+        "description": "The full text Ricky read from a `ready` file, page by page for a PDF. Agents read this text to answer. A file not yet `ready` answers `409 conflict`.\n\nScope: `knowledge:read`.",
+        "parameters": [
+          {
+            "name": "file_id",
+            "in": "path",
+            "required": true,
+            "description": "File ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/KnowledgeFileReading"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`conflict`: The resource changed in a way that prevents the operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "`upstream_error`: The messaging provider failed. Retry later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/contacts/tags": {
       "post": {
         "operationId": "changeContactsTags",
@@ -20297,16 +20433,6 @@
               12
             ]
           },
-          "preview": {
-            "description": "Start of the text Ricky read from it.",
-            "examples": [
-              "Catálogo 2026. Lentes de sol…"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
           "extraction_error": {
             "description": "Why Ricky could not read useful content; null when it could.",
             "examples": [
@@ -20357,13 +20483,66 @@
           "consult_enabled",
           "send_enabled",
           "page_count",
-          "preview",
           "extraction_error",
           "download_url",
           "created_at",
           "updated_at"
         ],
         "description": "A document or image the agents can consult or send."
+      },
+      "KnowledgeFileReading": {
+        "type": "object",
+        "properties": {
+          "file_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "File ID.",
+            "examples": [
+              "f1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c"
+            ]
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "page": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "PDF page it was read from; null for formats without pages.",
+                  "examples": [
+                    1
+                  ]
+                },
+                "text": {
+                  "type": "string",
+                  "description": "Everything Ricky read from that page, in Markdown: text in reading order, tables, and one line per picture saying what it shows.",
+                  "examples": [
+                    "# Catálogo 2026\n\n| Modelo | Precio |\n| --- | --- |\n| Lentes de sol Aviador | $89 |"
+                  ]
+                }
+              },
+              "required": [
+                "page",
+                "text"
+              ]
+            },
+            "description": "In page order. Empty when Ricky read no useful content (`extraction_error`)."
+          }
+        },
+        "required": [
+          "file_id",
+          "sections"
+        ],
+        "description": "Everything Ricky read from a file, what the agents consult to answer."
       },
       "KnowledgeFileUpload": {
         "type": "object",

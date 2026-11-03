@@ -81,3 +81,10 @@ curl -X POST https://getricky.ai/api/v1/knowledge/files/$FILE_ID/complete \
 ```
 
 Los PDF, Word y Excel admiten hasta 100 MB; las imágenes JPEG y PNG, hasta 5 MB. Si Ricky no lee contenido útil, `extraction_error` lo dice y los agentes no pueden consultarlo, aunque sí enviarlo. `GET /knowledge/files/{file_id}` de un archivo `ready` trae una `download_url` válida por cinco minutos.
+
+Para ver exactamente lo que consultan los agentes, lee el texto completo que Ricky leyó del archivo, página por página si es un PDF, en Markdown:
+
+```bash
+curl https://getricky.ai/api/v1/knowledge/files/$FILE_ID/reading \
+  -H "Authorization: Bearer $RICKY_API_KEY"
+```

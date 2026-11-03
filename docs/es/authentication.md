@@ -147,6 +147,7 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Subir un archivo](https://getricky.ai/docs/api/reference/knowledge/create-knowledge-file) | `POST /knowledge/files` | `knowledge:write` |
 | [Completar una carga](https://getricky.ai/docs/api/reference/knowledge/complete-knowledge-file) | `POST /knowledge/files/{file_id}/complete` | `knowledge:write` |
 | [Consultar un archivo](https://getricky.ai/docs/api/reference/knowledge/get-knowledge-file) | `GET /knowledge/files/{file_id}` | `knowledge:read` |
+| [Leer lo que leyó Ricky](https://getricky.ai/docs/api/reference/knowledge/get-knowledge-file-reading) | `GET /knowledge/files/{file_id}/reading` | `knowledge:read` |
 | [Actualizar un archivo](https://getricky.ai/docs/api/reference/knowledge/update-knowledge-file) | `PATCH /knowledge/files/{file_id}` | `knowledge:write` |
 | [Eliminar un archivo](https://getricky.ai/docs/api/reference/knowledge/delete-knowledge-file) | `DELETE /knowledge/files/{file_id}` | `knowledge:write` |
 | [Cambiar etiquetas de muchos contactos](https://getricky.ai/docs/api/reference/contacts/change-contacts-tags) | `POST /contacts/tags` | `contacts:write` |

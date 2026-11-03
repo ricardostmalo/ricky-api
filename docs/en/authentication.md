@@ -147,6 +147,7 @@ The table below is generated from the API contract: it is the exact list of oper
 | [Upload a file](https://getricky.ai/en/docs/api/reference/knowledge/create-knowledge-file) | `POST /knowledge/files` | `knowledge:write` |
 | [Complete an upload](https://getricky.ai/en/docs/api/reference/knowledge/complete-knowledge-file) | `POST /knowledge/files/{file_id}/complete` | `knowledge:write` |
 | [Get a file](https://getricky.ai/en/docs/api/reference/knowledge/get-knowledge-file) | `GET /knowledge/files/{file_id}` | `knowledge:read` |
+| [Read what Ricky read](https://getricky.ai/en/docs/api/reference/knowledge/get-knowledge-file-reading) | `GET /knowledge/files/{file_id}/reading` | `knowledge:read` |
 | [Update a file](https://getricky.ai/en/docs/api/reference/knowledge/update-knowledge-file) | `PATCH /knowledge/files/{file_id}` | `knowledge:write` |
 | [Delete a file](https://getricky.ai/en/docs/api/reference/knowledge/delete-knowledge-file) | `DELETE /knowledge/files/{file_id}` | `knowledge:write` |
 | [Change tags on many contacts](https://getricky.ai/en/docs/api/reference/contacts/change-contacts-tags) | `POST /contacts/tags` | `contacts:write` |

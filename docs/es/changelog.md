@@ -8,6 +8,8 @@ Esta página registra los cambios de la API. Un cambio incompatible solo llega e
 
 ## 2 de noviembre de 2026
 
+**Texto completo de los archivos de conocimiento.** `GET /knowledge/files/{file_id}/reading` responde todo lo que Ricky leyó de un archivo `ready`, página por página si es un PDF, en Markdown: el texto que consultan los agentes. Los archivos ya no responden `preview`, el primer pedazo de ese texto; ninguna integración lo leía. Consulta [Agentes y conocimiento](./agents-and-knowledge.md#5-sube-un-archivo).
+
 **Sin responsable del contacto.** Cambio compatible con la v1. Los contactos ya no tienen responsable: el miembro responsable es el de cada conversación (`assigned_user_id`). `owner_user_id` de los contactos queda obsoleto y siempre responde `null`; enviarlo al crear o editar un contacto se acepta y se ignora. El filtro `owner_user_id` de `GET /contacts` queda obsoleto y no devuelve contactos. `sync_contact_owner` al asignar una conversación queda obsoleto y se ignora; asignar una o varias conversaciones ya no cambia nada del contacto.
 
 ## 31 de octubre de 2026

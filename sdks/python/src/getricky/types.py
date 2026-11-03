@@ -1329,10 +1329,6 @@ class KnowledgeFile(TypedDict):
     """
     Pages of a PDF; null otherwise.
     """
-    preview: Optional[str]
-    """
-    Start of the text Ricky read from it.
-    """
     extraction_error: Optional[str]
     """
     Why Ricky could not read useful content; null when it could.
@@ -1348,6 +1344,32 @@ class KnowledgeFile(TypedDict):
     updated_at: str
     """
     Last change.
+    """
+
+
+class KnowledgeFileReadingSection(TypedDict):
+    page: Optional[int]
+    """
+    PDF page it was read from; null for formats without pages.
+    """
+    text: str
+    """
+    Everything Ricky read from that page, in Markdown: text in reading order, tables, and one line per picture saying what it shows.
+    """
+
+
+class KnowledgeFileReading(TypedDict):
+    """
+    Everything Ricky read from a file, what the agents consult to answer.
+    """
+
+    file_id: str
+    """
+    File ID.
+    """
+    sections: List[KnowledgeFileReadingSection]
+    """
+    In page order. Empty when Ricky read no useful content (`extraction_error`).
     """
 
 
