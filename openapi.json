@@ -134,8 +134,9 @@
             "name": "owner_user_id",
             "in": "query",
             "required": false,
-            "description": "Only contacts this member owns.",
+            "description": "Deprecated: contacts no longer have an owner, so no contact matches.",
             "schema": {
+              "deprecated": true,
               "type": "string",
               "format": "uuid"
             }
@@ -7885,7 +7886,7 @@
           "Conversations"
         ],
         "summary": "Set the AI agent of a conversation",
-        "description": "Makes an agent answer the conversation, or turns the AI off with `null`. Either way the conversation is no longer assigned to a member; the contact owner stays.\n\nScope: `conversations:write`.",
+        "description": "Makes an agent answer the conversation, or turns the AI off with `null`. Either way the conversation is no longer assigned to a member.\n\nScope: `conversations:write`.",
         "parameters": [
           {
             "name": "conversation_id",
@@ -15508,7 +15509,7 @@
           "Conversations"
         ],
         "summary": "Assign many conversations",
-        "description": "Makes members responsible for up to 100 conversations, as assigning each one does, and answers one result per conversation, in order. Each member also becomes the contact's owner. A member outside the organization refuses the whole request before any conversation changes.\n\nScope: `conversations:write`.",
+        "description": "Makes members responsible for up to 100 conversations, as assigning each one does, and answers one result per conversation, in order. A member outside the organization refuses the whole request before any conversation changes.\n\nScope: `conversations:write`.",
         "parameters": [
           {
             "$ref": "#/components/parameters/IdempotencyKey"
@@ -18322,15 +18323,16 @@
             "anyOf": [
               {
                 "type": "string",
-                "format": "uuid",
-                "description": "Member who owns the contact.",
-                "examples": [
-                  "2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b"
-                ]
+                "format": "uuid"
               },
               {
                 "type": "null"
               }
+            ],
+            "description": "Deprecated: contacts no longer have an owner; the member responsible is each conversation's `assigned_user_id`. Always `null`.",
+            "deprecated": true,
+            "examples": [
+              null
             ]
           },
           "lead_status": {
@@ -25730,7 +25732,7 @@
           "assignments"
         ],
         "additionalProperties": false,
-        "description": "Makes members responsible for many conversations at once. Each member also becomes the contact's owner.",
+        "description": "Makes members responsible for many conversations at once.",
         "examples": [
           {
             "assignments": [
@@ -25939,7 +25941,8 @@
             ]
           },
           "owner_user_id": {
-            "description": "Member who owns the contact.",
+            "description": "Deprecated: contacts no longer have an owner. Accepted and ignored.",
+            "deprecated": true,
             "anyOf": [
               {
                 "type": "string",
@@ -26222,7 +26225,8 @@
             ]
           },
           "owner_user_id": {
-            "description": "Member who owns the contact.",
+            "description": "Deprecated: contacts no longer have an owner. Accepted and ignored.",
+            "deprecated": true,
             "anyOf": [
               {
                 "type": "string",
@@ -26767,8 +26771,8 @@
             "description": "Member to assign; null unassigns."
           },
           "sync_contact_owner": {
-            "default": true,
-            "description": "Also make that member the contact owner.",
+            "description": "Deprecated: contacts no longer have an owner. Accepted and ignored.",
+            "deprecated": true,
             "type": "boolean"
           }
         },
@@ -26778,8 +26782,7 @@
         "additionalProperties": false,
         "examples": [
           {
-            "assigned_user_id": "2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b",
-            "sync_contact_owner": true
+            "assigned_user_id": "2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b"
           }
         ]
       },

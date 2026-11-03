@@ -128,7 +128,7 @@ class SyncOperations:
             cursor: `next_cursor` from the previous page. Use it unchanged.
             query: Text contained in the name, phone, email or company.
             tag_id: Only contacts with this tag.
-            owner_user_id: Only contacts this member owns.
+            owner_user_id: Deprecated: contacts no longer have an owner, so no contact matches.
             channel: Only contacts reachable on this channel.
         """
         return cast(Page[Contact], self._request(
@@ -1310,7 +1310,7 @@ class SyncOperations:
     ) -> Resource[Conversation]:
         """Set the AI agent of a conversation.
 
-        Makes an agent answer the conversation, or turns the AI off with `null`. Either way the conversation is no longer assigned to a member; the contact owner stays.
+        Makes an agent answer the conversation, or turns the AI off with `null`. Either way the conversation is no longer assigned to a member.
 
         Scope: `conversations:write`.
 
@@ -2443,7 +2443,7 @@ class SyncOperations:
     ) -> Page[ConversationAssignmentResult]:
         """Assign many conversations.
 
-        Makes members responsible for up to 100 conversations, as assigning each one does, and answers one result per conversation, in order. Each member also becomes the contact's owner. A member outside the organization refuses the whole request before any conversation changes.
+        Makes members responsible for up to 100 conversations, as assigning each one does, and answers one result per conversation, in order. A member outside the organization refuses the whole request before any conversation changes.
 
         Scope: `conversations:write`.
 
@@ -2544,7 +2544,7 @@ class AsyncOperations:
             cursor: `next_cursor` from the previous page. Use it unchanged.
             query: Text contained in the name, phone, email or company.
             tag_id: Only contacts with this tag.
-            owner_user_id: Only contacts this member owns.
+            owner_user_id: Deprecated: contacts no longer have an owner, so no contact matches.
             channel: Only contacts reachable on this channel.
         """
         return cast(Page[Contact], await self._request(
@@ -3726,7 +3726,7 @@ class AsyncOperations:
     ) -> Resource[Conversation]:
         """Set the AI agent of a conversation.
 
-        Makes an agent answer the conversation, or turns the AI off with `null`. Either way the conversation is no longer assigned to a member; the contact owner stays.
+        Makes an agent answer the conversation, or turns the AI off with `null`. Either way the conversation is no longer assigned to a member.
 
         Scope: `conversations:write`.
 
@@ -4859,7 +4859,7 @@ class AsyncOperations:
     ) -> Page[ConversationAssignmentResult]:
         """Assign many conversations.
 
-        Makes members responsible for up to 100 conversations, as assigning each one does, and answers one result per conversation, in order. Each member also becomes the contact's owner. A member outside the organization refuses the whole request before any conversation changes.
+        Makes members responsible for up to 100 conversations, as assigning each one does, and answers one result per conversation, in order. A member outside the organization refuses the whole request before any conversation changes.
 
         Scope: `conversations:write`.
 

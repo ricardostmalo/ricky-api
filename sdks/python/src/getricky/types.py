@@ -603,6 +603,9 @@ class Contact(TypedDict):
     Free-form notes.
     """
     owner_user_id: Optional[str]
+    """
+    Deprecated: contacts no longer have an owner; the member responsible is each conversation's `assigned_user_id`. Always `null`.
+    """
     lead_status: Optional[Literal["new", "open", "in_progress", "attempted", "connected", "unqualified", "bad_timing"]]
     """
     Sales lead status.
@@ -3832,7 +3835,7 @@ class AssignConversationsAssignment(TypedDict, closed=True):
 
 class AssignConversations(TypedDict, closed=True):
     """
-    Makes members responsible for many conversations at once. Each member also becomes the contact's owner.
+    Makes members responsible for many conversations at once.
     """
 
     assignments: List[AssignConversationsAssignment]
@@ -3912,7 +3915,7 @@ class CreateContact(TypedDict, closed=True):
     """
     owner_user_id: NotRequired[Optional[str]]
     """
-    Member who owns the contact.
+    Deprecated: contacts no longer have an owner. Accepted and ignored.
     """
     lead_status: NotRequired[Optional[Literal["new", "open", "in_progress", "attempted", "connected", "unqualified", "bad_timing"]]]
     custom_values: NotRequired[Dict[str, Optional[Union[str, float, bool, List[str]]]]]
@@ -3996,7 +3999,7 @@ class UpdateContact(TypedDict, closed=True):
     """
     owner_user_id: NotRequired[Optional[str]]
     """
-    Member who owns the contact.
+    Deprecated: contacts no longer have an owner. Accepted and ignored.
     """
     lead_status: NotRequired[Optional[Literal["new", "open", "in_progress", "attempted", "connected", "unqualified", "bad_timing"]]]
     custom_values: NotRequired[Dict[str, Optional[Union[str, float, bool, List[str]]]]]
@@ -4209,7 +4212,7 @@ class AssignConversation(TypedDict, closed=True):
     """
     sync_contact_owner: NotRequired[bool]
     """
-    Also make that member the contact owner.
+    Deprecated: contacts no longer have an owner. Accepted and ignored.
     """
 
 

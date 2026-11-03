@@ -1052,7 +1052,7 @@ export class RickyApi extends HeyApiClient {
     /**
      * Set the AI agent of a conversation
      *
-     * Makes an agent answer the conversation, or turns the AI off with `null`. Either way the conversation is no longer assigned to a member; the contact owner stays.
+     * Makes an agent answer the conversation, or turns the AI off with `null`. Either way the conversation is no longer assigned to a member.
      *
      * Scope: `conversations:write`.
      */
@@ -2016,7 +2016,7 @@ export class RickyApi extends HeyApiClient {
     /**
      * Assign many conversations
      *
-     * Makes members responsible for up to 100 conversations, as assigning each one does, and answers one result per conversation, in order. Each member also becomes the contact's owner. A member outside the organization refuses the whole request before any conversation changes.
+     * Makes members responsible for up to 100 conversations, as assigning each one does, and answers one result per conversation, in order. A member outside the organization refuses the whole request before any conversation changes.
      *
      * Scope: `conversations:write`.
      */

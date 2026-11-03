@@ -566,6 +566,11 @@ export type Contact = {
      * Free-form notes.
      */
     notes: string | null;
+    /**
+     * Deprecated: contacts no longer have an owner; the member responsible is each conversation's `assigned_user_id`. Always `null`.
+     *
+     * @deprecated
+     */
     owner_user_id: string | null;
     /**
      * Sales lead status.
@@ -3426,7 +3431,7 @@ export type ResolveHandoff = {
 };
 
 /**
- * Makes members responsible for many conversations at once. Each member also becomes the contact's owner.
+ * Makes members responsible for many conversations at once.
  */
 export type AssignConversations = {
     /**
@@ -3513,7 +3518,9 @@ export type CreateContact = {
      */
     notes?: string | null;
     /**
-     * Member who owns the contact.
+     * Deprecated: contacts no longer have an owner. Accepted and ignored.
+     *
+     * @deprecated
      */
     owner_user_id?: string | null;
     lead_status?: 'new' | 'open' | 'in_progress' | 'attempted' | 'connected' | 'unqualified' | 'bad_timing' | null;
@@ -3598,7 +3605,9 @@ export type UpdateContact = {
      */
     notes?: string | null;
     /**
-     * Member who owns the contact.
+     * Deprecated: contacts no longer have an owner. Accepted and ignored.
+     *
+     * @deprecated
      */
     owner_user_id?: string | null;
     lead_status?: 'new' | 'open' | 'in_progress' | 'attempted' | 'connected' | 'unqualified' | 'bad_timing' | null;
@@ -3757,7 +3766,9 @@ export type AssignConversation = {
      */
     assigned_user_id: string | null;
     /**
-     * Also make that member the contact owner.
+     * Deprecated: contacts no longer have an owner. Accepted and ignored.
+     *
+     * @deprecated
      */
     sync_contact_owner?: boolean;
 };
@@ -5204,7 +5215,9 @@ export type ListContactsData = {
          */
         tag_id?: string;
         /**
-         * Only contacts this member owns.
+         * Deprecated: contacts no longer have an owner, so no contact matches.
+         *
+         * @deprecated
          */
         owner_user_id?: string;
         /**
