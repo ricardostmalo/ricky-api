@@ -3110,6 +3110,25 @@ class WorkflowDefinitionMessageFilters(TypedDict):
     """
 
 
+class WorkflowDefinitionCoverage(TypedDict):
+    """
+    The period of a `team_away` workflow.
+    """
+
+    starts_at: str
+    """
+    When the team goes away.
+    """
+    ends_at: str
+    """
+    When the team is back.
+    """
+    notice: Optional[str]
+    """
+    What the agent tells customers meanwhile.
+    """
+
+
 WorkflowDefinitionConditionBusinessHoursWeekday: TypeAlias = int
 
 
@@ -3385,9 +3404,9 @@ class WorkflowDefinition(TypedDict):
     Reacts to a conversation with messages, questions, waits and assignments.
     """
 
-    trigger: Literal["conversation_opened", "first_message_received", "message_received"]
+    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves.
     """
     channel_ids: List[str]
     """
@@ -3396,6 +3415,10 @@ class WorkflowDefinition(TypedDict):
     message_filters: NotRequired[WorkflowDefinitionMessageFilters]
     """
     Which messages a `message_received` workflow reacts to.
+    """
+    coverage: NotRequired[WorkflowDefinitionCoverage]
+    """
+    The period of a `team_away` workflow.
     """
     condition: Optional[Union[WorkflowDefinitionCondition, WorkflowDefinitionCondition1]]
     """
@@ -4927,6 +4950,25 @@ class CreateWorkflowDefinitionMessageFilters(TypedDict, closed=True):
     """
 
 
+class CreateWorkflowDefinitionCoverage(TypedDict, closed=True):
+    """
+    The period of a `team_away` workflow.
+    """
+
+    starts_at: str
+    """
+    When the team goes away.
+    """
+    ends_at: str
+    """
+    When the team is back.
+    """
+    notice: Optional[str]
+    """
+    What the agent tells customers meanwhile.
+    """
+
+
 CreateWorkflowDefinitionConditionBusinessHoursWeekday: TypeAlias = int
 
 
@@ -5202,9 +5244,9 @@ class CreateWorkflowDefinition(TypedDict, closed=True):
     Reacts to a conversation with messages, questions, waits and assignments.
     """
 
-    trigger: Literal["conversation_opened", "first_message_received", "message_received"]
+    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves.
     """
     channel_ids: List[str]
     """
@@ -5213,6 +5255,10 @@ class CreateWorkflowDefinition(TypedDict, closed=True):
     message_filters: NotRequired[CreateWorkflowDefinitionMessageFilters]
     """
     Which messages a `message_received` workflow reacts to.
+    """
+    coverage: NotRequired[CreateWorkflowDefinitionCoverage]
+    """
+    The period of a `team_away` workflow.
     """
     condition: Optional[Union[CreateWorkflowDefinitionCondition, CreateWorkflowDefinitionCondition1]]
     """
@@ -5251,6 +5297,25 @@ class UpdateWorkflowDefinitionMessageFilters(TypedDict, closed=True):
     skip_buttons: bool
     """
     Not when the customer taps a button.
+    """
+
+
+class UpdateWorkflowDefinitionCoverage(TypedDict, closed=True):
+    """
+    The period of a `team_away` workflow.
+    """
+
+    starts_at: str
+    """
+    When the team goes away.
+    """
+    ends_at: str
+    """
+    When the team is back.
+    """
+    notice: Optional[str]
+    """
+    What the agent tells customers meanwhile.
     """
 
 
@@ -5529,9 +5594,9 @@ class UpdateWorkflowDefinition(TypedDict, closed=True):
     Replaces the whole definition.
     """
 
-    trigger: Literal["conversation_opened", "first_message_received", "message_received"]
+    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves.
     """
     channel_ids: List[str]
     """
@@ -5540,6 +5605,10 @@ class UpdateWorkflowDefinition(TypedDict, closed=True):
     message_filters: NotRequired[UpdateWorkflowDefinitionMessageFilters]
     """
     Which messages a `message_received` workflow reacts to.
+    """
+    coverage: NotRequired[UpdateWorkflowDefinitionCoverage]
+    """
+    The period of a `team_away` workflow.
     """
     condition: Optional[Union[UpdateWorkflowDefinitionCondition, UpdateWorkflowDefinitionCondition1]]
     """

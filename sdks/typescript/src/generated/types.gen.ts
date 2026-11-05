@@ -2861,9 +2861,9 @@ export type Workflow = {
     type: 'conversation' | 'scheduled';
     definition: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message.
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves.
          */
-        trigger: 'conversation_opened' | 'first_message_received' | 'message_received';
+        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away';
         /**
          * Channels it listens to. See `GET /channels`.
          */
@@ -2880,6 +2880,23 @@ export type Workflow = {
              * Not when the customer taps a button.
              */
             skip_buttons: boolean;
+        };
+        /**
+         * The period of a `team_away` workflow.
+         */
+        coverage?: {
+            /**
+             * When the team goes away.
+             */
+            starts_at: string;
+            /**
+             * When the team is back.
+             */
+            ends_at: string;
+            /**
+             * What the agent tells customers meanwhile.
+             */
+            notice: string | null;
         };
         /**
          * When it runs; null runs at any hour.
@@ -4392,9 +4409,9 @@ export type CreateWorkflow = {
      */
     definition: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message.
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves.
          */
-        trigger: 'conversation_opened' | 'first_message_received' | 'message_received';
+        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away';
         /**
          * Channels it listens to. See `GET /channels`.
          */
@@ -4411,6 +4428,23 @@ export type CreateWorkflow = {
              * Not when the customer taps a button.
              */
             skip_buttons: boolean;
+        };
+        /**
+         * The period of a `team_away` workflow.
+         */
+        coverage?: {
+            /**
+             * When the team goes away.
+             */
+            starts_at: string;
+            /**
+             * When the team is back.
+             */
+            ends_at: string;
+            /**
+             * What the agent tells customers meanwhile.
+             */
+            notice: string | null;
         };
         /**
          * When it runs; null runs at any hour.
@@ -4631,9 +4665,9 @@ export type UpdateWorkflow = {
      */
     definition?: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message.
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves.
          */
-        trigger: 'conversation_opened' | 'first_message_received' | 'message_received';
+        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away';
         /**
          * Channels it listens to. See `GET /channels`.
          */
@@ -4650,6 +4684,23 @@ export type UpdateWorkflow = {
              * Not when the customer taps a button.
              */
             skip_buttons: boolean;
+        };
+        /**
+         * The period of a `team_away` workflow.
+         */
+        coverage?: {
+            /**
+             * When the team goes away.
+             */
+            starts_at: string;
+            /**
+             * When the team is back.
+             */
+            ends_at: string;
+            /**
+             * What the agent tells customers meanwhile.
+             */
+            notice: string | null;
         };
         /**
          * When it runs; null runs at any hour.
