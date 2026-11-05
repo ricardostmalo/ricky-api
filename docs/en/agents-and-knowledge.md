@@ -51,6 +51,24 @@ The response is the conversation with its `agent_id`. The conversation is no lon
 
 `/knowledge/locations` keeps the branches the agents send as a WhatsApp location: name, address, confirmed coordinates, phone, email and hours. `/knowledge/contacts` keeps the contact cards they send; each one needs a display name and a phone or an email. Both accept `GET`, `POST`, `PATCH` and `DELETE`, and Ricky stores phones in E.164.
 
+### Location photo
+
+A location can have one optional photo, a JPEG or PNG of up to 5 MB, which the agents look at and send when it helps; it never goes out on its own with the location. It uploads in three steps, like a [file](#5-upload-a-file):
+
+```bash
+curl https://getricky.ai/api/v1/knowledge/locations/$LOCATION_ID/photo \
+  -H "Authorization: Bearer $RICKY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "mime_type": "image/jpeg", "size_bytes": 482133 }'
+
+curl -X PUT "$UPLOAD_URL" -H "Content-Type: image/jpeg" --data-binary @fachada.jpg
+
+curl -X POST https://getricky.ai/api/v1/knowledge/locations/$LOCATION_ID/photo/complete \
+  -H "Authorization: Bearer $RICKY_API_KEY"
+```
+
+The first call answers the location and an `upload_url` valid for two hours. `complete` checks the bytes and answers the location with its `photo`. To replace the photo, upload another: the current one stays until the new upload completes. `DELETE /knowledge/locations/{location_id}/photo` removes it. `GET /knowledge/locations/{location_id}` answers a `download_url` valid for five minutes in `photo`; the list answers it `null`.
+
 ## 5. Upload a file
 
 A file uploads in three steps, so its bytes never pass through the JSON body.

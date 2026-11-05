@@ -3095,6 +3095,21 @@ class ReminderHistory(TypedDict):
     """
 
 
+class WorkflowDefinitionMessageFilters(TypedDict):
+    """
+    Which messages a `message_received` workflow reacts to.
+    """
+
+    only_unassigned: bool
+    """
+    Only while nobody has the conversation.
+    """
+    skip_buttons: bool
+    """
+    Not when the customer taps a button.
+    """
+
+
 WorkflowDefinitionConditionBusinessHoursWeekday: TypeAlias = int
 
 
@@ -3370,13 +3385,17 @@ class WorkflowDefinition(TypedDict):
     Reacts to a conversation with messages, questions, waits and assignments.
     """
 
-    trigger: Literal["conversation_opened", "first_message_received"]
+    trigger: Literal["conversation_opened", "first_message_received", "message_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message.
     """
     channel_ids: List[str]
     """
     Channels it listens to. See `GET /channels`.
+    """
+    message_filters: NotRequired[WorkflowDefinitionMessageFilters]
+    """
+    Which messages a `message_received` workflow reacts to.
     """
     condition: Optional[Union[WorkflowDefinitionCondition, WorkflowDefinitionCondition1]]
     """
@@ -4893,6 +4912,21 @@ class UploadWorkflowHeaderMedia(TypedDict, closed=True):
     """
 
 
+class CreateWorkflowDefinitionMessageFilters(TypedDict, closed=True):
+    """
+    Which messages a `message_received` workflow reacts to.
+    """
+
+    only_unassigned: bool
+    """
+    Only while nobody has the conversation.
+    """
+    skip_buttons: bool
+    """
+    Not when the customer taps a button.
+    """
+
+
 CreateWorkflowDefinitionConditionBusinessHoursWeekday: TypeAlias = int
 
 
@@ -5168,13 +5202,17 @@ class CreateWorkflowDefinition(TypedDict, closed=True):
     Reacts to a conversation with messages, questions, waits and assignments.
     """
 
-    trigger: Literal["conversation_opened", "first_message_received"]
+    trigger: Literal["conversation_opened", "first_message_received", "message_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message.
     """
     channel_ids: List[str]
     """
     Channels it listens to. See `GET /channels`.
+    """
+    message_filters: NotRequired[CreateWorkflowDefinitionMessageFilters]
+    """
+    Which messages a `message_received` workflow reacts to.
     """
     condition: Optional[Union[CreateWorkflowDefinitionCondition, CreateWorkflowDefinitionCondition1]]
     """
@@ -5198,6 +5236,21 @@ class CreateWorkflow(TypedDict, closed=True):
     definition: CreateWorkflowDefinition
     """
     Reacts to a conversation with messages, questions, waits and assignments.
+    """
+
+
+class UpdateWorkflowDefinitionMessageFilters(TypedDict, closed=True):
+    """
+    Which messages a `message_received` workflow reacts to.
+    """
+
+    only_unassigned: bool
+    """
+    Only while nobody has the conversation.
+    """
+    skip_buttons: bool
+    """
+    Not when the customer taps a button.
     """
 
 
@@ -5476,13 +5529,17 @@ class UpdateWorkflowDefinition(TypedDict, closed=True):
     Replaces the whole definition.
     """
 
-    trigger: Literal["conversation_opened", "first_message_received"]
+    trigger: Literal["conversation_opened", "first_message_received", "message_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message.
     """
     channel_ids: List[str]
     """
     Channels it listens to. See `GET /channels`.
+    """
+    message_filters: NotRequired[UpdateWorkflowDefinitionMessageFilters]
+    """
+    Which messages a `message_received` workflow reacts to.
     """
     condition: Optional[Union[UpdateWorkflowDefinitionCondition, UpdateWorkflowDefinitionCondition1]]
     """

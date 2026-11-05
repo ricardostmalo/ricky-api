@@ -51,6 +51,24 @@ La respuesta es la conversación con su `agent_id`. La conversación deja de est
 
 `/knowledge/locations` guarda las sucursales que los agentes envían como ubicación de WhatsApp: nombre, dirección, coordenadas confirmadas, teléfono, correo y horario. `/knowledge/contacts` guarda las tarjetas de contacto que envían; cada una necesita un nombre visible y un teléfono o un correo. Ambas aceptan `GET`, `POST`, `PATCH` y `DELETE`, y Ricky guarda los teléfonos en E.164.
 
+### Foto de una ubicación
+
+Una ubicación puede tener una foto opcional, un JPEG o PNG de hasta 5 MB, que los agentes miran y envían cuando ayuda; nunca sale sola con la ubicación. Se sube en tres pasos, como un [archivo](#5-sube-un-archivo):
+
+```bash
+curl https://getricky.ai/api/v1/knowledge/locations/$LOCATION_ID/photo \
+  -H "Authorization: Bearer $RICKY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "mime_type": "image/jpeg", "size_bytes": 482133 }'
+
+curl -X PUT "$UPLOAD_URL" -H "Content-Type: image/jpeg" --data-binary @fachada.jpg
+
+curl -X POST https://getricky.ai/api/v1/knowledge/locations/$LOCATION_ID/photo/complete \
+  -H "Authorization: Bearer $RICKY_API_KEY"
+```
+
+La primera llamada responde la ubicación y una `upload_url` válida por dos horas. `complete` comprueba los bytes y responde la ubicación con su `photo`. Para reemplazar la foto, sube otra: la actual se queda hasta que la nueva carga termina. `DELETE /knowledge/locations/{location_id}/photo` la quita. `GET /knowledge/locations/{location_id}` responde en `photo` una `download_url` válida por cinco minutos; la lista la responde `null`.
+
 ## 5. Sube un archivo
 
 Un archivo se sube en tres pasos, así sus bytes nunca pasan por el cuerpo JSON.

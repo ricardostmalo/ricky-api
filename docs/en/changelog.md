@@ -6,6 +6,10 @@ URL: https://getricky.ai/en/docs/api/changelog
 
 This page records changes to the API. A breaking change only ships in a new path version and is announced here.
 
+## November 4, 2026
+
+**Location photos.** Compatible change to v1. A location can have one optional photo: `POST /knowledge/locations/{location_id}/photo`, `PUT` the bytes to the `upload_url`, then `POST /knowledge/locations/{location_id}/photo/complete`; `DELETE /knowledge/locations/{location_id}/photo` removes it. Locations answer `photo`, `null` when they have none. See [Agents and knowledge](./agents-and-knowledge.md#location-photo).
+
 ## November 3, 2026
 
 **The AI answers until someone takes the handoff.** Compatible with v1. While `active_handoff` is open, the AI agent keeps answering even though `assigned_user_id` is already the member. A handoff also ends when a member writes to the customer or assigns the conversation to themselves, and the `conversation.handoff_resolved` webhook arrives in those cases.

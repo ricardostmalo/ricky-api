@@ -2861,13 +2861,26 @@ export type Workflow = {
     type: 'conversation' | 'scheduled';
     definition: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives.
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message.
          */
-        trigger: 'conversation_opened' | 'first_message_received';
+        trigger: 'conversation_opened' | 'first_message_received' | 'message_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
         channel_ids: Array<string>;
+        /**
+         * Which messages a `message_received` workflow reacts to.
+         */
+        message_filters?: {
+            /**
+             * Only while nobody has the conversation.
+             */
+            only_unassigned: boolean;
+            /**
+             * Not when the customer taps a button.
+             */
+            skip_buttons: boolean;
+        };
         /**
          * When it runs; null runs at any hour.
          */
@@ -4379,13 +4392,26 @@ export type CreateWorkflow = {
      */
     definition: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives.
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message.
          */
-        trigger: 'conversation_opened' | 'first_message_received';
+        trigger: 'conversation_opened' | 'first_message_received' | 'message_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
         channel_ids: Array<string>;
+        /**
+         * Which messages a `message_received` workflow reacts to.
+         */
+        message_filters?: {
+            /**
+             * Only while nobody has the conversation.
+             */
+            only_unassigned: boolean;
+            /**
+             * Not when the customer taps a button.
+             */
+            skip_buttons: boolean;
+        };
         /**
          * When it runs; null runs at any hour.
          */
@@ -4605,13 +4631,26 @@ export type UpdateWorkflow = {
      */
     definition?: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives.
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message.
          */
-        trigger: 'conversation_opened' | 'first_message_received';
+        trigger: 'conversation_opened' | 'first_message_received' | 'message_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
         channel_ids: Array<string>;
+        /**
+         * Which messages a `message_received` workflow reacts to.
+         */
+        message_filters?: {
+            /**
+             * Only while nobody has the conversation.
+             */
+            only_unassigned: boolean;
+            /**
+             * Not when the customer taps a button.
+             */
+            skip_buttons: boolean;
+        };
         /**
          * When it runs; null runs at any hour.
          */

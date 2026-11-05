@@ -29,6 +29,8 @@ Recomendamos enviarla en todo envío de mensajes. Estas operaciones la aceptan:
 | [Definir el agente de IA de una conversación](https://getricky.ai/docs/api/reference/conversations/assign-conversation-agent) | `PATCH /conversations/{conversation_id}/agent` | `conversations:write` |
 | [Crear una ubicación](https://getricky.ai/docs/api/reference/knowledge/create-knowledge-location) | `POST /knowledge/locations` | `knowledge:write` |
 | [Actualizar una ubicación](https://getricky.ai/docs/api/reference/knowledge/update-knowledge-location) | `PATCH /knowledge/locations/{location_id}` | `knowledge:write` |
+| [Subir la foto de una ubicación](https://getricky.ai/docs/api/reference/knowledge/create-knowledge-location-photo) | `POST /knowledge/locations/{location_id}/photo` | `knowledge:write` |
+| [Completar la carga de una foto](https://getricky.ai/docs/api/reference/knowledge/complete-knowledge-location-photo) | `POST /knowledge/locations/{location_id}/photo/complete` | `knowledge:write` |
 | [Crear un contacto del directorio](https://getricky.ai/docs/api/reference/knowledge/create-knowledge-contact) | `POST /knowledge/contacts` | `knowledge:write` |
 | [Actualizar un contacto del directorio](https://getricky.ai/docs/api/reference/knowledge/update-knowledge-contact) | `PATCH /knowledge/contacts/{knowledge_contact_id}` | `knowledge:write` |
 | [Subir un archivo](https://getricky.ai/docs/api/reference/knowledge/create-knowledge-file) | `POST /knowledge/files` | `knowledge:write` |

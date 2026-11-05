@@ -138,6 +138,9 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Consultar una ubicación](https://getricky.ai/docs/api/reference/knowledge/get-knowledge-location) | `GET /knowledge/locations/{location_id}` | `knowledge:read` |
 | [Actualizar una ubicación](https://getricky.ai/docs/api/reference/knowledge/update-knowledge-location) | `PATCH /knowledge/locations/{location_id}` | `knowledge:write` |
 | [Eliminar una ubicación](https://getricky.ai/docs/api/reference/knowledge/delete-knowledge-location) | `DELETE /knowledge/locations/{location_id}` | `knowledge:write` |
+| [Subir la foto de una ubicación](https://getricky.ai/docs/api/reference/knowledge/create-knowledge-location-photo) | `POST /knowledge/locations/{location_id}/photo` | `knowledge:write` |
+| [Completar la carga de una foto](https://getricky.ai/docs/api/reference/knowledge/complete-knowledge-location-photo) | `POST /knowledge/locations/{location_id}/photo/complete` | `knowledge:write` |
+| [Quitar la foto de una ubicación](https://getricky.ai/docs/api/reference/knowledge/delete-knowledge-location-photo) | `DELETE /knowledge/locations/{location_id}/photo` | `knowledge:write` |
 | [Listar contactos del directorio](https://getricky.ai/docs/api/reference/knowledge/list-knowledge-contacts) | `GET /knowledge/contacts` | `knowledge:read` |
 | [Crear un contacto del directorio](https://getricky.ai/docs/api/reference/knowledge/create-knowledge-contact) | `POST /knowledge/contacts` | `knowledge:write` |
 | [Consultar un contacto del directorio](https://getricky.ai/docs/api/reference/knowledge/get-knowledge-contact) | `GET /knowledge/contacts/{knowledge_contact_id}` | `knowledge:read` |

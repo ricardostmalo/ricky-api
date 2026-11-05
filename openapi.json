@@ -24718,9 +24718,10 @@
                     "type": "string",
                     "enum": [
                       "conversation_opened",
-                      "first_message_received"
+                      "first_message_received",
+                      "message_received"
                     ],
-                    "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives."
+                    "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message."
                   },
                   "channel_ids": {
                     "maxItems": 50,
@@ -24730,6 +24731,24 @@
                       "format": "uuid"
                     },
                     "description": "Channels it listens to. See `GET /channels`."
+                  },
+                  "message_filters": {
+                    "description": "Which messages a `message_received` workflow reacts to.",
+                    "type": "object",
+                    "properties": {
+                      "only_unassigned": {
+                        "type": "boolean",
+                        "description": "Only while nobody has the conversation."
+                      },
+                      "skip_buttons": {
+                        "type": "boolean",
+                        "description": "Not when the customer taps a button."
+                      }
+                    },
+                    "required": [
+                      "only_unassigned",
+                      "skip_buttons"
+                    ]
                   },
                   "condition": {
                     "anyOf": [
@@ -29006,9 +29025,10 @@
                 "type": "string",
                 "enum": [
                   "conversation_opened",
-                  "first_message_received"
+                  "first_message_received",
+                  "message_received"
                 ],
-                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives."
+                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message."
               },
               "channel_ids": {
                 "maxItems": 50,
@@ -29018,6 +29038,25 @@
                   "format": "uuid"
                 },
                 "description": "Channels it listens to. See `GET /channels`."
+              },
+              "message_filters": {
+                "description": "Which messages a `message_received` workflow reacts to.",
+                "type": "object",
+                "properties": {
+                  "only_unassigned": {
+                    "type": "boolean",
+                    "description": "Only while nobody has the conversation."
+                  },
+                  "skip_buttons": {
+                    "type": "boolean",
+                    "description": "Not when the customer taps a button."
+                  }
+                },
+                "required": [
+                  "only_unassigned",
+                  "skip_buttons"
+                ],
+                "additionalProperties": false
               },
               "condition": {
                 "anyOf": [
@@ -29683,9 +29722,10 @@
                 "type": "string",
                 "enum": [
                   "conversation_opened",
-                  "first_message_received"
+                  "first_message_received",
+                  "message_received"
                 ],
-                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives."
+                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message."
               },
               "channel_ids": {
                 "maxItems": 50,
@@ -29695,6 +29735,25 @@
                   "format": "uuid"
                 },
                 "description": "Channels it listens to. See `GET /channels`."
+              },
+              "message_filters": {
+                "description": "Which messages a `message_received` workflow reacts to.",
+                "type": "object",
+                "properties": {
+                  "only_unassigned": {
+                    "type": "boolean",
+                    "description": "Only while nobody has the conversation."
+                  },
+                  "skip_buttons": {
+                    "type": "boolean",
+                    "description": "Not when the customer taps a button."
+                  }
+                },
+                "required": [
+                  "only_unassigned",
+                  "skip_buttons"
+                ],
+                "additionalProperties": false
               },
               "condition": {
                 "anyOf": [

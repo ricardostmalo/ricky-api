@@ -6,6 +6,10 @@ URL: https://getricky.ai/docs/api/changelog
 
 Esta página registra los cambios de la API. Un cambio incompatible solo llega en una versión nueva de la ruta y se anuncia aquí.
 
+## 4 de noviembre de 2026
+
+**Fotos de las ubicaciones.** Cambio compatible con la v1. Una ubicación puede tener una foto opcional: `POST /knowledge/locations/{location_id}/photo`, envía los bytes con `PUT` a la `upload_url` y luego `POST /knowledge/locations/{location_id}/photo/complete`; `DELETE /knowledge/locations/{location_id}/photo` la quita. Las ubicaciones responden `photo`, `null` cuando no tienen. Consulta [Agentes y conocimiento](./agents-and-knowledge.md#foto-de-una-ubicación).
+
 ## 3 de noviembre de 2026
 
 **La IA responde hasta que alguien tome el traspaso.** Cambio compatible con la v1. Mientras `active_handoff` siga abierto, el agente de IA sigue respondiendo aunque `assigned_user_id` ya sea el miembro. El traspaso también se cierra cuando un miembro le escribe al cliente o se asigna la conversación a sí mismo, y el webhook `conversation.handoff_resolved` llega en esos casos.
