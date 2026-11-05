@@ -1080,6 +1080,24 @@ export type BroadcastAudiencePreview = {
 };
 
 /**
+ * The photo of a location, which the agents can look at and send when it helps.
+ */
+export type KnowledgeLocationPhoto = {
+    /**
+     * File type.
+     */
+    mime_type: 'image/jpeg' | 'image/png';
+    /**
+     * Size in bytes.
+     */
+    size_bytes: number;
+    /**
+     * Signed download URL, valid for five minutes. Only `GET /knowledge/locations/{location_id}` carries it; null elsewhere.
+     */
+    download_url: string | null;
+};
+
+/**
  * A branch or place the agents can send as a WhatsApp location.
  */
 export type KnowledgeLocation = {
@@ -1139,6 +1157,21 @@ export type KnowledgeLocation = {
      * Opening hours, as free text.
      */
     hours: string | null;
+    /**
+     * Its photo; null when it has none.
+     */
+    photo: KnowledgeLocationPhoto | null;
+};
+
+/**
+ * A location, with its current photo, and where to put the bytes of the next one.
+ */
+export type KnowledgeLocationPhotoUpload = {
+    location: KnowledgeLocation;
+    /**
+     * Signed URL valid for two hours. `PUT` the photo bytes to it with `Content-Type` set to `mime_type`, then call `POST /knowledge/locations/{location_id}/photo/complete`.
+     */
+    upload_url: string;
 };
 
 /**
@@ -4137,6 +4170,20 @@ export type UpdateKnowledgeLocation = {
      * Opening hours, as free text.
      */
     hours?: string | null;
+};
+
+/**
+ * Begins an upload. Ricky answers where to `PUT` the bytes.
+ */
+export type CreateKnowledgeLocationPhoto = {
+    /**
+     * File type: JPEG or PNG, up to 5 MB.
+     */
+    mime_type: 'image/jpeg' | 'image/png';
+    /**
+     * Exact size of the file you will upload.
+     */
+    size_bytes: number;
 };
 
 /**
@@ -8971,6 +9018,10 @@ export type GetKnowledgeLocationErrors = {
      * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
      */
     500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
 };
 
 export type GetKnowledgeLocationError = GetKnowledgeLocationErrors[keyof GetKnowledgeLocationErrors];
@@ -9059,6 +9110,210 @@ export type UpdateKnowledgeLocationResponses = {
 };
 
 export type UpdateKnowledgeLocationResponse = UpdateKnowledgeLocationResponses[keyof UpdateKnowledgeLocationResponses];
+
+export type DeleteKnowledgeLocationPhotoData = {
+    body?: never;
+    path: {
+        /**
+         * Location ID.
+         */
+        location_id: string;
+    };
+    query?: never;
+    url: '/knowledge/locations/{location_id}/photo';
+};
+
+export type DeleteKnowledgeLocationPhotoErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type DeleteKnowledgeLocationPhotoError = DeleteKnowledgeLocationPhotoErrors[keyof DeleteKnowledgeLocationPhotoErrors];
+
+export type DeleteKnowledgeLocationPhotoResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: KnowledgeLocation;
+    };
+};
+
+export type DeleteKnowledgeLocationPhotoResponse = DeleteKnowledgeLocationPhotoResponses[keyof DeleteKnowledgeLocationPhotoResponses];
+
+export type CreateKnowledgeLocationPhotoData = {
+    body: CreateKnowledgeLocationPhoto;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Location ID.
+         */
+        location_id: string;
+    };
+    query?: never;
+    url: '/knowledge/locations/{location_id}/photo';
+};
+
+export type CreateKnowledgeLocationPhotoErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds 64 KiB.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type CreateKnowledgeLocationPhotoError = CreateKnowledgeLocationPhotoErrors[keyof CreateKnowledgeLocationPhotoErrors];
+
+export type CreateKnowledgeLocationPhotoResponses = {
+    /**
+     * Success.
+     */
+    201: {
+        data: KnowledgeLocationPhotoUpload;
+    };
+};
+
+export type CreateKnowledgeLocationPhotoResponse = CreateKnowledgeLocationPhotoResponses[keyof CreateKnowledgeLocationPhotoResponses];
+
+export type CompleteKnowledgeLocationPhotoData = {
+    body?: never;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Location ID.
+         */
+        location_id: string;
+    };
+    query?: never;
+    url: '/knowledge/locations/{location_id}/photo/complete';
+};
+
+export type CompleteKnowledgeLocationPhotoErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type CompleteKnowledgeLocationPhotoError = CompleteKnowledgeLocationPhotoErrors[keyof CompleteKnowledgeLocationPhotoErrors];
+
+export type CompleteKnowledgeLocationPhotoResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: KnowledgeLocation;
+    };
+};
+
+export type CompleteKnowledgeLocationPhotoResponse = CompleteKnowledgeLocationPhotoResponses[keyof CompleteKnowledgeLocationPhotoResponses];
 
 export type ListKnowledgeContactsData = {
     body?: never;

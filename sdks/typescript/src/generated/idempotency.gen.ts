@@ -39,6 +39,8 @@ export const idempotentOperations: ReadonlySet<string> = new Set([
     'POST /knowledge/files',
     'POST /knowledge/files/{file_id}/complete',
     'POST /knowledge/locations',
+    'POST /knowledge/locations/{location_id}/photo',
+    'POST /knowledge/locations/{location_id}/photo/complete',
     'POST /quick-replies',
     'POST /tags',
     'POST /templates',

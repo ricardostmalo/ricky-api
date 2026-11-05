@@ -1158,6 +1158,25 @@ class BroadcastAudiencePreview(TypedDict):
     """
 
 
+class KnowledgeLocationPhoto(TypedDict):
+    """
+    The photo of a location, which the agents can look at and send when it helps.
+    """
+
+    mime_type: Literal["image/jpeg", "image/png"]
+    """
+    File type.
+    """
+    size_bytes: int
+    """
+    Size in bytes.
+    """
+    download_url: Optional[str]
+    """
+    Signed download URL, valid for five minutes. Only `GET /knowledge/locations/{location_id}` carries it; null elsewhere.
+    """
+
+
 class KnowledgeLocation(TypedDict):
     """
     A branch or place the agents can send as a WhatsApp location.
@@ -1218,6 +1237,22 @@ class KnowledgeLocation(TypedDict):
     hours: Optional[str]
     """
     Opening hours, as free text.
+    """
+    photo: Optional[KnowledgeLocationPhoto]
+    """
+    Its photo; null when it has none.
+    """
+
+
+class KnowledgeLocationPhotoUpload(TypedDict):
+    """
+    A location, with its current photo, and where to put the bytes of the next one.
+    """
+
+    location: KnowledgeLocation
+    upload_url: str
+    """
+    Signed URL valid for two hours. `PUT` the photo bytes to it with `Content-Type` set to `mime_type`, then call `POST /knowledge/locations/{location_id}/photo/complete`.
     """
 
 
@@ -4654,6 +4689,21 @@ class UpdateKnowledgeLocation(TypedDict, closed=True):
     hours: NotRequired[Optional[str]]
     """
     Opening hours, as free text.
+    """
+
+
+class CreateKnowledgeLocationPhoto(TypedDict, closed=True):
+    """
+    Begins an upload. Ricky answers where to `PUT` the bytes.
+    """
+
+    mime_type: Literal["image/jpeg", "image/png"]
+    """
+    File type: JPEG or PNG, up to 5 MB.
+    """
+    size_bytes: int
+    """
+    Exact size of the file you will upload.
     """
 
 

@@ -36,6 +36,7 @@ from .types import (
     CreateKnowledgeContact,
     CreateKnowledgeFile,
     CreateKnowledgeLocation,
+    CreateKnowledgeLocationPhoto,
     CreateProfilePhotoUpload,
     CreateQuickReply,
     CreateTag,
@@ -52,6 +53,7 @@ from .types import (
     KnowledgeFileReading,
     KnowledgeFileUpload,
     KnowledgeLocation,
+    KnowledgeLocationPhotoUpload,
     MediaUpload,
     Member,
     Message,
@@ -1370,7 +1372,7 @@ class SyncOperations:
     ) -> Resource[KnowledgeLocation]:
         """Get a location.
 
-        One location.
+        One location; its `photo`, when it has one, carries a `download_url`.
 
         Scope: `knowledge:read`.
         """
@@ -1419,6 +1421,70 @@ class SyncOperations:
             "DELETE",
             "/knowledge/locations/{location_id}",
             path_parameters={"location_id": location_id},
+        ))
+
+    def create_knowledge_location_photo(
+        self,
+        location_id: str,
+        body: CreateKnowledgeLocationPhoto,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeLocationPhotoUpload]:
+        """Upload a location photo.
+
+        Begins an upload in three steps: this call answers the location and an `upload_url`; `PUT` the bytes there; then call `POST /knowledge/locations/{location_id}/photo/complete`. A location has one photo: uploading another replaces it when the upload completes, and until then the current one stays.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeLocationPhotoUpload], self._request(
+            "POST",
+            "/knowledge/locations/{location_id}/photo",
+            path_parameters={"location_id": location_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def delete_knowledge_location_photo(
+        self,
+        location_id: str,
+    ) -> Resource[KnowledgeLocation]:
+        """Remove a location photo.
+
+        Removes the photo and any upload in progress, and answers the location. Copies already sent in conversations stay there. A location without a photo stays as it is.
+
+        Scope: `knowledge:write`.
+        """
+        return cast(Resource[KnowledgeLocation], self._request(
+            "DELETE",
+            "/knowledge/locations/{location_id}/photo",
+            path_parameters={"location_id": location_id},
+        ))
+
+    def complete_knowledge_location_photo(
+        self,
+        location_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeLocation]:
+        """Complete a photo upload.
+
+        Checks that the uploaded bytes are a JPEG or PNG of up to 5 MB, of the type they were sent with, and makes them the location photo. Send no body. Completing an upload that already finished changes nothing; with no upload in progress and no photo, `409 conflict`.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeLocation], self._request(
+            "POST",
+            "/knowledge/locations/{location_id}/photo/complete",
+            path_parameters={"location_id": location_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
         ))
 
     def list_knowledge_contacts(
@@ -3802,7 +3868,7 @@ class AsyncOperations:
     ) -> Resource[KnowledgeLocation]:
         """Get a location.
 
-        One location.
+        One location; its `photo`, when it has one, carries a `download_url`.
 
         Scope: `knowledge:read`.
         """
@@ -3851,6 +3917,70 @@ class AsyncOperations:
             "DELETE",
             "/knowledge/locations/{location_id}",
             path_parameters={"location_id": location_id},
+        ))
+
+    async def create_knowledge_location_photo(
+        self,
+        location_id: str,
+        body: CreateKnowledgeLocationPhoto,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeLocationPhotoUpload]:
+        """Upload a location photo.
+
+        Begins an upload in three steps: this call answers the location and an `upload_url`; `PUT` the bytes there; then call `POST /knowledge/locations/{location_id}/photo/complete`. A location has one photo: uploading another replaces it when the upload completes, and until then the current one stays.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeLocationPhotoUpload], await self._request(
+            "POST",
+            "/knowledge/locations/{location_id}/photo",
+            path_parameters={"location_id": location_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def delete_knowledge_location_photo(
+        self,
+        location_id: str,
+    ) -> Resource[KnowledgeLocation]:
+        """Remove a location photo.
+
+        Removes the photo and any upload in progress, and answers the location. Copies already sent in conversations stay there. A location without a photo stays as it is.
+
+        Scope: `knowledge:write`.
+        """
+        return cast(Resource[KnowledgeLocation], await self._request(
+            "DELETE",
+            "/knowledge/locations/{location_id}/photo",
+            path_parameters={"location_id": location_id},
+        ))
+
+    async def complete_knowledge_location_photo(
+        self,
+        location_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[KnowledgeLocation]:
+        """Complete a photo upload.
+
+        Checks that the uploaded bytes are a JPEG or PNG of up to 5 MB, of the type they were sent with, and makes them the location photo. Send no body. Completing an upload that already finished changes nothing; with no upload in progress and no photo, `409 conflict`.
+
+        Scope: `knowledge:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[KnowledgeLocation], await self._request(
+            "POST",
+            "/knowledge/locations/{location_id}/photo/complete",
+            path_parameters={"location_id": location_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
         ))
 
     async def list_knowledge_contacts(
