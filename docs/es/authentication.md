@@ -8,15 +8,15 @@ Cada solicitud lleva una clave de API de la organización en la cabecera `Author
 
 ## Crea una clave
 
-Solo los propietarios y administradores de la organización pueden crear y revocar claves.
+Solo los propietarios y administradores de la organización pueden crear, editar, ver, regenerar y revocar claves.
 
-1. Abre **Configuración → API** en Ricky.
+1. Abre **Configuración → API** en Ricky y selecciona **Crear clave**.
 2. Escribe un nombre que identifique la integración, por ejemplo `ERP de tiendas`.
 3. Marca solo los permisos que la integración necesita.
-4. Elige el vencimiento: 90 días o 1 año.
+4. Elige el vencimiento: 30 días, 90 días, 1 año, una fecha o sin vencimiento.
 5. Selecciona **Crear clave** y copia la clave.
 
-Ricky muestra la clave completa una sola vez y guarda solo su huella SHA-256. Si la pierdes, crea otra.
+Puedes volver a ver y copiar la clave en **Configuración → API**. Ricky la guarda cifrada y registra quién la ve. Las claves creadas antes del 6 de noviembre de 2026 no se pueden mostrar: regénerala para poder verla.
 
 Una clave tiene la forma `rky_live_` seguida de 43 caracteres.
 
@@ -36,11 +36,15 @@ La clave pertenece a la organización, no a una persona. Sigue funcionando aunqu
 * Alguien la revoca en **Configuración → API**. El efecto es inmediato.
 * Llega su fecha de vencimiento.
 
-Cuando sale de tu equipo alguien que conocía la clave, rótala.
+Cuando sale de tu equipo alguien que conocía la clave, regénerala.
 
 Una clave que no funciona recibe `401 unauthorized`.
 
-Para rotar una clave, crea la nueva, despliégala en tu servidor y revoca la anterior.
+## Cambia una clave
+
+En **Configuración → API**, selecciona **Editar** para cambiar el nombre, los permisos o el vencimiento. La clave sigue siendo la misma y el cambio aplica desde la siguiente solicitud, así que no tienes que tocar tu integración. Una clave vencida vuelve a funcionar si le das otra fecha.
+
+**Regenerar clave** le da un valor nuevo. El anterior deja de funcionar de inmediato; el nombre, los permisos y el vencimiento no cambian. Si la clave anterior debe seguir funcionando mientras despliegas, crea una clave nueva, despliégala y revoca la anterior.
 
 ## Permisos
 

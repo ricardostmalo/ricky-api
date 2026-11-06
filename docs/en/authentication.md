@@ -8,15 +8,15 @@ Every request carries an organization API key in the `Authorization` header. The
 
 ## Create a key
 
-Only owners and admins of the organization can create and revoke keys.
+Only owners and admins of the organization can create, edit, view, regenerate and revoke keys.
 
-1. Open **Settings → API** in Ricky.
+1. Open **Settings → API** in Ricky and select **Create key**.
 2. Enter a name that identifies the integration, for example `Store ERP`.
 3. Select only the scopes the integration needs.
-4. Choose the expiry: 90 days or 1 year.
+4. Choose the expiry: 30 days, 90 days, 1 year, a date or no expiration.
 5. Select **Create key** and copy the key.
 
-Ricky shows the full key once and stores only its SHA-256 digest. If you lose it, create another one.
+You can view and copy the key again in **Settings → API**. Ricky stores it encrypted and records who views it. Keys created before November 6, 2026 cannot be shown: regenerate one to be able to view it.
 
 A key has the form `rky_live_` followed by 43 characters.
 
@@ -36,11 +36,15 @@ The key belongs to the organization, not to a person. It keeps working when its 
 * Someone revokes it in **Settings → API**. The effect is immediate.
 * It reaches its expiry date.
 
-When someone who knew the key leaves your team, rotate it.
+When someone who knew the key leaves your team, regenerate it.
 
 A key that no longer works gets `401 unauthorized`.
 
-To rotate a key, create the new one, deploy it to your server and revoke the old one.
+## Change a key
+
+In **Settings → API**, select **Edit** to change the name, scopes or expiry. The key stays the same and the change applies from the next request, so your integration needs no change. An expired key works again once you give it a new date.
+
+**Regenerate key** gives it a new value. The old one stops working at once; the name, scopes and expiry stay the same. If the old key must keep working while you deploy, create a new key, deploy it and revoke the old one.
 
 ## Scopes
 
