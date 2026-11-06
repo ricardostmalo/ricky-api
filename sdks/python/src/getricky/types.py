@@ -3193,7 +3193,7 @@ class WorkflowDefinitionCondition1(TypedDict):
 
 class WorkflowDefinitionFlowSteps(TypedDict):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3228,7 +3228,7 @@ class WorkflowDefinitionFlowSteps1Choice(TypedDict):
 
 class WorkflowDefinitionFlowSteps1(TypedDict):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3268,7 +3268,7 @@ class WorkflowDefinitionFlowSteps1(TypedDict):
 
 class WorkflowDefinitionFlowSteps2(TypedDict):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3297,7 +3297,7 @@ class WorkflowDefinitionFlowSteps2(TypedDict):
 
 class WorkflowDefinitionFlowSteps3(TypedDict):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3317,7 +3317,7 @@ class WorkflowDefinitionFlowSteps3(TypedDict):
 
 class WorkflowDefinitionFlowSteps4(TypedDict):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3337,7 +3337,7 @@ class WorkflowDefinitionFlowSteps4(TypedDict):
 
 class WorkflowDefinitionFlowSteps5(TypedDict):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3357,7 +3357,7 @@ class WorkflowDefinitionFlowSteps5(TypedDict):
 
 class WorkflowDefinitionFlowSteps6(TypedDict):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3373,7 +3373,7 @@ class WorkflowDefinitionFlowSteps6(TypedDict):
 
 class WorkflowDefinitionFlowSteps7(TypedDict):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5033,7 +5033,7 @@ class CreateWorkflowDefinitionCondition1(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps(TypedDict, closed=True):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5068,7 +5068,7 @@ class CreateWorkflowDefinitionFlowSteps1Choice(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5108,7 +5108,7 @@ class CreateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5137,7 +5137,7 @@ class CreateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5157,7 +5157,7 @@ class CreateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5177,7 +5177,7 @@ class CreateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5197,7 +5197,7 @@ class CreateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5213,7 +5213,7 @@ class CreateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5383,7 +5383,7 @@ class UpdateWorkflowDefinitionCondition1(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps(TypedDict, closed=True):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5418,7 +5418,7 @@ class UpdateWorkflowDefinitionFlowSteps1Choice(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5458,7 +5458,7 @@ class UpdateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5487,7 +5487,7 @@ class UpdateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5507,7 +5507,7 @@ class UpdateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5527,7 +5527,7 @@ class UpdateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5547,7 +5547,7 @@ class UpdateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5563,7 +5563,7 @@ class UpdateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
     """
-    One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
     """
 
     id: str

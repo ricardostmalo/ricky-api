@@ -25320,7 +25320,7 @@
                               ]
                             }
                           ],
-                          "description": "One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run."
+                          "description": "One step. `close_conversation` and `end` finish the flow; every other step continues at its target."
                         }
                       }
                     },
@@ -29678,7 +29678,7 @@
                           "additionalProperties": false
                         }
                       ],
-                      "description": "One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run."
+                      "description": "One step. `close_conversation` and `end` finish the flow; every other step continues at its target."
                     }
                   }
                 },
@@ -30412,7 +30412,7 @@
                           "additionalProperties": false
                         }
                       ],
-                      "description": "One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run."
+                      "description": "One step. `close_conversation` and `end` finish the flow; every other step continues at its target."
                     }
                   }
                 },

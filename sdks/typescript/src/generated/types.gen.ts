@@ -2951,7 +2951,7 @@ export type Workflow = {
              */
             entry: string;
             /**
-             * One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+             * One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
              */
             steps: Array<{
                 /**
@@ -4499,7 +4499,7 @@ export type CreateWorkflow = {
              */
             entry: string;
             /**
-             * One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+             * One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
              */
             steps: Array<{
                 /**
@@ -4755,7 +4755,7 @@ export type UpdateWorkflow = {
              */
             entry: string;
             /**
-             * One step. `assign_user`, `assign_agent` and `close_conversation` end the flow after they run.
+             * One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
              */
             steps: Array<{
                 /**
