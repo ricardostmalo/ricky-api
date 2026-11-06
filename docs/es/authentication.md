@@ -12,7 +12,7 @@ Solo los propietarios y administradores de la organización pueden crear, editar
 
 1. Abre **Configuración → API** en Ricky y selecciona **Crear clave**.
 2. Escribe un nombre que identifique la integración, por ejemplo `ERP de tiendas`.
-3. Marca solo los permisos que la integración necesita.
+3. Elige solo los accesos que la integración necesita.
 4. Elige el vencimiento: 30 días, 90 días, 1 año, una fecha o sin vencimiento.
 5. Selecciona **Crear clave** y copia la clave.
 
@@ -48,7 +48,7 @@ En **Configuración → API**, selecciona **Editar** para cambiar el nombre, los
 
 ## Permisos
 
-Cada operación exige un permiso (scope). Una clave sin ese permiso recibe `403 insufficient_scope`. `POST /tags` también acepta `contacts:write`, el permiso que exigía antes de que existiera `tags:write`.
+Cada operación exige un permiso (scope). Una clave sin ese permiso recibe `403 insufficient_scope`. En **Configuración → API** eliges el acceso por recurso: **Ver** da su permiso `:read` y **Ver y editar** da también `:write`. `POST /tags` también acepta `contacts:write`, el permiso que exigía antes de que existiera `tags:write`.
 
 | Permiso               | Permite                                                                                                                    |
 | --------------------- | -------------------------------------------------------------------------------------------------------------------------- |

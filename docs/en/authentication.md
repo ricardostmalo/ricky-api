@@ -12,7 +12,7 @@ Only owners and admins of the organization can create, edit, view, regenerate an
 
 1. Open **Settings → API** in Ricky and select **Create key**.
 2. Enter a name that identifies the integration, for example `Store ERP`.
-3. Select only the scopes the integration needs.
+3. Choose only the access the integration needs.
 4. Choose the expiry: 30 days, 90 days, 1 year, a date or no expiration.
 5. Select **Create key** and copy the key.
 
@@ -48,7 +48,7 @@ In **Settings → API**, select **Edit** to change the name, scopes or expiry. T
 
 ## Scopes
 
-Each operation requires one scope. A key without it gets `403 insufficient_scope`. `POST /tags` also accepts `contacts:write`, the scope it required before `tags:write` existed.
+Each operation requires one scope. A key without it gets `403 insufficient_scope`. In **Settings → API** you choose access by resource: **View** gives its `:read` scope and **View and edit** also gives `:write`. `POST /tags` also accepts `contacts:write`, the scope it required before `tags:write` existed.
 
 | Scope                 | Allows                                                                                                  |
 | --------------------- | ------------------------------------------------------------------------------------------------------- |
