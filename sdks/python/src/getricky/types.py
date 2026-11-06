@@ -3333,6 +3333,10 @@ class WorkflowDefinitionFlowSteps4(TypedDict):
     """
     Member who takes the conversation. See `GET /members`.
     """
+    user_ids: NotRequired[List[str]]
+    """
+    Members who take new conversations in turn, when there are two or more.
+    """
 
 
 class WorkflowDefinitionFlowSteps5(TypedDict):
@@ -5173,6 +5177,10 @@ class CreateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
     """
     Member who takes the conversation. See `GET /members`.
     """
+    user_ids: NotRequired[List[str]]
+    """
+    Members who take new conversations in turn, when there are two or more.
+    """
 
 
 class CreateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
@@ -5522,6 +5530,10 @@ class UpdateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
     user_id: str
     """
     Member who takes the conversation. See `GET /members`.
+    """
+    user_ids: NotRequired[List[str]]
+    """
+    Members who take new conversations in turn, when there are two or more.
     """
 
 

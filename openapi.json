@@ -25208,6 +25208,15 @@
                                   "type": "string",
                                   "format": "uuid",
                                   "description": "Member who takes the conversation. See `GET /members`."
+                                },
+                                "user_ids": {
+                                  "description": "Members who take new conversations in turn, when there are two or more.",
+                                  "maxItems": 20,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                  }
                                 }
                               },
                               "required": [
@@ -29562,6 +29571,15 @@
                               "type": "string",
                               "format": "uuid",
                               "description": "Member who takes the conversation. See `GET /members`."
+                            },
+                            "user_ids": {
+                              "description": "Members who take new conversations in turn, when there are two or more.",
+                              "maxItems": 20,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "format": "uuid"
+                              }
                             }
                           },
                           "required": [
@@ -30296,6 +30314,15 @@
                               "type": "string",
                               "format": "uuid",
                               "description": "Member who takes the conversation. See `GET /members`."
+                            },
+                            "user_ids": {
+                              "description": "Members who take new conversations in turn, when there are two or more.",
+                              "maxItems": 20,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "format": "uuid"
+                              }
                             }
                           },
                           "required": [

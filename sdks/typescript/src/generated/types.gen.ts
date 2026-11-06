@@ -3065,6 +3065,10 @@ export type Workflow = {
                  * Member who takes the conversation. See `GET /members`.
                  */
                 user_id: string;
+                /**
+                 * Members who take new conversations in turn, when there are two or more.
+                 */
+                user_ids?: Array<string>;
             } | {
                 /**
                  * Step ID: letters, digits, `_` or `-`, up to 64.
@@ -4613,6 +4617,10 @@ export type CreateWorkflow = {
                  * Member who takes the conversation. See `GET /members`.
                  */
                 user_id: string;
+                /**
+                 * Members who take new conversations in turn, when there are two or more.
+                 */
+                user_ids?: Array<string>;
             } | {
                 /**
                  * Step ID: letters, digits, `_` or `-`, up to 64.
@@ -4869,6 +4877,10 @@ export type UpdateWorkflow = {
                  * Member who takes the conversation. See `GET /members`.
                  */
                 user_id: string;
+                /**
+                 * Members who take new conversations in turn, when there are two or more.
+                 */
+                user_ids?: Array<string>;
             } | {
                 /**
                  * Step ID: letters, digits, `_` or `-`, up to 64.

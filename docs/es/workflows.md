@@ -92,8 +92,8 @@ Si algo falla, la respuesta es `400 invalid_input` con `param: "definition"` y e
 | `ask_question`       | Pregunta y espera la respuesta. Con `choices`, muestra botones u opciones. | `text`, `answer_key`, `choices`, `timeout_seconds`, `on_timeout`, `on_invalid`  |
 | `branch`             | Compara una respuesta guardada y sigue a `next` o a `otherwise`.           | `answer_key`, `operator` (`equals`, `contains`, `exists`), `value`, `otherwise` |
 | `wait`               | Espera antes del paso siguiente, hasta 7 días.                             | `seconds`                                                                       |
-| `assign_user`        | Asigna la conversación a un miembro y termina el flujo.                    | `user_id`                                                                       |
-| `assign_agent`       | Pone un agente IA en la conversación y termina el flujo.                   | `agent_id`                                                                      |
+| `assign_user`        | Asigna la conversación a un miembro y sigue en `next`.                     | `user_id`                                                                       |
+| `assign_agent`       | Pone un agente IA en la conversación y sigue en `next`.                    | `agent_id`                                                                      |
 | `close_conversation` | Cierra la conversación y termina el flujo.                                 |                                                                                 |
 | `end`                | Termina el flujo.                                                          |                                                                                 |
 

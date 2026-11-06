@@ -92,8 +92,8 @@ When a check fails, the response is `400 invalid_input` with `param: "definition
 | `ask_question`       | Asks and waits for the answer. With `choices`, shows buttons or a list. | `text`, `answer_key`, `choices`, `timeout_seconds`, `on_timeout`, `on_invalid`  |
 | `branch`             | Compares a stored answer and goes to `next` or `otherwise`.             | `answer_key`, `operator` (`equals`, `contains`, `exists`), `value`, `otherwise` |
 | `wait`               | Waits before the next step, up to 7 days.                               | `seconds`                                                                       |
-| `assign_user`        | Assigns the conversation to a member and ends the flow.                 | `user_id`                                                                       |
-| `assign_agent`       | Puts an AI agent on the conversation and ends the flow.                 | `agent_id`                                                                      |
+| `assign_user`        | Assigns the conversation to a member and continues at `next`.           | `user_id`                                                                       |
+| `assign_agent`       | Puts an AI agent on the conversation and continues at `next`.           | `agent_id`                                                                      |
 | `close_conversation` | Closes the conversation and ends the flow.                              |                                                                                 |
 | `end`                | Ends the flow.                                                          |                                                                                 |
 
