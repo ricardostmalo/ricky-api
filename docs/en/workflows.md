@@ -12,12 +12,13 @@ The key needs the `workflows:read` scope to read and `workflows:write` to change
 
 Ricky starts every execution from an event. There is no operation to start a workflow from your system.
 
-| Type           | `trigger`                | Runs when                                                           |
-| -------------- | ------------------------ | ------------------------------------------------------------------- |
-| `conversation` | `conversation_opened`    | A conversation opens on one of its channels.                        |
-| `conversation` | `first_message_received` | The contact's first message in a conversation arrives.              |
-| `conversation` | `message_received`       | Any message from the contact arrives; `message_filters` narrows it. |
-| `scheduled`    | `{ "kind": "daily" }`    | Every day at a set time, with Odoo appointments or birthdays.       |
+| Type           | `trigger`                | Runs when                                                                |
+| -------------- | ------------------------ | ------------------------------------------------------------------------ |
+| `conversation` | `conversation_opened`    | A conversation opens on one of its channels.                             |
+| `conversation` | `first_message_received` | The contact's first message in a conversation arrives.                   |
+| `conversation` | `message_received`       | Any message from the contact arrives; `message_filters` narrows it.      |
+| `conversation` | `call_received`          | A WhatsApp call comes in on one of its channels; it decides who answers. |
+| `scheduled`    | `{ "kind": "daily" }`    | Every day at a set time, with Odoo appointments or birthdays.            |
 
 The API creates and edits conversation workflows. Scheduled workflows are created in Ricky; the API reads, renames, activates, pauses and deletes them, sets their header file, and previews and reviews appointment reminders and their Odoo states ([below](#scheduled-workflows)).
 
@@ -92,16 +93,20 @@ When a check fails, the response is `400 invalid_input` with `param: "definition
 
 ## Steps
 
-| `kind`               | Does                                                                                               | Fields                                                                                                   |
-| -------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `send_message`       | Sends a text.                                                                                      | `text`                                                                                                   |
-| `ask_question`       | Asks and waits for the answer. With `choices`, shows buttons or a list.                            | `text`, `answer_key`, `choices`, `timeout_seconds`, `on_timeout`, `on_invalid`                           |
-| `branch`             | Checks a stored answer, or the business hours, and goes to `next` when it holds or to `otherwise`. | `answer_key`, `operator` (`equals`, `contains`, `exists`), `value`; or `business_hours`. And `otherwise` |
-| `wait`               | Waits before the next step, up to 7 days.                                                          | `seconds`                                                                                                |
-| `assign_user`        | Assigns the conversation to a member and continues at `next`.                                      | `user_id`                                                                                                |
-| `assign_agent`       | Puts an AI agent on the conversation and continues at `next`.                                      | `agent_id`                                                                                               |
-| `close_conversation` | Closes the conversation and ends the flow.                                                         |                                                                                                          |
-| `end`                | Ends the flow.                                                                                     |                                                                                                          |
+| `kind`               | Does                                                                                                          | Fields                                                                                                   |
+| -------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `send_message`       | Sends a text.                                                                                                 | `text`                                                                                                   |
+| `ask_question`       | Asks and waits for the answer. With `choices`, shows buttons or a list.                                       | `text`, `answer_key`, `choices`, `timeout_seconds`, `on_timeout`, `on_invalid`                           |
+| `branch`             | Checks a stored answer, or the business hours, and goes to `next` when it holds or to `otherwise`.            | `answer_key`, `operator` (`equals`, `contains`, `exists`), `value`; or `business_hours`. And `otherwise` |
+| `wait`               | Waits before the next step, up to 7 days.                                                                     | `seconds`                                                                                                |
+| `assign_user`        | Assigns the conversation to a member and continues at `next`.                                                 | `user_id`                                                                                                |
+| `assign_agent`       | Puts an AI agent on the conversation and continues at `next`.                                                 | `agent_id`                                                                                               |
+| `close_conversation` | Closes the conversation and ends the flow.                                                                    |                                                                                                          |
+| `end`                | Ends the flow.                                                                                                |                                                                                                          |
+| `answer_call`        | Only in `call_received`: the AI agent answers the call. It does not reassign the conversation. Ends the flow. | `agent_id`                                                                                               |
+| `decline_call`       | Only in `call_received`: Ricky rejects the call and sends the text to the caller's WhatsApp. Ends the flow.   | `text`                                                                                                   |
+
+A `call_received` workflow listens only to WhatsApp numbers with AI calls turned on, and its flow takes only `answer_call`, `decline_call` and a `branch` with `business_hours`. The first active one whose channel, `condition` and branches reach one of those steps decides, even when a person holds the conversation; without one, the agent that holds the caller's conversation answers.
 
 ### Business hours
 

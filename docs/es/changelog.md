@@ -8,6 +8,8 @@ Esta página registra los cambios de la API. Un cambio incompatible solo llega e
 
 ## 8 de noviembre de 2026
 
+**Quién contesta una llamada.** Cambio compatible con la v1. Un workflow de conversación acepta el `trigger` `call_received` y los pasos `answer_call` (`agent_id`) y `decline_call` (`text`): decide si un agente IA contesta una llamada de WhatsApp o si Ricky la rechaza y le escribe a quien llamó. Consulta [Workflows](./workflows.md#los-pasos).
+
 **Horario por día.** Cambio compatible con la v1. El `business_hours` de un workflow recibe las franjas de cada día en `days` y los feriados en `closed_dates`, y un paso `branch` puede evaluar el horario con `business_hours` en lugar de una respuesta. `start`, `end` y `weekdays` se siguen aceptando y respondiendo, obsoletos. Consulta [Workflows](./workflows.md#horario-de-atención).
 
 ## 4 de noviembre de 2026

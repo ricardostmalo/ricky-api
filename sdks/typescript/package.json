@@ -60,6 +60,9 @@
     "@types/node": "22.20.5",
     "typescript": "6.0.3"
   },
+  "overrides": {
+    "js-yaml": "^4.3.2"
+  },
   "engines": {
     "node": ">=18"
   }

@@ -8,6 +8,8 @@ This page records changes to the API. A breaking change only ships in a new path
 
 ## November 8, 2026
 
+**Who answers a call.** Compatible change to v1. A conversation workflow takes the `call_received` `trigger` and the `answer_call` (`agent_id`) and `decline_call` (`text`) steps: it decides whether an AI agent answers a WhatsApp call or Ricky rejects it and writes to the caller. See [Workflows](./workflows.md#steps).
+
 **Business hours per day.** Compatible change to v1. A workflow's `business_hours` takes each weekday's ranges in `days` and holidays in `closed_dates`, and a `branch` step can check the hours with `business_hours` instead of an answer. `start`, `end` and `weekdays` are still accepted and still answered, deprecated. See [Workflows](./workflows.md#business-hours).
 
 ## November 4, 2026

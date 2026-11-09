@@ -12,12 +12,13 @@ La clave necesita el permiso `workflows:read` para leer y `workflows:write` para
 
 Ricky inicia cada ejecución por un evento. No hay una operación para iniciar un workflow desde tu sistema.
 
-| Tipo           | `trigger`                | Se ejecuta cuando                                                  |
-| -------------- | ------------------------ | ------------------------------------------------------------------ |
-| `conversation` | `conversation_opened`    | Se abre una conversación en uno de sus canales.                    |
-| `conversation` | `first_message_received` | Llega el primer mensaje del contacto en una conversación.          |
-| `conversation` | `message_received`       | Llega cualquier mensaje del contacto; `message_filters` lo limita. |
-| `scheduled`    | `{ "kind": "daily" }`    | Cada día a una hora, con las citas o cumpleaños de Odoo.           |
+| Tipo           | `trigger`                | Se ejecuta cuando                                                          |
+| -------------- | ------------------------ | -------------------------------------------------------------------------- |
+| `conversation` | `conversation_opened`    | Se abre una conversación en uno de sus canales.                            |
+| `conversation` | `first_message_received` | Llega el primer mensaje del contacto en una conversación.                  |
+| `conversation` | `message_received`       | Llega cualquier mensaje del contacto; `message_filters` lo limita.         |
+| `conversation` | `call_received`          | Llega una llamada de WhatsApp a uno de sus canales; decide quién contesta. |
+| `scheduled`    | `{ "kind": "daily" }`    | Cada día a una hora, con las citas o cumpleaños de Odoo.                   |
 
 La API crea y edita workflows de conversación. Los workflows programados se crean en Ricky; la API los lee, les cambia el nombre, los activa, los pausa y los elimina, define su archivo de encabezado, y previsualiza y revisa los recordatorios de citas y sus estados de Odoo ([más abajo](#workflows-programados)).
 
@@ -92,16 +93,20 @@ Si algo falla, la respuesta es `400 invalid_input` con `param: "definition"` y e
 
 ## Los pasos
 
-| `kind`               | Hace                                                                                                    | Campos                                                                                                |
-| -------------------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `send_message`       | Envía un texto.                                                                                         | `text`                                                                                                |
-| `ask_question`       | Pregunta y espera la respuesta. Con `choices`, muestra botones u opciones.                              | `text`, `answer_key`, `choices`, `timeout_seconds`, `on_timeout`, `on_invalid`                        |
-| `branch`             | Evalúa una respuesta guardada, o el horario de atención, y sigue a `next` si se cumple o a `otherwise`. | `answer_key`, `operator` (`equals`, `contains`, `exists`), `value`; o `business_hours`. Y `otherwise` |
-| `wait`               | Espera antes del paso siguiente, hasta 7 días.                                                          | `seconds`                                                                                             |
-| `assign_user`        | Asigna la conversación a un miembro y sigue en `next`.                                                  | `user_id`                                                                                             |
-| `assign_agent`       | Pone un agente IA en la conversación y sigue en `next`.                                                 | `agent_id`                                                                                            |
-| `close_conversation` | Cierra la conversación y termina el flujo.                                                              |                                                                                                       |
-| `end`                | Termina el flujo.                                                                                       |                                                                                                       |
+| `kind`               | Hace                                                                                                             | Campos                                                                                                |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `send_message`       | Envía un texto.                                                                                                  | `text`                                                                                                |
+| `ask_question`       | Pregunta y espera la respuesta. Con `choices`, muestra botones u opciones.                                       | `text`, `answer_key`, `choices`, `timeout_seconds`, `on_timeout`, `on_invalid`                        |
+| `branch`             | Evalúa una respuesta guardada, o el horario de atención, y sigue a `next` si se cumple o a `otherwise`.          | `answer_key`, `operator` (`equals`, `contains`, `exists`), `value`; o `business_hours`. Y `otherwise` |
+| `wait`               | Espera antes del paso siguiente, hasta 7 días.                                                                   | `seconds`                                                                                             |
+| `assign_user`        | Asigna la conversación a un miembro y sigue en `next`.                                                           | `user_id`                                                                                             |
+| `assign_agent`       | Pone un agente IA en la conversación y sigue en `next`.                                                          | `agent_id`                                                                                            |
+| `close_conversation` | Cierra la conversación y termina el flujo.                                                                       |                                                                                                       |
+| `end`                | Termina el flujo.                                                                                                |                                                                                                       |
+| `answer_call`        | Solo en `call_received`: el agente IA contesta la llamada. No reasigna la conversación. Termina el flujo.        | `agent_id`                                                                                            |
+| `decline_call`       | Solo en `call_received`: Ricky rechaza la llamada y envía el texto al WhatsApp de quien llamó. Termina el flujo. | `text`                                                                                                |
+
+Un workflow `call_received` escucha solo números de WhatsApp con llamadas con IA activadas y su flujo admite solo `answer_call`, `decline_call` y `branch` con `business_hours`. El primero activo cuyo canal, `condition` y ramas llegan a uno de esos pasos decide, aunque una persona tenga la conversación; sin él, contesta el agente que tiene la conversación de quien llama.
 
 ### Horario de atención
 
