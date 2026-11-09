@@ -6,6 +6,10 @@ URL: https://getricky.ai/docs/api/changelog
 
 Esta página registra los cambios de la API. Un cambio incompatible solo llega en una versión nueva de la ruta y se anuncia aquí.
 
+## 8 de noviembre de 2026
+
+**Horario por día.** Cambio compatible con la v1. El `business_hours` de un workflow recibe las franjas de cada día en `days` y los feriados en `closed_dates`, y un paso `branch` puede evaluar el horario con `business_hours` en lugar de una respuesta. `start`, `end` y `weekdays` se siguen aceptando y respondiendo, obsoletos. Consulta [Workflows](./workflows.md#horario-de-atención).
+
 ## 4 de noviembre de 2026
 
 **Fotos de las ubicaciones.** Cambio compatible con la v1. Una ubicación puede tener una foto opcional: `POST /knowledge/locations/{location_id}/photo`, envía los bytes con `PUT` a la `upload_url` y luego `POST /knowledge/locations/{location_id}/photo/complete`; `DELETE /knowledge/locations/{location_id}/photo` la quita. Las ubicaciones responden `photo`, `null` cuando no tienen. Consulta [Agentes y conocimiento](./agents-and-knowledge.md#foto-de-una-ubicación).

@@ -2139,7 +2139,7 @@ class DashboardReportLongestWaitingItem(TypedDict):
     """
     participant_name: Optional[str]
     """
-    Name the channel reports for the customer.
+    Customer name as the inbox shows it: the contact’s saved name, else the channel profile name, else the contact’s phone.
     """
     waiting_since: str
     """
@@ -3095,6 +3095,148 @@ class ReminderHistory(TypedDict):
     """
 
 
+class BusinessHoursDaysMondayItem(TypedDict):
+    start: str
+    """
+    Opens, `HH:MM`.
+    """
+    end: str
+    """
+    Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+    """
+
+
+class BusinessHoursDaysTuesdayItem(TypedDict):
+    start: str
+    """
+    Opens, `HH:MM`.
+    """
+    end: str
+    """
+    Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+    """
+
+
+class BusinessHoursDaysWednesdayItem(TypedDict):
+    start: str
+    """
+    Opens, `HH:MM`.
+    """
+    end: str
+    """
+    Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+    """
+
+
+class BusinessHoursDaysThursdayItem(TypedDict):
+    start: str
+    """
+    Opens, `HH:MM`.
+    """
+    end: str
+    """
+    Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+    """
+
+
+class BusinessHoursDaysFridayItem(TypedDict):
+    start: str
+    """
+    Opens, `HH:MM`.
+    """
+    end: str
+    """
+    Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+    """
+
+
+class BusinessHoursDaysSaturdayItem(TypedDict):
+    start: str
+    """
+    Opens, `HH:MM`.
+    """
+    end: str
+    """
+    Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+    """
+
+
+class BusinessHoursDaysSundayItem(TypedDict):
+    start: str
+    """
+    Opens, `HH:MM`.
+    """
+    end: str
+    """
+    Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+    """
+
+
+class BusinessHoursDays(TypedDict):
+    """
+    Open ranges of each weekday, in `timezone`; a range never crosses midnight. A day left out of a request is closed. When sent, `start`, `end` and `weekdays` are ignored.
+    """
+
+    monday: List[BusinessHoursDaysMondayItem]
+    """
+    Up to 3 ranges in order; empty when closed that day.
+    """
+    tuesday: List[BusinessHoursDaysTuesdayItem]
+    """
+    Up to 3 ranges in order; empty when closed that day.
+    """
+    wednesday: List[BusinessHoursDaysWednesdayItem]
+    """
+    Up to 3 ranges in order; empty when closed that day.
+    """
+    thursday: List[BusinessHoursDaysThursdayItem]
+    """
+    Up to 3 ranges in order; empty when closed that day.
+    """
+    friday: List[BusinessHoursDaysFridayItem]
+    """
+    Up to 3 ranges in order; empty when closed that day.
+    """
+    saturday: List[BusinessHoursDaysSaturdayItem]
+    """
+    Up to 3 ranges in order; empty when closed that day.
+    """
+    sunday: List[BusinessHoursDaysSundayItem]
+    """
+    Up to 3 ranges in order; empty when closed that day.
+    """
+
+
+BusinessHoursWeekday: TypeAlias = int
+
+
+class BusinessHours(TypedDict):
+    timezone: str
+    """
+    IANA time zone, for example `America/Panama`.
+    """
+    days: BusinessHoursDays
+    """
+    Open ranges of each weekday, in `timezone`; a range never crosses midnight. A day left out of a request is closed. When sent, `start`, `end` and `weekdays` are ignored.
+    """
+    closed_dates: List[str]
+    """
+    Local dates closed whatever the weekday says, such as holidays, `YYYY-MM-DD`.
+    """
+    start: str
+    """
+    Deprecated, read `days`: opening time when every open day has the same hours; otherwise the earliest opening of the week.
+    """
+    end: str
+    """
+    Deprecated, read `days`: closing time when every open day has the same hours (before `start` when they cross midnight); otherwise the latest closing of the week.
+    """
+    weekdays: List[BusinessHoursWeekday]
+    """
+    Deprecated, read `days`: open days, 0 for Sunday to 6 for Saturday.
+    """
+
+
 class WorkflowDefinitionMessageFilters(TypedDict):
     """
     Which messages a `message_received` workflow reacts to.
@@ -3129,57 +3271,13 @@ class WorkflowDefinitionCoverage(TypedDict):
     """
 
 
-WorkflowDefinitionConditionBusinessHoursWeekday: TypeAlias = int
-
-
-class WorkflowDefinitionConditionBusinessHours(TypedDict):
-    start: str
-    """
-    Opening time, `HH:MM`.
-    """
-    end: str
-    """
-    Closing time, `HH:MM`.
-    """
-    timezone: str
-    """
-    IANA time zone, for example `America/Panama`.
-    """
-    weekdays: List[WorkflowDefinitionConditionBusinessHoursWeekday]
-    """
-    Open days, 0 for Sunday to 6 for Saturday.
-    """
-
-
 class WorkflowDefinitionCondition(TypedDict):
     """
     When it runs; null runs at any hour.
     """
 
     kind: Literal["inside_business_hours"]
-    business_hours: WorkflowDefinitionConditionBusinessHours
-
-
-WorkflowDefinitionCondition1BusinessHoursWeekday: TypeAlias = int
-
-
-class WorkflowDefinitionCondition1BusinessHours(TypedDict):
-    start: str
-    """
-    Opening time, `HH:MM`.
-    """
-    end: str
-    """
-    Closing time, `HH:MM`.
-    """
-    timezone: str
-    """
-    IANA time zone, for example `America/Panama`.
-    """
-    weekdays: List[WorkflowDefinitionCondition1BusinessHoursWeekday]
-    """
-    Open days, 0 for Sunday to 6 for Saturday.
-    """
+    business_hours: BusinessHours
 
 
 class WorkflowDefinitionCondition1(TypedDict):
@@ -3188,12 +3286,12 @@ class WorkflowDefinitionCondition1(TypedDict):
     """
 
     kind: Literal["outside_business_hours"]
-    business_hours: WorkflowDefinitionCondition1BusinessHours
+    business_hours: BusinessHours
 
 
 class WorkflowDefinitionFlowSteps(TypedDict):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3228,7 +3326,7 @@ class WorkflowDefinitionFlowSteps1Choice(TypedDict):
 
 class WorkflowDefinitionFlowSteps1(TypedDict):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3268,7 +3366,7 @@ class WorkflowDefinitionFlowSteps1(TypedDict):
 
 class WorkflowDefinitionFlowSteps2(TypedDict):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3280,14 +3378,21 @@ class WorkflowDefinitionFlowSteps2(TypedDict):
     Step to run next; null ends the flow.
     """
     kind: Literal["branch"]
-    answer_key: str
+    answer_key: NotRequired[str]
     """
     Name the answer is kept under, for a later `branch`.
     """
-    operator: Literal["equals", "contains", "exists"]
-    value: str
+    operator: NotRequired[Literal["equals", "contains", "exists"]]
+    """
+    How the answer is compared. With `answer_key` and `value`.
+    """
+    value: NotRequired[str]
     """
     Value compared with the answer.
+    """
+    business_hours: NotRequired[BusinessHours]
+    """
+    Holds while the business is open at the moment the step runs. Send it instead of `answer_key`, `operator` and `value`.
     """
     otherwise: Optional[str]
     """
@@ -3297,7 +3402,7 @@ class WorkflowDefinitionFlowSteps2(TypedDict):
 
 class WorkflowDefinitionFlowSteps3(TypedDict):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3317,7 +3422,7 @@ class WorkflowDefinitionFlowSteps3(TypedDict):
 
 class WorkflowDefinitionFlowSteps4(TypedDict):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3341,7 +3446,7 @@ class WorkflowDefinitionFlowSteps4(TypedDict):
 
 class WorkflowDefinitionFlowSteps5(TypedDict):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3361,7 +3466,7 @@ class WorkflowDefinitionFlowSteps5(TypedDict):
 
 class WorkflowDefinitionFlowSteps6(TypedDict):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3377,7 +3482,7 @@ class WorkflowDefinitionFlowSteps6(TypedDict):
 
 class WorkflowDefinitionFlowSteps7(TypedDict):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3391,6 +3496,46 @@ class WorkflowDefinitionFlowSteps7(TypedDict):
     kind: Literal["end"]
 
 
+class WorkflowDefinitionFlowSteps8(TypedDict):
+    """
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["answer_call"]
+    agent_id: str
+    """
+    AI agent that answers the call, in a `call_received` workflow. The conversation keeps whoever holds it.
+    """
+
+
+class WorkflowDefinitionFlowSteps9(TypedDict):
+    """
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["decline_call"]
+    text: str
+    """
+    In a `call_received` workflow: Ricky rejects the call and sends this text to the caller's WhatsApp chat.
+    """
+
+
 class WorkflowDefinitionFlow(TypedDict):
     """
     The steps and how they connect.
@@ -3400,7 +3545,7 @@ class WorkflowDefinitionFlow(TypedDict):
     """
     ID of the first step.
     """
-    steps: List[Union[WorkflowDefinitionFlowSteps, WorkflowDefinitionFlowSteps1, WorkflowDefinitionFlowSteps2, WorkflowDefinitionFlowSteps3, WorkflowDefinitionFlowSteps4, WorkflowDefinitionFlowSteps5, WorkflowDefinitionFlowSteps6, WorkflowDefinitionFlowSteps7]]
+    steps: List[Union[WorkflowDefinitionFlowSteps, WorkflowDefinitionFlowSteps1, WorkflowDefinitionFlowSteps2, WorkflowDefinitionFlowSteps3, WorkflowDefinitionFlowSteps4, WorkflowDefinitionFlowSteps5, WorkflowDefinitionFlowSteps6, WorkflowDefinitionFlowSteps7, WorkflowDefinitionFlowSteps8, WorkflowDefinitionFlowSteps9]]
 
 
 class WorkflowDefinition(TypedDict):
@@ -3408,9 +3553,9 @@ class WorkflowDefinition(TypedDict):
     Reacts to a conversation with messages, questions, waits and assignments.
     """
 
-    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away"]
+    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away", "call_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """
@@ -4939,6 +5084,151 @@ class UploadWorkflowHeaderMedia(TypedDict, closed=True):
     """
 
 
+class BusinessHoursInputDaysMondayItem(TypedDict, closed=True):
+    start: str
+    """
+    Opens, `HH:MM`.
+    """
+    end: str
+    """
+    Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+    """
+
+
+class BusinessHoursInputDaysTuesdayItem(TypedDict, closed=True):
+    start: str
+    """
+    Opens, `HH:MM`.
+    """
+    end: str
+    """
+    Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+    """
+
+
+class BusinessHoursInputDaysWednesdayItem(TypedDict, closed=True):
+    start: str
+    """
+    Opens, `HH:MM`.
+    """
+    end: str
+    """
+    Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+    """
+
+
+class BusinessHoursInputDaysThursdayItem(TypedDict, closed=True):
+    start: str
+    """
+    Opens, `HH:MM`.
+    """
+    end: str
+    """
+    Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+    """
+
+
+class BusinessHoursInputDaysFridayItem(TypedDict, closed=True):
+    start: str
+    """
+    Opens, `HH:MM`.
+    """
+    end: str
+    """
+    Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+    """
+
+
+class BusinessHoursInputDaysSaturdayItem(TypedDict, closed=True):
+    start: str
+    """
+    Opens, `HH:MM`.
+    """
+    end: str
+    """
+    Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+    """
+
+
+class BusinessHoursInputDaysSundayItem(TypedDict, closed=True):
+    start: str
+    """
+    Opens, `HH:MM`.
+    """
+    end: str
+    """
+    Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+    """
+
+
+class BusinessHoursInputDays(TypedDict, closed=True):
+    """
+    Open ranges of each weekday, in `timezone`; a range never crosses midnight. A day left out of a request is closed. When sent, `start`, `end` and `weekdays` are ignored.
+    """
+
+    monday: NotRequired[List[BusinessHoursInputDaysMondayItem]]
+    """
+    Up to 3 ranges in order; empty when closed that day.
+    """
+    tuesday: NotRequired[List[BusinessHoursInputDaysTuesdayItem]]
+    """
+    Up to 3 ranges in order; empty when closed that day.
+    """
+    wednesday: NotRequired[List[BusinessHoursInputDaysWednesdayItem]]
+    """
+    Up to 3 ranges in order; empty when closed that day.
+    """
+    thursday: NotRequired[List[BusinessHoursInputDaysThursdayItem]]
+    """
+    Up to 3 ranges in order; empty when closed that day.
+    """
+    friday: NotRequired[List[BusinessHoursInputDaysFridayItem]]
+    """
+    Up to 3 ranges in order; empty when closed that day.
+    """
+    saturday: NotRequired[List[BusinessHoursInputDaysSaturdayItem]]
+    """
+    Up to 3 ranges in order; empty when closed that day.
+    """
+    sunday: NotRequired[List[BusinessHoursInputDaysSundayItem]]
+    """
+    Up to 3 ranges in order; empty when closed that day.
+    """
+
+
+BusinessHoursInputClosedDate: TypeAlias = str
+
+
+BusinessHoursInputWeekday: TypeAlias = int
+
+
+class BusinessHoursInput(TypedDict, closed=True):
+    timezone: str
+    """
+    IANA time zone, for example `America/Panama`.
+    """
+    days: NotRequired[BusinessHoursInputDays]
+    """
+    Open ranges of each weekday, in `timezone`; a range never crosses midnight. A day left out of a request is closed. When sent, `start`, `end` and `weekdays` are ignored.
+    """
+    closed_dates: NotRequired[List[BusinessHoursInputClosedDate]]
+    """
+    Local dates closed whatever the weekday says, such as holidays, `YYYY-MM-DD`.
+    """
+    start: NotRequired[str]
+    """
+    Deprecated, read `days`: opening time when every open day has the same hours; otherwise the earliest opening of the week.
+    """
+    end: NotRequired[str]
+    """
+    Deprecated, read `days`: closing time when every open day has the same hours (before `start` when they cross midnight); otherwise the latest closing of the week.
+    """
+    weekdays: NotRequired[List[BusinessHoursInputWeekday]]
+    """
+    Deprecated, read `days`: open days, 0 for Sunday to 6 for Saturday.
+    """
+
+
 class CreateWorkflowDefinitionMessageFilters(TypedDict, closed=True):
     """
     Which messages a `message_received` workflow reacts to.
@@ -4973,57 +5263,13 @@ class CreateWorkflowDefinitionCoverage(TypedDict, closed=True):
     """
 
 
-CreateWorkflowDefinitionConditionBusinessHoursWeekday: TypeAlias = int
-
-
-class CreateWorkflowDefinitionConditionBusinessHours(TypedDict, closed=True):
-    start: str
-    """
-    Opening time, `HH:MM`.
-    """
-    end: str
-    """
-    Closing time, `HH:MM`.
-    """
-    timezone: str
-    """
-    IANA time zone, for example `America/Panama`.
-    """
-    weekdays: List[CreateWorkflowDefinitionConditionBusinessHoursWeekday]
-    """
-    Open days, 0 for Sunday to 6 for Saturday.
-    """
-
-
 class CreateWorkflowDefinitionCondition(TypedDict, closed=True):
     """
     When it runs; null runs at any hour.
     """
 
     kind: Literal["inside_business_hours"]
-    business_hours: CreateWorkflowDefinitionConditionBusinessHours
-
-
-CreateWorkflowDefinitionCondition1BusinessHoursWeekday: TypeAlias = int
-
-
-class CreateWorkflowDefinitionCondition1BusinessHours(TypedDict, closed=True):
-    start: str
-    """
-    Opening time, `HH:MM`.
-    """
-    end: str
-    """
-    Closing time, `HH:MM`.
-    """
-    timezone: str
-    """
-    IANA time zone, for example `America/Panama`.
-    """
-    weekdays: List[CreateWorkflowDefinitionCondition1BusinessHoursWeekday]
-    """
-    Open days, 0 for Sunday to 6 for Saturday.
-    """
+    business_hours: BusinessHoursInput
 
 
 class CreateWorkflowDefinitionCondition1(TypedDict, closed=True):
@@ -5032,12 +5278,12 @@ class CreateWorkflowDefinitionCondition1(TypedDict, closed=True):
     """
 
     kind: Literal["outside_business_hours"]
-    business_hours: CreateWorkflowDefinitionCondition1BusinessHours
+    business_hours: BusinessHoursInput
 
 
 class CreateWorkflowDefinitionFlowSteps(TypedDict, closed=True):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5072,7 +5318,7 @@ class CreateWorkflowDefinitionFlowSteps1Choice(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5112,7 +5358,7 @@ class CreateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5124,14 +5370,21 @@ class CreateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
     Step to run next; null ends the flow.
     """
     kind: Literal["branch"]
-    answer_key: str
+    answer_key: NotRequired[str]
     """
     Name the answer is kept under, for a later `branch`.
     """
-    operator: Literal["equals", "contains", "exists"]
-    value: str
+    operator: NotRequired[Literal["equals", "contains", "exists"]]
+    """
+    How the answer is compared. With `answer_key` and `value`.
+    """
+    value: NotRequired[str]
     """
     Value compared with the answer.
+    """
+    business_hours: NotRequired[BusinessHoursInput]
+    """
+    Holds while the business is open at the moment the step runs. Send it instead of `answer_key`, `operator` and `value`.
     """
     otherwise: Optional[str]
     """
@@ -5141,7 +5394,7 @@ class CreateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5161,7 +5414,7 @@ class CreateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5185,7 +5438,7 @@ class CreateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5205,7 +5458,7 @@ class CreateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5221,7 +5474,7 @@ class CreateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5235,6 +5488,46 @@ class CreateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
     kind: Literal["end"]
 
 
+class CreateWorkflowDefinitionFlowSteps8(TypedDict, closed=True):
+    """
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["answer_call"]
+    agent_id: str
+    """
+    AI agent that answers the call, in a `call_received` workflow. The conversation keeps whoever holds it.
+    """
+
+
+class CreateWorkflowDefinitionFlowSteps9(TypedDict, closed=True):
+    """
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["decline_call"]
+    text: str
+    """
+    In a `call_received` workflow: Ricky rejects the call and sends this text to the caller's WhatsApp chat.
+    """
+
+
 class CreateWorkflowDefinitionFlow(TypedDict, closed=True):
     """
     The steps and how they connect.
@@ -5244,7 +5537,7 @@ class CreateWorkflowDefinitionFlow(TypedDict, closed=True):
     """
     ID of the first step.
     """
-    steps: List[Union[CreateWorkflowDefinitionFlowSteps, CreateWorkflowDefinitionFlowSteps1, CreateWorkflowDefinitionFlowSteps2, CreateWorkflowDefinitionFlowSteps3, CreateWorkflowDefinitionFlowSteps4, CreateWorkflowDefinitionFlowSteps5, CreateWorkflowDefinitionFlowSteps6, CreateWorkflowDefinitionFlowSteps7]]
+    steps: List[Union[CreateWorkflowDefinitionFlowSteps, CreateWorkflowDefinitionFlowSteps1, CreateWorkflowDefinitionFlowSteps2, CreateWorkflowDefinitionFlowSteps3, CreateWorkflowDefinitionFlowSteps4, CreateWorkflowDefinitionFlowSteps5, CreateWorkflowDefinitionFlowSteps6, CreateWorkflowDefinitionFlowSteps7, CreateWorkflowDefinitionFlowSteps8, CreateWorkflowDefinitionFlowSteps9]]
 
 
 class CreateWorkflowDefinition(TypedDict, closed=True):
@@ -5252,9 +5545,9 @@ class CreateWorkflowDefinition(TypedDict, closed=True):
     Reacts to a conversation with messages, questions, waits and assignments.
     """
 
-    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away"]
+    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away", "call_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """
@@ -5327,57 +5620,13 @@ class UpdateWorkflowDefinitionCoverage(TypedDict, closed=True):
     """
 
 
-UpdateWorkflowDefinitionConditionBusinessHoursWeekday: TypeAlias = int
-
-
-class UpdateWorkflowDefinitionConditionBusinessHours(TypedDict, closed=True):
-    start: str
-    """
-    Opening time, `HH:MM`.
-    """
-    end: str
-    """
-    Closing time, `HH:MM`.
-    """
-    timezone: str
-    """
-    IANA time zone, for example `America/Panama`.
-    """
-    weekdays: List[UpdateWorkflowDefinitionConditionBusinessHoursWeekday]
-    """
-    Open days, 0 for Sunday to 6 for Saturday.
-    """
-
-
 class UpdateWorkflowDefinitionCondition(TypedDict, closed=True):
     """
     When it runs; null runs at any hour.
     """
 
     kind: Literal["inside_business_hours"]
-    business_hours: UpdateWorkflowDefinitionConditionBusinessHours
-
-
-UpdateWorkflowDefinitionCondition1BusinessHoursWeekday: TypeAlias = int
-
-
-class UpdateWorkflowDefinitionCondition1BusinessHours(TypedDict, closed=True):
-    start: str
-    """
-    Opening time, `HH:MM`.
-    """
-    end: str
-    """
-    Closing time, `HH:MM`.
-    """
-    timezone: str
-    """
-    IANA time zone, for example `America/Panama`.
-    """
-    weekdays: List[UpdateWorkflowDefinitionCondition1BusinessHoursWeekday]
-    """
-    Open days, 0 for Sunday to 6 for Saturday.
-    """
+    business_hours: BusinessHoursInput
 
 
 class UpdateWorkflowDefinitionCondition1(TypedDict, closed=True):
@@ -5386,12 +5635,12 @@ class UpdateWorkflowDefinitionCondition1(TypedDict, closed=True):
     """
 
     kind: Literal["outside_business_hours"]
-    business_hours: UpdateWorkflowDefinitionCondition1BusinessHours
+    business_hours: BusinessHoursInput
 
 
 class UpdateWorkflowDefinitionFlowSteps(TypedDict, closed=True):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5426,7 +5675,7 @@ class UpdateWorkflowDefinitionFlowSteps1Choice(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5466,7 +5715,7 @@ class UpdateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5478,14 +5727,21 @@ class UpdateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
     Step to run next; null ends the flow.
     """
     kind: Literal["branch"]
-    answer_key: str
+    answer_key: NotRequired[str]
     """
     Name the answer is kept under, for a later `branch`.
     """
-    operator: Literal["equals", "contains", "exists"]
-    value: str
+    operator: NotRequired[Literal["equals", "contains", "exists"]]
+    """
+    How the answer is compared. With `answer_key` and `value`.
+    """
+    value: NotRequired[str]
     """
     Value compared with the answer.
+    """
+    business_hours: NotRequired[BusinessHoursInput]
+    """
+    Holds while the business is open at the moment the step runs. Send it instead of `answer_key`, `operator` and `value`.
     """
     otherwise: Optional[str]
     """
@@ -5495,7 +5751,7 @@ class UpdateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5515,7 +5771,7 @@ class UpdateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5539,7 +5795,7 @@ class UpdateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5559,7 +5815,7 @@ class UpdateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5575,7 +5831,7 @@ class UpdateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
     """
-    One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5589,6 +5845,46 @@ class UpdateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
     kind: Literal["end"]
 
 
+class UpdateWorkflowDefinitionFlowSteps8(TypedDict, closed=True):
+    """
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["answer_call"]
+    agent_id: str
+    """
+    AI agent that answers the call, in a `call_received` workflow. The conversation keeps whoever holds it.
+    """
+
+
+class UpdateWorkflowDefinitionFlowSteps9(TypedDict, closed=True):
+    """
+    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["decline_call"]
+    text: str
+    """
+    In a `call_received` workflow: Ricky rejects the call and sends this text to the caller's WhatsApp chat.
+    """
+
+
 class UpdateWorkflowDefinitionFlow(TypedDict, closed=True):
     """
     The steps and how they connect.
@@ -5598,7 +5894,7 @@ class UpdateWorkflowDefinitionFlow(TypedDict, closed=True):
     """
     ID of the first step.
     """
-    steps: List[Union[UpdateWorkflowDefinitionFlowSteps, UpdateWorkflowDefinitionFlowSteps1, UpdateWorkflowDefinitionFlowSteps2, UpdateWorkflowDefinitionFlowSteps3, UpdateWorkflowDefinitionFlowSteps4, UpdateWorkflowDefinitionFlowSteps5, UpdateWorkflowDefinitionFlowSteps6, UpdateWorkflowDefinitionFlowSteps7]]
+    steps: List[Union[UpdateWorkflowDefinitionFlowSteps, UpdateWorkflowDefinitionFlowSteps1, UpdateWorkflowDefinitionFlowSteps2, UpdateWorkflowDefinitionFlowSteps3, UpdateWorkflowDefinitionFlowSteps4, UpdateWorkflowDefinitionFlowSteps5, UpdateWorkflowDefinitionFlowSteps6, UpdateWorkflowDefinitionFlowSteps7, UpdateWorkflowDefinitionFlowSteps8, UpdateWorkflowDefinitionFlowSteps9]]
 
 
 class UpdateWorkflowDefinition(TypedDict, closed=True):
@@ -5606,9 +5902,9 @@ class UpdateWorkflowDefinition(TypedDict, closed=True):
     Replaces the whole definition.
     """
 
-    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away"]
+    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away", "call_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """

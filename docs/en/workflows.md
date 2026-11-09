@@ -21,7 +21,7 @@ Ricky starts every execution from an event. There is no operation to start a wor
 
 The API creates and edits conversation workflows. Scheduled workflows are created in Ricky; the API reads, renames, activates, pauses and deletes them, sets their header file, and previews and reviews appointment reminders and their Odoo states ([below](#scheduled-workflows)).
 
-A conversation workflow can have a `condition` so it runs only inside or outside business hours.
+A conversation workflow can have a `condition` so it runs only inside or outside business hours, and a `branch` step can take one route or another by the hours ([below](#business-hours)).
 
 ## Create a workflow
 
@@ -40,16 +40,22 @@ curl https://getricky.ai/api/v1/workflows \
       "condition": {
         "kind": "outside_business_hours",
         "business_hours": {
-          "start": "09:00",
-          "end": "18:00",
           "timezone": "America/Panama",
-          "weekdays": [1, 2, 3, 4, 5]
+          "days": {
+            "monday": [{ "start": "09:00", "end": "18:00" }],
+            "tuesday": [{ "start": "09:00", "end": "18:00" }],
+            "wednesday": [{ "start": "09:00", "end": "18:00" }],
+            "thursday": [{ "start": "09:00", "end": "18:00" }],
+            "friday": [{ "start": "09:00", "end": "18:00" }],
+            "saturday": [{ "start": "09:00", "end": "13:00" }]
+          },
+          "closed_dates": ["2026-12-25"]
         }
       },
       "flow": {
         "entry": "welcome",
         "steps": [
-          { "id": "welcome", "kind": "send_message", "text": "Hi, we are open Monday to Friday, 9:00 to 18:00.", "next": "reason" },
+          { "id": "welcome", "kind": "send_message", "text": "Hi, we are open Monday to Friday, 9:00 to 18:00, and Saturday until 13:00.", "next": "reason" },
           {
             "id": "reason",
             "kind": "ask_question",
@@ -86,16 +92,39 @@ When a check fails, the response is `400 invalid_input` with `param: "definition
 
 ## Steps
 
-| `kind`               | Does                                                                    | Fields                                                                          |
-| -------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `send_message`       | Sends a text.                                                           | `text`                                                                          |
-| `ask_question`       | Asks and waits for the answer. With `choices`, shows buttons or a list. | `text`, `answer_key`, `choices`, `timeout_seconds`, `on_timeout`, `on_invalid`  |
-| `branch`             | Compares a stored answer and goes to `next` or `otherwise`.             | `answer_key`, `operator` (`equals`, `contains`, `exists`), `value`, `otherwise` |
-| `wait`               | Waits before the next step, up to 7 days.                               | `seconds`                                                                       |
-| `assign_user`        | Assigns the conversation to a member and continues at `next`.           | `user_id`                                                                       |
-| `assign_agent`       | Puts an AI agent on the conversation and continues at `next`.           | `agent_id`                                                                      |
-| `close_conversation` | Closes the conversation and ends the flow.                              |                                                                                 |
-| `end`                | Ends the flow.                                                          |                                                                                 |
+| `kind`               | Does                                                                                               | Fields                                                                                                   |
+| -------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `send_message`       | Sends a text.                                                                                      | `text`                                                                                                   |
+| `ask_question`       | Asks and waits for the answer. With `choices`, shows buttons or a list.                            | `text`, `answer_key`, `choices`, `timeout_seconds`, `on_timeout`, `on_invalid`                           |
+| `branch`             | Checks a stored answer, or the business hours, and goes to `next` when it holds or to `otherwise`. | `answer_key`, `operator` (`equals`, `contains`, `exists`), `value`; or `business_hours`. And `otherwise` |
+| `wait`               | Waits before the next step, up to 7 days.                                                          | `seconds`                                                                                                |
+| `assign_user`        | Assigns the conversation to a member and continues at `next`.                                      | `user_id`                                                                                                |
+| `assign_agent`       | Puts an AI agent on the conversation and continues at `next`.                                      | `agent_id`                                                                                               |
+| `close_conversation` | Closes the conversation and ends the flow.                                                         |                                                                                                          |
+| `end`                | Ends the flow.                                                                                     |                                                                                                          |
+
+### Business hours
+
+`business_hours` is the same object in a `condition` and in a `branch`:
+
+* `timezone`: an IANA time zone, such as `America/Panama`.
+* `days`: each weekday (`monday` to `sunday`) with up to 3 ranges `{ "start": "HH:MM", "end": "HH:MM" }`, in order. A day left out or empty is closed. A range never crosses midnight: `end` is after `start`, and `24:00` is the end of the day; an overnight shift is two ranges on two days.
+* `closed_dates`: dates closed whatever the weekday says, such as holidays, `YYYY-MM-DD`.
+
+A `branch` with `business_hours` goes to `next` when the business is open at the moment the step runs, and to `otherwise` when not. This routes new chats to the team during hours and to an AI agent the rest of the time:
+
+```json
+{
+  "entry": "hours",
+  "steps": [
+    { "id": "hours", "kind": "branch", "business_hours": { "timezone": "America/Panama", "days": { "monday": [{ "start": "08:00", "end": "17:00" }], "saturday": [{ "start": "08:00", "end": "13:00" }] } }, "next": "team", "otherwise": "agent" },
+    { "id": "team", "kind": "assign_user", "user_id": "2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b", "next": null },
+    { "id": "agent", "kind": "assign_agent", "agent_id": "7e8f9a0b-1c2d-4e3f-a4b5-c6d7e8f9a0b1", "next": null }
+  ]
+}
+```
+
+Before hours per day, `business_hours` was one range for several days: `start`, `end` and `weekdays` (0 for Sunday to 6 for Saturday). Requests still accept it; when `days` comes, those fields are ignored. Responses carry `days` and `closed_dates`, and also `start`, `end` and `weekdays`, which are exact when every open day has the same hours and are deprecated.
 
 A workflow's messages are free-form text. So they only arrive inside the channel's reply window; on WhatsApp, 24 hours from the contact's last message.
 

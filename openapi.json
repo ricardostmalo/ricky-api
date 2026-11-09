@@ -22607,7 +22607,7 @@
                   "description": "Channel."
                 },
                 "participant_name": {
-                  "description": "Name the channel reports for the customer.",
+                  "description": "Customer name as the inbox shows it: the contact’s saved name, else the channel profile name, else the contact’s phone.",
                   "type": [
                     "string",
                     "null"
@@ -24677,6 +24677,238 @@
         ],
         "description": "What a reminder workflow checked and sent on a past day."
       },
+      "BusinessHours": {
+        "type": "object",
+        "properties": {
+          "timezone": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "IANA time zone, for example `America/Panama`."
+          },
+          "days": {
+            "type": "object",
+            "properties": {
+              "monday": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                      "description": "Opens, `HH:MM`."
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^(([01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+                      "description": "Closes, `HH:MM`, after `start`; `24:00` is the end of the day."
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ]
+                },
+                "description": "Up to 3 ranges in order; empty when closed that day."
+              },
+              "tuesday": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                      "description": "Opens, `HH:MM`."
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^(([01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+                      "description": "Closes, `HH:MM`, after `start`; `24:00` is the end of the day."
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ]
+                },
+                "description": "Up to 3 ranges in order; empty when closed that day."
+              },
+              "wednesday": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                      "description": "Opens, `HH:MM`."
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^(([01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+                      "description": "Closes, `HH:MM`, after `start`; `24:00` is the end of the day."
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ]
+                },
+                "description": "Up to 3 ranges in order; empty when closed that day."
+              },
+              "thursday": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                      "description": "Opens, `HH:MM`."
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^(([01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+                      "description": "Closes, `HH:MM`, after `start`; `24:00` is the end of the day."
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ]
+                },
+                "description": "Up to 3 ranges in order; empty when closed that day."
+              },
+              "friday": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                      "description": "Opens, `HH:MM`."
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^(([01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+                      "description": "Closes, `HH:MM`, after `start`; `24:00` is the end of the day."
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ]
+                },
+                "description": "Up to 3 ranges in order; empty when closed that day."
+              },
+              "saturday": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                      "description": "Opens, `HH:MM`."
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^(([01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+                      "description": "Closes, `HH:MM`, after `start`; `24:00` is the end of the day."
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ]
+                },
+                "description": "Up to 3 ranges in order; empty when closed that day."
+              },
+              "sunday": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                      "description": "Opens, `HH:MM`."
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^(([01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+                      "description": "Closes, `HH:MM`, after `start`; `24:00` is the end of the day."
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ]
+                },
+                "description": "Up to 3 ranges in order; empty when closed that day."
+              }
+            },
+            "required": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday",
+              "saturday",
+              "sunday"
+            ],
+            "description": "Open ranges of each weekday, in `timezone`; a range never crosses midnight. A day left out of a request is closed. When sent, `start`, `end` and `weekdays` are ignored."
+          },
+          "closed_dates": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "description": "Local dates closed whatever the weekday says, such as holidays, `YYYY-MM-DD`."
+          },
+          "start": {
+            "type": "string",
+            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+            "description": "Deprecated, read `days`: opening time when every open day has the same hours; otherwise the earliest opening of the week."
+          },
+          "end": {
+            "type": "string",
+            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+            "description": "Deprecated, read `days`: closing time when every open day has the same hours (before `start` when they cross midnight); otherwise the latest closing of the week."
+          },
+          "weekdays": {
+            "minItems": 1,
+            "maxItems": 7,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            "description": "Deprecated, read `days`: open days, 0 for Sunday to 6 for Saturday."
+          }
+        },
+        "required": [
+          "timezone",
+          "days",
+          "closed_dates",
+          "start",
+          "end",
+          "weekdays"
+        ]
+      },
       "Workflow": {
         "type": "object",
         "properties": {
@@ -24720,9 +24952,10 @@
                       "conversation_opened",
                       "first_message_received",
                       "message_received",
-                      "team_away"
+                      "team_away",
+                      "call_received"
                     ],
-                    "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves."
+                    "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
                   },
                   "channel_ids": {
                     "maxItems": 50,
@@ -24798,42 +25031,7 @@
                                 "const": "inside_business_hours"
                               },
                               "business_hours": {
-                                "type": "object",
-                                "properties": {
-                                  "start": {
-                                    "type": "string",
-                                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
-                                    "description": "Opening time, `HH:MM`."
-                                  },
-                                  "end": {
-                                    "type": "string",
-                                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
-                                    "description": "Closing time, `HH:MM`."
-                                  },
-                                  "timezone": {
-                                    "type": "string",
-                                    "minLength": 1,
-                                    "maxLength": 100,
-                                    "description": "IANA time zone, for example `America/Panama`."
-                                  },
-                                  "weekdays": {
-                                    "minItems": 1,
-                                    "maxItems": 7,
-                                    "type": "array",
-                                    "items": {
-                                      "type": "integer",
-                                      "minimum": 0,
-                                      "maximum": 6
-                                    },
-                                    "description": "Open days, 0 for Sunday to 6 for Saturday."
-                                  }
-                                },
-                                "required": [
-                                  "start",
-                                  "end",
-                                  "timezone",
-                                  "weekdays"
-                                ]
+                                "$ref": "#/components/schemas/BusinessHours"
                               }
                             },
                             "required": [
@@ -24849,42 +25047,7 @@
                                 "const": "outside_business_hours"
                               },
                               "business_hours": {
-                                "type": "object",
-                                "properties": {
-                                  "start": {
-                                    "type": "string",
-                                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
-                                    "description": "Opening time, `HH:MM`."
-                                  },
-                                  "end": {
-                                    "type": "string",
-                                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
-                                    "description": "Closing time, `HH:MM`."
-                                  },
-                                  "timezone": {
-                                    "type": "string",
-                                    "minLength": 1,
-                                    "maxLength": 100,
-                                    "description": "IANA time zone, for example `America/Panama`."
-                                  },
-                                  "weekdays": {
-                                    "minItems": 1,
-                                    "maxItems": 7,
-                                    "type": "array",
-                                    "items": {
-                                      "type": "integer",
-                                      "minimum": 0,
-                                      "maximum": 6
-                                    },
-                                    "description": "Open days, 0 for Sunday to 6 for Saturday."
-                                  }
-                                },
-                                "required": [
-                                  "start",
-                                  "end",
-                                  "timezone",
-                                  "weekdays"
-                                ]
+                                "$ref": "#/components/schemas/BusinessHours"
                               }
                             },
                             "required": [
@@ -25104,6 +25267,7 @@
                                   "description": "Name the answer is kept under, for a later `branch`."
                                 },
                                 "operator": {
+                                  "description": "How the answer is compared. With `answer_key` and `value`.",
                                   "type": "string",
                                   "enum": [
                                     "equals",
@@ -25112,9 +25276,13 @@
                                   ]
                                 },
                                 "value": {
+                                  "description": "Value compared with the answer.",
                                   "type": "string",
-                                  "maxLength": 1024,
-                                  "description": "Value compared with the answer."
+                                  "maxLength": 1024
+                                },
+                                "business_hours": {
+                                  "description": "Holds while the business is open at the moment the step runs. Send it instead of `answer_key`, `operator` and `value`.",
+                                  "$ref": "#/components/schemas/BusinessHours"
                                 },
                                 "otherwise": {
                                   "anyOf": [
@@ -25134,9 +25302,6 @@
                                 "id",
                                 "next",
                                 "kind",
-                                "answer_key",
-                                "operator",
-                                "value",
                                 "otherwise"
                               ]
                             },
@@ -25327,9 +25492,86 @@
                                 "next",
                                 "kind"
                               ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                  "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                                },
+                                "next": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "Step to run next; null ends the flow."
+                                },
+                                "kind": {
+                                  "type": "string",
+                                  "const": "answer_call"
+                                },
+                                "agent_id": {
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "description": "AI agent that answers the call, in a `call_received` workflow. The conversation keeps whoever holds it."
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "next",
+                                "kind",
+                                "agent_id"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                  "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                                },
+                                "next": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "Step to run next; null ends the flow."
+                                },
+                                "kind": {
+                                  "type": "string",
+                                  "const": "decline_call"
+                                },
+                                "text": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024,
+                                  "description": "In a `call_received` workflow: Ricky rejects the call and sends this text to the caller's WhatsApp chat."
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "next",
+                                "kind",
+                                "text"
+                              ]
                             }
                           ],
-                          "description": "One step. `close_conversation` and `end` finish the flow; every other step continues at its target."
+                          "description": "One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target."
                         }
                       }
                     },
@@ -25519,15 +25761,58 @@
               "condition": {
                 "kind": "outside_business_hours",
                 "business_hours": {
+                  "timezone": "America/Panama",
+                  "days": {
+                    "monday": [
+                      {
+                        "start": "09:00",
+                        "end": "18:00"
+                      }
+                    ],
+                    "tuesday": [
+                      {
+                        "start": "09:00",
+                        "end": "18:00"
+                      }
+                    ],
+                    "wednesday": [
+                      {
+                        "start": "09:00",
+                        "end": "18:00"
+                      }
+                    ],
+                    "thursday": [
+                      {
+                        "start": "09:00",
+                        "end": "18:00"
+                      }
+                    ],
+                    "friday": [
+                      {
+                        "start": "09:00",
+                        "end": "18:00"
+                      }
+                    ],
+                    "saturday": [
+                      {
+                        "start": "09:00",
+                        "end": "13:00"
+                      }
+                    ],
+                    "sunday": []
+                  },
+                  "closed_dates": [
+                    "2026-12-25"
+                  ],
                   "start": "09:00",
                   "end": "18:00",
-                  "timezone": "America/Panama",
                   "weekdays": [
                     1,
                     2,
                     3,
                     4,
-                    5
+                    5,
+                    6
                   ]
                 }
               },
@@ -29054,6 +29339,234 @@
           }
         ]
       },
+      "BusinessHoursInput": {
+        "type": "object",
+        "properties": {
+          "timezone": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "IANA time zone, for example `America/Panama`."
+          },
+          "days": {
+            "description": "Open ranges of each weekday, in `timezone`; a range never crosses midnight. A day left out of a request is closed. When sent, `start`, `end` and `weekdays` are ignored.",
+            "type": "object",
+            "properties": {
+              "monday": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                      "description": "Opens, `HH:MM`."
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^(([01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+                      "description": "Closes, `HH:MM`, after `start`; `24:00` is the end of the day."
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "Up to 3 ranges in order; empty when closed that day."
+              },
+              "tuesday": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                      "description": "Opens, `HH:MM`."
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^(([01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+                      "description": "Closes, `HH:MM`, after `start`; `24:00` is the end of the day."
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "Up to 3 ranges in order; empty when closed that day."
+              },
+              "wednesday": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                      "description": "Opens, `HH:MM`."
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^(([01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+                      "description": "Closes, `HH:MM`, after `start`; `24:00` is the end of the day."
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "Up to 3 ranges in order; empty when closed that day."
+              },
+              "thursday": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                      "description": "Opens, `HH:MM`."
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^(([01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+                      "description": "Closes, `HH:MM`, after `start`; `24:00` is the end of the day."
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "Up to 3 ranges in order; empty when closed that day."
+              },
+              "friday": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                      "description": "Opens, `HH:MM`."
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^(([01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+                      "description": "Closes, `HH:MM`, after `start`; `24:00` is the end of the day."
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "Up to 3 ranges in order; empty when closed that day."
+              },
+              "saturday": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                      "description": "Opens, `HH:MM`."
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^(([01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+                      "description": "Closes, `HH:MM`, after `start`; `24:00` is the end of the day."
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "Up to 3 ranges in order; empty when closed that day."
+              },
+              "sunday": {
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                      "description": "Opens, `HH:MM`."
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^(([01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+                      "description": "Closes, `HH:MM`, after `start`; `24:00` is the end of the day."
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "Up to 3 ranges in order; empty when closed that day."
+              }
+            },
+            "additionalProperties": false
+          },
+          "closed_dates": {
+            "description": "Local dates closed whatever the weekday says, such as holidays, `YYYY-MM-DD`.",
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          "start": {
+            "description": "Deprecated, read `days`: opening time when every open day has the same hours; otherwise the earliest opening of the week.",
+            "type": "string",
+            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+          },
+          "end": {
+            "description": "Deprecated, read `days`: closing time when every open day has the same hours (before `start` when they cross midnight); otherwise the latest closing of the week.",
+            "type": "string",
+            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+          },
+          "weekdays": {
+            "description": "Deprecated, read `days`: open days, 0 for Sunday to 6 for Saturday.",
+            "minItems": 1,
+            "maxItems": 7,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            }
+          }
+        },
+        "required": [
+          "timezone"
+        ],
+        "additionalProperties": false
+      },
       "CreateWorkflow": {
         "type": "object",
         "properties": {
@@ -29072,9 +29585,10 @@
                   "conversation_opened",
                   "first_message_received",
                   "message_received",
-                  "team_away"
+                  "team_away",
+                  "call_received"
                 ],
-                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves."
+                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
               },
               "channel_ids": {
                 "maxItems": 50,
@@ -29152,43 +29666,7 @@
                             "const": "inside_business_hours"
                           },
                           "business_hours": {
-                            "type": "object",
-                            "properties": {
-                              "start": {
-                                "type": "string",
-                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
-                                "description": "Opening time, `HH:MM`."
-                              },
-                              "end": {
-                                "type": "string",
-                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
-                                "description": "Closing time, `HH:MM`."
-                              },
-                              "timezone": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 100,
-                                "description": "IANA time zone, for example `America/Panama`."
-                              },
-                              "weekdays": {
-                                "minItems": 1,
-                                "maxItems": 7,
-                                "type": "array",
-                                "items": {
-                                  "type": "integer",
-                                  "minimum": 0,
-                                  "maximum": 6
-                                },
-                                "description": "Open days, 0 for Sunday to 6 for Saturday."
-                              }
-                            },
-                            "required": [
-                              "start",
-                              "end",
-                              "timezone",
-                              "weekdays"
-                            ],
-                            "additionalProperties": false
+                            "$ref": "#/components/schemas/BusinessHoursInput"
                           }
                         },
                         "required": [
@@ -29205,43 +29683,7 @@
                             "const": "outside_business_hours"
                           },
                           "business_hours": {
-                            "type": "object",
-                            "properties": {
-                              "start": {
-                                "type": "string",
-                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
-                                "description": "Opening time, `HH:MM`."
-                              },
-                              "end": {
-                                "type": "string",
-                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
-                                "description": "Closing time, `HH:MM`."
-                              },
-                              "timezone": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 100,
-                                "description": "IANA time zone, for example `America/Panama`."
-                              },
-                              "weekdays": {
-                                "minItems": 1,
-                                "maxItems": 7,
-                                "type": "array",
-                                "items": {
-                                  "type": "integer",
-                                  "minimum": 0,
-                                  "maximum": 6
-                                },
-                                "description": "Open days, 0 for Sunday to 6 for Saturday."
-                              }
-                            },
-                            "required": [
-                              "start",
-                              "end",
-                              "timezone",
-                              "weekdays"
-                            ],
-                            "additionalProperties": false
+                            "$ref": "#/components/schemas/BusinessHoursInput"
                           }
                         },
                         "required": [
@@ -29465,6 +29907,7 @@
                               "description": "Name the answer is kept under, for a later `branch`."
                             },
                             "operator": {
+                              "description": "How the answer is compared. With `answer_key` and `value`.",
                               "type": "string",
                               "enum": [
                                 "equals",
@@ -29473,9 +29916,13 @@
                               ]
                             },
                             "value": {
+                              "description": "Value compared with the answer.",
                               "type": "string",
-                              "maxLength": 1024,
-                              "description": "Value compared with the answer."
+                              "maxLength": 1024
+                            },
+                            "business_hours": {
+                              "description": "Holds while the business is open at the moment the step runs. Send it instead of `answer_key`, `operator` and `value`.",
+                              "$ref": "#/components/schemas/BusinessHoursInput"
                             },
                             "otherwise": {
                               "anyOf": [
@@ -29495,9 +29942,6 @@
                             "id",
                             "next",
                             "kind",
-                            "answer_key",
-                            "operator",
-                            "value",
                             "otherwise"
                           ],
                           "additionalProperties": false
@@ -29694,9 +30138,88 @@
                             "kind"
                           ],
                           "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "answer_call"
+                            },
+                            "agent_id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "description": "AI agent that answers the call, in a `call_received` workflow. The conversation keeps whoever holds it."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "agent_id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "decline_call"
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 1024,
+                              "description": "In a `call_received` workflow: Ricky rejects the call and sends this text to the caller's WhatsApp chat."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "text"
+                          ],
+                          "additionalProperties": false
                         }
                       ],
-                      "description": "One step. `close_conversation` and `end` finish the flow; every other step continues at its target."
+                      "description": "One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target."
                     }
                   }
                 },
@@ -29735,15 +30258,48 @@
               "condition": {
                 "kind": "outside_business_hours",
                 "business_hours": {
-                  "start": "09:00",
-                  "end": "18:00",
                   "timezone": "America/Panama",
-                  "weekdays": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5
+                  "days": {
+                    "monday": [
+                      {
+                        "start": "09:00",
+                        "end": "18:00"
+                      }
+                    ],
+                    "tuesday": [
+                      {
+                        "start": "09:00",
+                        "end": "18:00"
+                      }
+                    ],
+                    "wednesday": [
+                      {
+                        "start": "09:00",
+                        "end": "18:00"
+                      }
+                    ],
+                    "thursday": [
+                      {
+                        "start": "09:00",
+                        "end": "18:00"
+                      }
+                    ],
+                    "friday": [
+                      {
+                        "start": "09:00",
+                        "end": "18:00"
+                      }
+                    ],
+                    "saturday": [
+                      {
+                        "start": "09:00",
+                        "end": "13:00"
+                      }
+                    ],
+                    "sunday": []
+                  },
+                  "closed_dates": [
+                    "2026-12-25"
                   ]
                 }
               },
@@ -29815,9 +30371,10 @@
                   "conversation_opened",
                   "first_message_received",
                   "message_received",
-                  "team_away"
+                  "team_away",
+                  "call_received"
                 ],
-                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves."
+                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
               },
               "channel_ids": {
                 "maxItems": 50,
@@ -29895,43 +30452,7 @@
                             "const": "inside_business_hours"
                           },
                           "business_hours": {
-                            "type": "object",
-                            "properties": {
-                              "start": {
-                                "type": "string",
-                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
-                                "description": "Opening time, `HH:MM`."
-                              },
-                              "end": {
-                                "type": "string",
-                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
-                                "description": "Closing time, `HH:MM`."
-                              },
-                              "timezone": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 100,
-                                "description": "IANA time zone, for example `America/Panama`."
-                              },
-                              "weekdays": {
-                                "minItems": 1,
-                                "maxItems": 7,
-                                "type": "array",
-                                "items": {
-                                  "type": "integer",
-                                  "minimum": 0,
-                                  "maximum": 6
-                                },
-                                "description": "Open days, 0 for Sunday to 6 for Saturday."
-                              }
-                            },
-                            "required": [
-                              "start",
-                              "end",
-                              "timezone",
-                              "weekdays"
-                            ],
-                            "additionalProperties": false
+                            "$ref": "#/components/schemas/BusinessHoursInput"
                           }
                         },
                         "required": [
@@ -29948,43 +30469,7 @@
                             "const": "outside_business_hours"
                           },
                           "business_hours": {
-                            "type": "object",
-                            "properties": {
-                              "start": {
-                                "type": "string",
-                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
-                                "description": "Opening time, `HH:MM`."
-                              },
-                              "end": {
-                                "type": "string",
-                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
-                                "description": "Closing time, `HH:MM`."
-                              },
-                              "timezone": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 100,
-                                "description": "IANA time zone, for example `America/Panama`."
-                              },
-                              "weekdays": {
-                                "minItems": 1,
-                                "maxItems": 7,
-                                "type": "array",
-                                "items": {
-                                  "type": "integer",
-                                  "minimum": 0,
-                                  "maximum": 6
-                                },
-                                "description": "Open days, 0 for Sunday to 6 for Saturday."
-                              }
-                            },
-                            "required": [
-                              "start",
-                              "end",
-                              "timezone",
-                              "weekdays"
-                            ],
-                            "additionalProperties": false
+                            "$ref": "#/components/schemas/BusinessHoursInput"
                           }
                         },
                         "required": [
@@ -30208,6 +30693,7 @@
                               "description": "Name the answer is kept under, for a later `branch`."
                             },
                             "operator": {
+                              "description": "How the answer is compared. With `answer_key` and `value`.",
                               "type": "string",
                               "enum": [
                                 "equals",
@@ -30216,9 +30702,13 @@
                               ]
                             },
                             "value": {
+                              "description": "Value compared with the answer.",
                               "type": "string",
-                              "maxLength": 1024,
-                              "description": "Value compared with the answer."
+                              "maxLength": 1024
+                            },
+                            "business_hours": {
+                              "description": "Holds while the business is open at the moment the step runs. Send it instead of `answer_key`, `operator` and `value`.",
+                              "$ref": "#/components/schemas/BusinessHoursInput"
                             },
                             "otherwise": {
                               "anyOf": [
@@ -30238,9 +30728,6 @@
                             "id",
                             "next",
                             "kind",
-                            "answer_key",
-                            "operator",
-                            "value",
                             "otherwise"
                           ],
                           "additionalProperties": false
@@ -30437,9 +30924,88 @@
                             "kind"
                           ],
                           "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "answer_call"
+                            },
+                            "agent_id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "description": "AI agent that answers the call, in a `call_received` workflow. The conversation keeps whoever holds it."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "agent_id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "decline_call"
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 1024,
+                              "description": "In a `call_received` workflow: Ricky rejects the call and sends this text to the caller's WhatsApp chat."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "text"
+                          ],
+                          "additionalProperties": false
                         }
                       ],
-                      "description": "One step. `close_conversation` and `end` finish the flow; every other step continues at its target."
+                      "description": "One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target."
                     }
                   }
                 },

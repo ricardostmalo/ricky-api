@@ -4,6 +4,12 @@ Also at https://getricky.ai/en/docs/api/changelog.
 
 This page records changes to the API. A breaking change only ships in a new path version and is announced here.
 
+## November 8, 2026
+
+**Who answers a call.** Compatible change to v1. A conversation workflow takes the `call_received` `trigger` and the `answer_call` (`agent_id`) and `decline_call` (`text`) steps: it decides whether an AI agent answers a WhatsApp call or Ricky rejects it and writes to the caller. See [Workflows](https://getricky.ai/en/docs/api/workflows#steps).
+
+**Business hours per day.** Compatible change to v1. A workflow's `business_hours` takes each weekday's ranges in `days` and holidays in `closed_dates`, and a `branch` step can check the hours with `business_hours` instead of an answer. `start`, `end` and `weekdays` are still accepted and still answered, deprecated. See [Workflows](https://getricky.ai/en/docs/api/workflows#business-hours).
+
 ## November 4, 2026
 
 **Location photos.** Compatible change to v1. A location can have one optional photo: `POST /knowledge/locations/{location_id}/photo`, `PUT` the bytes to the `upload_url`, then `POST /knowledge/locations/{location_id}/photo/complete`; `DELETE /knowledge/locations/{location_id}/photo` removes it. Locations answer `photo`, `null` when they have none. See [Agents and knowledge](https://getricky.ai/en/docs/api/agents-and-knowledge#location-photo).

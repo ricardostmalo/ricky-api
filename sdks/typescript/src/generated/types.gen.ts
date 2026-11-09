@@ -2006,7 +2006,7 @@ export type DashboardReport = {
          */
         channel: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
         /**
-         * Name the channel reports for the customer.
+         * Customer name as the inbox shows it: the contact’s saved name, else the channel profile name, else the contact’s phone.
          */
         participant_name: string | null;
         /**
@@ -2839,6 +2839,125 @@ export type ReminderHistory = {
     }>;
 };
 
+export type BusinessHours = {
+    /**
+     * IANA time zone, for example `America/Panama`.
+     */
+    timezone: string;
+    /**
+     * Open ranges of each weekday, in `timezone`; a range never crosses midnight. A day left out of a request is closed. When sent, `start`, `end` and `weekdays` are ignored.
+     */
+    days: {
+        /**
+         * Up to 3 ranges in order; empty when closed that day.
+         */
+        monday: Array<{
+            /**
+             * Opens, `HH:MM`.
+             */
+            start: string;
+            /**
+             * Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+             */
+            end: string;
+        }>;
+        /**
+         * Up to 3 ranges in order; empty when closed that day.
+         */
+        tuesday: Array<{
+            /**
+             * Opens, `HH:MM`.
+             */
+            start: string;
+            /**
+             * Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+             */
+            end: string;
+        }>;
+        /**
+         * Up to 3 ranges in order; empty when closed that day.
+         */
+        wednesday: Array<{
+            /**
+             * Opens, `HH:MM`.
+             */
+            start: string;
+            /**
+             * Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+             */
+            end: string;
+        }>;
+        /**
+         * Up to 3 ranges in order; empty when closed that day.
+         */
+        thursday: Array<{
+            /**
+             * Opens, `HH:MM`.
+             */
+            start: string;
+            /**
+             * Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+             */
+            end: string;
+        }>;
+        /**
+         * Up to 3 ranges in order; empty when closed that day.
+         */
+        friday: Array<{
+            /**
+             * Opens, `HH:MM`.
+             */
+            start: string;
+            /**
+             * Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+             */
+            end: string;
+        }>;
+        /**
+         * Up to 3 ranges in order; empty when closed that day.
+         */
+        saturday: Array<{
+            /**
+             * Opens, `HH:MM`.
+             */
+            start: string;
+            /**
+             * Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+             */
+            end: string;
+        }>;
+        /**
+         * Up to 3 ranges in order; empty when closed that day.
+         */
+        sunday: Array<{
+            /**
+             * Opens, `HH:MM`.
+             */
+            start: string;
+            /**
+             * Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+             */
+            end: string;
+        }>;
+    };
+    /**
+     * Local dates closed whatever the weekday says, such as holidays, `YYYY-MM-DD`.
+     */
+    closed_dates: Array<string>;
+    /**
+     * Deprecated, read `days`: opening time when every open day has the same hours; otherwise the earliest opening of the week.
+     */
+    start: string;
+    /**
+     * Deprecated, read `days`: closing time when every open day has the same hours (before `start` when they cross midnight); otherwise the latest closing of the week.
+     */
+    end: string;
+    /**
+     * Deprecated, read `days`: open days, 0 for Sunday to 6 for Saturday.
+     */
+    weekdays: Array<number>;
+};
+
 /**
  * An automation Ricky runs for the organization.
  */
@@ -2861,9 +2980,9 @@ export type Workflow = {
     type: 'conversation' | 'scheduled';
     definition: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves.
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
          */
-        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away';
+        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'call_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
@@ -2903,44 +3022,10 @@ export type Workflow = {
          */
         condition: {
             kind: 'inside_business_hours';
-            business_hours: {
-                /**
-                 * Opening time, `HH:MM`.
-                 */
-                start: string;
-                /**
-                 * Closing time, `HH:MM`.
-                 */
-                end: string;
-                /**
-                 * IANA time zone, for example `America/Panama`.
-                 */
-                timezone: string;
-                /**
-                 * Open days, 0 for Sunday to 6 for Saturday.
-                 */
-                weekdays: Array<number>;
-            };
+            business_hours: BusinessHours;
         } | {
             kind: 'outside_business_hours';
-            business_hours: {
-                /**
-                 * Opening time, `HH:MM`.
-                 */
-                start: string;
-                /**
-                 * Closing time, `HH:MM`.
-                 */
-                end: string;
-                /**
-                 * IANA time zone, for example `America/Panama`.
-                 */
-                timezone: string;
-                /**
-                 * Open days, 0 for Sunday to 6 for Saturday.
-                 */
-                weekdays: Array<number>;
-            };
+            business_hours: BusinessHours;
         } | null;
         /**
          * The steps and how they connect.
@@ -2951,7 +3036,7 @@ export type Workflow = {
              */
             entry: string;
             /**
-             * One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+             * One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
              */
             steps: Array<{
                 /**
@@ -3027,12 +3112,19 @@ export type Workflow = {
                 /**
                  * Name the answer is kept under, for a later `branch`.
                  */
-                answer_key: string;
-                operator: 'equals' | 'contains' | 'exists';
+                answer_key?: string;
+                /**
+                 * How the answer is compared. With `answer_key` and `value`.
+                 */
+                operator?: 'equals' | 'contains' | 'exists';
                 /**
                  * Value compared with the answer.
                  */
-                value: string;
+                value?: string;
+                /**
+                 * Holds while the business is open at the moment the step runs. Send it instead of `answer_key`, `operator` and `value`.
+                 */
+                business_hours?: BusinessHours;
                 /**
                  * Step to run when the condition does not hold; `next` when it does.
                  */
@@ -3103,6 +3195,34 @@ export type Workflow = {
                  */
                 next: string | null;
                 kind: 'end';
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'answer_call';
+                /**
+                 * AI agent that answers the call, in a `call_received` workflow. The conversation keeps whoever holds it.
+                 */
+                agent_id: string;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'decline_call';
+                /**
+                 * In a `call_received` workflow: Ricky rejects the call and sends this text to the caller's WhatsApp chat.
+                 */
+                text: string;
             }>;
         };
     } | {
@@ -4400,6 +4520,125 @@ export type UploadWorkflowHeaderMedia = {
     file_name?: string;
 };
 
+export type BusinessHoursInput = {
+    /**
+     * IANA time zone, for example `America/Panama`.
+     */
+    timezone: string;
+    /**
+     * Open ranges of each weekday, in `timezone`; a range never crosses midnight. A day left out of a request is closed. When sent, `start`, `end` and `weekdays` are ignored.
+     */
+    days?: {
+        /**
+         * Up to 3 ranges in order; empty when closed that day.
+         */
+        monday?: Array<{
+            /**
+             * Opens, `HH:MM`.
+             */
+            start: string;
+            /**
+             * Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+             */
+            end: string;
+        }>;
+        /**
+         * Up to 3 ranges in order; empty when closed that day.
+         */
+        tuesday?: Array<{
+            /**
+             * Opens, `HH:MM`.
+             */
+            start: string;
+            /**
+             * Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+             */
+            end: string;
+        }>;
+        /**
+         * Up to 3 ranges in order; empty when closed that day.
+         */
+        wednesday?: Array<{
+            /**
+             * Opens, `HH:MM`.
+             */
+            start: string;
+            /**
+             * Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+             */
+            end: string;
+        }>;
+        /**
+         * Up to 3 ranges in order; empty when closed that day.
+         */
+        thursday?: Array<{
+            /**
+             * Opens, `HH:MM`.
+             */
+            start: string;
+            /**
+             * Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+             */
+            end: string;
+        }>;
+        /**
+         * Up to 3 ranges in order; empty when closed that day.
+         */
+        friday?: Array<{
+            /**
+             * Opens, `HH:MM`.
+             */
+            start: string;
+            /**
+             * Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+             */
+            end: string;
+        }>;
+        /**
+         * Up to 3 ranges in order; empty when closed that day.
+         */
+        saturday?: Array<{
+            /**
+             * Opens, `HH:MM`.
+             */
+            start: string;
+            /**
+             * Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+             */
+            end: string;
+        }>;
+        /**
+         * Up to 3 ranges in order; empty when closed that day.
+         */
+        sunday?: Array<{
+            /**
+             * Opens, `HH:MM`.
+             */
+            start: string;
+            /**
+             * Closes, `HH:MM`, after `start`; `24:00` is the end of the day.
+             */
+            end: string;
+        }>;
+    };
+    /**
+     * Local dates closed whatever the weekday says, such as holidays, `YYYY-MM-DD`.
+     */
+    closed_dates?: Array<string>;
+    /**
+     * Deprecated, read `days`: opening time when every open day has the same hours; otherwise the earliest opening of the week.
+     */
+    start?: string;
+    /**
+     * Deprecated, read `days`: closing time when every open day has the same hours (before `start` when they cross midnight); otherwise the latest closing of the week.
+     */
+    end?: string;
+    /**
+     * Deprecated, read `days`: open days, 0 for Sunday to 6 for Saturday.
+     */
+    weekdays?: Array<number>;
+};
+
 /**
  * Creates a conversation workflow as a `draft`. Activating it is a separate call.
  */
@@ -4413,9 +4652,9 @@ export type CreateWorkflow = {
      */
     definition: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves.
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
          */
-        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away';
+        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'call_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
@@ -4455,44 +4694,10 @@ export type CreateWorkflow = {
          */
         condition: {
             kind: 'inside_business_hours';
-            business_hours: {
-                /**
-                 * Opening time, `HH:MM`.
-                 */
-                start: string;
-                /**
-                 * Closing time, `HH:MM`.
-                 */
-                end: string;
-                /**
-                 * IANA time zone, for example `America/Panama`.
-                 */
-                timezone: string;
-                /**
-                 * Open days, 0 for Sunday to 6 for Saturday.
-                 */
-                weekdays: Array<number>;
-            };
+            business_hours: BusinessHoursInput;
         } | {
             kind: 'outside_business_hours';
-            business_hours: {
-                /**
-                 * Opening time, `HH:MM`.
-                 */
-                start: string;
-                /**
-                 * Closing time, `HH:MM`.
-                 */
-                end: string;
-                /**
-                 * IANA time zone, for example `America/Panama`.
-                 */
-                timezone: string;
-                /**
-                 * Open days, 0 for Sunday to 6 for Saturday.
-                 */
-                weekdays: Array<number>;
-            };
+            business_hours: BusinessHoursInput;
         } | null;
         /**
          * The steps and how they connect.
@@ -4503,7 +4708,7 @@ export type CreateWorkflow = {
              */
             entry: string;
             /**
-             * One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+             * One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
              */
             steps: Array<{
                 /**
@@ -4579,12 +4784,19 @@ export type CreateWorkflow = {
                 /**
                  * Name the answer is kept under, for a later `branch`.
                  */
-                answer_key: string;
-                operator: 'equals' | 'contains' | 'exists';
+                answer_key?: string;
+                /**
+                 * How the answer is compared. With `answer_key` and `value`.
+                 */
+                operator?: 'equals' | 'contains' | 'exists';
                 /**
                  * Value compared with the answer.
                  */
-                value: string;
+                value?: string;
+                /**
+                 * Holds while the business is open at the moment the step runs. Send it instead of `answer_key`, `operator` and `value`.
+                 */
+                business_hours?: BusinessHoursInput;
                 /**
                  * Step to run when the condition does not hold; `next` when it does.
                  */
@@ -4655,6 +4867,34 @@ export type CreateWorkflow = {
                  */
                 next: string | null;
                 kind: 'end';
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'answer_call';
+                /**
+                 * AI agent that answers the call, in a `call_received` workflow. The conversation keeps whoever holds it.
+                 */
+                agent_id: string;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'decline_call';
+                /**
+                 * In a `call_received` workflow: Ricky rejects the call and sends this text to the caller's WhatsApp chat.
+                 */
+                text: string;
             }>;
         };
     };
@@ -4673,9 +4913,9 @@ export type UpdateWorkflow = {
      */
     definition?: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves.
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
          */
-        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away';
+        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'call_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
@@ -4715,44 +4955,10 @@ export type UpdateWorkflow = {
          */
         condition: {
             kind: 'inside_business_hours';
-            business_hours: {
-                /**
-                 * Opening time, `HH:MM`.
-                 */
-                start: string;
-                /**
-                 * Closing time, `HH:MM`.
-                 */
-                end: string;
-                /**
-                 * IANA time zone, for example `America/Panama`.
-                 */
-                timezone: string;
-                /**
-                 * Open days, 0 for Sunday to 6 for Saturday.
-                 */
-                weekdays: Array<number>;
-            };
+            business_hours: BusinessHoursInput;
         } | {
             kind: 'outside_business_hours';
-            business_hours: {
-                /**
-                 * Opening time, `HH:MM`.
-                 */
-                start: string;
-                /**
-                 * Closing time, `HH:MM`.
-                 */
-                end: string;
-                /**
-                 * IANA time zone, for example `America/Panama`.
-                 */
-                timezone: string;
-                /**
-                 * Open days, 0 for Sunday to 6 for Saturday.
-                 */
-                weekdays: Array<number>;
-            };
+            business_hours: BusinessHoursInput;
         } | null;
         /**
          * The steps and how they connect.
@@ -4763,7 +4969,7 @@ export type UpdateWorkflow = {
              */
             entry: string;
             /**
-             * One step. `close_conversation` and `end` finish the flow; every other step continues at its target.
+             * One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
              */
             steps: Array<{
                 /**
@@ -4839,12 +5045,19 @@ export type UpdateWorkflow = {
                 /**
                  * Name the answer is kept under, for a later `branch`.
                  */
-                answer_key: string;
-                operator: 'equals' | 'contains' | 'exists';
+                answer_key?: string;
+                /**
+                 * How the answer is compared. With `answer_key` and `value`.
+                 */
+                operator?: 'equals' | 'contains' | 'exists';
                 /**
                  * Value compared with the answer.
                  */
-                value: string;
+                value?: string;
+                /**
+                 * Holds while the business is open at the moment the step runs. Send it instead of `answer_key`, `operator` and `value`.
+                 */
+                business_hours?: BusinessHoursInput;
                 /**
                  * Step to run when the condition does not hold; `next` when it does.
                  */
@@ -4915,6 +5128,34 @@ export type UpdateWorkflow = {
                  */
                 next: string | null;
                 kind: 'end';
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'answer_call';
+                /**
+                 * AI agent that answers the call, in a `call_received` workflow. The conversation keeps whoever holds it.
+                 */
+                agent_id: string;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'decline_call';
+                /**
+                 * In a `call_received` workflow: Ricky rejects the call and sends this text to the caller's WhatsApp chat.
+                 */
+                text: string;
             }>;
         };
     };
