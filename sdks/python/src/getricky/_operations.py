@@ -49,6 +49,7 @@ from .types import (
     DashboardReport,
     DeletedTemplate,
     DisplayNameRequest,
+    GoogleAdsAccountReport,
     KnowledgeContact,
     KnowledgeFile,
     KnowledgeFileReading,
@@ -1253,6 +1254,32 @@ class SyncOperations:
             "GET",
             "/ads/conversations",
             query={"from": from_, "to": to, "ad_id": ad_id, "campaign_id": campaign_id, "ad_set_id": ad_set_id, "channel": channel, "page_size": page_size, "cursor": cursor},
+        ))
+
+    def get_google_ads_campaign_report(
+        self,
+        *,
+        account_id: Optional[str] = None,
+        campaign_id: Optional[str] = None,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+    ) -> Page[GoogleAdsAccountReport]:
+        """Get Google Ads campaign results.
+
+        Live Google Ads campaign metrics and attributed WhatsApp conversations for advertiser accounts selected by the organization.
+
+        Scope: `reports:read`.
+
+        Args:
+            account_id: A Google Ads account selected in Integrations.
+            campaign_id: Only this Google Ads campaign.
+            from_: First day, inclusive.
+            to: Last day, inclusive. A period can contain up to 366 days.
+        """
+        return cast(Page[GoogleAdsAccountReport], self._request(
+            "GET",
+            "/ads/google/campaigns",
+            query={"account_id": account_id, "campaign_id": campaign_id, "from": from_, "to": to},
         ))
 
     def list_agents(
@@ -3807,6 +3834,32 @@ class AsyncOperations:
             "GET",
             "/ads/conversations",
             query={"from": from_, "to": to, "ad_id": ad_id, "campaign_id": campaign_id, "ad_set_id": ad_set_id, "channel": channel, "page_size": page_size, "cursor": cursor},
+        ))
+
+    async def get_google_ads_campaign_report(
+        self,
+        *,
+        account_id: Optional[str] = None,
+        campaign_id: Optional[str] = None,
+        from_: Optional[str] = None,
+        to: Optional[str] = None,
+    ) -> Page[GoogleAdsAccountReport]:
+        """Get Google Ads campaign results.
+
+        Live Google Ads campaign metrics and attributed WhatsApp conversations for advertiser accounts selected by the organization.
+
+        Scope: `reports:read`.
+
+        Args:
+            account_id: A Google Ads account selected in Integrations.
+            campaign_id: Only this Google Ads campaign.
+            from_: First day, inclusive.
+            to: Last day, inclusive. A period can contain up to 366 days.
+        """
+        return cast(Page[GoogleAdsAccountReport], await self._request(
+            "GET",
+            "/ads/google/campaigns",
+            query={"account_id": account_id, "campaign_id": campaign_id, "from": from_, "to": to},
         ))
 
     async def list_agents(

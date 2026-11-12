@@ -7506,6 +7506,165 @@
         }
       }
     },
+    "/ads/google/campaigns": {
+      "get": {
+        "operationId": "getGoogleAdsCampaignReport",
+        "tags": [
+          "Ads"
+        ],
+        "summary": "Get Google Ads campaign results",
+        "description": "Live Google Ads campaign metrics and attributed WhatsApp conversations for advertiser accounts selected by the organization.\n\nScope: `reports:read`.",
+        "parameters": [
+          {
+            "name": "account_id",
+            "in": "query",
+            "required": false,
+            "description": "A Google Ads account selected in Integrations.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{10}$"
+            }
+          },
+          {
+            "name": "campaign_id",
+            "in": "query",
+            "required": false,
+            "description": "Only this Google Ads campaign.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{1,20}$"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "description": "First day, inclusive.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "description": "Last day, inclusive. A period can contain up to 366 days.",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "next_cursor"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GoogleAdsAccountReport"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Pass as `cursor` for the next page; null on the last page."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/agents": {
       "get": {
         "operationId": "listAgents",
@@ -23486,6 +23645,109 @@
           "body"
         ],
         "description": "A saved answer operators insert into a message."
+      },
+      "GoogleAdsAccountReport": {
+        "type": "object",
+        "properties": {
+          "account": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "currency_code": {
+                "type": "string"
+              },
+              "time_zone": {
+                "type": "string",
+                "description": "Time zone used for Google Ads campaign metrics."
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "currency_code",
+              "time_zone"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "access_denied",
+              "unavailable"
+            ]
+          },
+          "campaigns": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "spend": {
+                  "type": "number",
+                  "description": "Spend in the account currency."
+                },
+                "clicks": {
+                  "type": "number"
+                },
+                "impressions": {
+                  "type": "number"
+                },
+                "conversions": {
+                  "type": "number",
+                  "description": "Conversions as Google reports them."
+                },
+                "conversation_code": {
+                  "type": "string",
+                  "description": "Code that can be placed in this campaign’s prefilled WhatsApp message."
+                },
+                "conversation_count": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991,
+                  "description": "Distinct WhatsApp conversations in Ricky whose inbound message contains the campaign code, in America/Panama days."
+                },
+                "recent_conversation_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "description": "Up to ten recent matching Ricky conversations."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "status",
+                "spend",
+                "clicks",
+                "impressions",
+                "conversions",
+                "conversation_code",
+                "conversation_count",
+                "recent_conversation_ids"
+              ]
+            }
+          }
+        },
+        "required": [
+          "account",
+          "status",
+          "campaigns"
+        ]
       },
       "ConversationAssignmentResult": {
         "type": "object",

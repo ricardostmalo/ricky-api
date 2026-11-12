@@ -2376,6 +2376,50 @@ class QuickReply(TypedDict):
     """
 
 
+class GoogleAdsAccountReportAccount(TypedDict):
+    id: str
+    name: str
+    currency_code: str
+    time_zone: str
+    """
+    Time zone used for Google Ads campaign metrics.
+    """
+
+
+class GoogleAdsAccountReportCampaign(TypedDict):
+    id: str
+    name: str
+    status: str
+    spend: float
+    """
+    Spend in the account currency.
+    """
+    clicks: float
+    impressions: float
+    conversions: float
+    """
+    Conversions as Google reports them.
+    """
+    conversation_code: str
+    """
+    Code that can be placed in this campaign’s prefilled WhatsApp message.
+    """
+    conversation_count: int
+    """
+    Distinct WhatsApp conversations in Ricky whose inbound message contains the campaign code, in America/Panama days.
+    """
+    recent_conversation_ids: List[str]
+    """
+    Up to ten recent matching Ricky conversations.
+    """
+
+
+class GoogleAdsAccountReport(TypedDict):
+    account: GoogleAdsAccountReportAccount
+    status: Literal["ready", "access_denied", "unavailable"]
+    campaigns: List[GoogleAdsAccountReportCampaign]
+
+
 class ConversationAssignmentResult(TypedDict):
     """
     What a bulk assignment did to one conversation.

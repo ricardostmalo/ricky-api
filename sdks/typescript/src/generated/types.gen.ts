@@ -2208,6 +2208,46 @@ export type QuickReply = {
     body: string;
 };
 
+export type GoogleAdsAccountReport = {
+    account: {
+        id: string;
+        name: string;
+        currency_code: string;
+        /**
+         * Time zone used for Google Ads campaign metrics.
+         */
+        time_zone: string;
+    };
+    status: 'ready' | 'access_denied' | 'unavailable';
+    campaigns: Array<{
+        id: string;
+        name: string;
+        status: string;
+        /**
+         * Spend in the account currency.
+         */
+        spend: number;
+        clicks: number;
+        impressions: number;
+        /**
+         * Conversions as Google reports them.
+         */
+        conversions: number;
+        /**
+         * Code that can be placed in this campaign’s prefilled WhatsApp message.
+         */
+        conversation_code: string;
+        /**
+         * Distinct WhatsApp conversations in Ricky whose inbound message contains the campaign code, in America/Panama days.
+         */
+        conversation_count: number;
+        /**
+         * Up to ten recent matching Ricky conversations.
+         */
+        recent_conversation_ids: Array<string>;
+    }>;
+};
+
 /**
  * What a bulk assignment did to one conversation.
  */
@@ -9090,6 +9130,74 @@ export type ListAdConversationsResponses = {
 };
 
 export type ListAdConversationsResponse = ListAdConversationsResponses[keyof ListAdConversationsResponses];
+
+export type GetGoogleAdsCampaignReportData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * A Google Ads account selected in Integrations.
+         */
+        account_id?: string;
+        /**
+         * Only this Google Ads campaign.
+         */
+        campaign_id?: string;
+        /**
+         * First day, inclusive.
+         */
+        from: string;
+        /**
+         * Last day, inclusive. A period can contain up to 366 days.
+         */
+        to: string;
+    };
+    url: '/ads/google/campaigns';
+};
+
+export type GetGoogleAdsCampaignReportErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetGoogleAdsCampaignReportError = GetGoogleAdsCampaignReportErrors[keyof GetGoogleAdsCampaignReportErrors];
+
+export type GetGoogleAdsCampaignReportResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<GoogleAdsAccountReport>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type GetGoogleAdsCampaignReportResponse = GetGoogleAdsCampaignReportResponses[keyof GetGoogleAdsCampaignReportResponses];
 
 export type ListAgentsData = {
     body?: never;
