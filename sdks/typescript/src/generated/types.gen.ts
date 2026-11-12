@@ -31,6 +31,614 @@ export type Error = {
 };
 
 /**
+ * The ad as Ricky's Meta Ads sync last stored it, matched by `ad_id`. It is Ricky's lookup in the connected ad account, not part of the message Meta sent. `GET /ads/ads` reads the same ad live from Meta.
+ */
+export type AdReferralResolution = {
+    /**
+     * Name of the ad in Meta.
+     */
+    ad_name: string | null;
+    /**
+     * Campaign ID at Meta.
+     */
+    campaign_id: string | null;
+    /**
+     * Campaign name in Meta.
+     */
+    campaign_name: string | null;
+    /**
+     * Ad set ID at Meta.
+     */
+    ad_set_id: string | null;
+    /**
+     * Ad set name in Meta.
+     */
+    ad_set_name: string | null;
+    /**
+     * Ad account ID at Meta.
+     */
+    ad_account_id: string | null;
+    /**
+     * When Ricky last synced this ad from Meta.
+     */
+    synced_at: string | null;
+};
+
+/**
+ * A Meta ad a customer came from: an inbound message whose Meta referral names an ad (Click to WhatsApp, Instagram or Messenger ads). The same definition as `GET /reports/ads`.
+ */
+export type AdReferral = {
+    /**
+     * Meta's ID of the ad, as Meta sent it in the message's referral: WhatsApp `source_id`, Instagram and Messenger `ad_id`. The same ID as `GET /ads/ads` and `ad_id` in `GET /ads/insights`.
+     */
+    ad_id: string;
+    /**
+     * Channel the customer wrote on.
+     */
+    channel: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
+    /**
+     * The customer message that carried the referral.
+     */
+    message_id: string;
+    /**
+     * Conversation of that message.
+     */
+    conversation_id: string;
+    contact_id: string | null;
+    /**
+     * When the customer sent that message.
+     */
+    referred_at: string;
+    /**
+     * Meta's kind of source: WhatsApp's `source_type` (`ad`) or Instagram and Messenger's `source` (`ADS`).
+     */
+    source_type: string | null;
+    /**
+     * Link to the ad's post on Facebook or Instagram, as Meta sent it. WhatsApp only.
+     */
+    source_url: string | null;
+    /**
+     * The ad's title as Meta sent it: WhatsApp `headline`, Instagram and Messenger `ads_context_data.ad_title`.
+     */
+    headline: string | null;
+    /**
+     * The ad's text as Meta sent it. WhatsApp only.
+     */
+    body: string | null;
+    /**
+     * `image` or `video`, as Meta sent it. WhatsApp only.
+     */
+    media_type: string | null;
+    /**
+     * The ad's image: Ricky's permanent copy of the image Meta sent, else Meta's own link while it has not expired; null otherwise.
+     */
+    image_url: string | null;
+    /**
+     * Meta's link to the ad's video, as Meta sent it; it can expire.
+     */
+    video_url: string | null;
+    /**
+     * Meta's click ID of the Click to WhatsApp ad, as Meta sent it; send it back to Meta's Conversions API to attribute an event. WhatsApp only.
+     */
+    ctwa_clid: string | null;
+    /**
+     * The `ref` parameter of the ad link, as Meta sent it. Instagram and Messenger only.
+     */
+    ref: string | null;
+    /**
+     * The ad's name, campaign and ad set from Ricky's Meta Ads sync; null when the ad is not in a connected ad account Ricky has synced.
+     */
+    resolved: AdReferralResolution | null;
+};
+
+/**
+ * The days a report covers, in America/Panama time, and the period it is compared with.
+ */
+export type ReportPeriod = {
+    /**
+     * First day, inclusive.
+     */
+    from: string;
+    /**
+     * Last day, inclusive. A `to` after today is today.
+     */
+    to: string;
+    /**
+     * Days in the period.
+     */
+    days: number;
+    /**
+     * `hour` when the period is one day: series then have 24 hourly slots.
+     */
+    granularity: 'day' | 'hour';
+    /**
+     * The time zone of every day and hour in the report.
+     */
+    time_zone: 'America/Panama';
+    /**
+     * First day of the previous period: the same number of days, right before.
+     */
+    previous_from: string;
+    /**
+     * Last day of the previous period.
+     */
+    previous_to: string;
+};
+
+/**
+ * How many customers write, whether they are new, and when. Only messages customers send count: a customer is a conversation with at least one of them in the period, and it is new when its first message ever falls in the period. Messages from the team, AI agents or campaigns and conversation openings and closes play no part.
+ */
+export type ConversationsReport = {
+    period: ReportPeriod;
+    /**
+     * The channel filter the report applied.
+     */
+    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
+    /**
+     * The period.
+     */
+    totals: {
+        /**
+         * Conversations with at least one customer message in the period.
+         */
+        customers: number;
+        /**
+         * Customers whose first message ever falls in the period.
+         */
+        new_customers: number;
+        /**
+         * Customers who had written before the period.
+         */
+        returning_customers: number;
+        /**
+         * Messages customers sent in the period.
+         */
+        messages: number;
+    };
+    /**
+     * The previous period.
+     */
+    previous: {
+        /**
+         * Conversations with at least one customer message in the period.
+         */
+        customers: number;
+        /**
+         * Customers whose first message ever falls in the period.
+         */
+        new_customers: number;
+        /**
+         * Customers who had written before the period.
+         */
+        returning_customers: number;
+        /**
+         * Messages customers sent in the period.
+         */
+        messages: number;
+    };
+    /**
+     * The period per channel, most customers first.
+     */
+    by_channel: Array<{
+        /**
+         * Channel.
+         */
+        channel: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
+        /**
+         * Conversations with at least one customer message in the period.
+         */
+        customers: number;
+        /**
+         * Customers whose first message ever falls in the period.
+         */
+        new_customers: number;
+        /**
+         * Customers who had written before the period.
+         */
+        returning_customers: number;
+        /**
+         * Messages customers sent in the period.
+         */
+        messages: number;
+    }>;
+    /**
+     * One entry per day of the period, or per hour of a one-day period.
+     */
+    series: Array<{
+        /**
+         * America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+         */
+        slot: string;
+        /**
+         * Customers whose first message ever falls in this slot.
+         */
+        new_customers: number;
+        /**
+         * Customers who wrote in this slot and had written before.
+         */
+        returning_customers: number;
+        previous_customers: number | null;
+    }>;
+    /**
+     * Customer messages of the period per weekday and hour; slots without any are left out.
+     */
+    heatmap: Array<{
+        /**
+         * 0 is Sunday, 6 is Saturday.
+         */
+        day_of_week: number;
+        /**
+         * Hour of the day, 0–23.
+         */
+        hour: number;
+        /**
+         * Customer messages in that hour of that weekday.
+         */
+        messages: number;
+    }>;
+    /**
+     * When Ricky computed the report.
+     */
+    generated_at: string;
+};
+
+/**
+ * Messages received from customers and sent to them in the period, and who sent them, dated when each message was sent.
+ */
+export type MessagesReport = {
+    period: ReportPeriod;
+    /**
+     * The channel filter the report applied.
+     */
+    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
+    /**
+     * The period.
+     */
+    totals: {
+        /**
+         * Messages customers sent.
+         */
+        received: number;
+        /**
+         * Messages sent to customers, by anyone; the sum of `sent_by`.
+         */
+        sent: number;
+        /**
+         * Sent messages by sender; each message counts in one of them.
+         */
+        sent_by: {
+            /**
+             * Sent by a person in Ricky.
+             */
+            human: number;
+            /**
+             * Sent by an AI agent.
+             */
+            ai: number;
+            /**
+             * Sent by an automation.
+             */
+            automation: number;
+            /**
+             * Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
+             */
+            campaign: number;
+            /**
+             * Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
+             */
+            external: number;
+        };
+    };
+    /**
+     * The previous period.
+     */
+    previous: {
+        /**
+         * Messages customers sent.
+         */
+        received: number;
+        /**
+         * Messages sent to customers, by anyone; the sum of `sent_by`.
+         */
+        sent: number;
+        /**
+         * Sent messages by sender; each message counts in one of them.
+         */
+        sent_by: {
+            /**
+             * Sent by a person in Ricky.
+             */
+            human: number;
+            /**
+             * Sent by an AI agent.
+             */
+            ai: number;
+            /**
+             * Sent by an automation.
+             */
+            automation: number;
+            /**
+             * Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
+             */
+            campaign: number;
+            /**
+             * Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
+             */
+            external: number;
+        };
+    };
+    /**
+     * The period per channel, most messages first.
+     */
+    by_channel: Array<{
+        /**
+         * Channel.
+         */
+        channel: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
+        /**
+         * Messages customers sent.
+         */
+        received: number;
+        /**
+         * Messages sent to customers, by anyone; the sum of `sent_by`.
+         */
+        sent: number;
+        /**
+         * Sent messages by sender; each message counts in one of them.
+         */
+        sent_by: {
+            /**
+             * Sent by a person in Ricky.
+             */
+            human: number;
+            /**
+             * Sent by an AI agent.
+             */
+            ai: number;
+            /**
+             * Sent by an automation.
+             */
+            automation: number;
+            /**
+             * Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
+             */
+            campaign: number;
+            /**
+             * Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
+             */
+            external: number;
+        };
+    }>;
+    /**
+     * One entry per day of the period, or per hour of a one-day period.
+     */
+    series: Array<{
+        /**
+         * America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+         */
+        slot: string;
+        /**
+         * Messages customers sent.
+         */
+        received: number;
+        /**
+         * Messages sent to customers, by anyone; the sum of `sent_by`.
+         */
+        sent: number;
+        /**
+         * Sent messages by sender; each message counts in one of them.
+         */
+        sent_by: {
+            /**
+             * Sent by a person in Ricky.
+             */
+            human: number;
+            /**
+             * Sent by an AI agent.
+             */
+            ai: number;
+            /**
+             * Sent by an automation.
+             */
+            automation: number;
+            /**
+             * Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
+             */
+            campaign: number;
+            /**
+             * Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
+             */
+            external: number;
+        };
+        previous_received: number | null;
+        previous_sent: number | null;
+    }>;
+    /**
+     * When Ricky computed the report.
+     */
+    generated_at: string;
+};
+
+/**
+ * What the inbox looks like right now; it has no period.
+ */
+export type DashboardReport = {
+    /**
+     * Now.
+     */
+    totals: {
+        /**
+         * Open conversations.
+         */
+        open_now: number;
+        /**
+         * Open conversations with no member or AI agent assigned.
+         */
+        unassigned: number;
+        /**
+         * Open conversations whose last message, reactions aside, is from the customer.
+         */
+        awaiting_reply: number;
+        /**
+         * Handoffs from an AI agent to a person still waiting.
+         */
+        pending_handoffs: number;
+        /**
+         * Conversations opened or reopened today, America/Panama.
+         */
+        opened_today: number;
+        /**
+         * Conversations closed today, America/Panama.
+         */
+        closed_today: number;
+    };
+    /**
+     * Open conversations per channel, most first.
+     */
+    by_channel: Array<{
+        /**
+         * Channel.
+         */
+        channel: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
+        /**
+         * Open conversations.
+         */
+        open: number;
+    }>;
+    /**
+     * Open conversations per assignee, most first.
+     */
+    assignees: Array<{
+        /**
+         * `human` is a member, `ai` an AI agent, `unassigned` nobody.
+         */
+        type: 'human' | 'ai' | 'unassigned';
+        /**
+         * User ID or AI agent ID; null for `unassigned`.
+         */
+        id: string | null;
+        /**
+         * Name; null when it has none and for `unassigned`.
+         */
+        name: string | null;
+        /**
+         * Open conversations they hold.
+         */
+        open: number;
+        /**
+         * Of those, the ones whose last message is from the customer.
+         */
+        awaiting_reply: number;
+    }>;
+    /**
+     * The 15 open conversations waiting longest for a reply, oldest first.
+     */
+    longest_waiting: Array<{
+        /**
+         * Conversation ID.
+         */
+        conversation_id: string;
+        /**
+         * Channel.
+         */
+        channel: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
+        /**
+         * Customer name as the inbox shows it: the contact’s saved name, else the channel profile name, else the contact’s phone.
+         */
+        participant_name: string | null;
+        /**
+         * When the customer message they wait on arrived.
+         */
+        waiting_since: string;
+        /**
+         * `human` is a member, `ai` an AI agent, `unassigned` nobody.
+         */
+        assignee_type: 'human' | 'ai' | 'unassigned';
+        /**
+         * Assignee name; null when there is none.
+         */
+        assignee_name: string | null;
+    }>;
+    /**
+     * When Ricky computed the report.
+     */
+    generated_at: string;
+};
+
+/**
+ * A conversation a Meta ad opened or brought back in the period, with what happened after. One row per conversation and ad: a conversation two ads brought back has two rows.
+ */
+export type AdConversation = {
+    /**
+     * The first customer message from this ad in this conversation within the period.
+     */
+    ad_referral: AdReferral;
+    /**
+     * Whether that message started the conversation: no message came before it. False when the ad brought back someone who had written before.
+     */
+    opened_conversation: boolean;
+    /**
+     * Text of that message: what the customer wrote, often the greeting the ad prefilled.
+     */
+    message_text: string | null;
+    /**
+     * Who wrote.
+     */
+    contact: {
+        id: string | null;
+        /**
+         * Name saved on the contact, else the name on the channel.
+         */
+        name: string | null;
+        /**
+         * Phone saved on the contact, in E.164.
+         */
+        phone: string | null;
+        /**
+         * Address on the channel: phone digits for WhatsApp, account ID otherwise.
+         */
+        external_id: string;
+    };
+    /**
+     * The conversation as it is now.
+     */
+    conversation: {
+        /**
+         * Conversation ID.
+         */
+        id: string;
+        /**
+         * Its state now.
+         */
+        status: 'open' | 'closed';
+        /**
+         * Why it was closed: `sale` when a member closed it as a sale, the only sign of a purchase Ricky records, without an amount. Null while open or when closed without a category.
+         */
+        close_category: 'resolved' | 'sale' | 'no_response' | 'spam' | 'other' | null;
+        /**
+         * When it was closed; null while open.
+         */
+        closed_at: string | null;
+        /**
+         * When Ricky created it.
+         */
+        created_at: string;
+    };
+    /**
+     * Messages the customer sent in the conversation from that message on, that one included; reactions do not count.
+     */
+    customer_messages: number;
+    /**
+     * Replies from that message on by a member in Ricky, an AI agent or someone in the channel's own app. Automations, broadcasts, templates and reactions do not count.
+     */
+    replies: number;
+    /**
+     * Seconds from that message to the first reply; null while unanswered.
+     */
+    first_reply_seconds: number | null;
+};
+
+/**
  * A campaign of a connected ad account.
  */
 export type MetaAdsCampaign = {
@@ -600,6 +1208,14 @@ export type Contact = {
     last_activity_preview: string | null;
     last_conversation_id: string | null;
     /**
+     * First touch: the earliest Meta ad this contact came from, in any of its conversations; null when none came from an ad.
+     */
+    first_ad_referral: AdReferral | null;
+    /**
+     * Last touch: the latest Meta ad this contact came from; the same as `first_ad_referral` when only one ad brought them.
+     */
+    last_ad_referral: AdReferral | null;
+    /**
      * Last change to the contact.
      */
     updated_at: string;
@@ -753,6 +1369,14 @@ export type Conversation = {
      * The handoff to a person waiting to be resolved; null when there is none.
      */
     active_handoff: ConversationHandoff | null;
+    /**
+     * The earliest Meta ad that brought the contact to this conversation; null when none did.
+     */
+    first_ad_referral: AdReferral | null;
+    /**
+     * The latest Meta ad that brought the contact back to this conversation; the same as `first_ad_referral` when only one did.
+     */
+    latest_ad_referral: AdReferral | null;
 };
 
 /**
@@ -845,6 +1469,10 @@ export type Message = {
      * When the sender deleted it.
      */
     deleted_at: string | null;
+    /**
+     * The Meta ad this customer message came from; null for every other message.
+     */
+    ad_referral: AdReferral | null;
 };
 
 /**
@@ -1447,6 +2075,10 @@ export type WebhookEvent = {
          */
         message_id?: string;
         /**
+         * Meta's ID of the ad the customer came from, for a `message.received` whose message carries an ad referral. Read the message for the rest of the referral.
+         */
+        ad_id?: string;
+        /**
          * Contact, for `contact.*` events.
          */
         contact_id?: string;
@@ -1592,440 +2224,6 @@ export type ConversationAssignmentResult = {
      * `assigned`; `not_found` when the organization has no such conversation; `failed` when Ricky could not save it, so retry that conversation.
      */
     status: 'assigned' | 'not_found' | 'failed';
-};
-
-/**
- * The days a report covers, in America/Panama time, and the period it is compared with.
- */
-export type ReportPeriod = {
-    /**
-     * First day, inclusive.
-     */
-    from: string;
-    /**
-     * Last day, inclusive. A `to` after today is today.
-     */
-    to: string;
-    /**
-     * Days in the period.
-     */
-    days: number;
-    /**
-     * `hour` when the period is one day: series then have 24 hourly slots.
-     */
-    granularity: 'day' | 'hour';
-    /**
-     * The time zone of every day and hour in the report.
-     */
-    time_zone: 'America/Panama';
-    /**
-     * First day of the previous period: the same number of days, right before.
-     */
-    previous_from: string;
-    /**
-     * Last day of the previous period.
-     */
-    previous_to: string;
-};
-
-/**
- * How many customers write, whether they are new, and when. Only messages customers send count: a customer is a conversation with at least one of them in the period, and it is new when its first message ever falls in the period. Messages from the team, AI agents or campaigns and conversation openings and closes play no part.
- */
-export type ConversationsReport = {
-    period: ReportPeriod;
-    /**
-     * The channel filter the report applied.
-     */
-    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
-    /**
-     * The period.
-     */
-    totals: {
-        /**
-         * Conversations with at least one customer message in the period.
-         */
-        customers: number;
-        /**
-         * Customers whose first message ever falls in the period.
-         */
-        new_customers: number;
-        /**
-         * Customers who had written before the period.
-         */
-        returning_customers: number;
-        /**
-         * Messages customers sent in the period.
-         */
-        messages: number;
-    };
-    /**
-     * The previous period.
-     */
-    previous: {
-        /**
-         * Conversations with at least one customer message in the period.
-         */
-        customers: number;
-        /**
-         * Customers whose first message ever falls in the period.
-         */
-        new_customers: number;
-        /**
-         * Customers who had written before the period.
-         */
-        returning_customers: number;
-        /**
-         * Messages customers sent in the period.
-         */
-        messages: number;
-    };
-    /**
-     * The period per channel, most customers first.
-     */
-    by_channel: Array<{
-        /**
-         * Channel.
-         */
-        channel: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
-        /**
-         * Conversations with at least one customer message in the period.
-         */
-        customers: number;
-        /**
-         * Customers whose first message ever falls in the period.
-         */
-        new_customers: number;
-        /**
-         * Customers who had written before the period.
-         */
-        returning_customers: number;
-        /**
-         * Messages customers sent in the period.
-         */
-        messages: number;
-    }>;
-    /**
-     * One entry per day of the period, or per hour of a one-day period.
-     */
-    series: Array<{
-        /**
-         * America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
-         */
-        slot: string;
-        /**
-         * Customers whose first message ever falls in this slot.
-         */
-        new_customers: number;
-        /**
-         * Customers who wrote in this slot and had written before.
-         */
-        returning_customers: number;
-        previous_customers: number | null;
-    }>;
-    /**
-     * Customer messages of the period per weekday and hour; slots without any are left out.
-     */
-    heatmap: Array<{
-        /**
-         * 0 is Sunday, 6 is Saturday.
-         */
-        day_of_week: number;
-        /**
-         * Hour of the day, 0–23.
-         */
-        hour: number;
-        /**
-         * Customer messages in that hour of that weekday.
-         */
-        messages: number;
-    }>;
-    /**
-     * When Ricky computed the report.
-     */
-    generated_at: string;
-};
-
-/**
- * Messages received from customers and sent to them in the period, and who sent them, dated when each message was sent.
- */
-export type MessagesReport = {
-    period: ReportPeriod;
-    /**
-     * The channel filter the report applied.
-     */
-    channel: 'all' | 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
-    /**
-     * The period.
-     */
-    totals: {
-        /**
-         * Messages customers sent.
-         */
-        received: number;
-        /**
-         * Messages sent to customers, by anyone; the sum of `sent_by`.
-         */
-        sent: number;
-        /**
-         * Sent messages by sender; each message counts in one of them.
-         */
-        sent_by: {
-            /**
-             * Sent by a person in Ricky.
-             */
-            human: number;
-            /**
-             * Sent by an AI agent.
-             */
-            ai: number;
-            /**
-             * Sent by an automation.
-             */
-            automation: number;
-            /**
-             * Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
-             */
-            campaign: number;
-            /**
-             * Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
-             */
-            external: number;
-        };
-    };
-    /**
-     * The previous period.
-     */
-    previous: {
-        /**
-         * Messages customers sent.
-         */
-        received: number;
-        /**
-         * Messages sent to customers, by anyone; the sum of `sent_by`.
-         */
-        sent: number;
-        /**
-         * Sent messages by sender; each message counts in one of them.
-         */
-        sent_by: {
-            /**
-             * Sent by a person in Ricky.
-             */
-            human: number;
-            /**
-             * Sent by an AI agent.
-             */
-            ai: number;
-            /**
-             * Sent by an automation.
-             */
-            automation: number;
-            /**
-             * Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
-             */
-            campaign: number;
-            /**
-             * Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
-             */
-            external: number;
-        };
-    };
-    /**
-     * The period per channel, most messages first.
-     */
-    by_channel: Array<{
-        /**
-         * Channel.
-         */
-        channel: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
-        /**
-         * Messages customers sent.
-         */
-        received: number;
-        /**
-         * Messages sent to customers, by anyone; the sum of `sent_by`.
-         */
-        sent: number;
-        /**
-         * Sent messages by sender; each message counts in one of them.
-         */
-        sent_by: {
-            /**
-             * Sent by a person in Ricky.
-             */
-            human: number;
-            /**
-             * Sent by an AI agent.
-             */
-            ai: number;
-            /**
-             * Sent by an automation.
-             */
-            automation: number;
-            /**
-             * Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
-             */
-            campaign: number;
-            /**
-             * Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
-             */
-            external: number;
-        };
-    }>;
-    /**
-     * One entry per day of the period, or per hour of a one-day period.
-     */
-    series: Array<{
-        /**
-         * America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
-         */
-        slot: string;
-        /**
-         * Messages customers sent.
-         */
-        received: number;
-        /**
-         * Messages sent to customers, by anyone; the sum of `sent_by`.
-         */
-        sent: number;
-        /**
-         * Sent messages by sender; each message counts in one of them.
-         */
-        sent_by: {
-            /**
-             * Sent by a person in Ricky.
-             */
-            human: number;
-            /**
-             * Sent by an AI agent.
-             */
-            ai: number;
-            /**
-             * Sent by an automation.
-             */
-            automation: number;
-            /**
-             * Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
-             */
-            campaign: number;
-            /**
-             * Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
-             */
-            external: number;
-        };
-        previous_received: number | null;
-        previous_sent: number | null;
-    }>;
-    /**
-     * When Ricky computed the report.
-     */
-    generated_at: string;
-};
-
-/**
- * What the inbox looks like right now; it has no period.
- */
-export type DashboardReport = {
-    /**
-     * Now.
-     */
-    totals: {
-        /**
-         * Open conversations.
-         */
-        open_now: number;
-        /**
-         * Open conversations with no member or AI agent assigned.
-         */
-        unassigned: number;
-        /**
-         * Open conversations whose last message, reactions aside, is from the customer.
-         */
-        awaiting_reply: number;
-        /**
-         * Handoffs from an AI agent to a person still waiting.
-         */
-        pending_handoffs: number;
-        /**
-         * Conversations opened or reopened today, America/Panama.
-         */
-        opened_today: number;
-        /**
-         * Conversations closed today, America/Panama.
-         */
-        closed_today: number;
-    };
-    /**
-     * Open conversations per channel, most first.
-     */
-    by_channel: Array<{
-        /**
-         * Channel.
-         */
-        channel: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
-        /**
-         * Open conversations.
-         */
-        open: number;
-    }>;
-    /**
-     * Open conversations per assignee, most first.
-     */
-    assignees: Array<{
-        /**
-         * `human` is a member, `ai` an AI agent, `unassigned` nobody.
-         */
-        type: 'human' | 'ai' | 'unassigned';
-        /**
-         * User ID or AI agent ID; null for `unassigned`.
-         */
-        id: string | null;
-        /**
-         * Name; null when it has none and for `unassigned`.
-         */
-        name: string | null;
-        /**
-         * Open conversations they hold.
-         */
-        open: number;
-        /**
-         * Of those, the ones whose last message is from the customer.
-         */
-        awaiting_reply: number;
-    }>;
-    /**
-     * The 15 open conversations waiting longest for a reply, oldest first.
-     */
-    longest_waiting: Array<{
-        /**
-         * Conversation ID.
-         */
-        conversation_id: string;
-        /**
-         * Channel.
-         */
-        channel: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
-        /**
-         * Customer name as the inbox shows it: the contact’s saved name, else the channel profile name, else the contact’s phone.
-         */
-        participant_name: string | null;
-        /**
-         * When the customer message they wait on arrived.
-         */
-        waiting_since: string;
-        /**
-         * `human` is a member, `ai` an AI agent, `unassigned` nobody.
-         */
-        assignee_type: 'human' | 'ai' | 'unassigned';
-        /**
-         * Assignee name; null when there is none.
-         */
-        assignee_name: string | null;
-    }>;
-    /**
-     * When Ricky computed the report.
-     */
-    generated_at: string;
 };
 
 /**
@@ -3560,73 +3758,6 @@ export type WhatsAppNumber = {
 };
 
 /**
- * Only `name` is required; it does not connect the agent to any channel.
- */
-export type CreateAgent = {
-    /**
-     * Name the team sees.
-     */
-    name: string;
-    /**
-     * What the agent is for.
-     */
-    description?: string | null;
-    /**
-     * How the agent answers customers.
-     */
-    instructions?: string | null;
-    /**
-     * A voice of `GET /agent-options`. Without one, the default voice.
-     */
-    voice?: string;
-    /**
-     * The complete set of capability names. Replaces the current ones.
-     */
-    capabilities?: Array<string>;
-    /**
-     * The complete set of members who receive handed-off conversations. Required with `ricky.handoff.request`.
-     */
-    handoff_user_ids?: Array<string>;
-};
-
-/**
- * Only the fields you send change. Send `null` to clear a text.
- */
-export type UpdateAgent = {
-    /**
-     * Name the team sees.
-     */
-    name?: string;
-    /**
-     * What the agent is for.
-     */
-    description?: string | null;
-    /**
-     * How the agent answers customers.
-     */
-    instructions?: string | null;
-    /**
-     * A voice of `GET /agent-options`. Without one, the default voice.
-     */
-    voice?: string;
-    /**
-     * The complete set of capability names. Replaces the current ones.
-     */
-    capabilities?: Array<string>;
-    /**
-     * The complete set of members who receive handed-off conversations. Required with `ricky.handoff.request`.
-     */
-    handoff_user_ids?: Array<string>;
-};
-
-export type AssignConversationAgent = {
-    /**
-     * Agent that answers from now on; null turns the AI off for the conversation.
-     */
-    agent_id: string | null;
-};
-
-/**
  * How the handoff ends.
  */
 export type ResolveHandoff = {
@@ -4017,6 +4148,73 @@ export type RotateWebhookSecret = {
      * How long deliveries keep the previous signature too, so you can deploy the new secret first. 0 ends the previous secret now.
      */
     expire_previous_after_hours?: number;
+};
+
+/**
+ * Only `name` is required; it does not connect the agent to any channel.
+ */
+export type CreateAgent = {
+    /**
+     * Name the team sees.
+     */
+    name: string;
+    /**
+     * What the agent is for.
+     */
+    description?: string | null;
+    /**
+     * How the agent answers customers.
+     */
+    instructions?: string | null;
+    /**
+     * A voice of `GET /agent-options`. Without one, the default voice.
+     */
+    voice?: string;
+    /**
+     * The complete set of capability names. Replaces the current ones.
+     */
+    capabilities?: Array<string>;
+    /**
+     * The complete set of members who receive handed-off conversations. Required with `ricky.handoff.request`.
+     */
+    handoff_user_ids?: Array<string>;
+};
+
+/**
+ * Only the fields you send change. Send `null` to clear a text.
+ */
+export type UpdateAgent = {
+    /**
+     * Name the team sees.
+     */
+    name?: string;
+    /**
+     * What the agent is for.
+     */
+    description?: string | null;
+    /**
+     * How the agent answers customers.
+     */
+    instructions?: string | null;
+    /**
+     * A voice of `GET /agent-options`. Without one, the default voice.
+     */
+    voice?: string;
+    /**
+     * The complete set of capability names. Replaces the current ones.
+     */
+    capabilities?: Array<string>;
+    /**
+     * The complete set of members who receive handed-off conversations. Required with `ricky.handoff.request`.
+     */
+    handoff_user_ids?: Array<string>;
+};
+
+export type AssignConversationAgent = {
+    /**
+     * Agent that answers from now on; null turns the AI off for the conversation.
+     */
+    agent_id: string | null;
 };
 
 /**
@@ -5633,6 +5831,26 @@ export type ListContactsData = {
          * Only contacts reachable on this channel.
          */
         channel?: 'whatsapp' | 'instagram' | 'messenger' | 'webchat';
+        /**
+         * Only contacts with a customer message, in any of their conversations, from this Meta ad. Ad filters apply together to one customer message: from that ad, campaign or ad set, at that time.
+         */
+        ad_id?: string;
+        /**
+         * Only contacts with a customer message, in any of their conversations, from an ad of this Meta campaign. Matches the ads Ricky synced from a connected ad account.
+         */
+        campaign_id?: string;
+        /**
+         * Only contacts with a customer message, in any of their conversations, from an ad of this Meta ad set. Matches the ads Ricky synced from a connected ad account.
+         */
+        ad_set_id?: string;
+        /**
+         * Only contacts with a customer message, in any of their conversations, from a Meta ad sent at or after this time, ISO 8601.
+         */
+        referred_after?: string;
+        /**
+         * Only contacts with a customer message, in any of their conversations, from a Meta ad sent before this time, ISO 8601.
+         */
+        referred_before?: string;
     };
     url: '/contacts';
 };
@@ -6101,6 +6319,34 @@ export type ListConversationsData = {
          * `customer`: only conversations whose latest message came from the contact.
          */
         last_message_from?: 'customer';
+        /**
+         * Only conversations whose latest message is at or after this time, ISO 8601.
+         */
+        last_activity_after?: string;
+        /**
+         * Only conversations whose latest message is before this time, ISO 8601.
+         */
+        last_activity_before?: string;
+        /**
+         * Only conversations with a customer message from this Meta ad. Ad filters apply together to one customer message: from that ad, campaign or ad set, at that time.
+         */
+        ad_id?: string;
+        /**
+         * Only conversations with a customer message from an ad of this Meta campaign. Matches the ads Ricky synced from a connected ad account.
+         */
+        campaign_id?: string;
+        /**
+         * Only conversations with a customer message from an ad of this Meta ad set. Matches the ads Ricky synced from a connected ad account.
+         */
+        ad_set_id?: string;
+        /**
+         * Only conversations with a customer message from a Meta ad sent at or after this time, ISO 8601.
+         */
+        referred_after?: string;
+        /**
+         * Only conversations with a customer message from a Meta ad sent before this time, ISO 8601.
+         */
+        referred_before?: string;
     };
     url: '/conversations';
 };
@@ -8764,6 +9010,86 @@ export type GetMetaAdsInsightsResponses = {
 };
 
 export type GetMetaAdsInsightsResponse = GetMetaAdsInsightsResponses[keyof GetMetaAdsInsightsResponses];
+
+export type ListAdConversationsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
+         */
+        from?: string;
+        /**
+         * Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
+         */
+        to?: string;
+        /**
+         * Only this Meta ad.
+         */
+        ad_id?: string;
+        /**
+         * Only ads of this Meta campaign, among the ads Ricky synced from a connected ad account.
+         */
+        campaign_id?: string;
+        /**
+         * Only ads of this Meta ad set, among the ads Ricky synced from a connected ad account.
+         */
+        ad_set_id?: string;
+        /**
+         * Only conversations on this channel.
+         */
+        channel?: 'whatsapp' | 'instagram' | 'messenger';
+        /**
+         * Items per page.
+         */
+        page_size?: number;
+        /**
+         * `next_cursor` from the previous page. Use it unchanged.
+         */
+        cursor?: string;
+    };
+    url: '/ads/conversations';
+};
+
+export type ListAdConversationsErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListAdConversationsError = ListAdConversationsErrors[keyof ListAdConversationsErrors];
+
+export type ListAdConversationsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<AdConversation>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListAdConversationsResponse = ListAdConversationsResponses[keyof ListAdConversationsResponses];
 
 export type ListAgentsData = {
     body?: never;
