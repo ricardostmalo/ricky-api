@@ -19,21 +19,23 @@ These operations do what the Ricky inbox does, with the same rules.
 
 `GET /conversations` takes the inbox's filters. They combine; send the same ones with `cursor` on every page.
 
-| Parameter                    | Only conversations                                           |
-| ---------------------------- | ------------------------------------------------------------ |
-| `status`                     | `open` or `closed`                                           |
-| `channel_id`                 | on that channel, including earlier connections of the number |
-| `tag_id`                     | whose contact has that tag                                   |
-| `unread=true`                | with messages the team has not read                          |
-| `pending_handoff=true`       | with a handoff to a person not resolved yet                  |
-| `last_message_from=customer` | whose latest message came from the contact                   |
-| `assigned_user_id`           | assigned to that member                                      |
-| `agent_id`                   | that AI agent answers, with no member assigned               |
-| `unassigned=true`            | with no member and no AI agent                               |
+| Parameter                                                                | Only conversations                                                                                                                                         |
+| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `status`                                                                 | `open` or `closed`                                                                                                                                         |
+| `channel_id`                                                             | on that channel, including earlier connections of the number                                                                                               |
+| `tag_id`                                                                 | whose contact has that tag                                                                                                                                 |
+| `unread=true`                                                            | with messages the team has not read                                                                                                                        |
+| `pending_handoff=true`                                                   | with a handoff to a person not resolved yet                                                                                                                |
+| `last_message_from=customer`                                             | whose latest message came from the contact                                                                                                                 |
+| `assigned_user_id`                                                       | assigned to that member                                                                                                                                    |
+| `agent_id`                                                               | that AI agent answers, with no member assigned                                                                                                             |
+| `unassigned=true`                                                        | with no member and no AI agent                                                                                                                             |
+| `last_activity_after`, `last_activity_before`                            | whose latest message is in that range (ISO 8601)                                                                                                           |
+| `ad_id`, `campaign_id`, `ad_set_id`, `referred_after`, `referred_before` | with a customer message from that Meta ad, campaign or ad set, or sent in that range; see [Ad attribution](./ad-attribution.md#filter-lists-by-ad) |
 
 `assigned_user_id`, `agent_id` and `unassigned=true` exclude each other: sending more than one answers `400 invalid_input`. A channel or tag the organization does not have answers an empty list.
 
-Each conversation carries `unread` and `active_handoff`, the handoff waiting or `null`.
+Each conversation carries `unread` and `active_handoff`, the handoff waiting or `null`, and `first_ad_referral` and `latest_ad_referral`, the Meta ads that brought the contact or `null`.
 
 ## Bulk assignment
 

@@ -6,6 +6,10 @@ URL: https://getricky.ai/en/docs/api/changelog
 
 This page records changes to the API. A breaking change only ships in a new path version and is announced here.
 
+## November 11, 2026
+
+**Ad attribution.** Compatible change to v1. Conversations answer `first_ad_referral` and `latest_ad_referral`, messages `ad_referral`, and contacts `first_ad_referral` and `last_ad_referral`: the Meta ad the customer came from, with the ad ID and what Meta sent with it, and the ad's name, campaign and ad set from Ricky's Meta Ads sync in `resolved`. `GET /conversations` and `GET /contacts` filter by `ad_id`, `campaign_id`, `ad_set_id`, `referred_after` and `referred_before`; `GET /conversations` also by `last_activity_after` and `last_activity_before`. `GET /ads/conversations` lists each conversation an ad brought in a period with what happened after, with `conversations:read`. The `message.received` webhook carries `ad_id` when the message came from an ad. See [Ad attribution](./ad-attribution.md).
+
 ## November 8, 2026
 
 **Who answers a call.** Compatible change to v1. A conversation workflow takes the `call_received` `trigger` and the `answer_call` (`agent_id`) and `decline_call` (`text`) steps: it decides whether an AI agent answers a WhatsApp call or Ricky rejects it and writes to the caller. See [Workflows](./workflows.md#steps).

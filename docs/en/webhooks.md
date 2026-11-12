@@ -47,27 +47,27 @@ Ricky checks the URL again on every delivery and does not follow redirects.
 
 ## Events
 
-| Event                             | Happens when                                                                                      | `data`                                 |
-| --------------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| `message.received`                | A contact sends a message.                                                                        | `conversation_id`, `message_id`        |
-| `message.sent`                    | The provider accepts a message from the organization.                                             | `conversation_id`, `message_id`        |
-| `message.delivered`               | An outbound message reaches the recipient's phone.                                                | `conversation_id`, `message_id`        |
-| `message.read`                    | The recipient reads an outbound message.                                                          | `conversation_id`, `message_id`        |
-| `message.failed`                  | An outbound message fails for good.                                                               | `conversation_id`, `message_id`        |
-| `conversation.opened`             | A conversation is created or reopened.                                                            | `conversation_id`                      |
-| `conversation.closed`             | A conversation is closed.                                                                         | `conversation_id`                      |
-| `conversation.assignment_changed` | A conversation is assigned, reassigned or unassigned.                                             | `conversation_id`                      |
-| `conversation.agent_changed`      | The AI agent that answers a conversation is assigned, replaced or removed.                        | `conversation_id`                      |
-| `conversation.handoff_requested`  | An AI agent hands a conversation to a person.                                                     | `conversation_id`                      |
-| `conversation.handoff_resolved`   | A person resolves the handoff: the conversation stays with a person or goes back to the AI agent. | `conversation_id`                      |
-| `contact.created`                 | A contact is created: in Ricky, by the API or with its first message.                             | `contact_id`                           |
-| `contact.updated`                 | A contact is saved: its fields, tags or values.                                                   | `contact_id`                           |
-| `contact.tags_changed`            | A contact gains or loses a tag.                                                                   | `contact_id`                           |
-| `broadcast.completed`             | A broadcast hands its last message to WhatsApp.                                                   | `broadcast_id`                         |
-| `broadcast.failed`                | A broadcast ends and every recipient has failed.                                                  | `broadcast_id`                         |
-| `template.status_changed`         | Meta changes a WhatsApp template's status: approved, rejected, paused and others.                 | `template_id`                          |
-| `workflow.execution_failed`       | A workflow execution fails for good.                                                              | `workflow_id`, `workflow_execution_id` |
-| `knowledge_file.ready`            | Ricky finishes reading an uploaded knowledge file.                                                | `knowledge_file_id`                    |
+| Event                             | Happens when                                                                                      | `data`                                                                   |
+| --------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `message.received`                | A contact sends a message.                                                                        | `conversation_id`, `message_id`, and `ad_id` when it came from a Meta ad |
+| `message.sent`                    | The provider accepts a message from the organization.                                             | `conversation_id`, `message_id`                                          |
+| `message.delivered`               | An outbound message reaches the recipient's phone.                                                | `conversation_id`, `message_id`                                          |
+| `message.read`                    | The recipient reads an outbound message.                                                          | `conversation_id`, `message_id`                                          |
+| `message.failed`                  | An outbound message fails for good.                                                               | `conversation_id`, `message_id`                                          |
+| `conversation.opened`             | A conversation is created or reopened.                                                            | `conversation_id`                                                        |
+| `conversation.closed`             | A conversation is closed.                                                                         | `conversation_id`                                                        |
+| `conversation.assignment_changed` | A conversation is assigned, reassigned or unassigned.                                             | `conversation_id`                                                        |
+| `conversation.agent_changed`      | The AI agent that answers a conversation is assigned, replaced or removed.                        | `conversation_id`                                                        |
+| `conversation.handoff_requested`  | An AI agent hands a conversation to a person.                                                     | `conversation_id`                                                        |
+| `conversation.handoff_resolved`   | A person resolves the handoff: the conversation stays with a person or goes back to the AI agent. | `conversation_id`                                                        |
+| `contact.created`                 | A contact is created: in Ricky, by the API or with its first message.                             | `contact_id`                                                             |
+| `contact.updated`                 | A contact is saved: its fields, tags or values.                                                   | `contact_id`                                                             |
+| `contact.tags_changed`            | A contact gains or loses a tag.                                                                   | `contact_id`                                                             |
+| `broadcast.completed`             | A broadcast hands its last message to WhatsApp.                                                   | `broadcast_id`                                                           |
+| `broadcast.failed`                | A broadcast ends and every recipient has failed.                                                  | `broadcast_id`                                                           |
+| `template.status_changed`         | Meta changes a WhatsApp template's status: approved, rejected, paused and others.                 | `template_id`                                                            |
+| `workflow.execution_failed`       | A workflow execution fails for good.                                                              | `workflow_id`, `workflow_execution_id`                                   |
+| `knowledge_file.ready`            | Ricky finishes reading an uploaded knowledge file.                                                | `knowledge_file_id`                                                      |
 
 `message.sent` fires for every outbound message, not only the ones sent through the API. A history import fires no `message.*` event, and no agent change, handoff or tag change. For the cause of a `message.failed`, read the message.
 

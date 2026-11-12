@@ -75,7 +75,7 @@ El ejemplo está recortado. La [referencia](https://getricky.ai/docs/api/referen
 
 ## Meta Ads, en vivo
 
-El reporte de anuncios cuenta las conversaciones que cada anuncio trajo a Ricky. Para ver las cuentas publicitarias en sí, cuatro operaciones leen en vivo de Meta las cuentas publicitarias conectadas de la organización. Solo leen: nada cambia en Meta. Necesitan `reports:read`, y responden `422 rule_violation` mientras Meta Ads no está conectado y `403 forbidden` cuando Meta ya no acepta la conexión.
+El reporte de anuncios cuenta las conversaciones que cada anuncio trajo a Ricky; [Atribución de anuncios](./ad-attribution.md) las lista una por una. Para ver las cuentas publicitarias en sí, cuatro operaciones leen en vivo de Meta las cuentas publicitarias conectadas de la organización. Solo leen: nada cambia en Meta. Necesitan `reports:read`, y responden `422 rule_violation` mientras Meta Ads no está conectado y `403 forbidden` cuando Meta ya no acepta la conexión.
 
 | Operación            | Qué responde                                                                                                   |
 | -------------------- | -------------------------------------------------------------------------------------------------------------- |

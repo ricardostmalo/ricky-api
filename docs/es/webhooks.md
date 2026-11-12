@@ -47,27 +47,27 @@ Ricky vuelve a comprobar la URL en cada entrega y no sigue redirecciones.
 
 ## Eventos
 
-| Evento                            | Ocurre cuando                                                                                     | `data`                                 |
-| --------------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| `message.received`                | Un contacto envía un mensaje.                                                                     | `conversation_id`, `message_id`        |
-| `message.sent`                    | El proveedor acepta un mensaje de la organización.                                                | `conversation_id`, `message_id`        |
-| `message.delivered`               | Un mensaje saliente llega al teléfono del destinatario.                                           | `conversation_id`, `message_id`        |
-| `message.read`                    | El destinatario lee un mensaje saliente.                                                          | `conversation_id`, `message_id`        |
-| `message.failed`                  | Un mensaje saliente falla de forma definitiva.                                                    | `conversation_id`, `message_id`        |
-| `conversation.opened`             | Se crea o se reabre una conversación.                                                             | `conversation_id`                      |
-| `conversation.closed`             | Se cierra una conversación.                                                                       | `conversation_id`                      |
-| `conversation.assignment_changed` | Se asigna, se reasigna o se quita la asignación de una conversación.                              | `conversation_id`                      |
-| `conversation.agent_changed`      | Se asigna, se cambia o se quita el agente de IA que responde una conversación.                    | `conversation_id`                      |
-| `conversation.handoff_requested`  | Un agente de IA pasa una conversación a una persona.                                              | `conversation_id`                      |
-| `conversation.handoff_resolved`   | Una persona resuelve el traspaso: la conversación sigue con una persona o vuelve al agente de IA. | `conversation_id`                      |
-| `contact.created`                 | Se crea un contacto: en Ricky, por la API o con su primer mensaje.                                | `contact_id`                           |
-| `contact.updated`                 | Se guarda un contacto: sus campos, etiquetas o valores.                                           | `contact_id`                           |
-| `contact.tags_changed`            | Un contacto gana o pierde una etiqueta.                                                           | `contact_id`                           |
-| `broadcast.completed`             | Una campaña entrega su último mensaje a WhatsApp.                                                 | `broadcast_id`                         |
-| `broadcast.failed`                | Una campaña termina y todos sus destinatarios fallaron.                                           | `broadcast_id`                         |
-| `template.status_changed`         | Meta cambia el estado de una plantilla de WhatsApp: aprobada, rechazada, pausada y otros.         | `template_id`                          |
-| `workflow.execution_failed`       | Una ejecución de un workflow falla de forma definitiva.                                           | `workflow_id`, `workflow_execution_id` |
-| `knowledge_file.ready`            | Ricky termina de leer un archivo de conocimiento subido.                                          | `knowledge_file_id`                    |
+| Evento                            | Ocurre cuando                                                                                     | `data`                                                                       |
+| --------------------------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `message.received`                | Un contacto envía un mensaje.                                                                     | `conversation_id`, `message_id`, y `ad_id` cuando vino de un anuncio de Meta |
+| `message.sent`                    | El proveedor acepta un mensaje de la organización.                                                | `conversation_id`, `message_id`                                              |
+| `message.delivered`               | Un mensaje saliente llega al teléfono del destinatario.                                           | `conversation_id`, `message_id`                                              |
+| `message.read`                    | El destinatario lee un mensaje saliente.                                                          | `conversation_id`, `message_id`                                              |
+| `message.failed`                  | Un mensaje saliente falla de forma definitiva.                                                    | `conversation_id`, `message_id`                                              |
+| `conversation.opened`             | Se crea o se reabre una conversación.                                                             | `conversation_id`                                                            |
+| `conversation.closed`             | Se cierra una conversación.                                                                       | `conversation_id`                                                            |
+| `conversation.assignment_changed` | Se asigna, se reasigna o se quita la asignación de una conversación.                              | `conversation_id`                                                            |
+| `conversation.agent_changed`      | Se asigna, se cambia o se quita el agente de IA que responde una conversación.                    | `conversation_id`                                                            |
+| `conversation.handoff_requested`  | Un agente de IA pasa una conversación a una persona.                                              | `conversation_id`                                                            |
+| `conversation.handoff_resolved`   | Una persona resuelve el traspaso: la conversación sigue con una persona o vuelve al agente de IA. | `conversation_id`                                                            |
+| `contact.created`                 | Se crea un contacto: en Ricky, por la API o con su primer mensaje.                                | `contact_id`                                                                 |
+| `contact.updated`                 | Se guarda un contacto: sus campos, etiquetas o valores.                                           | `contact_id`                                                                 |
+| `contact.tags_changed`            | Un contacto gana o pierde una etiqueta.                                                           | `contact_id`                                                                 |
+| `broadcast.completed`             | Una campaña entrega su último mensaje a WhatsApp.                                                 | `broadcast_id`                                                               |
+| `broadcast.failed`                | Una campaña termina y todos sus destinatarios fallaron.                                           | `broadcast_id`                                                               |
+| `template.status_changed`         | Meta cambia el estado de una plantilla de WhatsApp: aprobada, rechazada, pausada y otros.         | `template_id`                                                                |
+| `workflow.execution_failed`       | Una ejecución de un workflow falla de forma definitiva.                                           | `workflow_id`, `workflow_execution_id`                                       |
+| `knowledge_file.ready`            | Ricky termina de leer un archivo de conocimiento subido.                                          | `knowledge_file_id`                                                          |
 
 `message.sent` llega por cada mensaje saliente, no solo por los enviados con la API. Una importación de historial no genera eventos `message.*`, ni cambios de agente, traspasos o cambios de etiquetas. Para la causa de un `message.failed`, lee el mensaje.
 

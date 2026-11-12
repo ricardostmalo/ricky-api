@@ -19,21 +19,23 @@ Estas operaciones hacen lo que hace el inbox de Ricky, con las mismas reglas.
 
 `GET /conversations` acepta los filtros del inbox. Se combinan entre sí; envía los mismos junto con `cursor` en cada página.
 
-| Parámetro                    | Solo conversaciones                                            |
-| ---------------------------- | -------------------------------------------------------------- |
-| `status`                     | `open` o `closed`                                              |
-| `channel_id`                 | de ese canal, incluidas conexiones anteriores del mismo número |
-| `tag_id`                     | cuyo contacto tiene esa etiqueta                               |
-| `unread=true`                | con mensajes que el equipo no ha leído                         |
-| `pending_handoff=true`       | con un traspaso a una persona sin resolver                     |
-| `last_message_from=customer` | cuyo último mensaje vino del contacto                          |
-| `assigned_user_id`           | asignadas a ese miembro                                        |
-| `agent_id`                   | que responde ese agente de IA, sin miembro asignado            |
-| `unassigned=true`            | sin miembro ni agente de IA                                    |
+| Parámetro                                                                | Solo conversaciones                                                                                                                                                                      |
+| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `status`                                                                 | `open` o `closed`                                                                                                                                                                        |
+| `channel_id`                                                             | de ese canal, incluidas conexiones anteriores del mismo número                                                                                                                           |
+| `tag_id`                                                                 | cuyo contacto tiene esa etiqueta                                                                                                                                                         |
+| `unread=true`                                                            | con mensajes que el equipo no ha leído                                                                                                                                                   |
+| `pending_handoff=true`                                                   | con un traspaso a una persona sin resolver                                                                                                                                               |
+| `last_message_from=customer`                                             | cuyo último mensaje vino del contacto                                                                                                                                                    |
+| `assigned_user_id`                                                       | asignadas a ese miembro                                                                                                                                                                  |
+| `agent_id`                                                               | que responde ese agente de IA, sin miembro asignado                                                                                                                                      |
+| `unassigned=true`                                                        | sin miembro ni agente de IA                                                                                                                                                              |
+| `last_activity_after`, `last_activity_before`                            | cuyo último mensaje está en ese rango (ISO 8601)                                                                                                                                         |
+| `ad_id`, `campaign_id`, `ad_set_id`, `referred_after`, `referred_before` | con un mensaje del cliente de ese anuncio, campaña o conjunto de Meta, o enviado en ese rango; consulta [Atribución de anuncios](./ad-attribution.md#filtra-las-listas-por-anuncio) |
 
 `assigned_user_id`, `agent_id` y `unassigned=true` se excluyen entre sí: enviar más de uno responde `400 invalid_input`. Un canal o una etiqueta que la organización no tiene responde una lista vacía.
 
-Cada conversación trae `unread` y `active_handoff`, el traspaso pendiente o `null`.
+Cada conversación trae `unread` y `active_handoff`, el traspaso pendiente o `null`, y `first_ad_referral` y `latest_ad_referral`, los anuncios de Meta que trajeron al contacto o `null`.
 
 ## Asignar en lote
 

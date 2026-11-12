@@ -20,6 +20,8 @@ You can view and copy the key again in **Settings → API**. Ricky stores it enc
 
 A key has the form `rky_live_` followed by 43 characters.
 
+For an agency or contractor, create a key with **View only** for every resource and an expiry, and revoke it when the work ends; see [Ad attribution](./ad-attribution.md#a-key-for-an-agency).
+
 ## Send the key
 
 ```bash
@@ -50,30 +52,30 @@ In **Settings → API**, select **Edit** to change the name, scopes or expiry. T
 
 Each operation requires one scope. A key without it gets `403 insufficient_scope`. In **Settings → API** you choose access by resource: **View** gives its `:read` scope and **View and edit** also gives `:write`. `POST /tags` also accepts `contacts:write`, the scope it required before `tags:write` existed.
 
-| Scope                 | Allows                                                                                                  |
-| --------------------- | ------------------------------------------------------------------------------------------------------- |
-| `contacts:read`       | Read contacts and contact fields.                                                                       |
-| `contacts:write`      | Create and update contacts, add notes to them, change their tags, and create and delete contact fields. |
-| `conversations:read`  | Read and search conversations, messages, channels and WhatsApp numbers.                                 |
-| `conversations:write` | Assign, close, reopen and mark conversations read, set their AI agent, and manage WhatsApp numbers.     |
-| `messages:send`       | Start conversations, send messages and read sends.                                                      |
-| `templates:read`      | Read WhatsApp templates and validate drafts.                                                            |
-| `templates:write`     | Create, edit and delete WhatsApp templates, upload their header samples and map their variables.        |
-| `members:read`        | Read the members of the organization.                                                                   |
-| `tags:read`           | Read contact tags.                                                                                      |
-| `webhooks:manage`     | Create, list and disable webhooks; read and retry their deliveries.                                     |
-| `workflows:read`      | Read workflows, their executions, and appointment reminder previews and history.                        |
-| `workflows:write`     | Create, edit, activate, pause and delete workflows, and set a scheduled workflow's header file.         |
-| `reports:read`        | Read the numbers of the Reports pages.                                                                  |
-| `agents:read`         | Read agents and their configuration options.                                                            |
-| `agents:write`        | Create, update and archive agents.                                                                      |
-| `knowledge:read`      | Read knowledge locations, directory contacts and files.                                                 |
-| `knowledge:write`     | Create, update and delete knowledge locations, directory contacts and files.                            |
-| `tags:write`          | Create, edit and delete tags.                                                                           |
-| `quick_replies:read`  | Read quick replies.                                                                                     |
-| `quick_replies:write` | Create, update and delete quick replies.                                                                |
-| `broadcasts:read`     | Read broadcasts, their counts and each recipient's delivery status, and preview an audience.            |
-| `broadcasts:write`    | Create, schedule and cancel broadcasts.                                                                 |
+| Scope                 | Allows                                                                                                     |
+| --------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `contacts:read`       | Read contacts and contact fields.                                                                          |
+| `contacts:write`      | Create and update contacts, add notes to them, change their tags, and create and delete contact fields.    |
+| `conversations:read`  | Read and search conversations, messages, channels and WhatsApp numbers, and the conversations ads brought. |
+| `conversations:write` | Assign, close, reopen and mark conversations read, set their AI agent, and manage WhatsApp numbers.        |
+| `messages:send`       | Start conversations, send messages and read sends.                                                         |
+| `templates:read`      | Read WhatsApp templates and validate drafts.                                                               |
+| `templates:write`     | Create, edit and delete WhatsApp templates, upload their header samples and map their variables.           |
+| `members:read`        | Read the members of the organization.                                                                      |
+| `tags:read`           | Read contact tags.                                                                                         |
+| `webhooks:manage`     | Create, list and disable webhooks; read and retry their deliveries.                                        |
+| `workflows:read`      | Read workflows, their executions, and appointment reminder previews and history.                           |
+| `workflows:write`     | Create, edit, activate, pause and delete workflows, and set a scheduled workflow's header file.            |
+| `reports:read`        | Read the numbers of the Reports pages.                                                                     |
+| `agents:read`         | Read agents and their configuration options.                                                               |
+| `agents:write`        | Create, update and archive agents.                                                                         |
+| `knowledge:read`      | Read knowledge locations, directory contacts and files.                                                    |
+| `knowledge:write`     | Create, update and delete knowledge locations, directory contacts and files.                               |
+| `tags:write`          | Create, edit and delete tags.                                                                              |
+| `quick_replies:read`  | Read quick replies.                                                                                        |
+| `quick_replies:write` | Create, update and delete quick replies.                                                                   |
+| `broadcasts:read`     | Read broadcasts, their counts and each recipient's delivery status, and preview an audience.               |
+| `broadcasts:write`    | Create, schedule and cancel broadcasts.                                                                    |
 
 The table below is generated from the API contract: it is the exact list of operations and the scope each one requires.
 
@@ -130,6 +132,7 @@ The table below is generated from the API contract: it is the exact list of oper
 | [List Meta ad sets](https://getricky.ai/en/docs/api/reference/ads/list-meta-ads-ad-sets) | `GET /ads/ad-sets` | `reports:read` |
 | [List Meta ads](https://getricky.ai/en/docs/api/reference/ads/list-meta-ads) | `GET /ads/ads` | `reports:read` |
 | [Get Meta ads insights](https://getricky.ai/en/docs/api/reference/ads/get-meta-ads-insights) | `GET /ads/insights` | `reports:read` |
+| [List the conversations ads brought](https://getricky.ai/en/docs/api/reference/ads/list-ad-conversations) | `GET /ads/conversations` | `conversations:read` |
 | [List agents](https://getricky.ai/en/docs/api/reference/agents/list-agents) | `GET /agents` | `agents:read` |
 | [Create an agent](https://getricky.ai/en/docs/api/reference/agents/create-agent) | `POST /agents` | `agents:write` |
 | [Get an agent](https://getricky.ai/en/docs/api/reference/agents/get-agent) | `GET /agents/{agent_id}` | `agents:read` |

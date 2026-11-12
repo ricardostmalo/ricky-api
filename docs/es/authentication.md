@@ -20,6 +20,8 @@ Puedes volver a ver y copiar la clave en **Configuración → API**. Ricky la gu
 
 Una clave tiene la forma `rky_live_` seguida de 43 caracteres.
 
+Para una agencia o un proveedor, crea una clave con **Solo ver** en todos los recursos y una fecha de vencimiento, y revócala cuando termine el trabajo; consulta [Atribución de anuncios](./ad-attribution.md#una-clave-para-una-agencia).
+
 ## Envía la clave
 
 ```bash
@@ -54,7 +56,7 @@ Cada operación exige un permiso (scope). Una clave sin ese permiso recibe `403 
 | --------------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | `contacts:read`       | Leer contactos y campos de contacto.                                                                                       |
 | `contacts:write`      | Crear y actualizar contactos, agregarles notas, cambiar sus etiquetas, y crear y borrar campos de contacto.                |
-| `conversations:read`  | Leer y buscar conversaciones, mensajes, canales y números de WhatsApp.                                                     |
+| `conversations:read`  | Leer y buscar conversaciones, mensajes, canales y números de WhatsApp, y las conversaciones que trajeron los anuncios.     |
 | `conversations:write` | Asignar, cerrar, reabrir y marcar como leídas las conversaciones, definir su agente de IA y gestionar números de WhatsApp. |
 | `messages:send`       | Iniciar conversaciones, enviar mensajes y consultar envíos.                                                                |
 | `templates:read`      | Leer las plantillas de WhatsApp y validar borradores.                                                                      |
@@ -130,6 +132,7 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Listar los conjuntos de anuncios de Meta](https://getricky.ai/docs/api/reference/ads/list-meta-ads-ad-sets) | `GET /ads/ad-sets` | `reports:read` |
 | [Listar los anuncios de Meta](https://getricky.ai/docs/api/reference/ads/list-meta-ads) | `GET /ads/ads` | `reports:read` |
 | [Consultar los resultados de los anuncios de Meta](https://getricky.ai/docs/api/reference/ads/get-meta-ads-insights) | `GET /ads/insights` | `reports:read` |
+| [Listar las conversaciones que trajeron los anuncios](https://getricky.ai/docs/api/reference/ads/list-ad-conversations) | `GET /ads/conversations` | `conversations:read` |
 | [Listar agentes](https://getricky.ai/docs/api/reference/agents/list-agents) | `GET /agents` | `agents:read` |
 | [Crear un agente](https://getricky.ai/docs/api/reference/agents/create-agent) | `POST /agents` | `agents:write` |
 | [Consultar un agente](https://getricky.ai/docs/api/reference/agents/get-agent) | `GET /agents/{agent_id}` | `agents:read` |

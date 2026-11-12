@@ -75,7 +75,7 @@ The example is shortened. The [reference](https://getricky.ai/en/docs/api/refere
 
 ## Meta Ads, live
 
-The ads report counts the conversations each ad brought into Ricky. To see the ad accounts themselves, four operations read the organization's connected Meta ad accounts live from Meta. They only read: nothing changes in Meta. They need `reports:read`, and answer `422 rule_violation` while Meta Ads is not connected and `403 forbidden` when Meta no longer accepts the connection.
+The ads report counts the conversations each ad brought into Ricky; [Ad attribution](./ad-attribution.md) lists them one by one. To see the ad accounts themselves, four operations read the organization's connected Meta ad accounts live from Meta. They only read: nothing changes in Meta. They need `reports:read`, and answer `422 rule_violation` while Meta Ads is not connected and `403 forbidden` when Meta no longer accepts the connection.
 
 | Operation            | What it answers                                                                                           |
 | -------------------- | --------------------------------------------------------------------------------------------------------- |

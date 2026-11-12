@@ -50,7 +50,10 @@ Each family of operations has a guide and its reference.
 | Agents                         | Create AI agents and put them on conversations.                                                    | [Agents and knowledge](./agents-and-knowledge.md) | [Agents](https://getricky.ai/en/docs/api/reference/agents/list-agents)                      |
 | Knowledge                      | Files, branches and contact cards the agents consult and send.                                     | [Agents and knowledge](./agents-and-knowledge.md) | [Knowledge](https://getricky.ai/en/docs/api/reference/knowledge/list-knowledge-files)       |
 | Reports                        | The numbers of the Reports pages, for a period and the same filters.                               | [Reports](./reports.md)                           | [Reports](https://getricky.ai/en/docs/api/reference/reports/get-dashboard-report)           |
+| Ads                            | Meta ad accounts read live, and which ad each conversation, message and contact came from.         | [Ad attribution](./ad-attribution.md)             | [Ads](https://getricky.ai/en/docs/api/reference/ads/list-ad-conversations)                  |
 | Webhooks                       | Subscribe to events and review the log of their deliveries.                                        | [Webhooks](./webhooks.md)                         | [Webhooks](https://getricky.ai/en/docs/api/reference/webhooks/list-webhooks)                |
+
+Agents such as Claude Code and Codex can use Ricky with the [`ricky-api` and `ricky` skills](https://github.com/ricardostmalo/ricky-api/tree/main/skills): copy their folders into the agent's skills directory.
 
 The reference is generated from the API contract. The complete OpenAPI 3.1 document is at [`https://getricky.ai/openapi.json`](https://getricky.ai/openapi.json). Use it to generate a client or import it into your API testing tool.
 
