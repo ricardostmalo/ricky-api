@@ -2400,18 +2400,6 @@ class GoogleAdsAccountReportCampaign(TypedDict):
     """
     Conversions as Google reports them.
     """
-    conversation_code: str
-    """
-    Code that can be placed in this campaign’s prefilled WhatsApp message.
-    """
-    conversation_count: int
-    """
-    Distinct WhatsApp conversations in Ricky whose inbound message contains the campaign code, in America/Panama days.
-    """
-    recent_conversation_ids: List[str]
-    """
-    Up to ten recent matching Ricky conversations.
-    """
 
 
 class GoogleAdsAccountReport(TypedDict):

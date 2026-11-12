@@ -133,6 +133,7 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Listar los anuncios de Meta](https://getricky.ai/docs/api/reference/ads/list-meta-ads) | `GET /ads/ads` | `reports:read` |
 | [Consultar los resultados de los anuncios de Meta](https://getricky.ai/docs/api/reference/ads/get-meta-ads-insights) | `GET /ads/insights` | `reports:read` |
 | [Listar las conversaciones que trajeron los anuncios](https://getricky.ai/docs/api/reference/ads/list-ad-conversations) | `GET /ads/conversations` | `conversations:read` |
+| [Consultar resultados de campañas de Google Ads](https://getricky.ai/docs/api/reference/ads/get-google-ads-campaign-report) | `GET /ads/google/campaigns` | `reports:read` |
 | [Listar agentes](https://getricky.ai/docs/api/reference/agents/list-agents) | `GET /agents` | `agents:read` |
 | [Crear un agente](https://getricky.ai/docs/api/reference/agents/create-agent) | `POST /agents` | `agents:write` |
 | [Consultar un agente](https://getricky.ai/docs/api/reference/agents/get-agent) | `GET /agents/{agent_id}` | `agents:read` |

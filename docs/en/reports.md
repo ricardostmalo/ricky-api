@@ -17,6 +17,12 @@ Each report operation answers the numbers of one tab of **Reports** in Ricky. Th
 | `GET /reports/broadcasts`    | Broadcasts    | `from`, `to`                         | WhatsApp broadcasts and their recipients' outcomes.                                |
 | `GET /reports/ads`           | Ads           | `from`, `to`                         | Meta ad spend next to the conversations each ad brought.                           |
 
+## Google Ads
+
+`GET /ads/google/campaigns` reads the advertiser accounts selected by the organization in **Integrations → Google Ads**. The API key needs `reports:read`. Send `from` and `to` as `YYYY-MM-DD`. Filter by `account_id` or `campaign_id` as needed.
+
+Each campaign includes spend in the account currency, impressions, clicks, and conversions as Google reports them. It also includes the number of WhatsApp conversations that reached Ricky with the campaign code and up to ten of their recent IDs.
+
 ## The period
 
 * `from` and `to` are days, `YYYY-MM-DD`, both inclusive. Send both or neither. Without them the report covers the last 7 days, today included.

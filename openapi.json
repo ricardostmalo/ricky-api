@@ -7513,7 +7513,7 @@
           "Ads"
         ],
         "summary": "Get Google Ads campaign results",
-        "description": "Live Google Ads campaign metrics and attributed WhatsApp conversations for advertiser accounts selected by the organization.\n\nScope: `reports:read`.",
+        "description": "Live Google Ads campaign metrics for advertiser accounts selected by the organization.\n\nScope: `reports:read`.",
         "parameters": [
           {
             "name": "account_id",
@@ -23708,24 +23708,6 @@
                 "conversions": {
                   "type": "number",
                   "description": "Conversions as Google reports them."
-                },
-                "conversation_code": {
-                  "type": "string",
-                  "description": "Code that can be placed in this campaign’s prefilled WhatsApp message."
-                },
-                "conversation_count": {
-                  "type": "integer",
-                  "minimum": -9007199254740991,
-                  "maximum": 9007199254740991,
-                  "description": "Distinct WhatsApp conversations in Ricky whose inbound message contains the campaign code, in America/Panama days."
-                },
-                "recent_conversation_ids": {
-                  "type": "array",
-                  "items": {
-                    "type": "string",
-                    "format": "uuid"
-                  },
-                  "description": "Up to ten recent matching Ricky conversations."
                 }
               },
               "required": [
@@ -23735,10 +23717,7 @@
                 "spend",
                 "clicks",
                 "impressions",
-                "conversions",
-                "conversation_code",
-                "conversation_count",
-                "recent_conversation_ids"
+                "conversions"
               ]
             }
           }

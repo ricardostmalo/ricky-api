@@ -17,6 +17,12 @@ Cada operación de reportes responde los números de una pestaña de **Reportes*
 | `GET /reports/broadcasts`    | Envíos         | `from`, `to`                         | Envíos masivos de WhatsApp y lo que pasó con sus destinatarios.                         |
 | `GET /reports/ads`           | Anuncios       | `from`, `to`                         | Inversión en anuncios de Meta junto a las conversaciones que trajo.                     |
 
+## Google Ads
+
+`GET /ads/google/campaigns` consulta las cuentas publicitarias que la organización eligió en **Integraciones → Google Ads**. La clave necesita `reports:read`. Envía `from` y `to` en formato `YYYY-MM-DD`. Puedes filtrar por `account_id` y `campaign_id`.
+
+Cada campaña incluye gasto en la moneda de la cuenta, impresiones, clics y conversiones según Google. También incluye el número de conversaciones de WhatsApp que llegaron a Ricky con su código de campaña y hasta diez de sus IDs recientes.
+
 ## El período
 
 * `from` y `to` son días, `YYYY-MM-DD`, los dos incluidos. Envía los dos o ninguno. Sin ellos, el reporte cubre los últimos 7 días, hoy incluido.

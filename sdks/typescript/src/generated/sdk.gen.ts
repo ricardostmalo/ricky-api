@@ -964,7 +964,7 @@ export class RickyApi extends HeyApiClient {
     /**
      * Get Google Ads campaign results
      *
-     * Live Google Ads campaign metrics and attributed WhatsApp conversations for advertiser accounts selected by the organization.
+     * Live Google Ads campaign metrics for advertiser accounts selected by the organization.
      *
      * Scope: `reports:read`.
      */

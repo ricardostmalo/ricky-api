@@ -2233,18 +2233,6 @@ export type GoogleAdsAccountReport = {
          * Conversions as Google reports them.
          */
         conversions: number;
-        /**
-         * Code that can be placed in this campaign’s prefilled WhatsApp message.
-         */
-        conversation_code: string;
-        /**
-         * Distinct WhatsApp conversations in Ricky whose inbound message contains the campaign code, in America/Panama days.
-         */
-        conversation_count: number;
-        /**
-         * Up to ten recent matching Ricky conversations.
-         */
-        recent_conversation_ids: Array<string>;
     }>;
 };
 

@@ -1266,7 +1266,7 @@ class SyncOperations:
     ) -> Page[GoogleAdsAccountReport]:
         """Get Google Ads campaign results.
 
-        Live Google Ads campaign metrics and attributed WhatsApp conversations for advertiser accounts selected by the organization.
+        Live Google Ads campaign metrics for advertiser accounts selected by the organization.
 
         Scope: `reports:read`.
 
@@ -3846,7 +3846,7 @@ class AsyncOperations:
     ) -> Page[GoogleAdsAccountReport]:
         """Get Google Ads campaign results.
 
-        Live Google Ads campaign metrics and attributed WhatsApp conversations for advertiser accounts selected by the organization.
+        Live Google Ads campaign metrics for advertiser accounts selected by the organization.
 
         Scope: `reports:read`.
 

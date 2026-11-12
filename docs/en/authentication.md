@@ -133,6 +133,7 @@ The table below is generated from the API contract: it is the exact list of oper
 | [List Meta ads](https://getricky.ai/en/docs/api/reference/ads/list-meta-ads) | `GET /ads/ads` | `reports:read` |
 | [Get Meta ads insights](https://getricky.ai/en/docs/api/reference/ads/get-meta-ads-insights) | `GET /ads/insights` | `reports:read` |
 | [List the conversations ads brought](https://getricky.ai/en/docs/api/reference/ads/list-ad-conversations) | `GET /ads/conversations` | `conversations:read` |
+| [Get Google Ads campaign results](https://getricky.ai/en/docs/api/reference/ads/get-google-ads-campaign-report) | `GET /ads/google/campaigns` | `reports:read` |
 | [List agents](https://getricky.ai/en/docs/api/reference/agents/list-agents) | `GET /agents` | `agents:read` |
 | [Create an agent](https://getricky.ai/en/docs/api/reference/agents/create-agent) | `POST /agents` | `agents:write` |
 | [Get an agent](https://getricky.ai/en/docs/api/reference/agents/get-agent) | `GET /agents/{agent_id}` | `agents:read` |
