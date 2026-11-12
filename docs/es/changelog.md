@@ -6,6 +6,10 @@ URL: https://getricky.ai/docs/api/changelog
 
 Esta página registra los cambios de la API. Un cambio incompatible solo llega en una versión nueva de la ruta y se anuncia aquí.
 
+## 12 de noviembre de 2026
+
+**Corrección del reporte de Google Ads.** `/ads/google/campaigns` devuelve métricas de campañas según Google Ads. Se retiró el mecanismo de códigos en mensajes de WhatsApp y sus campos `conversation_code`, `conversation_count` y `recent_conversation_ids`. Las conversiones que reporta Google siguen disponibles en `conversions`.
+
 ## 11 de noviembre de 2026
 
 **Atribución de anuncios.** Cambio compatible con la v1. Las conversaciones responden `first_ad_referral` y `latest_ad_referral`, los mensajes `ad_referral`, y los contactos `first_ad_referral` y `last_ad_referral`: el anuncio de Meta del que vino el cliente, con el ID del anuncio y lo que Meta envió con él, y el nombre, la campaña y el conjunto del anuncio según la sincronización de Meta Ads de Ricky en `resolved`. `GET /conversations` y `GET /contacts` filtran por `ad_id`, `campaign_id`, `ad_set_id`, `referred_after` y `referred_before`; `GET /conversations` también por `last_activity_after` y `last_activity_before`. `GET /ads/conversations` lista cada conversación que trajo un anuncio en un período, con lo que pasó después, con `conversations:read`. El webhook `message.received` trae `ad_id` cuando el mensaje vino de un anuncio. Consulta [Atribución de anuncios](./ad-attribution.md).

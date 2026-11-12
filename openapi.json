@@ -23681,20 +23681,233 @@
               "unavailable"
             ]
           },
-          "campaigns": {
+          "period": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "string",
+                "format": "date",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+              },
+              "to": {
+                "type": "string",
+                "format": "date",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ]
+          },
+          "previous_period": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "from": {
+                    "type": "string",
+                    "format": "date",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                  },
+                  "to": {
+                    "type": "string",
+                    "format": "date",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                  }
+                },
+                "required": [
+                  "from",
+                  "to"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The immediately preceding period of equal length; null if the read failed."
+          },
+          "totals": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "spend": {
+                    "type": "number",
+                    "description": "Spend in the account currency."
+                  },
+                  "clicks": {
+                    "type": "number"
+                  },
+                  "impressions": {
+                    "type": "number"
+                  },
+                  "conversions": {
+                    "type": "number",
+                    "description": "Conversions as Google reports them."
+                  },
+                  "cost_per_click": {
+                    "description": "Total spend divided by clicks; null with zero clicks.",
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "cost_per_conversion": {
+                    "description": "Total spend divided by conversions; null with zero conversions.",
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "click_through_rate": {
+                    "description": "Clicks divided by impressions, as a fraction; null with zero impressions.",
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "spend",
+                  "clicks",
+                  "impressions",
+                  "conversions",
+                  "cost_per_click",
+                  "cost_per_conversion",
+                  "click_through_rate"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "previous_totals": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "spend": {
+                    "type": "number",
+                    "description": "Spend in the account currency."
+                  },
+                  "clicks": {
+                    "type": "number"
+                  },
+                  "impressions": {
+                    "type": "number"
+                  },
+                  "conversions": {
+                    "type": "number",
+                    "description": "Conversions as Google reports them."
+                  },
+                  "cost_per_click": {
+                    "description": "Total spend divided by clicks; null with zero clicks.",
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "cost_per_conversion": {
+                    "description": "Total spend divided by conversions; null with zero conversions.",
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "click_through_rate": {
+                    "description": "Clicks divided by impressions, as a fraction; null with zero impressions.",
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "spend",
+                  "clicks",
+                  "impressions",
+                  "conversions",
+                  "cost_per_click",
+                  "cost_per_conversion",
+                  "click_through_rate"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "changes": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "spend": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "clicks": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "impressions": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "conversions": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "cost_per_click": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "cost_per_conversion": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "click_through_rate": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "spend",
+                  "clicks",
+                  "impressions",
+                  "conversions",
+                  "cost_per_click",
+                  "cost_per_conversion",
+                  "click_through_rate"
+                ],
+                "description": "Relative changes from the previous period, as fractions; null with a zero or unknown baseline."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "daily": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "status": {
-                  "type": "string"
-                },
                 "spend": {
                   "type": "number",
                   "description": "Spend in the account currency."
@@ -23708,16 +23921,281 @@
                 "conversions": {
                   "type": "number",
                   "description": "Conversions as Google reports them."
+                },
+                "cost_per_click": {
+                  "description": "Total spend divided by clicks; null with zero clicks.",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "cost_per_conversion": {
+                  "description": "Total spend divided by conversions; null with zero conversions.",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "click_through_rate": {
+                  "description": "Clicks divided by impressions, as a fraction; null with zero impressions.",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "day": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
                 }
               },
               "required": [
-                "id",
-                "name",
-                "status",
                 "spend",
                 "clicks",
                 "impressions",
-                "conversions"
+                "conversions",
+                "cost_per_click",
+                "cost_per_conversion",
+                "click_through_rate",
+                "day"
+              ]
+            },
+            "description": "One row per calendar day in the account time zone, including zero activity after a successful read."
+          },
+          "previous_daily": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "spend": {
+                  "type": "number",
+                  "description": "Spend in the account currency."
+                },
+                "clicks": {
+                  "type": "number"
+                },
+                "impressions": {
+                  "type": "number"
+                },
+                "conversions": {
+                  "type": "number",
+                  "description": "Conversions as Google reports them."
+                },
+                "cost_per_click": {
+                  "description": "Total spend divided by clicks; null with zero clicks.",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "cost_per_conversion": {
+                  "description": "Total spend divided by conversions; null with zero conversions.",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "click_through_rate": {
+                  "description": "Clicks divided by impressions, as a fraction; null with zero impressions.",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "day": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                }
+              },
+              "required": [
+                "spend",
+                "clicks",
+                "impressions",
+                "conversions",
+                "cost_per_click",
+                "cost_per_conversion",
+                "click_through_rate",
+                "day"
+              ]
+            }
+          },
+          "campaigns": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "spend": {
+                  "type": "number",
+                  "description": "Spend in the account currency."
+                },
+                "clicks": {
+                  "type": "number"
+                },
+                "impressions": {
+                  "type": "number"
+                },
+                "conversions": {
+                  "type": "number",
+                  "description": "Conversions as Google reports them."
+                },
+                "cost_per_click": {
+                  "description": "Total spend divided by clicks; null with zero clicks.",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "cost_per_conversion": {
+                  "description": "Total spend divided by conversions; null with zero conversions.",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "click_through_rate": {
+                  "description": "Clicks divided by impressions, as a fraction; null with zero impressions.",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "channel_type": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "previous": {
+                  "type": "object",
+                  "properties": {
+                    "spend": {
+                      "type": "number",
+                      "description": "Spend in the account currency."
+                    },
+                    "clicks": {
+                      "type": "number"
+                    },
+                    "impressions": {
+                      "type": "number"
+                    },
+                    "conversions": {
+                      "type": "number",
+                      "description": "Conversions as Google reports them."
+                    },
+                    "cost_per_click": {
+                      "description": "Total spend divided by clicks; null with zero clicks.",
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "cost_per_conversion": {
+                      "description": "Total spend divided by conversions; null with zero conversions.",
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "click_through_rate": {
+                      "description": "Clicks divided by impressions, as a fraction; null with zero impressions.",
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "spend",
+                    "clicks",
+                    "impressions",
+                    "conversions",
+                    "cost_per_click",
+                    "cost_per_conversion",
+                    "click_through_rate"
+                  ]
+                },
+                "changes": {
+                  "type": "object",
+                  "properties": {
+                    "spend": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "clicks": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "impressions": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "conversions": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "cost_per_click": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "cost_per_conversion": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "click_through_rate": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "spend",
+                    "clicks",
+                    "impressions",
+                    "conversions",
+                    "cost_per_click",
+                    "cost_per_conversion",
+                    "click_through_rate"
+                  ],
+                  "description": "Relative changes from the previous period, as fractions; null with a zero or unknown baseline."
+                }
+              },
+              "required": [
+                "spend",
+                "clicks",
+                "impressions",
+                "conversions",
+                "cost_per_click",
+                "cost_per_conversion",
+                "click_through_rate",
+                "id",
+                "name",
+                "status",
+                "channel_type",
+                "previous",
+                "changes"
               ]
             }
           }
@@ -23725,6 +24203,13 @@
         "required": [
           "account",
           "status",
+          "period",
+          "previous_period",
+          "totals",
+          "previous_totals",
+          "changes",
+          "daily",
+          "previous_daily",
           "campaigns"
         ]
       },

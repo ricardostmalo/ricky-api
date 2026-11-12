@@ -21,7 +21,7 @@ Each report operation answers the numbers of one tab of **Reports** in Ricky. Th
 
 `GET /ads/google/campaigns` reads the advertiser accounts selected by the organization in **Integrations → Google Ads**. The API key needs `reports:read`. Send `from` and `to` as `YYYY-MM-DD`. Filter by `account_id` or `campaign_id` as needed.
 
-Each campaign includes spend in the account currency, impressions, clicks, and conversions as Google reports them. It also includes the number of WhatsApp conversations that reached Ricky with the campaign code and up to ten of their recent IDs.
+Each campaign includes spend in the account currency, impressions, clicks, and conversions as Google reports them.
 
 ## The period
 

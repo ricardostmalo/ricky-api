@@ -2386,10 +2386,25 @@ class GoogleAdsAccountReportAccount(TypedDict):
     """
 
 
-class GoogleAdsAccountReportCampaign(TypedDict):
-    id: str
-    name: str
-    status: str
+GoogleAdsAccountReportPeriod = TypedDict(
+    "GoogleAdsAccountReportPeriod",
+    {
+        "from": str,
+        "to": str,
+    },
+)
+
+
+GoogleAdsAccountReportPreviousPeriod = TypedDict(
+    "GoogleAdsAccountReportPreviousPeriod",
+    {
+        "from": str,
+        "to": str,
+    },
+)
+
+
+class GoogleAdsAccountReportTotals(TypedDict):
     spend: float
     """
     Spend in the account currency.
@@ -2400,11 +2415,200 @@ class GoogleAdsAccountReportCampaign(TypedDict):
     """
     Conversions as Google reports them.
     """
+    cost_per_click: Optional[float]
+    """
+    Total spend divided by clicks; null with zero clicks.
+    """
+    cost_per_conversion: Optional[float]
+    """
+    Total spend divided by conversions; null with zero conversions.
+    """
+    click_through_rate: Optional[float]
+    """
+    Clicks divided by impressions, as a fraction; null with zero impressions.
+    """
+
+
+class GoogleAdsAccountReportPreviousTotals(TypedDict):
+    spend: float
+    """
+    Spend in the account currency.
+    """
+    clicks: float
+    impressions: float
+    conversions: float
+    """
+    Conversions as Google reports them.
+    """
+    cost_per_click: Optional[float]
+    """
+    Total spend divided by clicks; null with zero clicks.
+    """
+    cost_per_conversion: Optional[float]
+    """
+    Total spend divided by conversions; null with zero conversions.
+    """
+    click_through_rate: Optional[float]
+    """
+    Clicks divided by impressions, as a fraction; null with zero impressions.
+    """
+
+
+class GoogleAdsAccountReportChanges(TypedDict):
+    """
+    Relative changes from the previous period, as fractions; null with a zero or unknown baseline.
+    """
+
+    spend: Optional[float]
+    clicks: Optional[float]
+    impressions: Optional[float]
+    conversions: Optional[float]
+    cost_per_click: Optional[float]
+    cost_per_conversion: Optional[float]
+    click_through_rate: Optional[float]
+
+
+class GoogleAdsAccountReportDailyItem(TypedDict):
+    spend: float
+    """
+    Spend in the account currency.
+    """
+    clicks: float
+    impressions: float
+    conversions: float
+    """
+    Conversions as Google reports them.
+    """
+    cost_per_click: Optional[float]
+    """
+    Total spend divided by clicks; null with zero clicks.
+    """
+    cost_per_conversion: Optional[float]
+    """
+    Total spend divided by conversions; null with zero conversions.
+    """
+    click_through_rate: Optional[float]
+    """
+    Clicks divided by impressions, as a fraction; null with zero impressions.
+    """
+    day: str
+
+
+class GoogleAdsAccountReportPreviousDailyItem(TypedDict):
+    spend: float
+    """
+    Spend in the account currency.
+    """
+    clicks: float
+    impressions: float
+    conversions: float
+    """
+    Conversions as Google reports them.
+    """
+    cost_per_click: Optional[float]
+    """
+    Total spend divided by clicks; null with zero clicks.
+    """
+    cost_per_conversion: Optional[float]
+    """
+    Total spend divided by conversions; null with zero conversions.
+    """
+    click_through_rate: Optional[float]
+    """
+    Clicks divided by impressions, as a fraction; null with zero impressions.
+    """
+    day: str
+
+
+class GoogleAdsAccountReportCampaignPrevious(TypedDict):
+    spend: float
+    """
+    Spend in the account currency.
+    """
+    clicks: float
+    impressions: float
+    conversions: float
+    """
+    Conversions as Google reports them.
+    """
+    cost_per_click: Optional[float]
+    """
+    Total spend divided by clicks; null with zero clicks.
+    """
+    cost_per_conversion: Optional[float]
+    """
+    Total spend divided by conversions; null with zero conversions.
+    """
+    click_through_rate: Optional[float]
+    """
+    Clicks divided by impressions, as a fraction; null with zero impressions.
+    """
+
+
+class GoogleAdsAccountReportCampaignChanges(TypedDict):
+    """
+    Relative changes from the previous period, as fractions; null with a zero or unknown baseline.
+    """
+
+    spend: Optional[float]
+    clicks: Optional[float]
+    impressions: Optional[float]
+    conversions: Optional[float]
+    cost_per_click: Optional[float]
+    cost_per_conversion: Optional[float]
+    click_through_rate: Optional[float]
+
+
+class GoogleAdsAccountReportCampaign(TypedDict):
+    spend: float
+    """
+    Spend in the account currency.
+    """
+    clicks: float
+    impressions: float
+    conversions: float
+    """
+    Conversions as Google reports them.
+    """
+    cost_per_click: Optional[float]
+    """
+    Total spend divided by clicks; null with zero clicks.
+    """
+    cost_per_conversion: Optional[float]
+    """
+    Total spend divided by conversions; null with zero conversions.
+    """
+    click_through_rate: Optional[float]
+    """
+    Clicks divided by impressions, as a fraction; null with zero impressions.
+    """
+    id: str
+    name: str
+    status: str
+    channel_type: Optional[str]
+    previous: GoogleAdsAccountReportCampaignPrevious
+    changes: GoogleAdsAccountReportCampaignChanges
+    """
+    Relative changes from the previous period, as fractions; null with a zero or unknown baseline.
+    """
 
 
 class GoogleAdsAccountReport(TypedDict):
     account: GoogleAdsAccountReportAccount
     status: Literal["ready", "access_denied", "unavailable"]
+    period: GoogleAdsAccountReportPeriod
+    previous_period: Optional[GoogleAdsAccountReportPreviousPeriod]
+    """
+    The immediately preceding period of equal length; null if the read failed.
+    """
+    totals: Optional[GoogleAdsAccountReportTotals]
+    previous_totals: Optional[GoogleAdsAccountReportPreviousTotals]
+    changes: Optional[GoogleAdsAccountReportChanges]
+    daily: List[GoogleAdsAccountReportDailyItem]
+    """
+    One row per calendar day in the account time zone, including zero activity after a successful read.
+    """
+    previous_daily: List[GoogleAdsAccountReportPreviousDailyItem]
     campaigns: List[GoogleAdsAccountReportCampaign]
 
 

@@ -21,7 +21,7 @@ Cada operación de reportes responde los números de una pestaña de **Reportes*
 
 `GET /ads/google/campaigns` consulta las cuentas publicitarias que la organización eligió en **Integraciones → Google Ads**. La clave necesita `reports:read`. Envía `from` y `to` en formato `YYYY-MM-DD`. Puedes filtrar por `account_id` y `campaign_id`.
 
-Cada campaña incluye gasto en la moneda de la cuenta, impresiones, clics y conversiones según Google. También incluye el número de conversaciones de WhatsApp que llegaron a Ricky con su código de campaña y hasta diez de sus IDs recientes.
+Cada campaña incluye gasto en la moneda de la cuenta, impresiones, clics y conversiones según Google.
 
 ## El período
 

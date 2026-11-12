@@ -2219,10 +2219,18 @@ export type GoogleAdsAccountReport = {
         time_zone: string;
     };
     status: 'ready' | 'access_denied' | 'unavailable';
-    campaigns: Array<{
-        id: string;
-        name: string;
-        status: string;
+    period: {
+        from: string;
+        to: string;
+    };
+    /**
+     * The immediately preceding period of equal length; null if the read failed.
+     */
+    previous_period: {
+        from: string;
+        to: string;
+    } | null;
+    totals: {
         /**
          * Spend in the account currency.
          */
@@ -2233,6 +2241,168 @@ export type GoogleAdsAccountReport = {
          * Conversions as Google reports them.
          */
         conversions: number;
+        /**
+         * Total spend divided by clicks; null with zero clicks.
+         */
+        cost_per_click: number | null;
+        /**
+         * Total spend divided by conversions; null with zero conversions.
+         */
+        cost_per_conversion: number | null;
+        /**
+         * Clicks divided by impressions, as a fraction; null with zero impressions.
+         */
+        click_through_rate: number | null;
+    } | null;
+    previous_totals: {
+        /**
+         * Spend in the account currency.
+         */
+        spend: number;
+        clicks: number;
+        impressions: number;
+        /**
+         * Conversions as Google reports them.
+         */
+        conversions: number;
+        /**
+         * Total spend divided by clicks; null with zero clicks.
+         */
+        cost_per_click: number | null;
+        /**
+         * Total spend divided by conversions; null with zero conversions.
+         */
+        cost_per_conversion: number | null;
+        /**
+         * Clicks divided by impressions, as a fraction; null with zero impressions.
+         */
+        click_through_rate: number | null;
+    } | null;
+    changes: {
+        spend: number | null;
+        clicks: number | null;
+        impressions: number | null;
+        conversions: number | null;
+        cost_per_click: number | null;
+        cost_per_conversion: number | null;
+        click_through_rate: number | null;
+    } | null;
+    /**
+     * One row per calendar day in the account time zone, including zero activity after a successful read.
+     */
+    daily: Array<{
+        /**
+         * Spend in the account currency.
+         */
+        spend: number;
+        clicks: number;
+        impressions: number;
+        /**
+         * Conversions as Google reports them.
+         */
+        conversions: number;
+        /**
+         * Total spend divided by clicks; null with zero clicks.
+         */
+        cost_per_click: number | null;
+        /**
+         * Total spend divided by conversions; null with zero conversions.
+         */
+        cost_per_conversion: number | null;
+        /**
+         * Clicks divided by impressions, as a fraction; null with zero impressions.
+         */
+        click_through_rate: number | null;
+        day: string;
+    }>;
+    previous_daily: Array<{
+        /**
+         * Spend in the account currency.
+         */
+        spend: number;
+        clicks: number;
+        impressions: number;
+        /**
+         * Conversions as Google reports them.
+         */
+        conversions: number;
+        /**
+         * Total spend divided by clicks; null with zero clicks.
+         */
+        cost_per_click: number | null;
+        /**
+         * Total spend divided by conversions; null with zero conversions.
+         */
+        cost_per_conversion: number | null;
+        /**
+         * Clicks divided by impressions, as a fraction; null with zero impressions.
+         */
+        click_through_rate: number | null;
+        day: string;
+    }>;
+    campaigns: Array<{
+        /**
+         * Spend in the account currency.
+         */
+        spend: number;
+        clicks: number;
+        impressions: number;
+        /**
+         * Conversions as Google reports them.
+         */
+        conversions: number;
+        /**
+         * Total spend divided by clicks; null with zero clicks.
+         */
+        cost_per_click: number | null;
+        /**
+         * Total spend divided by conversions; null with zero conversions.
+         */
+        cost_per_conversion: number | null;
+        /**
+         * Clicks divided by impressions, as a fraction; null with zero impressions.
+         */
+        click_through_rate: number | null;
+        id: string;
+        name: string;
+        status: string;
+        channel_type: string | null;
+        previous: {
+            /**
+             * Spend in the account currency.
+             */
+            spend: number;
+            clicks: number;
+            impressions: number;
+            /**
+             * Conversions as Google reports them.
+             */
+            conversions: number;
+            /**
+             * Total spend divided by clicks; null with zero clicks.
+             */
+            cost_per_click: number | null;
+            /**
+             * Total spend divided by conversions; null with zero conversions.
+             */
+            cost_per_conversion: number | null;
+            /**
+             * Clicks divided by impressions, as a fraction; null with zero impressions.
+             */
+            click_through_rate: number | null;
+        };
+        /**
+         * Relative changes from the previous period, as fractions; null with a zero or unknown baseline.
+         */
+        changes: {
+            spend: number | null;
+            clicks: number | null;
+            impressions: number | null;
+            conversions: number | null;
+            cost_per_click: number | null;
+            cost_per_conversion: number | null;
+            click_through_rate: number | null;
+        };
     }>;
 };
 
