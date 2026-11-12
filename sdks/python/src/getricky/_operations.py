@@ -4,7 +4,6 @@ from typing import Any, Literal, Optional, cast
 
 from ._page import Page, Resource
 from .types import (
-    AdConversation,
     AddContactNote,
     AdsReport,
     Agent,
@@ -120,11 +119,6 @@ class SyncOperations:
         tag_id: Optional[str] = None,
         owner_user_id: Optional[str] = None,
         channel: Optional[Literal["whatsapp", "instagram", "messenger", "webchat"]] = None,
-        ad_id: Optional[str] = None,
-        campaign_id: Optional[str] = None,
-        ad_set_id: Optional[str] = None,
-        referred_after: Optional[str] = None,
-        referred_before: Optional[str] = None,
     ) -> Page[Contact]:
         """List contacts.
 
@@ -139,16 +133,11 @@ class SyncOperations:
             tag_id: Only contacts with this tag.
             owner_user_id: Deprecated: contacts no longer have an owner, so no contact matches.
             channel: Only contacts reachable on this channel.
-            ad_id: Only contacts with a customer message, in any of their conversations, from this Meta ad. Ad filters apply together to one customer message: from that ad, campaign or ad set, at that time.
-            campaign_id: Only contacts with a customer message, in any of their conversations, from an ad of this Meta campaign. Matches the ads Ricky synced from a connected ad account.
-            ad_set_id: Only contacts with a customer message, in any of their conversations, from an ad of this Meta ad set. Matches the ads Ricky synced from a connected ad account.
-            referred_after: Only contacts with a customer message, in any of their conversations, from a Meta ad sent at or after this time, ISO 8601.
-            referred_before: Only contacts with a customer message, in any of their conversations, from a Meta ad sent before this time, ISO 8601.
         """
         return cast(Page[Contact], self._request(
             "GET",
             "/contacts",
-            query={"page_size": page_size, "cursor": cursor, "query": query, "tag_id": tag_id, "owner_user_id": owner_user_id, "channel": channel, "ad_id": ad_id, "campaign_id": campaign_id, "ad_set_id": ad_set_id, "referred_after": referred_after, "referred_before": referred_before},
+            query={"page_size": page_size, "cursor": cursor, "query": query, "tag_id": tag_id, "owner_user_id": owner_user_id, "channel": channel},
         ))
 
     def create_contact(
@@ -291,13 +280,6 @@ class SyncOperations:
         unread: Optional[Literal["true", "false"]] = None,
         pending_handoff: Optional[Literal["true", "false"]] = None,
         last_message_from: Optional[Literal["customer"]] = None,
-        last_activity_after: Optional[str] = None,
-        last_activity_before: Optional[str] = None,
-        ad_id: Optional[str] = None,
-        campaign_id: Optional[str] = None,
-        ad_set_id: Optional[str] = None,
-        referred_after: Optional[str] = None,
-        referred_before: Optional[str] = None,
     ) -> Page[Conversation]:
         """List conversations.
 
@@ -316,18 +298,11 @@ class SyncOperations:
             unread: `true`: only conversations with messages the team has not read.
             pending_handoff: `true`: only conversations with a handoff to a person not resolved yet.
             last_message_from: `customer`: only conversations whose latest message came from the contact.
-            last_activity_after: Only conversations whose latest message is at or after this time, ISO 8601.
-            last_activity_before: Only conversations whose latest message is before this time, ISO 8601.
-            ad_id: Only conversations with a customer message from this Meta ad. Ad filters apply together to one customer message: from that ad, campaign or ad set, at that time.
-            campaign_id: Only conversations with a customer message from an ad of this Meta campaign. Matches the ads Ricky synced from a connected ad account.
-            ad_set_id: Only conversations with a customer message from an ad of this Meta ad set. Matches the ads Ricky synced from a connected ad account.
-            referred_after: Only conversations with a customer message from a Meta ad sent at or after this time, ISO 8601.
-            referred_before: Only conversations with a customer message from a Meta ad sent before this time, ISO 8601.
         """
         return cast(Page[Conversation], self._request(
             "GET",
             "/conversations",
-            query={"page_size": page_size, "cursor": cursor, "status": status, "assigned_user_id": assigned_user_id, "agent_id": agent_id, "unassigned": unassigned, "channel_id": channel_id, "tag_id": tag_id, "unread": unread, "pending_handoff": pending_handoff, "last_message_from": last_message_from, "last_activity_after": last_activity_after, "last_activity_before": last_activity_before, "ad_id": ad_id, "campaign_id": campaign_id, "ad_set_id": ad_set_id, "referred_after": referred_after, "referred_before": referred_before},
+            query={"page_size": page_size, "cursor": cursor, "status": status, "assigned_user_id": assigned_user_id, "agent_id": agent_id, "unassigned": unassigned, "channel_id": channel_id, "tag_id": tag_id, "unread": unread, "pending_handoff": pending_handoff, "last_message_from": last_message_from},
         ))
 
     def start_conversation(
@@ -1219,40 +1194,6 @@ class SyncOperations:
             "GET",
             "/ads/insights",
             query={"account_id": account_id, "level": level, "from": from_, "to": to, "breakdowns": breakdowns, "daily": daily, "object_id": object_id},
-        ))
-
-    def list_ad_conversations(
-        self,
-        *,
-        from_: Optional[str] = None,
-        to: Optional[str] = None,
-        ad_id: Optional[str] = None,
-        campaign_id: Optional[str] = None,
-        ad_set_id: Optional[str] = None,
-        channel: Optional[Literal["whatsapp", "instagram", "messenger"]] = None,
-        page_size: Optional[int] = None,
-        cursor: Optional[str] = None,
-    ) -> Page[AdConversation]:
-        """List the conversations ads brought.
-
-        Each conversation a Meta ad opened or brought back in the period, newest first, with the ad, the contact, the conversation's state and the replies it got. Read from the customer messages Ricky received, so it works without connecting Meta Ads; the ad's name, campaign and ad set (`ad_referral.resolved`) need the connection. The period is America/Panama days, as in `GET /reports/ads`, whose per-ad conversations these rows add up to.
-
-        Scope: `conversations:read`.
-
-        Args:
-            from_: First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
-            to: Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
-            ad_id: Only this Meta ad.
-            campaign_id: Only ads of this Meta campaign, among the ads Ricky synced from a connected ad account.
-            ad_set_id: Only ads of this Meta ad set, among the ads Ricky synced from a connected ad account.
-            channel: Only conversations on this channel.
-            page_size: Items per page.
-            cursor: `next_cursor` from the previous page. Use it unchanged.
-        """
-        return cast(Page[AdConversation], self._request(
-            "GET",
-            "/ads/conversations",
-            query={"from": from_, "to": to, "ad_id": ad_id, "campaign_id": campaign_id, "ad_set_id": ad_set_id, "channel": channel, "page_size": page_size, "cursor": cursor},
         ))
 
     def list_agents(
@@ -2674,11 +2615,6 @@ class AsyncOperations:
         tag_id: Optional[str] = None,
         owner_user_id: Optional[str] = None,
         channel: Optional[Literal["whatsapp", "instagram", "messenger", "webchat"]] = None,
-        ad_id: Optional[str] = None,
-        campaign_id: Optional[str] = None,
-        ad_set_id: Optional[str] = None,
-        referred_after: Optional[str] = None,
-        referred_before: Optional[str] = None,
     ) -> Page[Contact]:
         """List contacts.
 
@@ -2693,16 +2629,11 @@ class AsyncOperations:
             tag_id: Only contacts with this tag.
             owner_user_id: Deprecated: contacts no longer have an owner, so no contact matches.
             channel: Only contacts reachable on this channel.
-            ad_id: Only contacts with a customer message, in any of their conversations, from this Meta ad. Ad filters apply together to one customer message: from that ad, campaign or ad set, at that time.
-            campaign_id: Only contacts with a customer message, in any of their conversations, from an ad of this Meta campaign. Matches the ads Ricky synced from a connected ad account.
-            ad_set_id: Only contacts with a customer message, in any of their conversations, from an ad of this Meta ad set. Matches the ads Ricky synced from a connected ad account.
-            referred_after: Only contacts with a customer message, in any of their conversations, from a Meta ad sent at or after this time, ISO 8601.
-            referred_before: Only contacts with a customer message, in any of their conversations, from a Meta ad sent before this time, ISO 8601.
         """
         return cast(Page[Contact], await self._request(
             "GET",
             "/contacts",
-            query={"page_size": page_size, "cursor": cursor, "query": query, "tag_id": tag_id, "owner_user_id": owner_user_id, "channel": channel, "ad_id": ad_id, "campaign_id": campaign_id, "ad_set_id": ad_set_id, "referred_after": referred_after, "referred_before": referred_before},
+            query={"page_size": page_size, "cursor": cursor, "query": query, "tag_id": tag_id, "owner_user_id": owner_user_id, "channel": channel},
         ))
 
     async def create_contact(
@@ -2845,13 +2776,6 @@ class AsyncOperations:
         unread: Optional[Literal["true", "false"]] = None,
         pending_handoff: Optional[Literal["true", "false"]] = None,
         last_message_from: Optional[Literal["customer"]] = None,
-        last_activity_after: Optional[str] = None,
-        last_activity_before: Optional[str] = None,
-        ad_id: Optional[str] = None,
-        campaign_id: Optional[str] = None,
-        ad_set_id: Optional[str] = None,
-        referred_after: Optional[str] = None,
-        referred_before: Optional[str] = None,
     ) -> Page[Conversation]:
         """List conversations.
 
@@ -2870,18 +2794,11 @@ class AsyncOperations:
             unread: `true`: only conversations with messages the team has not read.
             pending_handoff: `true`: only conversations with a handoff to a person not resolved yet.
             last_message_from: `customer`: only conversations whose latest message came from the contact.
-            last_activity_after: Only conversations whose latest message is at or after this time, ISO 8601.
-            last_activity_before: Only conversations whose latest message is before this time, ISO 8601.
-            ad_id: Only conversations with a customer message from this Meta ad. Ad filters apply together to one customer message: from that ad, campaign or ad set, at that time.
-            campaign_id: Only conversations with a customer message from an ad of this Meta campaign. Matches the ads Ricky synced from a connected ad account.
-            ad_set_id: Only conversations with a customer message from an ad of this Meta ad set. Matches the ads Ricky synced from a connected ad account.
-            referred_after: Only conversations with a customer message from a Meta ad sent at or after this time, ISO 8601.
-            referred_before: Only conversations with a customer message from a Meta ad sent before this time, ISO 8601.
         """
         return cast(Page[Conversation], await self._request(
             "GET",
             "/conversations",
-            query={"page_size": page_size, "cursor": cursor, "status": status, "assigned_user_id": assigned_user_id, "agent_id": agent_id, "unassigned": unassigned, "channel_id": channel_id, "tag_id": tag_id, "unread": unread, "pending_handoff": pending_handoff, "last_message_from": last_message_from, "last_activity_after": last_activity_after, "last_activity_before": last_activity_before, "ad_id": ad_id, "campaign_id": campaign_id, "ad_set_id": ad_set_id, "referred_after": referred_after, "referred_before": referred_before},
+            query={"page_size": page_size, "cursor": cursor, "status": status, "assigned_user_id": assigned_user_id, "agent_id": agent_id, "unassigned": unassigned, "channel_id": channel_id, "tag_id": tag_id, "unread": unread, "pending_handoff": pending_handoff, "last_message_from": last_message_from},
         ))
 
     async def start_conversation(
@@ -3773,40 +3690,6 @@ class AsyncOperations:
             "GET",
             "/ads/insights",
             query={"account_id": account_id, "level": level, "from": from_, "to": to, "breakdowns": breakdowns, "daily": daily, "object_id": object_id},
-        ))
-
-    async def list_ad_conversations(
-        self,
-        *,
-        from_: Optional[str] = None,
-        to: Optional[str] = None,
-        ad_id: Optional[str] = None,
-        campaign_id: Optional[str] = None,
-        ad_set_id: Optional[str] = None,
-        channel: Optional[Literal["whatsapp", "instagram", "messenger"]] = None,
-        page_size: Optional[int] = None,
-        cursor: Optional[str] = None,
-    ) -> Page[AdConversation]:
-        """List the conversations ads brought.
-
-        Each conversation a Meta ad opened or brought back in the period, newest first, with the ad, the contact, the conversation's state and the replies it got. Read from the customer messages Ricky received, so it works without connecting Meta Ads; the ad's name, campaign and ad set (`ad_referral.resolved`) need the connection. The period is America/Panama days, as in `GET /reports/ads`, whose per-ad conversations these rows add up to.
-
-        Scope: `conversations:read`.
-
-        Args:
-            from_: First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.
-            to: Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.
-            ad_id: Only this Meta ad.
-            campaign_id: Only ads of this Meta campaign, among the ads Ricky synced from a connected ad account.
-            ad_set_id: Only ads of this Meta ad set, among the ads Ricky synced from a connected ad account.
-            channel: Only conversations on this channel.
-            page_size: Items per page.
-            cursor: `next_cursor` from the previous page. Use it unchanged.
-        """
-        return cast(Page[AdConversation], await self._request(
-            "GET",
-            "/ads/conversations",
-            query={"from": from_, "to": to, "ad_id": ad_id, "campaign_id": campaign_id, "ad_set_id": ad_set_id, "channel": channel, "page_size": page_size, "cursor": cursor},
         ))
 
     async def list_agents(

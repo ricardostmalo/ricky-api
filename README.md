@@ -4,7 +4,6 @@ The OpenAPI 3.1 description of the [Ricky](https://getricky.ai) REST API, its gu
 
 - **Guides:** [`docs/en/`](docs/en) (English) and [`docs/es/`](docs/es) (español), also at <https://getricky.ai/docs/api>
 - **SDKs:** [`sdks/`](sdks), published as `getricky` on npm and PyPI
-- **Agent skills:** [`skills/`](skills), for Claude Code, Codex and other agents that use Ricky
 - **Specification:** [`openapi.json`](openapi.json), also served at <https://getricky.ai/openapi.json>
 - **Changelog:** [`CHANGELOG.md`](CHANGELOG.md)
 
@@ -37,7 +36,6 @@ This repository is generated from the code that serves the API and updated on ev
 | Agents and knowledge | Create AI agents, put them on conversations, manage the files, branches and contact cards they use | [Agents and knowledge](docs/en/agents-and-knowledge.md) |
 | Reports | Read the numbers of the Reports pages for a period | [Reports](docs/en/reports.md) |
 | Meta Ads | Read the connected ad accounts' campaigns, ad sets, ads and insights live from Meta, read-only | [Reports](docs/en/reports.md) |
-| Ad attribution | Which Meta ad each conversation, message and contact came from, filter by ad, campaign or ad set, and list the conversations each ad brought with what happened after | [Ad attribution](docs/en/ad-attribution.md) |
 | Webhooks | Subscribe to signed events and review deliveries | [Webhooks](docs/en/webhooks.md) |
 
 ## Quick start
@@ -99,20 +97,6 @@ channels = ricky.list_channels()["data"]
 ```
 
 They add an `Idempotency-Key` to writes, retry rate limits and server errors, walk pages and verify webhooks. See [`sdks/typescript`](sdks/typescript) and [`sdks/python`](sdks/python), and [`sdks/README.md`](sdks/README.md) for how they are generated.
-
-## Agent skills
-
-[`skills/`](skills) holds [Agent Skills](https://agentskills.io) (`SKILL.md`) for AI agents that work with Ricky:
-
-- [`ricky-api`](skills/ricky-api/SKILL.md): authenticate, the API's conventions, the SDKs, and recipes such as an ads report (which ad each chat came from, what the customer asked, how it ended) and webhook verification.
-- [`ricky`](skills/ricky/SKILL.md): how an agent should work in a company's Ricky safely: the connector and the API, what Ricky knows and does not, and the rules that protect customers.
-
-Install one in Claude Code by copying its folder into `~/.claude/skills/` (or a project's `.claude/skills/`); in Codex, into `~/.agents/skills/`:
-
-```bash
-git clone https://github.com/ricardostmalo/ricky-api.git
-cp -r ricky-api/skills/ricky-api ricky-api/skills/ricky ~/.claude/skills/
-```
 
 ## Using the specification
 

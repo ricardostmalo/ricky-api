@@ -35,682 +35,6 @@ class Error(TypedDict):
     error: ErrorError
 
 
-class AdReferralResolution(TypedDict):
-    """
-    The ad as Ricky's Meta Ads sync last stored it, matched by `ad_id`. It is Ricky's lookup in the connected ad account, not part of the message Meta sent. `GET /ads/ads` reads the same ad live from Meta.
-    """
-
-    ad_name: Optional[str]
-    """
-    Name of the ad in Meta.
-    """
-    campaign_id: Optional[str]
-    """
-    Campaign ID at Meta.
-    """
-    campaign_name: Optional[str]
-    """
-    Campaign name in Meta.
-    """
-    ad_set_id: Optional[str]
-    """
-    Ad set ID at Meta.
-    """
-    ad_set_name: Optional[str]
-    """
-    Ad set name in Meta.
-    """
-    ad_account_id: Optional[str]
-    """
-    Ad account ID at Meta.
-    """
-    synced_at: Optional[str]
-    """
-    When Ricky last synced this ad from Meta.
-    """
-
-
-class AdReferral(TypedDict):
-    """
-    A Meta ad a customer came from: an inbound message whose Meta referral names an ad (Click to WhatsApp, Instagram or Messenger ads). The same definition as `GET /reports/ads`.
-    """
-
-    ad_id: str
-    """
-    Meta's ID of the ad, as Meta sent it in the message's referral: WhatsApp `source_id`, Instagram and Messenger `ad_id`. The same ID as `GET /ads/ads` and `ad_id` in `GET /ads/insights`.
-    """
-    channel: Literal["whatsapp", "instagram", "messenger", "webchat"]
-    """
-    Channel the customer wrote on.
-    """
-    message_id: str
-    """
-    The customer message that carried the referral.
-    """
-    conversation_id: str
-    """
-    Conversation of that message.
-    """
-    contact_id: Optional[str]
-    referred_at: str
-    """
-    When the customer sent that message.
-    """
-    source_type: Optional[str]
-    """
-    Meta's kind of source: WhatsApp's `source_type` (`ad`) or Instagram and Messenger's `source` (`ADS`).
-    """
-    source_url: Optional[str]
-    """
-    Link to the ad's post on Facebook or Instagram, as Meta sent it. WhatsApp only.
-    """
-    headline: Optional[str]
-    """
-    The ad's title as Meta sent it: WhatsApp `headline`, Instagram and Messenger `ads_context_data.ad_title`.
-    """
-    body: Optional[str]
-    """
-    The ad's text as Meta sent it. WhatsApp only.
-    """
-    media_type: Optional[str]
-    """
-    `image` or `video`, as Meta sent it. WhatsApp only.
-    """
-    image_url: Optional[str]
-    """
-    The ad's image: Ricky's permanent copy of the image Meta sent, else Meta's own link while it has not expired; null otherwise.
-    """
-    video_url: Optional[str]
-    """
-    Meta's link to the ad's video, as Meta sent it; it can expire.
-    """
-    ctwa_clid: Optional[str]
-    """
-    Meta's click ID of the Click to WhatsApp ad, as Meta sent it; send it back to Meta's Conversions API to attribute an event. WhatsApp only.
-    """
-    ref: Optional[str]
-    """
-    The `ref` parameter of the ad link, as Meta sent it. Instagram and Messenger only.
-    """
-    resolved: Optional[AdReferralResolution]
-    """
-    The ad's name, campaign and ad set from Ricky's Meta Ads sync; null when the ad is not in a connected ad account Ricky has synced.
-    """
-
-
-ReportPeriod = TypedDict(
-    "ReportPeriod",
-    {
-        "from": str,
-        "to": str,
-        "days": int,
-        "granularity": Literal["day", "hour"],
-        "time_zone": Literal["America/Panama"],
-        "previous_from": str,
-        "previous_to": str,
-    },
-)
-
-
-class ConversationsReportTotals(TypedDict):
-    """
-    The period.
-    """
-
-    customers: int
-    """
-    Conversations with at least one customer message in the period.
-    """
-    new_customers: int
-    """
-    Customers whose first message ever falls in the period.
-    """
-    returning_customers: int
-    """
-    Customers who had written before the period.
-    """
-    messages: int
-    """
-    Messages customers sent in the period.
-    """
-
-
-class ConversationsReportPrevious(TypedDict):
-    """
-    The previous period.
-    """
-
-    customers: int
-    """
-    Conversations with at least one customer message in the period.
-    """
-    new_customers: int
-    """
-    Customers whose first message ever falls in the period.
-    """
-    returning_customers: int
-    """
-    Customers who had written before the period.
-    """
-    messages: int
-    """
-    Messages customers sent in the period.
-    """
-
-
-class ConversationsReportByChannelItem(TypedDict):
-    channel: Literal["whatsapp", "instagram", "messenger", "webchat"]
-    """
-    Channel.
-    """
-    customers: int
-    """
-    Conversations with at least one customer message in the period.
-    """
-    new_customers: int
-    """
-    Customers whose first message ever falls in the period.
-    """
-    returning_customers: int
-    """
-    Customers who had written before the period.
-    """
-    messages: int
-    """
-    Messages customers sent in the period.
-    """
-
-
-class ConversationsReportSery(TypedDict):
-    slot: str
-    """
-    America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
-    """
-    new_customers: int
-    """
-    Customers whose first message ever falls in this slot.
-    """
-    returning_customers: int
-    """
-    Customers who wrote in this slot and had written before.
-    """
-    previous_customers: Optional[int]
-
-
-class ConversationsReportHeatmapItem(TypedDict):
-    day_of_week: int
-    """
-    0 is Sunday, 6 is Saturday.
-    """
-    hour: int
-    """
-    Hour of the day, 0–23.
-    """
-    messages: int
-    """
-    Customer messages in that hour of that weekday.
-    """
-
-
-class ConversationsReport(TypedDict):
-    """
-    How many customers write, whether they are new, and when. Only messages customers send count: a customer is a conversation with at least one of them in the period, and it is new when its first message ever falls in the period. Messages from the team, AI agents or campaigns and conversation openings and closes play no part.
-    """
-
-    period: ReportPeriod
-    channel: Literal["all", "whatsapp", "instagram", "messenger", "webchat"]
-    """
-    The channel filter the report applied.
-    """
-    totals: ConversationsReportTotals
-    """
-    The period.
-    """
-    previous: ConversationsReportPrevious
-    """
-    The previous period.
-    """
-    by_channel: List[ConversationsReportByChannelItem]
-    """
-    The period per channel, most customers first.
-    """
-    series: List[ConversationsReportSery]
-    """
-    One entry per day of the period, or per hour of a one-day period.
-    """
-    heatmap: List[ConversationsReportHeatmapItem]
-    """
-    Customer messages of the period per weekday and hour; slots without any are left out.
-    """
-    generated_at: str
-    """
-    When Ricky computed the report.
-    """
-
-
-class MessagesReportTotalsSentBy(TypedDict):
-    """
-    Sent messages by sender; each message counts in one of them.
-    """
-
-    human: int
-    """
-    Sent by a person in Ricky.
-    """
-    ai: int
-    """
-    Sent by an AI agent.
-    """
-    automation: int
-    """
-    Sent by an automation.
-    """
-    campaign: int
-    """
-    Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
-    """
-    external: int
-    """
-    Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
-    """
-
-
-class MessagesReportTotals(TypedDict):
-    """
-    The period.
-    """
-
-    received: int
-    """
-    Messages customers sent.
-    """
-    sent: int
-    """
-    Messages sent to customers, by anyone; the sum of `sent_by`.
-    """
-    sent_by: MessagesReportTotalsSentBy
-    """
-    Sent messages by sender; each message counts in one of them.
-    """
-
-
-class MessagesReportPreviousSentBy(TypedDict):
-    """
-    Sent messages by sender; each message counts in one of them.
-    """
-
-    human: int
-    """
-    Sent by a person in Ricky.
-    """
-    ai: int
-    """
-    Sent by an AI agent.
-    """
-    automation: int
-    """
-    Sent by an automation.
-    """
-    campaign: int
-    """
-    Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
-    """
-    external: int
-    """
-    Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
-    """
-
-
-class MessagesReportPrevious(TypedDict):
-    """
-    The previous period.
-    """
-
-    received: int
-    """
-    Messages customers sent.
-    """
-    sent: int
-    """
-    Messages sent to customers, by anyone; the sum of `sent_by`.
-    """
-    sent_by: MessagesReportPreviousSentBy
-    """
-    Sent messages by sender; each message counts in one of them.
-    """
-
-
-class MessagesReportByChannelItemSentBy(TypedDict):
-    """
-    Sent messages by sender; each message counts in one of them.
-    """
-
-    human: int
-    """
-    Sent by a person in Ricky.
-    """
-    ai: int
-    """
-    Sent by an AI agent.
-    """
-    automation: int
-    """
-    Sent by an automation.
-    """
-    campaign: int
-    """
-    Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
-    """
-    external: int
-    """
-    Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
-    """
-
-
-class MessagesReportByChannelItem(TypedDict):
-    channel: Literal["whatsapp", "instagram", "messenger", "webchat"]
-    """
-    Channel.
-    """
-    received: int
-    """
-    Messages customers sent.
-    """
-    sent: int
-    """
-    Messages sent to customers, by anyone; the sum of `sent_by`.
-    """
-    sent_by: MessagesReportByChannelItemSentBy
-    """
-    Sent messages by sender; each message counts in one of them.
-    """
-
-
-class MessagesReportSerySentBy(TypedDict):
-    """
-    Sent messages by sender; each message counts in one of them.
-    """
-
-    human: int
-    """
-    Sent by a person in Ricky.
-    """
-    ai: int
-    """
-    Sent by an AI agent.
-    """
-    automation: int
-    """
-    Sent by an automation.
-    """
-    campaign: int
-    """
-    Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
-    """
-    external: int
-    """
-    Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
-    """
-
-
-class MessagesReportSery(TypedDict):
-    slot: str
-    """
-    America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
-    """
-    received: int
-    """
-    Messages customers sent.
-    """
-    sent: int
-    """
-    Messages sent to customers, by anyone; the sum of `sent_by`.
-    """
-    sent_by: MessagesReportSerySentBy
-    """
-    Sent messages by sender; each message counts in one of them.
-    """
-    previous_received: Optional[int]
-    previous_sent: Optional[int]
-
-
-class MessagesReport(TypedDict):
-    """
-    Messages received from customers and sent to them in the period, and who sent them, dated when each message was sent.
-    """
-
-    period: ReportPeriod
-    channel: Literal["all", "whatsapp", "instagram", "messenger", "webchat"]
-    """
-    The channel filter the report applied.
-    """
-    totals: MessagesReportTotals
-    """
-    The period.
-    """
-    previous: MessagesReportPrevious
-    """
-    The previous period.
-    """
-    by_channel: List[MessagesReportByChannelItem]
-    """
-    The period per channel, most messages first.
-    """
-    series: List[MessagesReportSery]
-    """
-    One entry per day of the period, or per hour of a one-day period.
-    """
-    generated_at: str
-    """
-    When Ricky computed the report.
-    """
-
-
-class DashboardReportTotals(TypedDict):
-    """
-    Now.
-    """
-
-    open_now: int
-    """
-    Open conversations.
-    """
-    unassigned: int
-    """
-    Open conversations with no member or AI agent assigned.
-    """
-    awaiting_reply: int
-    """
-    Open conversations whose last message, reactions aside, is from the customer.
-    """
-    pending_handoffs: int
-    """
-    Handoffs from an AI agent to a person still waiting.
-    """
-    opened_today: int
-    """
-    Conversations opened or reopened today, America/Panama.
-    """
-    closed_today: int
-    """
-    Conversations closed today, America/Panama.
-    """
-
-
-class DashboardReportByChannelItem(TypedDict):
-    channel: Literal["whatsapp", "instagram", "messenger", "webchat"]
-    """
-    Channel.
-    """
-    open: int
-    """
-    Open conversations.
-    """
-
-
-class DashboardReportAssignee(TypedDict):
-    type: Literal["human", "ai", "unassigned"]
-    """
-    `human` is a member, `ai` an AI agent, `unassigned` nobody.
-    """
-    id: Optional[str]
-    """
-    User ID or AI agent ID; null for `unassigned`.
-    """
-    name: Optional[str]
-    """
-    Name; null when it has none and for `unassigned`.
-    """
-    open: int
-    """
-    Open conversations they hold.
-    """
-    awaiting_reply: int
-    """
-    Of those, the ones whose last message is from the customer.
-    """
-
-
-class DashboardReportLongestWaitingItem(TypedDict):
-    conversation_id: str
-    """
-    Conversation ID.
-    """
-    channel: Literal["whatsapp", "instagram", "messenger", "webchat"]
-    """
-    Channel.
-    """
-    participant_name: Optional[str]
-    """
-    Customer name as the inbox shows it: the contact’s saved name, else the channel profile name, else the contact’s phone.
-    """
-    waiting_since: str
-    """
-    When the customer message they wait on arrived.
-    """
-    assignee_type: Literal["human", "ai", "unassigned"]
-    """
-    `human` is a member, `ai` an AI agent, `unassigned` nobody.
-    """
-    assignee_name: Optional[str]
-    """
-    Assignee name; null when there is none.
-    """
-
-
-class DashboardReport(TypedDict):
-    """
-    What the inbox looks like right now; it has no period.
-    """
-
-    totals: DashboardReportTotals
-    """
-    Now.
-    """
-    by_channel: List[DashboardReportByChannelItem]
-    """
-    Open conversations per channel, most first.
-    """
-    assignees: List[DashboardReportAssignee]
-    """
-    Open conversations per assignee, most first.
-    """
-    longest_waiting: List[DashboardReportLongestWaitingItem]
-    """
-    The 15 open conversations waiting longest for a reply, oldest first.
-    """
-    generated_at: str
-    """
-    When Ricky computed the report.
-    """
-
-
-class AdConversationContact(TypedDict):
-    """
-    Who wrote.
-    """
-
-    id: Optional[str]
-    name: Optional[str]
-    """
-    Name saved on the contact, else the name on the channel.
-    """
-    phone: Optional[str]
-    """
-    Phone saved on the contact, in E.164.
-    """
-    external_id: str
-    """
-    Address on the channel: phone digits for WhatsApp, account ID otherwise.
-    """
-
-
-class AdConversationConversation(TypedDict):
-    """
-    The conversation as it is now.
-    """
-
-    id: str
-    """
-    Conversation ID.
-    """
-    status: Literal["open", "closed"]
-    """
-    Its state now.
-    """
-    close_category: Optional[Literal["resolved", "sale", "no_response", "spam", "other"]]
-    """
-    Why it was closed: `sale` when a member closed it as a sale, the only sign of a purchase Ricky records, without an amount. Null while open or when closed without a category.
-    """
-    closed_at: Optional[str]
-    """
-    When it was closed; null while open.
-    """
-    created_at: str
-    """
-    When Ricky created it.
-    """
-
-
-class AdConversation(TypedDict):
-    """
-    A conversation a Meta ad opened or brought back in the period, with what happened after. One row per conversation and ad: a conversation two ads brought back has two rows.
-    """
-
-    ad_referral: AdReferral
-    """
-    The first customer message from this ad in this conversation within the period.
-    """
-    opened_conversation: bool
-    """
-    Whether that message started the conversation: no message came before it. False when the ad brought back someone who had written before.
-    """
-    message_text: Optional[str]
-    """
-    Text of that message: what the customer wrote, often the greeting the ad prefilled.
-    """
-    contact: AdConversationContact
-    """
-    Who wrote.
-    """
-    conversation: AdConversationConversation
-    """
-    The conversation as it is now.
-    """
-    customer_messages: int
-    """
-    Messages the customer sent in the conversation from that message on, that one included; reactions do not count.
-    """
-    replies: int
-    """
-    Replies from that message on by a member in Ricky, an AI agent or someone in the channel's own app. Automations, broadcasts, templates and reactions do not count.
-    """
-    first_reply_seconds: Optional[float]
-    """
-    Seconds from that message to the first reply; null while unanswered.
-    """
-
-
 class MetaAdsCampaignBudget(TypedDict):
     """
     Budget as Meta reports it, in the ad account currency.
@@ -1307,14 +631,6 @@ class Contact(TypedDict):
     Text of that latest message.
     """
     last_conversation_id: Optional[str]
-    first_ad_referral: Optional[AdReferral]
-    """
-    First touch: the earliest Meta ad this contact came from, in any of its conversations; null when none came from an ad.
-    """
-    last_ad_referral: Optional[AdReferral]
-    """
-    Last touch: the latest Meta ad this contact came from; the same as `first_ad_referral` when only one ad brought them.
-    """
     updated_at: str
     """
     Last change to the contact.
@@ -1477,14 +793,6 @@ class Conversation(TypedDict):
     """
     The handoff to a person waiting to be resolved; null when there is none.
     """
-    first_ad_referral: Optional[AdReferral]
-    """
-    The earliest Meta ad that brought the contact to this conversation; null when none did.
-    """
-    latest_ad_referral: Optional[AdReferral]
-    """
-    The latest Meta ad that brought the contact back to this conversation; the same as `first_ad_referral` when only one did.
-    """
 
 
 class MessageSender(TypedDict):
@@ -1581,10 +889,6 @@ class Message(TypedDict):
     deleted_at: Optional[str]
     """
     When the sender deleted it.
-    """
-    ad_referral: Optional[AdReferral]
-    """
-    The Meta ad this customer message came from; null for every other message.
     """
 
 
@@ -2216,10 +1520,6 @@ class WebhookEventData(TypedDict):
     """
     Message, for `message.*` events.
     """
-    ad_id: NotRequired[str]
-    """
-    Meta's ID of the ad the customer came from, for a `message.received` whose message carries an ad referral. Read the message for the rest of the referral.
-    """
     contact_id: NotRequired[str]
     """
     Contact, for `contact.*` events.
@@ -2392,6 +1692,493 @@ class ConversationAssignmentResult(TypedDict):
     status: Literal["assigned", "not_found", "failed"]
     """
     `assigned`; `not_found` when the organization has no such conversation; `failed` when Ricky could not save it, so retry that conversation.
+    """
+
+
+ReportPeriod = TypedDict(
+    "ReportPeriod",
+    {
+        "from": str,
+        "to": str,
+        "days": int,
+        "granularity": Literal["day", "hour"],
+        "time_zone": Literal["America/Panama"],
+        "previous_from": str,
+        "previous_to": str,
+    },
+)
+
+
+class ConversationsReportTotals(TypedDict):
+    """
+    The period.
+    """
+
+    customers: int
+    """
+    Conversations with at least one customer message in the period.
+    """
+    new_customers: int
+    """
+    Customers whose first message ever falls in the period.
+    """
+    returning_customers: int
+    """
+    Customers who had written before the period.
+    """
+    messages: int
+    """
+    Messages customers sent in the period.
+    """
+
+
+class ConversationsReportPrevious(TypedDict):
+    """
+    The previous period.
+    """
+
+    customers: int
+    """
+    Conversations with at least one customer message in the period.
+    """
+    new_customers: int
+    """
+    Customers whose first message ever falls in the period.
+    """
+    returning_customers: int
+    """
+    Customers who had written before the period.
+    """
+    messages: int
+    """
+    Messages customers sent in the period.
+    """
+
+
+class ConversationsReportByChannelItem(TypedDict):
+    channel: Literal["whatsapp", "instagram", "messenger", "webchat"]
+    """
+    Channel.
+    """
+    customers: int
+    """
+    Conversations with at least one customer message in the period.
+    """
+    new_customers: int
+    """
+    Customers whose first message ever falls in the period.
+    """
+    returning_customers: int
+    """
+    Customers who had written before the period.
+    """
+    messages: int
+    """
+    Messages customers sent in the period.
+    """
+
+
+class ConversationsReportSery(TypedDict):
+    slot: str
+    """
+    America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+    """
+    new_customers: int
+    """
+    Customers whose first message ever falls in this slot.
+    """
+    returning_customers: int
+    """
+    Customers who wrote in this slot and had written before.
+    """
+    previous_customers: Optional[int]
+
+
+class ConversationsReportHeatmapItem(TypedDict):
+    day_of_week: int
+    """
+    0 is Sunday, 6 is Saturday.
+    """
+    hour: int
+    """
+    Hour of the day, 0–23.
+    """
+    messages: int
+    """
+    Customer messages in that hour of that weekday.
+    """
+
+
+class ConversationsReport(TypedDict):
+    """
+    How many customers write, whether they are new, and when. Only messages customers send count: a customer is a conversation with at least one of them in the period, and it is new when its first message ever falls in the period. Messages from the team, AI agents or campaigns and conversation openings and closes play no part.
+    """
+
+    period: ReportPeriod
+    channel: Literal["all", "whatsapp", "instagram", "messenger", "webchat"]
+    """
+    The channel filter the report applied.
+    """
+    totals: ConversationsReportTotals
+    """
+    The period.
+    """
+    previous: ConversationsReportPrevious
+    """
+    The previous period.
+    """
+    by_channel: List[ConversationsReportByChannelItem]
+    """
+    The period per channel, most customers first.
+    """
+    series: List[ConversationsReportSery]
+    """
+    One entry per day of the period, or per hour of a one-day period.
+    """
+    heatmap: List[ConversationsReportHeatmapItem]
+    """
+    Customer messages of the period per weekday and hour; slots without any are left out.
+    """
+    generated_at: str
+    """
+    When Ricky computed the report.
+    """
+
+
+class MessagesReportTotalsSentBy(TypedDict):
+    """
+    Sent messages by sender; each message counts in one of them.
+    """
+
+    human: int
+    """
+    Sent by a person in Ricky.
+    """
+    ai: int
+    """
+    Sent by an AI agent.
+    """
+    automation: int
+    """
+    Sent by an automation.
+    """
+    campaign: int
+    """
+    Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
+    """
+    external: int
+    """
+    Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
+    """
+
+
+class MessagesReportTotals(TypedDict):
+    """
+    The period.
+    """
+
+    received: int
+    """
+    Messages customers sent.
+    """
+    sent: int
+    """
+    Messages sent to customers, by anyone; the sum of `sent_by`.
+    """
+    sent_by: MessagesReportTotalsSentBy
+    """
+    Sent messages by sender; each message counts in one of them.
+    """
+
+
+class MessagesReportPreviousSentBy(TypedDict):
+    """
+    Sent messages by sender; each message counts in one of them.
+    """
+
+    human: int
+    """
+    Sent by a person in Ricky.
+    """
+    ai: int
+    """
+    Sent by an AI agent.
+    """
+    automation: int
+    """
+    Sent by an automation.
+    """
+    campaign: int
+    """
+    Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
+    """
+    external: int
+    """
+    Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
+    """
+
+
+class MessagesReportPrevious(TypedDict):
+    """
+    The previous period.
+    """
+
+    received: int
+    """
+    Messages customers sent.
+    """
+    sent: int
+    """
+    Messages sent to customers, by anyone; the sum of `sent_by`.
+    """
+    sent_by: MessagesReportPreviousSentBy
+    """
+    Sent messages by sender; each message counts in one of them.
+    """
+
+
+class MessagesReportByChannelItemSentBy(TypedDict):
+    """
+    Sent messages by sender; each message counts in one of them.
+    """
+
+    human: int
+    """
+    Sent by a person in Ricky.
+    """
+    ai: int
+    """
+    Sent by an AI agent.
+    """
+    automation: int
+    """
+    Sent by an automation.
+    """
+    campaign: int
+    """
+    Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
+    """
+    external: int
+    """
+    Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
+    """
+
+
+class MessagesReportByChannelItem(TypedDict):
+    channel: Literal["whatsapp", "instagram", "messenger", "webchat"]
+    """
+    Channel.
+    """
+    received: int
+    """
+    Messages customers sent.
+    """
+    sent: int
+    """
+    Messages sent to customers, by anyone; the sum of `sent_by`.
+    """
+    sent_by: MessagesReportByChannelItemSentBy
+    """
+    Sent messages by sender; each message counts in one of them.
+    """
+
+
+class MessagesReportSerySentBy(TypedDict):
+    """
+    Sent messages by sender; each message counts in one of them.
+    """
+
+    human: int
+    """
+    Sent by a person in Ricky.
+    """
+    ai: int
+    """
+    Sent by an AI agent.
+    """
+    automation: int
+    """
+    Sent by an automation.
+    """
+    campaign: int
+    """
+    Templates not sent by an automation: broadcasts and templates sent by hand or through the API.
+    """
+    external: int
+    """
+    Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history.
+    """
+
+
+class MessagesReportSery(TypedDict):
+    slot: str
+    """
+    America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.
+    """
+    received: int
+    """
+    Messages customers sent.
+    """
+    sent: int
+    """
+    Messages sent to customers, by anyone; the sum of `sent_by`.
+    """
+    sent_by: MessagesReportSerySentBy
+    """
+    Sent messages by sender; each message counts in one of them.
+    """
+    previous_received: Optional[int]
+    previous_sent: Optional[int]
+
+
+class MessagesReport(TypedDict):
+    """
+    Messages received from customers and sent to them in the period, and who sent them, dated when each message was sent.
+    """
+
+    period: ReportPeriod
+    channel: Literal["all", "whatsapp", "instagram", "messenger", "webchat"]
+    """
+    The channel filter the report applied.
+    """
+    totals: MessagesReportTotals
+    """
+    The period.
+    """
+    previous: MessagesReportPrevious
+    """
+    The previous period.
+    """
+    by_channel: List[MessagesReportByChannelItem]
+    """
+    The period per channel, most messages first.
+    """
+    series: List[MessagesReportSery]
+    """
+    One entry per day of the period, or per hour of a one-day period.
+    """
+    generated_at: str
+    """
+    When Ricky computed the report.
+    """
+
+
+class DashboardReportTotals(TypedDict):
+    """
+    Now.
+    """
+
+    open_now: int
+    """
+    Open conversations.
+    """
+    unassigned: int
+    """
+    Open conversations with no member or AI agent assigned.
+    """
+    awaiting_reply: int
+    """
+    Open conversations whose last message, reactions aside, is from the customer.
+    """
+    pending_handoffs: int
+    """
+    Handoffs from an AI agent to a person still waiting.
+    """
+    opened_today: int
+    """
+    Conversations opened or reopened today, America/Panama.
+    """
+    closed_today: int
+    """
+    Conversations closed today, America/Panama.
+    """
+
+
+class DashboardReportByChannelItem(TypedDict):
+    channel: Literal["whatsapp", "instagram", "messenger", "webchat"]
+    """
+    Channel.
+    """
+    open: int
+    """
+    Open conversations.
+    """
+
+
+class DashboardReportAssignee(TypedDict):
+    type: Literal["human", "ai", "unassigned"]
+    """
+    `human` is a member, `ai` an AI agent, `unassigned` nobody.
+    """
+    id: Optional[str]
+    """
+    User ID or AI agent ID; null for `unassigned`.
+    """
+    name: Optional[str]
+    """
+    Name; null when it has none and for `unassigned`.
+    """
+    open: int
+    """
+    Open conversations they hold.
+    """
+    awaiting_reply: int
+    """
+    Of those, the ones whose last message is from the customer.
+    """
+
+
+class DashboardReportLongestWaitingItem(TypedDict):
+    conversation_id: str
+    """
+    Conversation ID.
+    """
+    channel: Literal["whatsapp", "instagram", "messenger", "webchat"]
+    """
+    Channel.
+    """
+    participant_name: Optional[str]
+    """
+    Customer name as the inbox shows it: the contact’s saved name, else the channel profile name, else the contact’s phone.
+    """
+    waiting_since: str
+    """
+    When the customer message they wait on arrived.
+    """
+    assignee_type: Literal["human", "ai", "unassigned"]
+    """
+    `human` is a member, `ai` an AI agent, `unassigned` nobody.
+    """
+    assignee_name: Optional[str]
+    """
+    Assignee name; null when there is none.
+    """
+
+
+class DashboardReport(TypedDict):
+    """
+    What the inbox looks like right now; it has no period.
+    """
+
+    totals: DashboardReportTotals
+    """
+    Now.
+    """
+    by_channel: List[DashboardReportByChannelItem]
+    """
+    Open conversations per channel, most first.
+    """
+    assignees: List[DashboardReportAssignee]
+    """
+    Open conversations per assignee, most first.
+    """
+    longest_waiting: List[DashboardReportLongestWaitingItem]
+    """
+    The 15 open conversations waiting longest for a reply, oldest first.
+    """
+    generated_at: str
+    """
+    When Ricky computed the report.
     """
 
 
@@ -4197,6 +3984,81 @@ class WhatsAppNumber(TypedDict):
     """
 
 
+CreateAgentCapability: TypeAlias = str
+
+
+class CreateAgent(TypedDict, closed=True):
+    """
+    Only `name` is required; it does not connect the agent to any channel.
+    """
+
+    name: str
+    """
+    Name the team sees.
+    """
+    description: NotRequired[Optional[str]]
+    """
+    What the agent is for.
+    """
+    instructions: NotRequired[Optional[str]]
+    """
+    How the agent answers customers.
+    """
+    voice: NotRequired[str]
+    """
+    A voice of `GET /agent-options`. Without one, the default voice.
+    """
+    capabilities: NotRequired[List[CreateAgentCapability]]
+    """
+    The complete set of capability names. Replaces the current ones.
+    """
+    handoff_user_ids: NotRequired[List[str]]
+    """
+    The complete set of members who receive handed-off conversations. Required with `ricky.handoff.request`.
+    """
+
+
+UpdateAgentCapability: TypeAlias = str
+
+
+class UpdateAgent(TypedDict, closed=True):
+    """
+    Only the fields you send change. Send `null` to clear a text.
+    """
+
+    name: NotRequired[str]
+    """
+    Name the team sees.
+    """
+    description: NotRequired[Optional[str]]
+    """
+    What the agent is for.
+    """
+    instructions: NotRequired[Optional[str]]
+    """
+    How the agent answers customers.
+    """
+    voice: NotRequired[str]
+    """
+    A voice of `GET /agent-options`. Without one, the default voice.
+    """
+    capabilities: NotRequired[List[UpdateAgentCapability]]
+    """
+    The complete set of capability names. Replaces the current ones.
+    """
+    handoff_user_ids: NotRequired[List[str]]
+    """
+    The complete set of members who receive handed-off conversations. Required with `ricky.handoff.request`.
+    """
+
+
+class AssignConversationAgent(TypedDict, closed=True):
+    agent_id: Optional[str]
+    """
+    Agent that answers from now on; null turns the AI off for the conversation.
+    """
+
+
 class ResolveHandoff(TypedDict, closed=True):
     """
     How the handoff ends.
@@ -4639,81 +4501,6 @@ class RotateWebhookSecret(TypedDict, closed=True):
     expire_previous_after_hours: NotRequired[int]
     """
     How long deliveries keep the previous signature too, so you can deploy the new secret first. 0 ends the previous secret now.
-    """
-
-
-CreateAgentCapability: TypeAlias = str
-
-
-class CreateAgent(TypedDict, closed=True):
-    """
-    Only `name` is required; it does not connect the agent to any channel.
-    """
-
-    name: str
-    """
-    Name the team sees.
-    """
-    description: NotRequired[Optional[str]]
-    """
-    What the agent is for.
-    """
-    instructions: NotRequired[Optional[str]]
-    """
-    How the agent answers customers.
-    """
-    voice: NotRequired[str]
-    """
-    A voice of `GET /agent-options`. Without one, the default voice.
-    """
-    capabilities: NotRequired[List[CreateAgentCapability]]
-    """
-    The complete set of capability names. Replaces the current ones.
-    """
-    handoff_user_ids: NotRequired[List[str]]
-    """
-    The complete set of members who receive handed-off conversations. Required with `ricky.handoff.request`.
-    """
-
-
-UpdateAgentCapability: TypeAlias = str
-
-
-class UpdateAgent(TypedDict, closed=True):
-    """
-    Only the fields you send change. Send `null` to clear a text.
-    """
-
-    name: NotRequired[str]
-    """
-    Name the team sees.
-    """
-    description: NotRequired[Optional[str]]
-    """
-    What the agent is for.
-    """
-    instructions: NotRequired[Optional[str]]
-    """
-    How the agent answers customers.
-    """
-    voice: NotRequired[str]
-    """
-    A voice of `GET /agent-options`. Without one, the default voice.
-    """
-    capabilities: NotRequired[List[UpdateAgentCapability]]
-    """
-    The complete set of capability names. Replaces the current ones.
-    """
-    handoff_user_ids: NotRequired[List[str]]
-    """
-    The complete set of members who receive handed-off conversations. Required with `ricky.handoff.request`.
-    """
-
-
-class AssignConversationAgent(TypedDict, closed=True):
-    agent_id: Optional[str]
-    """
-    Agent that answers from now on; null turns the AI off for the conversation.
     """
 
 

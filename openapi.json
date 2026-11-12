@@ -155,61 +155,6 @@
                 "webchat"
               ]
             }
-          },
-          {
-            "name": "ad_id",
-            "in": "query",
-            "required": false,
-            "description": "Only contacts with a customer message, in any of their conversations, from this Meta ad. Ad filters apply together to one customer message: from that ad, campaign or ad set, at that time.",
-            "schema": {
-              "type": "string",
-              "maxLength": 32,
-              "pattern": "^\\d+$"
-            }
-          },
-          {
-            "name": "campaign_id",
-            "in": "query",
-            "required": false,
-            "description": "Only contacts with a customer message, in any of their conversations, from an ad of this Meta campaign. Matches the ads Ricky synced from a connected ad account.",
-            "schema": {
-              "type": "string",
-              "maxLength": 32,
-              "pattern": "^\\d+$"
-            }
-          },
-          {
-            "name": "ad_set_id",
-            "in": "query",
-            "required": false,
-            "description": "Only contacts with a customer message, in any of their conversations, from an ad of this Meta ad set. Matches the ads Ricky synced from a connected ad account.",
-            "schema": {
-              "type": "string",
-              "maxLength": 32,
-              "pattern": "^\\d+$"
-            }
-          },
-          {
-            "name": "referred_after",
-            "in": "query",
-            "required": false,
-            "description": "Only contacts with a customer message, in any of their conversations, from a Meta ad sent at or after this time, ISO 8601.",
-            "schema": {
-              "type": "string",
-              "format": "date-time",
-              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-            }
-          },
-          {
-            "name": "referred_before",
-            "in": "query",
-            "required": false,
-            "description": "Only contacts with a customer message, in any of their conversations, from a Meta ad sent before this time, ISO 8601.",
-            "schema": {
-              "type": "string",
-              "format": "date-time",
-              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-            }
           }
         ],
         "responses": {
@@ -1244,83 +1189,6 @@
               "enum": [
                 "customer"
               ]
-            }
-          },
-          {
-            "name": "last_activity_after",
-            "in": "query",
-            "required": false,
-            "description": "Only conversations whose latest message is at or after this time, ISO 8601.",
-            "schema": {
-              "type": "string",
-              "format": "date-time",
-              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-            }
-          },
-          {
-            "name": "last_activity_before",
-            "in": "query",
-            "required": false,
-            "description": "Only conversations whose latest message is before this time, ISO 8601.",
-            "schema": {
-              "type": "string",
-              "format": "date-time",
-              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-            }
-          },
-          {
-            "name": "ad_id",
-            "in": "query",
-            "required": false,
-            "description": "Only conversations with a customer message from this Meta ad. Ad filters apply together to one customer message: from that ad, campaign or ad set, at that time.",
-            "schema": {
-              "type": "string",
-              "maxLength": 32,
-              "pattern": "^\\d+$"
-            }
-          },
-          {
-            "name": "campaign_id",
-            "in": "query",
-            "required": false,
-            "description": "Only conversations with a customer message from an ad of this Meta campaign. Matches the ads Ricky synced from a connected ad account.",
-            "schema": {
-              "type": "string",
-              "maxLength": 32,
-              "pattern": "^\\d+$"
-            }
-          },
-          {
-            "name": "ad_set_id",
-            "in": "query",
-            "required": false,
-            "description": "Only conversations with a customer message from an ad of this Meta ad set. Matches the ads Ricky synced from a connected ad account.",
-            "schema": {
-              "type": "string",
-              "maxLength": 32,
-              "pattern": "^\\d+$"
-            }
-          },
-          {
-            "name": "referred_after",
-            "in": "query",
-            "required": false,
-            "description": "Only conversations with a customer message from a Meta ad sent at or after this time, ISO 8601.",
-            "schema": {
-              "type": "string",
-              "format": "date-time",
-              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-            }
-          },
-          {
-            "name": "referred_before",
-            "in": "query",
-            "required": false,
-            "description": "Only conversations with a customer message from a Meta ad sent before this time, ISO 8601.",
-            "schema": {
-              "type": "string",
-              "format": "date-time",
-              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
             }
           }
         ],
@@ -7277,204 +7145,6 @@
           },
           "422": {
             "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/ads/conversations": {
-      "get": {
-        "operationId": "listAdConversations",
-        "tags": [
-          "Ads"
-        ],
-        "summary": "List the conversations ads brought",
-        "description": "Each conversation a Meta ad opened or brought back in the period, newest first, with the ad, the contact, the conversation's state and the replies it got. Read from the customer messages Ricky received, so it works without connecting Meta Ads; the ad's name, campaign and ad set (`ad_referral.resolved`) need the connection. The period is America/Panama days, as in `GET /reports/ads`, whose per-ad conversations these rows add up to.\n\nScope: `conversations:read`.",
-        "parameters": [
-          {
-            "name": "from",
-            "in": "query",
-            "required": false,
-            "description": "First day, `YYYY-MM-DD`, America/Panama, inclusive. Send it with `to`; without both, the report covers the last 7 days including today.",
-            "schema": {
-              "type": "string",
-              "format": "date",
-              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
-            }
-          },
-          {
-            "name": "to",
-            "in": "query",
-            "required": false,
-            "description": "Last day, `YYYY-MM-DD`, America/Panama, inclusive. A day after today counts as today. The period is at most 366 days.",
-            "schema": {
-              "type": "string",
-              "format": "date",
-              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
-            }
-          },
-          {
-            "name": "ad_id",
-            "in": "query",
-            "required": false,
-            "description": "Only this Meta ad.",
-            "schema": {
-              "type": "string",
-              "maxLength": 32,
-              "pattern": "^\\d+$"
-            }
-          },
-          {
-            "name": "campaign_id",
-            "in": "query",
-            "required": false,
-            "description": "Only ads of this Meta campaign, among the ads Ricky synced from a connected ad account.",
-            "schema": {
-              "type": "string",
-              "maxLength": 32,
-              "pattern": "^\\d+$"
-            }
-          },
-          {
-            "name": "ad_set_id",
-            "in": "query",
-            "required": false,
-            "description": "Only ads of this Meta ad set, among the ads Ricky synced from a connected ad account.",
-            "schema": {
-              "type": "string",
-              "maxLength": 32,
-              "pattern": "^\\d+$"
-            }
-          },
-          {
-            "name": "channel",
-            "in": "query",
-            "required": false,
-            "description": "Only conversations on this channel.",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "whatsapp",
-                "instagram",
-                "messenger"
-              ]
-            }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "required": false,
-            "description": "Items per page.",
-            "schema": {
-              "default": 50,
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100
-            }
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "required": false,
-            "description": "`next_cursor` from the previous page. Use it unchanged.",
-            "schema": {
-              "type": "string",
-              "maxLength": 2048
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success.",
-            "headers": {
-              "X-Request-Id": {
-                "$ref": "#/components/headers/X-Request-Id"
-              },
-              "X-RateLimit-Limit": {
-                "$ref": "#/components/headers/X-RateLimit-Limit"
-              },
-              "X-RateLimit-Remaining": {
-                "$ref": "#/components/headers/X-RateLimit-Remaining"
-              },
-              "X-RateLimit-Reset": {
-                "$ref": "#/components/headers/X-RateLimit-Reset"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "data",
-                    "next_cursor"
-                  ],
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/AdConversation"
-                      }
-                    },
-                    "next_cursor": {
-                      "type": [
-                        "string",
-                        "null"
-                      ],
-                      "description": "Pass as `cursor` for the next page; null on the last page."
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
             "content": {
               "application/json": {
                 "schema": {
@@ -18088,1349 +17758,6 @@
         ],
         "description": "Every non-2xx response."
       },
-      "AdReferralResolution": {
-        "type": "object",
-        "properties": {
-          "ad_name": {
-            "description": "Name of the ad in Meta.",
-            "examples": [
-              "Implantes - video octubre"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "campaign_id": {
-            "description": "Campaign ID at Meta.",
-            "examples": [
-              "120210000000000003"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "campaign_name": {
-            "description": "Campaign name in Meta.",
-            "examples": [
-              "Implantes dentales"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "ad_set_id": {
-            "description": "Ad set ID at Meta.",
-            "examples": [
-              "120210000000000002"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "ad_set_name": {
-            "description": "Ad set name in Meta.",
-            "examples": [
-              "Panamá 30-55"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "ad_account_id": {
-            "description": "Ad account ID at Meta.",
-            "examples": [
-              "1234567890"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "synced_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time",
-                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "When Ricky last synced this ad from Meta.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          }
-        },
-        "required": [
-          "ad_name",
-          "campaign_id",
-          "campaign_name",
-          "ad_set_id",
-          "ad_set_name",
-          "ad_account_id",
-          "synced_at"
-        ],
-        "description": "The ad as Ricky's Meta Ads sync last stored it, matched by `ad_id`. It is Ricky's lookup in the connected ad account, not part of the message Meta sent. `GET /ads/ads` reads the same ad live from Meta."
-      },
-      "AdReferral": {
-        "type": "object",
-        "properties": {
-          "ad_id": {
-            "type": "string",
-            "description": "Meta's ID of the ad, as Meta sent it in the message's referral: WhatsApp `source_id`, Instagram and Messenger `ad_id`. The same ID as `GET /ads/ads` and `ad_id` in `GET /ads/insights`.",
-            "examples": [
-              "120210000000000001"
-            ]
-          },
-          "channel": {
-            "type": "string",
-            "enum": [
-              "whatsapp",
-              "instagram",
-              "messenger",
-              "webchat"
-            ],
-            "description": "Channel the customer wrote on."
-          },
-          "message_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The customer message that carried the referral.",
-            "examples": [
-              "c41d7e2a-5b6f-4a89-8c3d-0e1f2a3b4c5d"
-            ]
-          },
-          "conversation_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Conversation of that message.",
-            "examples": [
-              "9b2e4c61-7a3f-4d18-b5c2-6e0f1a2b3c4d"
-            ]
-          },
-          "contact_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid",
-                "description": "Contact who sent it.",
-                "examples": [
-                  "3f6c2b1e-8d4a-4b7e-9a51-2c7d8e9f0a1b"
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "referred_at": {
-            "type": "string",
-            "format": "date-time",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
-            "description": "When the customer sent that message.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          },
-          "source_type": {
-            "description": "Meta's kind of source: WhatsApp's `source_type` (`ad`) or Instagram and Messenger's `source` (`ADS`).",
-            "examples": [
-              "ad"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "source_url": {
-            "description": "Link to the ad's post on Facebook or Instagram, as Meta sent it. WhatsApp only.",
-            "examples": [
-              "https://fb.me/2ZBx1WlQe"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "headline": {
-            "description": "The ad's title as Meta sent it: WhatsApp `headline`, Instagram and Messenger `ads_context_data.ad_title`.",
-            "examples": [
-              "Implantes dentales en un día"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "body": {
-            "description": "The ad's text as Meta sent it. WhatsApp only.",
-            "examples": [
-              "Agenda tu evaluación sin costo."
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "media_type": {
-            "description": "`image` or `video`, as Meta sent it. WhatsApp only.",
-            "examples": [
-              "video"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "image_url": {
-            "description": "The ad's image: Ricky's permanent copy of the image Meta sent, else Meta's own link while it has not expired; null otherwise.",
-            "examples": [
-              null
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "video_url": {
-            "description": "Meta's link to the ad's video, as Meta sent it; it can expire.",
-            "examples": [
-              null
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "ctwa_clid": {
-            "description": "Meta's click ID of the Click to WhatsApp ad, as Meta sent it; send it back to Meta's Conversions API to attribute an event. WhatsApp only.",
-            "examples": [
-              "ARAkLkA8rmlFeiCktEJQ-QTwRiyYHAFDLMNDBH0CD3qpjd0HR4irJ6LEkR7JwFF4XvnO2E4Nx0-eM-GABDLOPaOdRMv-_zfUQ2a"
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "ref": {
-            "description": "The `ref` parameter of the ad link, as Meta sent it. Instagram and Messenger only.",
-            "examples": [
-              null
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "resolved": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/AdReferralResolution"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "The ad's name, campaign and ad set from Ricky's Meta Ads sync; null when the ad is not in a connected ad account Ricky has synced."
-          }
-        },
-        "required": [
-          "ad_id",
-          "channel",
-          "message_id",
-          "conversation_id",
-          "contact_id",
-          "referred_at",
-          "source_type",
-          "source_url",
-          "headline",
-          "body",
-          "media_type",
-          "image_url",
-          "video_url",
-          "ctwa_clid",
-          "ref",
-          "resolved"
-        ],
-        "description": "A Meta ad a customer came from: an inbound message whose Meta referral names an ad (Click to WhatsApp, Instagram or Messenger ads). The same definition as `GET /reports/ads`."
-      },
-      "ReportPeriod": {
-        "type": "object",
-        "properties": {
-          "from": {
-            "type": "string",
-            "format": "date",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
-            "description": "First day, inclusive.",
-            "examples": [
-              "2026-10-14"
-            ]
-          },
-          "to": {
-            "type": "string",
-            "format": "date",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
-            "description": "Last day, inclusive. A `to` after today is today.",
-            "examples": [
-              "2026-10-14"
-            ]
-          },
-          "days": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 366,
-            "description": "Days in the period."
-          },
-          "granularity": {
-            "type": "string",
-            "enum": [
-              "day",
-              "hour"
-            ],
-            "description": "`hour` when the period is one day: series then have 24 hourly slots."
-          },
-          "time_zone": {
-            "type": "string",
-            "const": "America/Panama",
-            "description": "The time zone of every day and hour in the report."
-          },
-          "previous_from": {
-            "type": "string",
-            "format": "date",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
-            "description": "First day of the previous period: the same number of days, right before.",
-            "examples": [
-              "2026-10-14"
-            ]
-          },
-          "previous_to": {
-            "type": "string",
-            "format": "date",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
-            "description": "Last day of the previous period.",
-            "examples": [
-              "2026-10-14"
-            ]
-          }
-        },
-        "required": [
-          "from",
-          "to",
-          "days",
-          "granularity",
-          "time_zone",
-          "previous_from",
-          "previous_to"
-        ],
-        "description": "The days a report covers, in America/Panama time, and the period it is compared with."
-      },
-      "ConversationsReport": {
-        "type": "object",
-        "properties": {
-          "period": {
-            "$ref": "#/components/schemas/ReportPeriod"
-          },
-          "channel": {
-            "type": "string",
-            "enum": [
-              "all",
-              "whatsapp",
-              "instagram",
-              "messenger",
-              "webchat"
-            ],
-            "description": "The channel filter the report applied."
-          },
-          "totals": {
-            "type": "object",
-            "properties": {
-              "customers": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Conversations with at least one customer message in the period."
-              },
-              "new_customers": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Customers whose first message ever falls in the period."
-              },
-              "returning_customers": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Customers who had written before the period."
-              },
-              "messages": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Messages customers sent in the period."
-              }
-            },
-            "required": [
-              "customers",
-              "new_customers",
-              "returning_customers",
-              "messages"
-            ],
-            "description": "The period."
-          },
-          "previous": {
-            "type": "object",
-            "properties": {
-              "customers": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Conversations with at least one customer message in the period."
-              },
-              "new_customers": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Customers whose first message ever falls in the period."
-              },
-              "returning_customers": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Customers who had written before the period."
-              },
-              "messages": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Messages customers sent in the period."
-              }
-            },
-            "required": [
-              "customers",
-              "new_customers",
-              "returning_customers",
-              "messages"
-            ],
-            "description": "The previous period."
-          },
-          "by_channel": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "channel": {
-                  "type": "string",
-                  "enum": [
-                    "whatsapp",
-                    "instagram",
-                    "messenger",
-                    "webchat"
-                  ],
-                  "description": "Channel."
-                },
-                "customers": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991,
-                  "description": "Conversations with at least one customer message in the period."
-                },
-                "new_customers": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991,
-                  "description": "Customers whose first message ever falls in the period."
-                },
-                "returning_customers": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991,
-                  "description": "Customers who had written before the period."
-                },
-                "messages": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991,
-                  "description": "Messages customers sent in the period."
-                }
-              },
-              "required": [
-                "channel",
-                "customers",
-                "new_customers",
-                "returning_customers",
-                "messages"
-              ]
-            },
-            "description": "The period per channel, most customers first."
-          },
-          "series": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "slot": {
-                  "type": "string",
-                  "description": "America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.",
-                  "examples": [
-                    "2026-10-14"
-                  ]
-                },
-                "new_customers": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991,
-                  "description": "Customers whose first message ever falls in this slot."
-                },
-                "returning_customers": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991,
-                  "description": "Customers who wrote in this slot and had written before."
-                },
-                "previous_customers": {
-                  "anyOf": [
-                    {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 9007199254740991,
-                      "description": "Customers in the same slot of the previous period; null when it has none."
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "slot",
-                "new_customers",
-                "returning_customers",
-                "previous_customers"
-              ]
-            },
-            "description": "One entry per day of the period, or per hour of a one-day period."
-          },
-          "heatmap": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "day_of_week": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 6,
-                  "description": "0 is Sunday, 6 is Saturday."
-                },
-                "hour": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 23,
-                  "description": "Hour of the day, 0–23."
-                },
-                "messages": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991,
-                  "description": "Customer messages in that hour of that weekday."
-                }
-              },
-              "required": [
-                "day_of_week",
-                "hour",
-                "messages"
-              ]
-            },
-            "description": "Customer messages of the period per weekday and hour; slots without any are left out."
-          },
-          "generated_at": {
-            "type": "string",
-            "format": "date-time",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
-            "description": "When Ricky computed the report.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          }
-        },
-        "required": [
-          "period",
-          "channel",
-          "totals",
-          "previous",
-          "by_channel",
-          "series",
-          "heatmap",
-          "generated_at"
-        ],
-        "description": "How many customers write, whether they are new, and when. Only messages customers send count: a customer is a conversation with at least one of them in the period, and it is new when its first message ever falls in the period. Messages from the team, AI agents or campaigns and conversation openings and closes play no part."
-      },
-      "MessagesReport": {
-        "type": "object",
-        "properties": {
-          "period": {
-            "$ref": "#/components/schemas/ReportPeriod"
-          },
-          "channel": {
-            "type": "string",
-            "enum": [
-              "all",
-              "whatsapp",
-              "instagram",
-              "messenger",
-              "webchat"
-            ],
-            "description": "The channel filter the report applied."
-          },
-          "totals": {
-            "type": "object",
-            "properties": {
-              "received": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Messages customers sent."
-              },
-              "sent": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Messages sent to customers, by anyone; the sum of `sent_by`."
-              },
-              "sent_by": {
-                "type": "object",
-                "properties": {
-                  "human": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 9007199254740991,
-                    "description": "Sent by a person in Ricky."
-                  },
-                  "ai": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 9007199254740991,
-                    "description": "Sent by an AI agent."
-                  },
-                  "automation": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 9007199254740991,
-                    "description": "Sent by an automation."
-                  },
-                  "campaign": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 9007199254740991,
-                    "description": "Templates not sent by an automation: broadcasts and templates sent by hand or through the API."
-                  },
-                  "external": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 9007199254740991,
-                    "description": "Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history."
-                  }
-                },
-                "required": [
-                  "human",
-                  "ai",
-                  "automation",
-                  "campaign",
-                  "external"
-                ],
-                "description": "Sent messages by sender; each message counts in one of them."
-              }
-            },
-            "required": [
-              "received",
-              "sent",
-              "sent_by"
-            ],
-            "description": "The period."
-          },
-          "previous": {
-            "type": "object",
-            "properties": {
-              "received": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Messages customers sent."
-              },
-              "sent": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Messages sent to customers, by anyone; the sum of `sent_by`."
-              },
-              "sent_by": {
-                "type": "object",
-                "properties": {
-                  "human": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 9007199254740991,
-                    "description": "Sent by a person in Ricky."
-                  },
-                  "ai": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 9007199254740991,
-                    "description": "Sent by an AI agent."
-                  },
-                  "automation": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 9007199254740991,
-                    "description": "Sent by an automation."
-                  },
-                  "campaign": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 9007199254740991,
-                    "description": "Templates not sent by an automation: broadcasts and templates sent by hand or through the API."
-                  },
-                  "external": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 9007199254740991,
-                    "description": "Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history."
-                  }
-                },
-                "required": [
-                  "human",
-                  "ai",
-                  "automation",
-                  "campaign",
-                  "external"
-                ],
-                "description": "Sent messages by sender; each message counts in one of them."
-              }
-            },
-            "required": [
-              "received",
-              "sent",
-              "sent_by"
-            ],
-            "description": "The previous period."
-          },
-          "by_channel": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "channel": {
-                  "type": "string",
-                  "enum": [
-                    "whatsapp",
-                    "instagram",
-                    "messenger",
-                    "webchat"
-                  ],
-                  "description": "Channel."
-                },
-                "received": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991,
-                  "description": "Messages customers sent."
-                },
-                "sent": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991,
-                  "description": "Messages sent to customers, by anyone; the sum of `sent_by`."
-                },
-                "sent_by": {
-                  "type": "object",
-                  "properties": {
-                    "human": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 9007199254740991,
-                      "description": "Sent by a person in Ricky."
-                    },
-                    "ai": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 9007199254740991,
-                      "description": "Sent by an AI agent."
-                    },
-                    "automation": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 9007199254740991,
-                      "description": "Sent by an automation."
-                    },
-                    "campaign": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 9007199254740991,
-                      "description": "Templates not sent by an automation: broadcasts and templates sent by hand or through the API."
-                    },
-                    "external": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 9007199254740991,
-                      "description": "Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history."
-                    }
-                  },
-                  "required": [
-                    "human",
-                    "ai",
-                    "automation",
-                    "campaign",
-                    "external"
-                  ],
-                  "description": "Sent messages by sender; each message counts in one of them."
-                }
-              },
-              "required": [
-                "channel",
-                "received",
-                "sent",
-                "sent_by"
-              ]
-            },
-            "description": "The period per channel, most messages first."
-          },
-          "series": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "slot": {
-                  "type": "string",
-                  "description": "America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.",
-                  "examples": [
-                    "2026-10-14"
-                  ]
-                },
-                "received": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991,
-                  "description": "Messages customers sent."
-                },
-                "sent": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991,
-                  "description": "Messages sent to customers, by anyone; the sum of `sent_by`."
-                },
-                "sent_by": {
-                  "type": "object",
-                  "properties": {
-                    "human": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 9007199254740991,
-                      "description": "Sent by a person in Ricky."
-                    },
-                    "ai": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 9007199254740991,
-                      "description": "Sent by an AI agent."
-                    },
-                    "automation": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 9007199254740991,
-                      "description": "Sent by an automation."
-                    },
-                    "campaign": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 9007199254740991,
-                      "description": "Templates not sent by an automation: broadcasts and templates sent by hand or through the API."
-                    },
-                    "external": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 9007199254740991,
-                      "description": "Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history."
-                    }
-                  },
-                  "required": [
-                    "human",
-                    "ai",
-                    "automation",
-                    "campaign",
-                    "external"
-                  ],
-                  "description": "Sent messages by sender; each message counts in one of them."
-                },
-                "previous_received": {
-                  "anyOf": [
-                    {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 9007199254740991,
-                      "description": "Received in the same slot of the previous period; null when it has none."
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
-                },
-                "previous_sent": {
-                  "anyOf": [
-                    {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 9007199254740991,
-                      "description": "Sent in the same slot of the previous period; null when it has none."
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "slot",
-                "received",
-                "sent",
-                "sent_by",
-                "previous_received",
-                "previous_sent"
-              ]
-            },
-            "description": "One entry per day of the period, or per hour of a one-day period."
-          },
-          "generated_at": {
-            "type": "string",
-            "format": "date-time",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
-            "description": "When Ricky computed the report.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          }
-        },
-        "required": [
-          "period",
-          "channel",
-          "totals",
-          "previous",
-          "by_channel",
-          "series",
-          "generated_at"
-        ],
-        "description": "Messages received from customers and sent to them in the period, and who sent them, dated when each message was sent."
-      },
-      "DashboardReport": {
-        "type": "object",
-        "properties": {
-          "totals": {
-            "type": "object",
-            "properties": {
-              "open_now": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Open conversations."
-              },
-              "unassigned": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Open conversations with no member or AI agent assigned."
-              },
-              "awaiting_reply": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Open conversations whose last message, reactions aside, is from the customer."
-              },
-              "pending_handoffs": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Handoffs from an AI agent to a person still waiting."
-              },
-              "opened_today": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Conversations opened or reopened today, America/Panama."
-              },
-              "closed_today": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Conversations closed today, America/Panama."
-              }
-            },
-            "required": [
-              "open_now",
-              "unassigned",
-              "awaiting_reply",
-              "pending_handoffs",
-              "opened_today",
-              "closed_today"
-            ],
-            "description": "Now."
-          },
-          "by_channel": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "channel": {
-                  "type": "string",
-                  "enum": [
-                    "whatsapp",
-                    "instagram",
-                    "messenger",
-                    "webchat"
-                  ],
-                  "description": "Channel."
-                },
-                "open": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991,
-                  "description": "Open conversations."
-                }
-              },
-              "required": [
-                "channel",
-                "open"
-              ]
-            },
-            "description": "Open conversations per channel, most first."
-          },
-          "assignees": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "type": {
-                  "type": "string",
-                  "enum": [
-                    "human",
-                    "ai",
-                    "unassigned"
-                  ],
-                  "description": "`human` is a member, `ai` an AI agent, `unassigned` nobody."
-                },
-                "id": {
-                  "anyOf": [
-                    {
-                      "type": "string",
-                      "format": "uuid"
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ],
-                  "description": "User ID or AI agent ID; null for `unassigned`."
-                },
-                "name": {
-                  "description": "Name; null when it has none and for `unassigned`.",
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "open": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991,
-                  "description": "Open conversations they hold."
-                },
-                "awaiting_reply": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991,
-                  "description": "Of those, the ones whose last message is from the customer."
-                }
-              },
-              "required": [
-                "type",
-                "id",
-                "name",
-                "open",
-                "awaiting_reply"
-              ]
-            },
-            "description": "Open conversations per assignee, most first."
-          },
-          "longest_waiting": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "conversation_id": {
-                  "type": "string",
-                  "format": "uuid",
-                  "description": "Conversation ID."
-                },
-                "channel": {
-                  "type": "string",
-                  "enum": [
-                    "whatsapp",
-                    "instagram",
-                    "messenger",
-                    "webchat"
-                  ],
-                  "description": "Channel."
-                },
-                "participant_name": {
-                  "description": "Customer name as the inbox shows it: the contact’s saved name, else the channel profile name, else the contact’s phone.",
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "waiting_since": {
-                  "type": "string",
-                  "format": "date-time",
-                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
-                  "description": "When the customer message they wait on arrived.",
-                  "examples": [
-                    "2026-10-14T15:30:00.000Z"
-                  ]
-                },
-                "assignee_type": {
-                  "type": "string",
-                  "enum": [
-                    "human",
-                    "ai",
-                    "unassigned"
-                  ],
-                  "description": "`human` is a member, `ai` an AI agent, `unassigned` nobody."
-                },
-                "assignee_name": {
-                  "description": "Assignee name; null when there is none.",
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                }
-              },
-              "required": [
-                "conversation_id",
-                "channel",
-                "participant_name",
-                "waiting_since",
-                "assignee_type",
-                "assignee_name"
-              ]
-            },
-            "description": "The 15 open conversations waiting longest for a reply, oldest first."
-          },
-          "generated_at": {
-            "type": "string",
-            "format": "date-time",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
-            "description": "When Ricky computed the report.",
-            "examples": [
-              "2026-10-14T15:30:00.000Z"
-            ]
-          }
-        },
-        "required": [
-          "totals",
-          "by_channel",
-          "assignees",
-          "longest_waiting",
-          "generated_at"
-        ],
-        "description": "What the inbox looks like right now; it has no period."
-      },
-      "AdConversation": {
-        "type": "object",
-        "properties": {
-          "ad_referral": {
-            "description": "The first customer message from this ad in this conversation within the period.",
-            "$ref": "#/components/schemas/AdReferral"
-          },
-          "opened_conversation": {
-            "type": "boolean",
-            "description": "Whether that message started the conversation: no message came before it. False when the ad brought back someone who had written before."
-          },
-          "message_text": {
-            "description": "Text of that message: what the customer wrote, often the greeting the ad prefilled.",
-            "examples": [
-              "Hola, quiero más información sobre los implantes."
-            ],
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "contact": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "format": "uuid",
-                    "description": "Contact ID.",
-                    "examples": [
-                      "3f6c2b1e-8d4a-4b7e-9a51-2c7d8e9f0a1b"
-                    ]
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "name": {
-                "description": "Name saved on the contact, else the name on the channel.",
-                "examples": [
-                  "Ana Pérez"
-                ],
-                "type": [
-                  "string",
-                  "null"
-                ]
-              },
-              "phone": {
-                "description": "Phone saved on the contact, in E.164.",
-                "examples": [
-                  "+50760001234"
-                ],
-                "type": [
-                  "string",
-                  "null"
-                ]
-              },
-              "external_id": {
-                "type": "string",
-                "description": "Address on the channel: phone digits for WhatsApp, account ID otherwise.",
-                "examples": [
-                  "50760001234"
-                ]
-              }
-            },
-            "required": [
-              "id",
-              "name",
-              "phone",
-              "external_id"
-            ],
-            "description": "Who wrote."
-          },
-          "conversation": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string",
-                "format": "uuid",
-                "description": "Conversation ID.",
-                "examples": [
-                  "9b2e4c61-7a3f-4d18-b5c2-6e0f1a2b3c4d"
-                ]
-              },
-              "status": {
-                "type": "string",
-                "enum": [
-                  "open",
-                  "closed"
-                ],
-                "description": "Its state now."
-              },
-              "close_category": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "enum": [
-                      "resolved",
-                      "sale",
-                      "no_response",
-                      "spam",
-                      "other"
-                    ]
-                  },
-                  {
-                    "type": "null"
-                  }
-                ],
-                "description": "Why it was closed: `sale` when a member closed it as a sale, the only sign of a purchase Ricky records, without an amount. Null while open or when closed without a category."
-              },
-              "closed_at": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "format": "date-time",
-                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ],
-                "description": "When it was closed; null while open.",
-                "examples": [
-                  "2026-10-14T15:30:00.000Z"
-                ]
-              },
-              "created_at": {
-                "type": "string",
-                "format": "date-time",
-                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
-                "description": "When Ricky created it.",
-                "examples": [
-                  "2026-10-14T15:30:00.000Z"
-                ]
-              }
-            },
-            "required": [
-              "id",
-              "status",
-              "close_category",
-              "closed_at",
-              "created_at"
-            ],
-            "description": "The conversation as it is now."
-          },
-          "customer_messages": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 9007199254740991,
-            "description": "Messages the customer sent in the conversation from that message on, that one included; reactions do not count."
-          },
-          "replies": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 9007199254740991,
-            "description": "Replies from that message on by a member in Ricky, an AI agent or someone in the channel's own app. Automations, broadcasts, templates and reactions do not count."
-          },
-          "first_reply_seconds": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Seconds from that message to the first reply; null while unanswered."
-          }
-        },
-        "required": [
-          "ad_referral",
-          "opened_conversation",
-          "message_text",
-          "contact",
-          "conversation",
-          "customer_messages",
-          "replies",
-          "first_reply_seconds"
-        ],
-        "description": "A conversation a Meta ad opened or brought back in the period, with what happened after. One row per conversation and ad: a conversation two ads brought back has two rows."
-      },
       "MetaAdsCampaign": {
         "type": "object",
         "properties": {
@@ -20695,28 +19022,6 @@
               }
             ]
           },
-          "first_ad_referral": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/AdReferral"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "First touch: the earliest Meta ad this contact came from, in any of its conversations; null when none came from an ad."
-          },
-          "last_ad_referral": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/AdReferral"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Last touch: the latest Meta ad this contact came from; the same as `first_ad_referral` when only one ad brought them."
-          },
           "updated_at": {
             "type": "string",
             "format": "date-time",
@@ -20753,8 +19058,6 @@
           "last_activity_at",
           "last_activity_preview",
           "last_conversation_id",
-          "first_ad_referral",
-          "last_ad_referral",
           "updated_at"
         ],
         "description": "A person in the CRM."
@@ -21198,28 +19501,6 @@
               }
             ],
             "description": "The handoff to a person waiting to be resolved; null when there is none."
-          },
-          "first_ad_referral": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/AdReferral"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "The earliest Meta ad that brought the contact to this conversation; null when none did."
-          },
-          "latest_ad_referral": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/AdReferral"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "The latest Meta ad that brought the contact back to this conversation; the same as `first_ad_referral` when only one did."
           }
         },
         "required": [
@@ -21236,9 +19517,7 @@
           "last_activity_at",
           "last_activity_preview",
           "unread",
-          "active_handoff",
-          "first_ad_referral",
-          "latest_ad_referral"
+          "active_handoff"
         ],
         "description": "One contact talking to the organization on one channel."
       },
@@ -21515,17 +19794,6 @@
             "examples": [
               "2026-10-14T15:30:00.000Z"
             ]
-          },
-          "ad_referral": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/AdReferral"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "The Meta ad this customer message came from; null for every other message."
           }
         },
         "required": [
@@ -21544,8 +19812,7 @@
           "read_at",
           "failed_at",
           "edited_at",
-          "deleted_at",
-          "ad_referral"
+          "deleted_at"
         ],
         "description": "One message in a conversation."
       },
@@ -23189,13 +21456,6 @@
                   "c41d7e2a-5b6f-4a89-8c3d-0e1f2a3b4c5d"
                 ]
               },
-              "ad_id": {
-                "type": "string",
-                "description": "Meta's ID of the ad the customer came from, for a `message.received` whose message carries an ad referral. Read the message for the rest of the referral.",
-                "examples": [
-                  "120210000000000001"
-                ]
-              },
               "contact_id": {
                 "type": "string",
                 "format": "uuid",
@@ -23522,6 +21782,892 @@
           "status"
         ],
         "description": "What a bulk assignment did to one conversation."
+      },
+      "ReportPeriod": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "First day, inclusive.",
+            "examples": [
+              "2026-10-14"
+            ]
+          },
+          "to": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "Last day, inclusive. A `to` after today is today.",
+            "examples": [
+              "2026-10-14"
+            ]
+          },
+          "days": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 366,
+            "description": "Days in the period."
+          },
+          "granularity": {
+            "type": "string",
+            "enum": [
+              "day",
+              "hour"
+            ],
+            "description": "`hour` when the period is one day: series then have 24 hourly slots."
+          },
+          "time_zone": {
+            "type": "string",
+            "const": "America/Panama",
+            "description": "The time zone of every day and hour in the report."
+          },
+          "previous_from": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "First day of the previous period: the same number of days, right before.",
+            "examples": [
+              "2026-10-14"
+            ]
+          },
+          "previous_to": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "Last day of the previous period.",
+            "examples": [
+              "2026-10-14"
+            ]
+          }
+        },
+        "required": [
+          "from",
+          "to",
+          "days",
+          "granularity",
+          "time_zone",
+          "previous_from",
+          "previous_to"
+        ],
+        "description": "The days a report covers, in America/Panama time, and the period it is compared with."
+      },
+      "ConversationsReport": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "$ref": "#/components/schemas/ReportPeriod"
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "all",
+              "whatsapp",
+              "instagram",
+              "messenger",
+              "webchat"
+            ],
+            "description": "The channel filter the report applied."
+          },
+          "totals": {
+            "type": "object",
+            "properties": {
+              "customers": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Conversations with at least one customer message in the period."
+              },
+              "new_customers": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Customers whose first message ever falls in the period."
+              },
+              "returning_customers": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Customers who had written before the period."
+              },
+              "messages": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Messages customers sent in the period."
+              }
+            },
+            "required": [
+              "customers",
+              "new_customers",
+              "returning_customers",
+              "messages"
+            ],
+            "description": "The period."
+          },
+          "previous": {
+            "type": "object",
+            "properties": {
+              "customers": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Conversations with at least one customer message in the period."
+              },
+              "new_customers": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Customers whose first message ever falls in the period."
+              },
+              "returning_customers": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Customers who had written before the period."
+              },
+              "messages": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Messages customers sent in the period."
+              }
+            },
+            "required": [
+              "customers",
+              "new_customers",
+              "returning_customers",
+              "messages"
+            ],
+            "description": "The previous period."
+          },
+          "by_channel": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel": {
+                  "type": "string",
+                  "enum": [
+                    "whatsapp",
+                    "instagram",
+                    "messenger",
+                    "webchat"
+                  ],
+                  "description": "Channel."
+                },
+                "customers": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Conversations with at least one customer message in the period."
+                },
+                "new_customers": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Customers whose first message ever falls in the period."
+                },
+                "returning_customers": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Customers who had written before the period."
+                },
+                "messages": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Messages customers sent in the period."
+                }
+              },
+              "required": [
+                "channel",
+                "customers",
+                "new_customers",
+                "returning_customers",
+                "messages"
+              ]
+            },
+            "description": "The period per channel, most customers first."
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "slot": {
+                  "type": "string",
+                  "description": "America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.",
+                  "examples": [
+                    "2026-10-14"
+                  ]
+                },
+                "new_customers": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Customers whose first message ever falls in this slot."
+                },
+                "returning_customers": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Customers who wrote in this slot and had written before."
+                },
+                "previous_customers": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Customers in the same slot of the previous period; null when it has none."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "slot",
+                "new_customers",
+                "returning_customers",
+                "previous_customers"
+              ]
+            },
+            "description": "One entry per day of the period, or per hour of a one-day period."
+          },
+          "heatmap": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "day_of_week": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 6,
+                  "description": "0 is Sunday, 6 is Saturday."
+                },
+                "hour": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 23,
+                  "description": "Hour of the day, 0–23."
+                },
+                "messages": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Customer messages in that hour of that weekday."
+                }
+              },
+              "required": [
+                "day_of_week",
+                "hour",
+                "messages"
+              ]
+            },
+            "description": "Customer messages of the period per weekday and hour; slots without any are left out."
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When Ricky computed the report.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "period",
+          "channel",
+          "totals",
+          "previous",
+          "by_channel",
+          "series",
+          "heatmap",
+          "generated_at"
+        ],
+        "description": "How many customers write, whether they are new, and when. Only messages customers send count: a customer is a conversation with at least one of them in the period, and it is new when its first message ever falls in the period. Messages from the team, AI agents or campaigns and conversation openings and closes play no part."
+      },
+      "MessagesReport": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "$ref": "#/components/schemas/ReportPeriod"
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "all",
+              "whatsapp",
+              "instagram",
+              "messenger",
+              "webchat"
+            ],
+            "description": "The channel filter the report applied."
+          },
+          "totals": {
+            "type": "object",
+            "properties": {
+              "received": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Messages customers sent."
+              },
+              "sent": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Messages sent to customers, by anyone; the sum of `sent_by`."
+              },
+              "sent_by": {
+                "type": "object",
+                "properties": {
+                  "human": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Sent by a person in Ricky."
+                  },
+                  "ai": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Sent by an AI agent."
+                  },
+                  "automation": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Sent by an automation."
+                  },
+                  "campaign": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Templates not sent by an automation: broadcasts and templates sent by hand or through the API."
+                  },
+                  "external": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history."
+                  }
+                },
+                "required": [
+                  "human",
+                  "ai",
+                  "automation",
+                  "campaign",
+                  "external"
+                ],
+                "description": "Sent messages by sender; each message counts in one of them."
+              }
+            },
+            "required": [
+              "received",
+              "sent",
+              "sent_by"
+            ],
+            "description": "The period."
+          },
+          "previous": {
+            "type": "object",
+            "properties": {
+              "received": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Messages customers sent."
+              },
+              "sent": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Messages sent to customers, by anyone; the sum of `sent_by`."
+              },
+              "sent_by": {
+                "type": "object",
+                "properties": {
+                  "human": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Sent by a person in Ricky."
+                  },
+                  "ai": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Sent by an AI agent."
+                  },
+                  "automation": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Sent by an automation."
+                  },
+                  "campaign": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Templates not sent by an automation: broadcasts and templates sent by hand or through the API."
+                  },
+                  "external": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history."
+                  }
+                },
+                "required": [
+                  "human",
+                  "ai",
+                  "automation",
+                  "campaign",
+                  "external"
+                ],
+                "description": "Sent messages by sender; each message counts in one of them."
+              }
+            },
+            "required": [
+              "received",
+              "sent",
+              "sent_by"
+            ],
+            "description": "The previous period."
+          },
+          "by_channel": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel": {
+                  "type": "string",
+                  "enum": [
+                    "whatsapp",
+                    "instagram",
+                    "messenger",
+                    "webchat"
+                  ],
+                  "description": "Channel."
+                },
+                "received": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Messages customers sent."
+                },
+                "sent": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Messages sent to customers, by anyone; the sum of `sent_by`."
+                },
+                "sent_by": {
+                  "type": "object",
+                  "properties": {
+                    "human": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent by a person in Ricky."
+                    },
+                    "ai": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent by an AI agent."
+                    },
+                    "automation": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent by an automation."
+                    },
+                    "campaign": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Templates not sent by an automation: broadcasts and templates sent by hand or through the API."
+                    },
+                    "external": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history."
+                    }
+                  },
+                  "required": [
+                    "human",
+                    "ai",
+                    "automation",
+                    "campaign",
+                    "external"
+                  ],
+                  "description": "Sent messages by sender; each message counts in one of them."
+                }
+              },
+              "required": [
+                "channel",
+                "received",
+                "sent",
+                "sent_by"
+              ]
+            },
+            "description": "The period per channel, most messages first."
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "slot": {
+                  "type": "string",
+                  "description": "America/Panama day `YYYY-MM-DD`, or hour `YYYY-MM-DDTHH` when the period is one day.",
+                  "examples": [
+                    "2026-10-14"
+                  ]
+                },
+                "received": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Messages customers sent."
+                },
+                "sent": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Messages sent to customers, by anyone; the sum of `sent_by`."
+                },
+                "sent_by": {
+                  "type": "object",
+                  "properties": {
+                    "human": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent by a person in Ricky."
+                    },
+                    "ai": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent by an AI agent."
+                    },
+                    "automation": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent by an automation."
+                    },
+                    "campaign": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Templates not sent by an automation: broadcasts and templates sent by hand or through the API."
+                    },
+                    "external": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent from the channel's own app, with no sender in Ricky: WhatsApp Business app coexistence and imported history."
+                    }
+                  },
+                  "required": [
+                    "human",
+                    "ai",
+                    "automation",
+                    "campaign",
+                    "external"
+                  ],
+                  "description": "Sent messages by sender; each message counts in one of them."
+                },
+                "previous_received": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Received in the same slot of the previous period; null when it has none."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "previous_sent": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Sent in the same slot of the previous period; null when it has none."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "slot",
+                "received",
+                "sent",
+                "sent_by",
+                "previous_received",
+                "previous_sent"
+              ]
+            },
+            "description": "One entry per day of the period, or per hour of a one-day period."
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When Ricky computed the report.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "period",
+          "channel",
+          "totals",
+          "previous",
+          "by_channel",
+          "series",
+          "generated_at"
+        ],
+        "description": "Messages received from customers and sent to them in the period, and who sent them, dated when each message was sent."
+      },
+      "DashboardReport": {
+        "type": "object",
+        "properties": {
+          "totals": {
+            "type": "object",
+            "properties": {
+              "open_now": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Open conversations."
+              },
+              "unassigned": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Open conversations with no member or AI agent assigned."
+              },
+              "awaiting_reply": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Open conversations whose last message, reactions aside, is from the customer."
+              },
+              "pending_handoffs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Handoffs from an AI agent to a person still waiting."
+              },
+              "opened_today": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Conversations opened or reopened today, America/Panama."
+              },
+              "closed_today": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Conversations closed today, America/Panama."
+              }
+            },
+            "required": [
+              "open_now",
+              "unassigned",
+              "awaiting_reply",
+              "pending_handoffs",
+              "opened_today",
+              "closed_today"
+            ],
+            "description": "Now."
+          },
+          "by_channel": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel": {
+                  "type": "string",
+                  "enum": [
+                    "whatsapp",
+                    "instagram",
+                    "messenger",
+                    "webchat"
+                  ],
+                  "description": "Channel."
+                },
+                "open": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Open conversations."
+                }
+              },
+              "required": [
+                "channel",
+                "open"
+              ]
+            },
+            "description": "Open conversations per channel, most first."
+          },
+          "assignees": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "human",
+                    "ai",
+                    "unassigned"
+                  ],
+                  "description": "`human` is a member, `ai` an AI agent, `unassigned` nobody."
+                },
+                "id": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "User ID or AI agent ID; null for `unassigned`."
+                },
+                "name": {
+                  "description": "Name; null when it has none and for `unassigned`.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "open": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Open conversations they hold."
+                },
+                "awaiting_reply": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Of those, the ones whose last message is from the customer."
+                }
+              },
+              "required": [
+                "type",
+                "id",
+                "name",
+                "open",
+                "awaiting_reply"
+              ]
+            },
+            "description": "Open conversations per assignee, most first."
+          },
+          "longest_waiting": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "conversation_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "Conversation ID."
+                },
+                "channel": {
+                  "type": "string",
+                  "enum": [
+                    "whatsapp",
+                    "instagram",
+                    "messenger",
+                    "webchat"
+                  ],
+                  "description": "Channel."
+                },
+                "participant_name": {
+                  "description": "Customer name as the inbox shows it: the contact’s saved name, else the channel profile name, else the contact’s phone.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "waiting_since": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                  "description": "When the customer message they wait on arrived.",
+                  "examples": [
+                    "2026-10-14T15:30:00.000Z"
+                  ]
+                },
+                "assignee_type": {
+                  "type": "string",
+                  "enum": [
+                    "human",
+                    "ai",
+                    "unassigned"
+                  ],
+                  "description": "`human` is a member, `ai` an AI agent, `unassigned` nobody."
+                },
+                "assignee_name": {
+                  "description": "Assignee name; null when there is none.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "conversation_id",
+                "channel",
+                "participant_name",
+                "waiting_since",
+                "assignee_type",
+                "assignee_name"
+              ]
+            },
+            "description": "The 15 open conversations waiting longest for a reply, oldest first."
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "description": "When Ricky computed the report.",
+            "examples": [
+              "2026-10-14T15:30:00.000Z"
+            ]
+          }
+        },
+        "required": [
+          "totals",
+          "by_channel",
+          "assignees",
+          "longest_waiting",
+          "generated_at"
+        ],
+        "description": "What the inbox looks like right now; it has no period."
       },
       "TeamReport": {
         "type": "object",
@@ -27403,6 +26549,172 @@
         ],
         "description": "A WhatsApp number, with its status, quality and messaging limit at Meta."
       },
+      "CreateAgent": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "description": "Name the team sees."
+          },
+          "description": {
+            "description": "What the agent is for.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "instructions": {
+            "description": "How the agent answers customers.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 50000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "voice": {
+            "description": "A voice of `GET /agent-options`. Without one, the default voice.",
+            "type": "string",
+            "maxLength": 100
+          },
+          "capabilities": {
+            "description": "The complete set of capability names. Replaces the current ones.",
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 200
+            }
+          },
+          "handoff_user_ids": {
+            "description": "The complete set of members who receive handed-off conversations. Required with `ricky.handoff.request`.",
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false,
+        "description": "Only `name` is required; it does not connect the agent to any channel.",
+        "examples": [
+          {
+            "name": "Asistente de ventas",
+            "instructions": "Saluda por el nombre y confirma el pedido antes de dar la fecha de entrega.",
+            "capabilities": [
+              "ricky.handoff.request"
+            ],
+            "handoff_user_ids": [
+              "2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b"
+            ]
+          }
+        ]
+      },
+      "UpdateAgent": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "description": "Name the team sees."
+          },
+          "description": {
+            "description": "What the agent is for.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "instructions": {
+            "description": "How the agent answers customers.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 50000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "voice": {
+            "description": "A voice of `GET /agent-options`. Without one, the default voice.",
+            "type": "string",
+            "maxLength": 100
+          },
+          "capabilities": {
+            "description": "The complete set of capability names. Replaces the current ones.",
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 200
+            }
+          },
+          "handoff_user_ids": {
+            "description": "The complete set of members who receive handed-off conversations. Required with `ricky.handoff.request`.",
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "additionalProperties": false,
+        "description": "Only the fields you send change. Send `null` to clear a text.",
+        "examples": [
+          {
+            "instructions": "Responde siempre en español y de forma breve."
+          }
+        ]
+      },
+      "AssignConversationAgent": {
+        "type": "object",
+        "properties": {
+          "agent_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Agent that answers from now on; null turns the AI off for the conversation."
+          }
+        },
+        "required": [
+          "agent_id"
+        ],
+        "additionalProperties": false,
+        "examples": [
+          {
+            "agent_id": "7e8f9a0b-1c2d-4e3f-a4b5-c6d7e8f9a0b1"
+          }
+        ]
+      },
       "ResolveHandoff": {
         "type": "object",
         "properties": {
@@ -28671,172 +27983,6 @@
         "examples": [
           {
             "expire_previous_after_hours": 24
-          }
-        ]
-      },
-      "CreateAgent": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 120,
-            "description": "Name the team sees."
-          },
-          "description": {
-            "description": "What the agent is for.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 2000
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "instructions": {
-            "description": "How the agent answers customers.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 50000
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "voice": {
-            "description": "A voice of `GET /agent-options`. Without one, the default voice.",
-            "type": "string",
-            "maxLength": 100
-          },
-          "capabilities": {
-            "description": "The complete set of capability names. Replaces the current ones.",
-            "maxItems": 200,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "maxLength": 200
-            }
-          },
-          "handoff_user_ids": {
-            "description": "The complete set of members who receive handed-off conversations. Required with `ricky.handoff.request`.",
-            "maxItems": 100,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        },
-        "required": [
-          "name"
-        ],
-        "additionalProperties": false,
-        "description": "Only `name` is required; it does not connect the agent to any channel.",
-        "examples": [
-          {
-            "name": "Asistente de ventas",
-            "instructions": "Saluda por el nombre y confirma el pedido antes de dar la fecha de entrega.",
-            "capabilities": [
-              "ricky.handoff.request"
-            ],
-            "handoff_user_ids": [
-              "2d4f6a8c-1b3d-4e5f-8a7b-9c0d1e2f3a4b"
-            ]
-          }
-        ]
-      },
-      "UpdateAgent": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 120,
-            "description": "Name the team sees."
-          },
-          "description": {
-            "description": "What the agent is for.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 2000
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "instructions": {
-            "description": "How the agent answers customers.",
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 50000
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "voice": {
-            "description": "A voice of `GET /agent-options`. Without one, the default voice.",
-            "type": "string",
-            "maxLength": 100
-          },
-          "capabilities": {
-            "description": "The complete set of capability names. Replaces the current ones.",
-            "maxItems": 200,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "maxLength": 200
-            }
-          },
-          "handoff_user_ids": {
-            "description": "The complete set of members who receive handed-off conversations. Required with `ricky.handoff.request`.",
-            "maxItems": 100,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        },
-        "additionalProperties": false,
-        "description": "Only the fields you send change. Send `null` to clear a text.",
-        "examples": [
-          {
-            "instructions": "Responde siempre en español y de forma breve."
-          }
-        ]
-      },
-      "AssignConversationAgent": {
-        "type": "object",
-        "properties": {
-          "agent_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Agent that answers from now on; null turns the AI off for the conversation."
-          }
-        },
-        "required": [
-          "agent_id"
-        ],
-        "additionalProperties": false,
-        "examples": [
-          {
-            "agent_id": "7e8f9a0b-1c2d-4e3f-a4b5-c6d7e8f9a0b1"
           }
         ]
       },
