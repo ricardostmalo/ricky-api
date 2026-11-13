@@ -21,9 +21,15 @@ Each report operation answers the numbers of one tab of **Reports** in Ricky. Th
 
 `GET /ads/google/campaigns` reads the advertiser accounts selected by the organization in **Integrations → Google Ads**. The API key needs `reports:read`. Send `from` and `to` as `YYYY-MM-DD`. Filter by `account_id` or `campaign_id` as needed.
 
-Each campaign includes spend in the account currency, impressions, clicks, and conversions as Google reports them.
+Each account includes `period`, `previous_period` (the same number of days immediately before), `totals`, `previous_totals`, fractional `changes`, `daily`, `previous_daily`, and `campaigns`. Campaigns include `channel_type`, status, current metrics, `previous`, and `changes`. A `campaign_id` filter applies to every total and series.
 
-## The period
+Dates follow **the Google Ads account time zone**, not Panama time. Accounts remain separate, with their own currency and time zone. For example, November 1–11 compares with October 21–31. Successful reads include zero-activity days and campaigns. An account with `access_denied` or `unavailable` has null totals/comparison and empty series; it does not report zero performance.
+
+`cost_per_click` is summed spend divided by clicks; `cost_per_conversion` is summed spend divided by Google's conversions; `click_through_rate` is clicks divided by impressions as a fraction. A zero denominator returns `null`. Changes use `(current - previous) / abs(previous)`, and return `null` for a zero or unknown baseline. These ratios are calculated by Ricky from the report totals, not averages of campaign ratios.
+
+Conversions retain Google's fractional values and configured conversion definitions. They are not unique customers or conversations. Recent conversions may update after the interaction date. Daily rows use the interaction date from Google, without shifting the account's calendar days.
+
+## The period for `/reports/*`
 
 * `from` and `to` are days, `YYYY-MM-DD`, both inclusive. Send both or neither. Without them the report covers the last 7 days, today included.
 * Days are **America/Panama** time, like the Reports pages. A message sent at 23:30 in Panama counts on that day.

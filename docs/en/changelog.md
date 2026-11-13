@@ -8,6 +8,8 @@ This page records changes to the API. A breaking change only ships in a new path
 
 ## November 12, 2026
 
+**Google Ads trends and comparison.** `/ads/google/campaigns` adds daily series, an equal-length previous period, totals and relative changes, cost per click/conversion, and campaign channel type. Zero denominators and unavailable reads remain null. The Ads report and connectors use the same data.
+
 **Google Ads report correction.** `/ads/google/campaigns` returns campaign metrics reported by Google Ads. The custom WhatsApp message-code mechanism and its `conversation_code`, `conversation_count` and `recent_conversation_ids` fields have been removed. Google-reported `conversions` remains available.
 
 ## November 11, 2026

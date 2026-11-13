@@ -8,6 +8,8 @@ Esta página registra los cambios de la API. Un cambio incompatible solo llega e
 
 ## 12 de noviembre de 2026
 
+**Tendencias y comparación de Google Ads.** `/ads/google/campaigns` añade series diarias, periodo anterior de igual duración, totales y cambios relativos, costos por clic/conversión y tipo de campaña. Los denominadores cero y las consultas fallidas quedan como null. El reporte de anuncios y los conectores usan los mismos datos.
+
 **Corrección del reporte de Google Ads.** `/ads/google/campaigns` devuelve métricas de campañas según Google Ads. Se retiró el mecanismo de códigos en mensajes de WhatsApp y sus campos `conversation_code`, `conversation_count` y `recent_conversation_ids`. Las conversiones que reporta Google siguen disponibles en `conversions`.
 
 ## 11 de noviembre de 2026

@@ -4042,7 +4042,7 @@ class WorkflowDefinition1Trigger(TypedDict):
 
 class WorkflowDefinition1Source(TypedDict):
     """
-    Who it messages: Odoo appointments or Odoo birthdays.
+    Who it messages: Odoo appointments or birthdays from Odoo or GesDen.
     """
 
     kind: Literal["odoo_appointments"]
@@ -4058,10 +4058,18 @@ class WorkflowDefinition1Source(TypedDict):
 
 class WorkflowDefinition1Source1(TypedDict):
     """
-    Who it messages: Odoo appointments or Odoo birthdays.
+    Who it messages: Odoo appointments or birthdays from Odoo or GesDen.
     """
 
     kind: Literal["odoo_birthdays"]
+
+
+class WorkflowDefinition1Source2(TypedDict):
+    """
+    Who it messages: Odoo appointments or birthdays from Odoo or GesDen.
+    """
+
+    kind: Literal["gesden_birthdays"]
 
 
 class WorkflowDefinition1Template(TypedDict):
@@ -4097,9 +4105,9 @@ class WorkflowDefinition1(TypedDict):
     """
 
     trigger: WorkflowDefinition1Trigger
-    source: Union[WorkflowDefinition1Source, WorkflowDefinition1Source1]
+    source: Union[WorkflowDefinition1Source, WorkflowDefinition1Source1, WorkflowDefinition1Source2]
     """
-    Who it messages: Odoo appointments or Odoo birthdays.
+    Who it messages: Odoo appointments or birthdays from Odoo or GesDen.
     """
     template: WorkflowDefinition1Template
 

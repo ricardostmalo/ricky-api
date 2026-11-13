@@ -3634,7 +3634,7 @@ export type Workflow = {
             timezone: string;
         };
         /**
-         * Who it messages: Odoo appointments or Odoo birthdays.
+         * Who it messages: Odoo appointments or birthdays from Odoo or GesDen.
          */
         source: {
             kind: 'odoo_appointments';
@@ -3648,6 +3648,8 @@ export type Workflow = {
             appointment_states: Array<string> | null;
         } | {
             kind: 'odoo_birthdays';
+        } | {
+            kind: 'gesden_birthdays';
         };
         template: {
             /**

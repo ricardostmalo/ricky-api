@@ -21,9 +21,15 @@ Cada operación de reportes responde los números de una pestaña de **Reportes*
 
 `GET /ads/google/campaigns` consulta las cuentas publicitarias que la organización eligió en **Integraciones → Google Ads**. La clave necesita `reports:read`. Envía `from` y `to` en formato `YYYY-MM-DD`. Puedes filtrar por `account_id` y `campaign_id`.
 
-Cada campaña incluye gasto en la moneda de la cuenta, impresiones, clics y conversiones según Google.
+Cada cuenta incluye `period`, `previous_period` (los mismos días inmediatamente anteriores), `totals`, `previous_totals`, cambios relativos `changes`, `daily`, `previous_daily` y `campaigns`. Las campañas incluyen `channel_type`, estado, métricas actuales, `previous` y `changes`. El filtro `campaign_id` se aplica a todos los totales y series.
 
-## El período
+Las fechas siguen **la zona horaria de la cuenta de Google Ads**, no la de Panamá. Cada cuenta conserva su moneda y zona horaria. Por ejemplo, el 1–11 de noviembre se compara con el 21–31 de octubre. Las consultas exitosas incluyen días y campañas sin actividad. Una cuenta con `access_denied` o `unavailable` devuelve totales y comparación null y series vacías; no informa rendimiento cero.
+
+`cost_per_click` divide la inversión total por los clics; `cost_per_conversion` divide la inversión por las conversiones de Google; `click_through_rate` divide clics por impresiones como fracción. Un denominador cero devuelve `null`. Los cambios usan `(actual - anterior) / abs(anterior)` y devuelven `null` si la base es cero o desconocida. Ricky calcula estas razones desde los totales; no promedia los costos por campaña.
+
+Las conversiones conservan las fracciones y definiciones de Google. No son clientes únicos ni conversaciones. Las conversiones recientes pueden actualizarse después de la interacción. Las series usan la fecha de interacción de Google, sin desplazar los días de la cuenta.
+
+## El período de `/reports/*`
 
 * `from` y `to` son días, `YYYY-MM-DD`, los dos incluidos. Envía los dos o ninguno. Sin ellos, el reporte cubre los últimos 7 días, hoy incluido.
 * Los días son de **America/Panama**, como en las páginas de Reportes. Un mensaje enviado a las 23:30 en Panamá cuenta en ese día.
