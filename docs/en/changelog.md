@@ -6,6 +6,10 @@ URL: https://getricky.ai/en/docs/api/changelog
 
 This page records changes to the API. A breaking change only ships in a new path version and is announced here.
 
+## November 15, 2026
+
+**Closing unanswered conversations.** Workflows accept `team_message_unanswered` with `inactivity_seconds` and a single `close_conversation` step. Each new team message starts the wait; a customer reply cancels the close. Due closes run on the next 15-minute deadline sweep. Scheduled workflows expose `close_after_send`: close only when that send opened the chat and no later message arrived; configure this option in Ricky's editor.
+
 ## November 13, 2026
 
 **Conversations waiting for a reply.** Backward-compatible change to v1. `GET /conversations?awaiting_reply=true` lists the conversations waiting for the team's reply: open, with the contact's message last, reactions aside. They are the ones `GET /reports/dashboard` counts in `awaiting_reply`. `last_message_from=customer` is unchanged. See [Inbox](./inbox.md).

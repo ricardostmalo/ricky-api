@@ -26561,7 +26561,7 @@
                     "description": "Channels it listens to. See `GET /channels`."
                   },
                   "inactivity_seconds": {
-                    "description": "For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.",
+                    "description": "For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.",
                     "type": "integer",
                     "minimum": 60,
                     "maximum": 31536000
@@ -31244,7 +31244,7 @@
                 "description": "Channels it listens to. See `GET /channels`."
               },
               "inactivity_seconds": {
-                "description": "For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.",
+                "description": "For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.",
                 "type": "integer",
                 "minimum": 60,
                 "maximum": 31536000
@@ -32037,7 +32037,7 @@
                 "description": "Channels it listens to. See `GET /channels`."
               },
               "inactivity_seconds": {
-                "description": "For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.",
+                "description": "For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.",
                 "type": "integer",
                 "minimum": 60,
                 "maximum": 31536000

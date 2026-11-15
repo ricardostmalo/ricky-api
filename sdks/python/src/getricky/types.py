@@ -4012,7 +4012,7 @@ class WorkflowDefinition(TypedDict):
     """
     inactivity_seconds: NotRequired[int]
     """
-    For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.
+    For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.
     """
     message_filters: NotRequired[WorkflowDefinitionMessageFilters]
     """
@@ -6036,7 +6036,7 @@ class CreateWorkflowDefinition(TypedDict, closed=True):
     """
     inactivity_seconds: NotRequired[int]
     """
-    For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.
+    For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.
     """
     message_filters: NotRequired[CreateWorkflowDefinitionMessageFilters]
     """
@@ -6397,7 +6397,7 @@ class UpdateWorkflowDefinition(TypedDict, closed=True):
     """
     inactivity_seconds: NotRequired[int]
     """
-    For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.
+    For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.
     """
     message_filters: NotRequired[UpdateWorkflowDefinitionMessageFilters]
     """

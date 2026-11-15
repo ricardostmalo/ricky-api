@@ -3384,7 +3384,7 @@ export type Workflow = {
          */
         channel_ids: Array<string>;
         /**
-         * For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.
+         * For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.
          */
         inactivity_seconds?: number;
         /**
@@ -5076,7 +5076,7 @@ export type CreateWorkflow = {
          */
         channel_ids: Array<string>;
         /**
-         * For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.
+         * For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.
          */
         inactivity_seconds?: number;
         /**
@@ -5341,7 +5341,7 @@ export type UpdateWorkflow = {
          */
         channel_ids: Array<string>;
         /**
-         * For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.
+         * For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.
          */
         inactivity_seconds?: number;
         /**
