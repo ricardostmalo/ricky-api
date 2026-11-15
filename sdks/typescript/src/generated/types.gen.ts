@@ -3378,13 +3378,13 @@ export type Workflow = {
         /**
          * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
          */
-        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'team_message_unanswered' | 'call_received';
+        trigger: 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'team_message_unanswered' | 'call_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
         channel_ids: Array<string>;
         /**
-         * For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.
+         * Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.
          */
         inactivity_seconds?: number;
         /**
@@ -5070,13 +5070,13 @@ export type CreateWorkflow = {
         /**
          * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
          */
-        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'team_message_unanswered' | 'call_received';
+        trigger: 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'team_message_unanswered' | 'call_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
         channel_ids: Array<string>;
         /**
-         * For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.
+         * Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.
          */
         inactivity_seconds?: number;
         /**
@@ -5335,13 +5335,13 @@ export type UpdateWorkflow = {
         /**
          * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
          */
-        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'team_message_unanswered' | 'call_received';
+        trigger: 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'team_message_unanswered' | 'call_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
         channel_ids: Array<string>;
         /**
-         * For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.
+         * Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.
          */
         inactivity_seconds?: number;
         /**

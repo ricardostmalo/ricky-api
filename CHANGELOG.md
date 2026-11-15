@@ -8,6 +8,8 @@ This page records changes to the API. A breaking change only ships in a new path
 
 **Closing unanswered conversations.** Workflows accept `team_message_unanswered` with `inactivity_seconds` and any conversation flow. The trigger starts the flow; closing is an explicit `close_conversation` step. Each new team message starts the wait; a customer reply cancels the close. Due closes run on the next 15-minute deadline sweep. Scheduled workflows expose `close_after_send`: close only when that send opened the chat and no later message arrived; configure this option in Ricky's editor.
 
+**Conversation inactivity.** The `conversation_inactive` trigger starts a flow after `inactivity_seconds` without a message or reaction from either side. Every new message or reaction restarts the timer, even when the latest message came from the customer. Closing remains a separate `close_conversation` step.
+
 ## November 13, 2026
 
 **Conversations waiting for a reply.** Backward-compatible change to v1. `GET /conversations?awaiting_reply=true` lists the conversations waiting for the team's reply: open, with the contact's message last, reactions aside. They are the ones `GET /reports/dashboard` counts in `awaiting_reply`. `last_message_from=customer` is unchanged. See [Inbox](https://getricky.ai/en/docs/api/inbox).

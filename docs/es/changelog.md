@@ -8,7 +8,7 @@ Esta página registra los cambios de la API. Un cambio incompatible solo llega e
 
 ## 15 de noviembre de 2026
 
-**Cierre por falta de respuesta.** Los workflows aceptan `team_message_unanswered` con `inactivity_seconds` y un único paso `close_conversation`. El plazo empieza con cada nuevo mensaje del equipo; una respuesta del cliente cancela el cierre. Se ejecuta en la siguiente revisión de vencimientos, cada 15 minutos. Los workflows programados muestran `close_after_send`: cierra solo si el propio envío abrió el chat y no llegó otro mensaje después; esta opción se configura en el editor de Ricky.
+**Cierre por falta de respuesta.** Los workflows aceptan `team_message_unanswered` con `inactivity_seconds` y un flujo de conversación. El disparador inicia el flujo; cerrar requiere un paso explícito `close_conversation`. El plazo empieza con cada nuevo mensaje del equipo; una respuesta del cliente cancela el cierre. Se ejecuta en la siguiente revisión de vencimientos, cada 15 minutos. Los workflows programados muestran `close_after_send`: cierra solo si el propio envío abrió el chat y no llegó otro mensaje después; esta opción se configura en el editor de Ricky.
 
 ## 13 de noviembre de 2026
 

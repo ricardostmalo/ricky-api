@@ -4002,7 +4002,7 @@ class WorkflowDefinition(TypedDict):
     Reacts to a conversation with messages, questions, waits and assignments.
     """
 
-    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away", "team_message_unanswered", "call_received"]
+    trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "team_away", "team_message_unanswered", "call_received"]
     """
     `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
@@ -4012,7 +4012,7 @@ class WorkflowDefinition(TypedDict):
     """
     inactivity_seconds: NotRequired[int]
     """
-    For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.
+    Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.
     """
     message_filters: NotRequired[WorkflowDefinitionMessageFilters]
     """
@@ -6026,7 +6026,7 @@ class CreateWorkflowDefinition(TypedDict, closed=True):
     Reacts to a conversation with messages, questions, waits and assignments.
     """
 
-    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away", "team_message_unanswered", "call_received"]
+    trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "team_away", "team_message_unanswered", "call_received"]
     """
     `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
@@ -6036,7 +6036,7 @@ class CreateWorkflowDefinition(TypedDict, closed=True):
     """
     inactivity_seconds: NotRequired[int]
     """
-    For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.
+    Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.
     """
     message_filters: NotRequired[CreateWorkflowDefinitionMessageFilters]
     """
@@ -6387,7 +6387,7 @@ class UpdateWorkflowDefinition(TypedDict, closed=True):
     Replaces the whole definition.
     """
 
-    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away", "team_message_unanswered", "call_received"]
+    trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "team_away", "team_message_unanswered", "call_received"]
     """
     `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
@@ -6397,7 +6397,7 @@ class UpdateWorkflowDefinition(TypedDict, closed=True):
     """
     inactivity_seconds: NotRequired[int]
     """
-    For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.
+    Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.
     """
     message_filters: NotRequired[UpdateWorkflowDefinitionMessageFilters]
     """

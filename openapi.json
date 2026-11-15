@@ -26542,6 +26542,7 @@
                   "trigger": {
                     "type": "string",
                     "enum": [
+                      "conversation_inactive",
                       "conversation_opened",
                       "first_message_received",
                       "message_received",
@@ -26561,7 +26562,7 @@
                     "description": "Channels it listens to. See `GET /channels`."
                   },
                   "inactivity_seconds": {
-                    "description": "For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.",
+                    "description": "Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.",
                     "type": "integer",
                     "minimum": 60,
                     "maximum": 31536000
@@ -31225,6 +31226,7 @@
               "trigger": {
                 "type": "string",
                 "enum": [
+                  "conversation_inactive",
                   "conversation_opened",
                   "first_message_received",
                   "message_received",
@@ -31244,7 +31246,7 @@
                 "description": "Channels it listens to. See `GET /channels`."
               },
               "inactivity_seconds": {
-                "description": "For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.",
+                "description": "Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.",
                 "type": "integer",
                 "minimum": 60,
                 "maximum": 31536000
@@ -32018,6 +32020,7 @@
               "trigger": {
                 "type": "string",
                 "enum": [
+                  "conversation_inactive",
                   "conversation_opened",
                   "first_message_received",
                   "message_received",
@@ -32037,7 +32040,7 @@
                 "description": "Channels it listens to. See `GET /channels`."
               },
               "inactivity_seconds": {
-                "description": "For team_message_unanswered: seconds since the latest team reply. Starts the configured flow when the customer has not replied.",
+                "description": "Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.",
                 "type": "integer",
                 "minimum": 60,
                 "maximum": 31536000
