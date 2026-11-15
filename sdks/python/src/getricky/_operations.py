@@ -291,6 +291,7 @@ class SyncOperations:
         tag_id: Optional[str] = None,
         unread: Optional[Literal["true", "false"]] = None,
         pending_handoff: Optional[Literal["true", "false"]] = None,
+        awaiting_reply: Optional[Literal["true", "false"]] = None,
         last_message_from: Optional[Literal["customer"]] = None,
         last_activity_after: Optional[str] = None,
         last_activity_before: Optional[str] = None,
@@ -316,6 +317,7 @@ class SyncOperations:
             tag_id: Only conversations whose contact has this tag.
             unread: `true`: only conversations with messages the team has not read.
             pending_handoff: `true`: only conversations with a handoff to a person not resolved yet.
+            awaiting_reply: `true`: only conversations waiting for the team's reply: open, with the contact's message as the latest one that asks or answers (a reaction does neither). The conversations `GET /reports/dashboard` counts in `awaiting_reply`.
             last_message_from: `customer`: only conversations whose latest message came from the contact.
             last_activity_after: Only conversations whose latest message is at or after this time, ISO 8601.
             last_activity_before: Only conversations whose latest message is before this time, ISO 8601.
@@ -328,7 +330,7 @@ class SyncOperations:
         return cast(Page[Conversation], self._request(
             "GET",
             "/conversations",
-            query={"page_size": page_size, "cursor": cursor, "status": status, "assigned_user_id": assigned_user_id, "agent_id": agent_id, "unassigned": unassigned, "channel_id": channel_id, "tag_id": tag_id, "unread": unread, "pending_handoff": pending_handoff, "last_message_from": last_message_from, "last_activity_after": last_activity_after, "last_activity_before": last_activity_before, "ad_id": ad_id, "campaign_id": campaign_id, "ad_set_id": ad_set_id, "referred_after": referred_after, "referred_before": referred_before},
+            query={"page_size": page_size, "cursor": cursor, "status": status, "assigned_user_id": assigned_user_id, "agent_id": agent_id, "unassigned": unassigned, "channel_id": channel_id, "tag_id": tag_id, "unread": unread, "pending_handoff": pending_handoff, "awaiting_reply": awaiting_reply, "last_message_from": last_message_from, "last_activity_after": last_activity_after, "last_activity_before": last_activity_before, "ad_id": ad_id, "campaign_id": campaign_id, "ad_set_id": ad_set_id, "referred_after": referred_after, "referred_before": referred_before},
         ))
 
     def start_conversation(
@@ -2871,6 +2873,7 @@ class AsyncOperations:
         tag_id: Optional[str] = None,
         unread: Optional[Literal["true", "false"]] = None,
         pending_handoff: Optional[Literal["true", "false"]] = None,
+        awaiting_reply: Optional[Literal["true", "false"]] = None,
         last_message_from: Optional[Literal["customer"]] = None,
         last_activity_after: Optional[str] = None,
         last_activity_before: Optional[str] = None,
@@ -2896,6 +2899,7 @@ class AsyncOperations:
             tag_id: Only conversations whose contact has this tag.
             unread: `true`: only conversations with messages the team has not read.
             pending_handoff: `true`: only conversations with a handoff to a person not resolved yet.
+            awaiting_reply: `true`: only conversations waiting for the team's reply: open, with the contact's message as the latest one that asks or answers (a reaction does neither). The conversations `GET /reports/dashboard` counts in `awaiting_reply`.
             last_message_from: `customer`: only conversations whose latest message came from the contact.
             last_activity_after: Only conversations whose latest message is at or after this time, ISO 8601.
             last_activity_before: Only conversations whose latest message is before this time, ISO 8601.
@@ -2908,7 +2912,7 @@ class AsyncOperations:
         return cast(Page[Conversation], await self._request(
             "GET",
             "/conversations",
-            query={"page_size": page_size, "cursor": cursor, "status": status, "assigned_user_id": assigned_user_id, "agent_id": agent_id, "unassigned": unassigned, "channel_id": channel_id, "tag_id": tag_id, "unread": unread, "pending_handoff": pending_handoff, "last_message_from": last_message_from, "last_activity_after": last_activity_after, "last_activity_before": last_activity_before, "ad_id": ad_id, "campaign_id": campaign_id, "ad_set_id": ad_set_id, "referred_after": referred_after, "referred_before": referred_before},
+            query={"page_size": page_size, "cursor": cursor, "status": status, "assigned_user_id": assigned_user_id, "agent_id": agent_id, "unassigned": unassigned, "channel_id": channel_id, "tag_id": tag_id, "unread": unread, "pending_handoff": pending_handoff, "awaiting_reply": awaiting_reply, "last_message_from": last_message_from, "last_activity_after": last_activity_after, "last_activity_before": last_activity_before, "ad_id": ad_id, "campaign_id": campaign_id, "ad_set_id": ad_set_id, "referred_after": referred_after, "referred_before": referred_before},
         ))
 
     async def start_conversation(

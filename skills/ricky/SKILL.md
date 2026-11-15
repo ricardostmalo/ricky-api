@@ -37,7 +37,7 @@ Each connection and each key belongs to one organization. Confirm which organiza
 
 - **"Who came from our ads this month, and what did they ask?"** List `GET /ads/conversations?from=…&to=…`, read the first message of each row (`message_text`) and, where needed, the conversation's messages; group by `ad_referral.ad_id` or `ad_referral.resolved.campaign_name`; join spend from `GET /ads/insights?level=ad`.
 - **"Find the chat with Ana."** Search conversations (`GET /conversations/search?query=Ana`) or contacts (`GET /contacts?query=Ana`), then read the messages.
-- **"What is waiting for us?"** `GET /conversations?status=open&last_message_from=customer`, or the live dashboard `GET /reports/dashboard`.
+- **"What is waiting for us?"** `GET /conversations?awaiting_reply=true`, or the live dashboard `GET /reports/dashboard`.
 - **"Send the order-ready template to this number."** Confirm the template, the variables and the number with the person, then `POST /conversations` with an `Idempotency-Key`, and follow `GET /sends/{send_id}` until it is `sent` or `failed`.
 
 ## When something fails

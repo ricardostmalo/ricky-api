@@ -1136,7 +1136,7 @@ class AgentOptionsCapability(TypedDict):
     """
     family: str
     """
-    Integration it belongs to; it works only once the organization connects it in Ricky. `human_handoff` needs no connection but requires `handoff_user_ids`.
+    Integration it belongs to; it works only once the organization connects it in Ricky. `human_handoff` needs no connection but requires `handoff_user_ids`; `conversation_close` needs nothing.
     """
 
 
@@ -4002,13 +4002,17 @@ class WorkflowDefinition(TypedDict):
     Reacts to a conversation with messages, questions, waits and assignments.
     """
 
-    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away", "call_received"]
+    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away", "team_message_unanswered", "call_received"]
     """
     `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """
     Channels it listens to. See `GET /channels`.
+    """
+    inactivity_seconds: NotRequired[int]
+    """
+    For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.
     """
     message_filters: NotRequired[WorkflowDefinitionMessageFilters]
     """
@@ -4042,7 +4046,7 @@ class WorkflowDefinition1Trigger(TypedDict):
 
 class WorkflowDefinition1Source(TypedDict):
     """
-    Who it messages: Odoo appointments or birthdays from Odoo or GesDen.
+    Who it messages: Odoo or GesDen appointments, or birthdays from Odoo or GesDen.
     """
 
     kind: Literal["odoo_appointments"]
@@ -4058,15 +4062,31 @@ class WorkflowDefinition1Source(TypedDict):
 
 class WorkflowDefinition1Source1(TypedDict):
     """
-    Who it messages: Odoo appointments or birthdays from Odoo or GesDen.
+    Who it messages: Odoo or GesDen appointments, or birthdays from Odoo or GesDen.
+    """
+
+    kind: Literal["gesden_appointments"]
+    days_ahead: int
+    """
+    Days before the appointment it reminds.
+    """
+    appointment_states: List[str]
+    """
+    GesDen appointment states it reminds, by their GesDen id.
+    """
+
+
+class WorkflowDefinition1Source2(TypedDict):
+    """
+    Who it messages: Odoo or GesDen appointments, or birthdays from Odoo or GesDen.
     """
 
     kind: Literal["odoo_birthdays"]
 
 
-class WorkflowDefinition1Source2(TypedDict):
+class WorkflowDefinition1Source3(TypedDict):
     """
-    Who it messages: Odoo appointments or birthdays from Odoo or GesDen.
+    Who it messages: Odoo or GesDen appointments, or birthdays from Odoo or GesDen.
     """
 
     kind: Literal["gesden_birthdays"]
@@ -4101,13 +4121,17 @@ class WorkflowDefinition1Template(TypedDict):
 
 class WorkflowDefinition1(TypedDict):
     """
-    Sends a WhatsApp template every day from an Odoo integration. Created and edited in Ricky; the API reads, activates, pauses and deletes it.
+    Sends a WhatsApp template every day from Odoo or GesDen. Created and edited in Ricky; the API reads, activates, pauses and deletes it.
     """
 
     trigger: WorkflowDefinition1Trigger
-    source: Union[WorkflowDefinition1Source, WorkflowDefinition1Source1, WorkflowDefinition1Source2]
+    source: Union[WorkflowDefinition1Source, WorkflowDefinition1Source1, WorkflowDefinition1Source2, WorkflowDefinition1Source3]
     """
-    Who it messages: Odoo appointments or birthdays from Odoo or GesDen.
+    Who it messages: Odoo or GesDen appointments, or birthdays from Odoo or GesDen.
+    """
+    close_after_send: NotRequired[bool]
+    """
+    Close only when this send opened the conversation and no later message arrived.
     """
     template: WorkflowDefinition1Template
 
@@ -6002,13 +6026,17 @@ class CreateWorkflowDefinition(TypedDict, closed=True):
     Reacts to a conversation with messages, questions, waits and assignments.
     """
 
-    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away", "call_received"]
+    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away", "team_message_unanswered", "call_received"]
     """
     `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """
     Channels it listens to. See `GET /channels`.
+    """
+    inactivity_seconds: NotRequired[int]
+    """
+    For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.
     """
     message_filters: NotRequired[CreateWorkflowDefinitionMessageFilters]
     """
@@ -6359,13 +6387,17 @@ class UpdateWorkflowDefinition(TypedDict, closed=True):
     Replaces the whole definition.
     """
 
-    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away", "call_received"]
+    trigger: Literal["conversation_opened", "first_message_received", "message_received", "team_away", "team_message_unanswered", "call_received"]
     """
     `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """
     Channels it listens to. See `GET /channels`.
+    """
+    inactivity_seconds: NotRequired[int]
+    """
+    For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.
     """
     message_filters: NotRequired[UpdateWorkflowDefinitionMessageFilters]
     """

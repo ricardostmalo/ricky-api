@@ -1052,7 +1052,7 @@ export type AgentOptions = {
          */
         description: string;
         /**
-         * Integration it belongs to; it works only once the organization connects it in Ricky. `human_handoff` needs no connection but requires `handoff_user_ids`.
+         * Integration it belongs to; it works only once the organization connects it in Ricky. `human_handoff` needs no connection but requires `handoff_user_ids`; `conversation_close` needs nothing.
          */
         family: string;
     }>;
@@ -3378,11 +3378,15 @@ export type Workflow = {
         /**
          * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
          */
-        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'call_received';
+        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'team_message_unanswered' | 'call_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
         channel_ids: Array<string>;
+        /**
+         * For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.
+         */
+        inactivity_seconds?: number;
         /**
          * Which messages a `message_received` workflow reacts to.
          */
@@ -3634,7 +3638,7 @@ export type Workflow = {
             timezone: string;
         };
         /**
-         * Who it messages: Odoo appointments or birthdays from Odoo or GesDen.
+         * Who it messages: Odoo or GesDen appointments, or birthdays from Odoo or GesDen.
          */
         source: {
             kind: 'odoo_appointments';
@@ -3647,10 +3651,24 @@ export type Workflow = {
              */
             appointment_states: Array<string> | null;
         } | {
+            kind: 'gesden_appointments';
+            /**
+             * Days before the appointment it reminds.
+             */
+            days_ahead: number;
+            /**
+             * GesDen appointment states it reminds, by their GesDen id.
+             */
+            appointment_states: Array<string>;
+        } | {
             kind: 'odoo_birthdays';
         } | {
             kind: 'gesden_birthdays';
         };
+        /**
+         * Close only when this send opened the conversation and no later message arrived.
+         */
+        close_after_send?: boolean;
         template: {
             /**
              * WhatsApp channel it sends from.
@@ -5052,11 +5070,15 @@ export type CreateWorkflow = {
         /**
          * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
          */
-        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'call_received';
+        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'team_message_unanswered' | 'call_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
         channel_ids: Array<string>;
+        /**
+         * For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.
+         */
+        inactivity_seconds?: number;
         /**
          * Which messages a `message_received` workflow reacts to.
          */
@@ -5313,11 +5335,15 @@ export type UpdateWorkflow = {
         /**
          * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
          */
-        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'call_received';
+        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'team_message_unanswered' | 'call_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
         channel_ids: Array<string>;
+        /**
+         * For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.
+         */
+        inactivity_seconds?: number;
         /**
          * Which messages a `message_received` workflow reacts to.
          */
@@ -6515,6 +6541,10 @@ export type ListConversationsData = {
          * `true`: only conversations with a handoff to a person not resolved yet.
          */
         pending_handoff?: 'true' | 'false';
+        /**
+         * `true`: only conversations waiting for the team's reply: open, with the contact's message as the latest one that asks or answers (a reaction does neither). The conversations `GET /reports/dashboard` counts in `awaiting_reply`.
+         */
+        awaiting_reply?: 'true' | 'false';
         /**
          * `customer`: only conversations whose latest message came from the contact.
          */

@@ -6,6 +6,10 @@ URL: https://getricky.ai/en/docs/api/changelog
 
 This page records changes to the API. A breaking change only ships in a new path version and is announced here.
 
+## November 13, 2026
+
+**Conversations waiting for a reply.** Backward-compatible change to v1. `GET /conversations?awaiting_reply=true` lists the conversations waiting for the team's reply: open, with the contact's message last, reactions aside. They are the ones `GET /reports/dashboard` counts in `awaiting_reply`. `last_message_from=customer` is unchanged. See [Inbox](./inbox.md).
+
 ## November 12, 2026
 
 **Google Ads trends and comparison.** `/ads/google/campaigns` adds daily series, an equal-length previous period, totals and relative changes, cost per click/conversion, and campaign channel type. Zero denominators and unavailable reads remain null. The Ads report and connectors use the same data.

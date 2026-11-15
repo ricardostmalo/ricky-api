@@ -1235,6 +1235,19 @@
             }
           },
           {
+            "name": "awaiting_reply",
+            "in": "query",
+            "required": false,
+            "description": "`true`: only conversations waiting for the team's reply: open, with the contact's message as the latest one that asks or answers (a reaction does neither). The conversations `GET /reports/dashboard` counts in `awaiting_reply`.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          },
+          {
             "name": "last_message_from",
             "in": "query",
             "required": false,
@@ -20435,7 +20448,7 @@
                 },
                 "family": {
                   "type": "string",
-                  "description": "Integration it belongs to; it works only once the organization connects it in Ricky. `human_handoff` needs no connection but requires `handoff_user_ids`.",
+                  "description": "Integration it belongs to; it works only once the organization connects it in Ricky. `human_handoff` needs no connection but requires `handoff_user_ids`; `conversation_close` needs nothing.",
                   "examples": [
                     "human_handoff"
                   ]
@@ -26533,6 +26546,7 @@
                       "first_message_received",
                       "message_received",
                       "team_away",
+                      "team_message_unanswered",
                       "call_received"
                     ],
                     "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
@@ -26545,6 +26559,12 @@
                       "format": "uuid"
                     },
                     "description": "Channels it listens to. See `GET /channels`."
+                  },
+                  "inactivity_seconds": {
+                    "description": "For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.",
+                    "type": "integer",
+                    "minimum": 60,
+                    "maximum": 31536000
                   },
                   "message_filters": {
                     "description": "Which messages a `message_received` workflow reacts to.",
@@ -27236,6 +27256,33 @@
                         "properties": {
                           "kind": {
                             "type": "string",
+                            "const": "gesden_appointments"
+                          },
+                          "days_ahead": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991,
+                            "description": "Days before the appointment it reminds."
+                          },
+                          "appointment_states": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "GesDen appointment states it reminds, by their GesDen id."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "days_ahead",
+                          "appointment_states"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
                             "const": "odoo_birthdays"
                           }
                         },
@@ -27256,7 +27303,11 @@
                         ]
                       }
                     ],
-                    "description": "Who it messages: Odoo appointments or birthdays from Odoo or GesDen."
+                    "description": "Who it messages: Odoo or GesDen appointments, or birthdays from Odoo or GesDen."
+                  },
+                  "close_after_send": {
+                    "description": "Close only when this send opened the conversation and no later message arrived.",
+                    "type": "boolean"
                   },
                   "template": {
                     "type": "object",
@@ -27316,7 +27367,7 @@
                   "source",
                   "template"
                 ],
-                "description": "Sends a WhatsApp template every day from an Odoo integration. Created and edited in Ricky; the API reads, activates, pauses and deletes it."
+                "description": "Sends a WhatsApp template every day from Odoo or GesDen. Created and edited in Ricky; the API reads, activates, pauses and deletes it."
               }
             ]
           },
@@ -31178,6 +31229,7 @@
                   "first_message_received",
                   "message_received",
                   "team_away",
+                  "team_message_unanswered",
                   "call_received"
                 ],
                 "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
@@ -31190,6 +31242,12 @@
                   "format": "uuid"
                 },
                 "description": "Channels it listens to. See `GET /channels`."
+              },
+              "inactivity_seconds": {
+                "description": "For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.",
+                "type": "integer",
+                "minimum": 60,
+                "maximum": 31536000
               },
               "message_filters": {
                 "description": "Which messages a `message_received` workflow reacts to.",
@@ -31964,6 +32022,7 @@
                   "first_message_received",
                   "message_received",
                   "team_away",
+                  "team_message_unanswered",
                   "call_received"
                 ],
                 "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
@@ -31976,6 +32035,12 @@
                   "format": "uuid"
                 },
                 "description": "Channels it listens to. See `GET /channels`."
+              },
+              "inactivity_seconds": {
+                "description": "For team_message_unanswered: seconds since the latest team reply. Requires a single close_conversation step.",
+                "type": "integer",
+                "minimum": 60,
+                "maximum": 31536000
               },
               "message_filters": {
                 "description": "Which messages a `message_received` workflow reacts to.",

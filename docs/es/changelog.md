@@ -6,6 +6,10 @@ URL: https://getricky.ai/docs/api/changelog
 
 Esta página registra los cambios de la API. Un cambio incompatible solo llega en una versión nueva de la ruta y se anuncia aquí.
 
+## 13 de noviembre de 2026
+
+**Conversaciones que esperan respuesta.** Cambio compatible con la v1. `GET /conversations?awaiting_reply=true` lista las conversaciones que esperan respuesta del equipo: abiertas y con el último mensaje del contacto, sin contar reacciones. Son las mismas que `GET /reports/dashboard` cuenta en `awaiting_reply`. `last_message_from=customer` sigue igual. Consulta [Inbox](./inbox.md).
+
 ## 12 de noviembre de 2026
 
 **Tendencias y comparación de Google Ads.** `/ads/google/campaigns` añade series diarias, periodo anterior de igual duración, totales y cambios relativos, costos por clic/conversión y tipo de campaña. Los denominadores cero y las consultas fallidas quedan como null. El reporte de anuncios y los conectores usan los mismos datos.
