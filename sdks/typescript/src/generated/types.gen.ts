@@ -3376,9 +3376,9 @@ export type Workflow = {
     type: 'conversation' | 'scheduled';
     definition: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
          */
-        trigger: 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'team_message_unanswered' | 'call_received';
+        trigger: 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'message_sent' | 'team_away' | 'team_message_unanswered' | 'call_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
@@ -3392,13 +3392,30 @@ export type Workflow = {
          */
         message_filters?: {
             /**
-             * Only while nobody has the conversation.
+             * Match the first inbound message OR only_unassigned. Neither selected matches every message.
+             */
+            first_message?: boolean;
+            /**
+             * Match while nobody has the conversation; OR first_message when selected.
              */
             only_unassigned: boolean;
             /**
              * Not when the customer taps a button.
              */
             skip_buttons: boolean;
+        };
+        /**
+         * Which outgoing messages a `message_sent` workflow reacts to; required for it.
+         */
+        sent_message_filters?: {
+            /**
+             * Who sent it: `person` (the team), `ai` (an AI agent, including its tools), `automation` (a workflow), `broadcast`, or `external_app` (another app connected to the channel). Each at most once.
+             */
+            senders: Array<'person' | 'ai' | 'automation' | 'broadcast' | 'external_app'>;
+            /**
+             * Only when the message contains this text, ignoring case, accents and repeated spaces.
+             */
+            text_contains?: string;
         };
         /**
          * The period of a `team_away` workflow.
@@ -5068,9 +5085,9 @@ export type CreateWorkflow = {
      */
     definition: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
          */
-        trigger: 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'team_message_unanswered' | 'call_received';
+        trigger: 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'message_sent' | 'team_away' | 'team_message_unanswered' | 'call_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
@@ -5084,13 +5101,30 @@ export type CreateWorkflow = {
          */
         message_filters?: {
             /**
-             * Only while nobody has the conversation.
+             * Match the first inbound message OR only_unassigned. Neither selected matches every message.
+             */
+            first_message?: boolean;
+            /**
+             * Match while nobody has the conversation; OR first_message when selected.
              */
             only_unassigned: boolean;
             /**
              * Not when the customer taps a button.
              */
             skip_buttons: boolean;
+        };
+        /**
+         * Which outgoing messages a `message_sent` workflow reacts to; required for it.
+         */
+        sent_message_filters?: {
+            /**
+             * Who sent it: `person` (the team), `ai` (an AI agent, including its tools), `automation` (a workflow), `broadcast`, or `external_app` (another app connected to the channel). Each at most once.
+             */
+            senders: Array<'person' | 'ai' | 'automation' | 'broadcast' | 'external_app'>;
+            /**
+             * Only when the message contains this text, ignoring case, accents and repeated spaces.
+             */
+            text_contains?: string;
         };
         /**
          * The period of a `team_away` workflow.
@@ -5333,9 +5367,9 @@ export type UpdateWorkflow = {
      */
     definition?: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
          */
-        trigger: 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'team_away' | 'team_message_unanswered' | 'call_received';
+        trigger: 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'message_sent' | 'team_away' | 'team_message_unanswered' | 'call_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
@@ -5349,13 +5383,30 @@ export type UpdateWorkflow = {
          */
         message_filters?: {
             /**
-             * Only while nobody has the conversation.
+             * Match the first inbound message OR only_unassigned. Neither selected matches every message.
+             */
+            first_message?: boolean;
+            /**
+             * Match while nobody has the conversation; OR first_message when selected.
              */
             only_unassigned: boolean;
             /**
              * Not when the customer taps a button.
              */
             skip_buttons: boolean;
+        };
+        /**
+         * Which outgoing messages a `message_sent` workflow reacts to; required for it.
+         */
+        sent_message_filters?: {
+            /**
+             * Who sent it: `person` (the team), `ai` (an AI agent, including its tools), `automation` (a workflow), `broadcast`, or `external_app` (another app connected to the channel). Each at most once.
+             */
+            senders: Array<'person' | 'ai' | 'automation' | 'broadcast' | 'external_app'>;
+            /**
+             * Only when the message contains this text, ignoring case, accents and repeated spaces.
+             */
+            text_contains?: string;
         };
         /**
          * The period of a `team_away` workflow.

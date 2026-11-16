@@ -3691,13 +3691,32 @@ class WorkflowDefinitionMessageFilters(TypedDict):
     Which messages a `message_received` workflow reacts to.
     """
 
+    first_message: NotRequired[bool]
+    """
+    Match the first inbound message OR only_unassigned. Neither selected matches every message.
+    """
     only_unassigned: bool
     """
-    Only while nobody has the conversation.
+    Match while nobody has the conversation; OR first_message when selected.
     """
     skip_buttons: bool
     """
     Not when the customer taps a button.
+    """
+
+
+class WorkflowDefinitionSentMessageFilters(TypedDict):
+    """
+    Which outgoing messages a `message_sent` workflow reacts to; required for it.
+    """
+
+    senders: List[Literal["person", "ai", "automation", "broadcast", "external_app"]]
+    """
+    Who sent it: `person` (the team), `ai` (an AI agent, including its tools), `automation` (a workflow), `broadcast`, or `external_app` (another app connected to the channel). Each at most once.
+    """
+    text_contains: NotRequired[str]
+    """
+    Only when the message contains this text, ignoring case, accents and repeated spaces.
     """
 
 
@@ -4002,9 +4021,9 @@ class WorkflowDefinition(TypedDict):
     Reacts to a conversation with messages, questions, waits and assignments.
     """
 
-    trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "team_away", "team_message_unanswered", "call_received"]
+    trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_away", "team_message_unanswered", "call_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """
@@ -4017,6 +4036,10 @@ class WorkflowDefinition(TypedDict):
     message_filters: NotRequired[WorkflowDefinitionMessageFilters]
     """
     Which messages a `message_received` workflow reacts to.
+    """
+    sent_message_filters: NotRequired[WorkflowDefinitionSentMessageFilters]
+    """
+    Which outgoing messages a `message_sent` workflow reacts to; required for it.
     """
     coverage: NotRequired[WorkflowDefinitionCoverage]
     """
@@ -5715,13 +5738,32 @@ class CreateWorkflowDefinitionMessageFilters(TypedDict, closed=True):
     Which messages a `message_received` workflow reacts to.
     """
 
+    first_message: NotRequired[bool]
+    """
+    Match the first inbound message OR only_unassigned. Neither selected matches every message.
+    """
     only_unassigned: bool
     """
-    Only while nobody has the conversation.
+    Match while nobody has the conversation; OR first_message when selected.
     """
     skip_buttons: bool
     """
     Not when the customer taps a button.
+    """
+
+
+class CreateWorkflowDefinitionSentMessageFilters(TypedDict, closed=True):
+    """
+    Which outgoing messages a `message_sent` workflow reacts to; required for it.
+    """
+
+    senders: List[Literal["person", "ai", "automation", "broadcast", "external_app"]]
+    """
+    Who sent it: `person` (the team), `ai` (an AI agent, including its tools), `automation` (a workflow), `broadcast`, or `external_app` (another app connected to the channel). Each at most once.
+    """
+    text_contains: NotRequired[str]
+    """
+    Only when the message contains this text, ignoring case, accents and repeated spaces.
     """
 
 
@@ -6026,9 +6068,9 @@ class CreateWorkflowDefinition(TypedDict, closed=True):
     Reacts to a conversation with messages, questions, waits and assignments.
     """
 
-    trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "team_away", "team_message_unanswered", "call_received"]
+    trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_away", "team_message_unanswered", "call_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """
@@ -6041,6 +6083,10 @@ class CreateWorkflowDefinition(TypedDict, closed=True):
     message_filters: NotRequired[CreateWorkflowDefinitionMessageFilters]
     """
     Which messages a `message_received` workflow reacts to.
+    """
+    sent_message_filters: NotRequired[CreateWorkflowDefinitionSentMessageFilters]
+    """
+    Which outgoing messages a `message_sent` workflow reacts to; required for it.
     """
     coverage: NotRequired[CreateWorkflowDefinitionCoverage]
     """
@@ -6076,13 +6122,32 @@ class UpdateWorkflowDefinitionMessageFilters(TypedDict, closed=True):
     Which messages a `message_received` workflow reacts to.
     """
 
+    first_message: NotRequired[bool]
+    """
+    Match the first inbound message OR only_unassigned. Neither selected matches every message.
+    """
     only_unassigned: bool
     """
-    Only while nobody has the conversation.
+    Match while nobody has the conversation; OR first_message when selected.
     """
     skip_buttons: bool
     """
     Not when the customer taps a button.
+    """
+
+
+class UpdateWorkflowDefinitionSentMessageFilters(TypedDict, closed=True):
+    """
+    Which outgoing messages a `message_sent` workflow reacts to; required for it.
+    """
+
+    senders: List[Literal["person", "ai", "automation", "broadcast", "external_app"]]
+    """
+    Who sent it: `person` (the team), `ai` (an AI agent, including its tools), `automation` (a workflow), `broadcast`, or `external_app` (another app connected to the channel). Each at most once.
+    """
+    text_contains: NotRequired[str]
+    """
+    Only when the message contains this text, ignoring case, accents and repeated spaces.
     """
 
 
@@ -6387,9 +6452,9 @@ class UpdateWorkflowDefinition(TypedDict, closed=True):
     Replaces the whole definition.
     """
 
-    trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "team_away", "team_message_unanswered", "call_received"]
+    trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_away", "team_message_unanswered", "call_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """
@@ -6402,6 +6467,10 @@ class UpdateWorkflowDefinition(TypedDict, closed=True):
     message_filters: NotRequired[UpdateWorkflowDefinitionMessageFilters]
     """
     Which messages a `message_received` workflow reacts to.
+    """
+    sent_message_filters: NotRequired[UpdateWorkflowDefinitionSentMessageFilters]
+    """
+    Which outgoing messages a `message_sent` workflow reacts to; required for it.
     """
     coverage: NotRequired[UpdateWorkflowDefinitionCoverage]
     """

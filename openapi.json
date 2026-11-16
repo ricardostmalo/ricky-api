@@ -26546,11 +26546,12 @@
                       "conversation_opened",
                       "first_message_received",
                       "message_received",
+                      "message_sent",
                       "team_away",
                       "team_message_unanswered",
                       "call_received"
                     ],
-                    "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
+                    "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
                   },
                   "channel_ids": {
                     "maxItems": 50,
@@ -26571,9 +26572,13 @@
                     "description": "Which messages a `message_received` workflow reacts to.",
                     "type": "object",
                     "properties": {
+                      "first_message": {
+                        "description": "Match the first inbound message OR only_unassigned. Neither selected matches every message.",
+                        "type": "boolean"
+                      },
                       "only_unassigned": {
                         "type": "boolean",
-                        "description": "Only while nobody has the conversation."
+                        "description": "Match while nobody has the conversation; OR first_message when selected."
                       },
                       "skip_buttons": {
                         "type": "boolean",
@@ -26583,6 +26588,36 @@
                     "required": [
                       "only_unassigned",
                       "skip_buttons"
+                    ]
+                  },
+                  "sent_message_filters": {
+                    "description": "Which outgoing messages a `message_sent` workflow reacts to; required for it.",
+                    "type": "object",
+                    "properties": {
+                      "senders": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "person",
+                            "ai",
+                            "automation",
+                            "broadcast",
+                            "external_app"
+                          ]
+                        },
+                        "description": "Who sent it: `person` (the team), `ai` (an AI agent, including its tools), `automation` (a workflow), `broadcast`, or `external_app` (another app connected to the channel). Each at most once."
+                      },
+                      "text_contains": {
+                        "description": "Only when the message contains this text, ignoring case, accents and repeated spaces.",
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 500
+                      }
+                    },
+                    "required": [
+                      "senders"
                     ]
                   },
                   "coverage": {
@@ -31230,11 +31265,12 @@
                   "conversation_opened",
                   "first_message_received",
                   "message_received",
+                  "message_sent",
                   "team_away",
                   "team_message_unanswered",
                   "call_received"
                 ],
-                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
+                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
               },
               "channel_ids": {
                 "maxItems": 50,
@@ -31255,9 +31291,13 @@
                 "description": "Which messages a `message_received` workflow reacts to.",
                 "type": "object",
                 "properties": {
+                  "first_message": {
+                    "description": "Match the first inbound message OR only_unassigned. Neither selected matches every message.",
+                    "type": "boolean"
+                  },
                   "only_unassigned": {
                     "type": "boolean",
-                    "description": "Only while nobody has the conversation."
+                    "description": "Match while nobody has the conversation; OR first_message when selected."
                   },
                   "skip_buttons": {
                     "type": "boolean",
@@ -31267,6 +31307,37 @@
                 "required": [
                   "only_unassigned",
                   "skip_buttons"
+                ],
+                "additionalProperties": false
+              },
+              "sent_message_filters": {
+                "description": "Which outgoing messages a `message_sent` workflow reacts to; required for it.",
+                "type": "object",
+                "properties": {
+                  "senders": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "person",
+                        "ai",
+                        "automation",
+                        "broadcast",
+                        "external_app"
+                      ]
+                    },
+                    "description": "Who sent it: `person` (the team), `ai` (an AI agent, including its tools), `automation` (a workflow), `broadcast`, or `external_app` (another app connected to the channel). Each at most once."
+                  },
+                  "text_contains": {
+                    "description": "Only when the message contains this text, ignoring case, accents and repeated spaces.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "senders"
                 ],
                 "additionalProperties": false
               },
@@ -32024,11 +32095,12 @@
                   "conversation_opened",
                   "first_message_received",
                   "message_received",
+                  "message_sent",
                   "team_away",
                   "team_message_unanswered",
                   "call_received"
                 ],
-                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
+                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
               },
               "channel_ids": {
                 "maxItems": 50,
@@ -32049,9 +32121,13 @@
                 "description": "Which messages a `message_received` workflow reacts to.",
                 "type": "object",
                 "properties": {
+                  "first_message": {
+                    "description": "Match the first inbound message OR only_unassigned. Neither selected matches every message.",
+                    "type": "boolean"
+                  },
                   "only_unassigned": {
                     "type": "boolean",
-                    "description": "Only while nobody has the conversation."
+                    "description": "Match while nobody has the conversation; OR first_message when selected."
                   },
                   "skip_buttons": {
                     "type": "boolean",
@@ -32061,6 +32137,37 @@
                 "required": [
                   "only_unassigned",
                   "skip_buttons"
+                ],
+                "additionalProperties": false
+              },
+              "sent_message_filters": {
+                "description": "Which outgoing messages a `message_sent` workflow reacts to; required for it.",
+                "type": "object",
+                "properties": {
+                  "senders": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "person",
+                        "ai",
+                        "automation",
+                        "broadcast",
+                        "external_app"
+                      ]
+                    },
+                    "description": "Who sent it: `person` (the team), `ai` (an AI agent, including its tools), `automation` (a workflow), `broadcast`, or `external_app` (another app connected to the channel). Each at most once."
+                  },
+                  "text_contains": {
+                    "description": "Only when the message contains this text, ignoring case, accents and repeated spaces.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "senders"
                 ],
                 "additionalProperties": false
               },

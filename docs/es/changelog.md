@@ -10,6 +10,8 @@ Esta página registra los cambios de la API. Un cambio incompatible solo llega e
 
 **Cierre por falta de respuesta.** Los workflows aceptan `team_message_unanswered` con `inactivity_seconds` y un flujo de conversación. El disparador inicia el flujo; cerrar requiere un paso explícito `close_conversation`. El plazo empieza con cada nuevo mensaje del equipo; una respuesta del cliente cancela el cierre. Se ejecuta en la siguiente revisión de vencimientos, cada 15 minutos. Los workflows programados muestran `close_after_send`: cierra solo si el propio envío abrió el chat y no llegó otro mensaje después; esta opción se configura en el editor de Ricky.
 
+**Conversación sin actividad.** El disparador `conversation_inactive` inicia un flujo después de `inactivity_seconds` sin mensajes ni reacciones de ninguna de las partes. Cada mensaje o reacción reinicia el plazo, aunque el último mensaje sea del cliente. Cerrar sigue siendo un paso separado `close_conversation`.
+
 ## 13 de noviembre de 2026
 
 **Conversaciones que esperan respuesta.** Cambio compatible con la v1. `GET /conversations?awaiting_reply=true` lista las conversaciones que esperan respuesta del equipo: abiertas y con el último mensaje del contacto, sin contar reacciones. Son las mismas que `GET /reports/dashboard` cuenta en `awaiting_reply`. `last_message_from=customer` sigue igual. Consulta [Inbox](./inbox.md).

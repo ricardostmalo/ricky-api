@@ -12,13 +12,15 @@ La clave necesita el permiso `workflows:read` para leer y `workflows:write` para
 
 Ricky inicia cada ejecución por un evento. No hay una operación para iniciar un workflow desde tu sistema.
 
-| Tipo           | `trigger`                | Se ejecuta cuando                                                          |
-| -------------- | ------------------------ | -------------------------------------------------------------------------- |
-| `conversation` | `conversation_opened`    | Se abre una conversación en uno de sus canales.                            |
-| `conversation` | `first_message_received` | Llega el primer mensaje del contacto en una conversación.                  |
-| `conversation` | `message_received`       | Llega cualquier mensaje del contacto; `message_filters` lo limita.         |
-| `conversation` | `call_received`          | Llega una llamada de WhatsApp a uno de sus canales; decide quién contesta. |
-| `scheduled`    | `{ "kind": "daily" }`    | Cada día a una hora, con las citas o cumpleaños de Odoo.                   |
+| Tipo           | `trigger`                 | Se ejecuta cuando                                                                 |
+| -------------- | ------------------------- | --------------------------------------------------------------------------------- |
+| `conversation` | `conversation_opened`     | Se abre una conversación en uno de sus canales.                                   |
+| `conversation` | `first_message_received`  | Llega el primer mensaje del contacto en una conversación.                         |
+| `conversation` | `message_received`        | Llega cualquier mensaje del contacto; `message_filters` lo limita.                |
+| `conversation` | `call_received`           | Llega una llamada de WhatsApp a uno de sus canales; decide quién contesta.        |
+| `conversation` | `team_message_unanswered` | Pasa `inactivity_seconds` sin respuesta del cliente al último mensaje del equipo. |
+| `conversation` | `conversation_inactive`   | Pasa `inactivity_seconds` sin mensajes ni reacciones de ninguna de las partes.    |
+| `scheduled`    | `{ "kind": "daily" }`     | Cada día a una hora, con las citas o cumpleaños de Odoo.                          |
 
 La API crea y edita workflows de conversación. Los workflows programados se crean en Ricky; la API los lee, les cambia el nombre, los activa, los pausa y los elimina, define su archivo de encabezado, y previsualiza y revisa los recordatorios de citas y sus estados de Odoo ([más abajo](#workflows-programados)).
 
