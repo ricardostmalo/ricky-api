@@ -26542,16 +26542,16 @@
                   "trigger": {
                     "type": "string",
                     "enum": [
+                      "assigned_to",
                       "conversation_inactive",
                       "conversation_opened",
                       "first_message_received",
                       "message_received",
                       "message_sent",
-                      "team_away",
                       "team_message_unanswered",
                       "call_received"
                     ],
-                    "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
+                    "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `assigned_to` runs nothing: while a conversation of its channels is assigned to one of `assigned_user_ids` and its `condition` holds, the agent of its only `turn_on_ai` step answers it and no assignee moves; when the hours begin to hold it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
                   },
                   "channel_ids": {
                     "maxItems": 50,
@@ -26620,52 +26620,15 @@
                       "senders"
                     ]
                   },
-                  "coverage": {
-                    "description": "When a `team_away` workflow covers: one period, or every week outside the team's hours.",
-                    "type": "object",
-                    "properties": {
-                      "starts_at": {
-                        "description": "When the team goes away, for one period; with `ends_at`.",
-                        "type": "string",
-                        "format": "date-time",
-                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-                      },
-                      "ends_at": {
-                        "description": "When the team is back, for one period; with `starts_at`.",
-                        "type": "string",
-                        "format": "date-time",
-                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-                      },
-                      "team_hours": {
-                        "description": "The team's hours, instead of `starts_at` and `ends_at`: the agent covers every week outside them, each closing starting a period.",
-                        "$ref": "#/components/schemas/BusinessHours"
-                      },
-                      "assigned_user_ids": {
-                        "description": "Covers only the conversations assigned to these members; omitted, every conversation of its channels. See `GET /members`.",
-                        "minItems": 1,
-                        "maxItems": 50,
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "format": "uuid"
-                        }
-                      },
-                      "notice": {
-                        "anyOf": [
-                          {
-                            "type": "string",
-                            "maxLength": 2000
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ],
-                        "description": "What the agent tells customers meanwhile."
-                      }
-                    },
-                    "required": [
-                      "notice"
-                    ]
+                  "assigned_user_ids": {
+                    "description": "Members whose conversations an `assigned_to` workflow reaches. See `GET /members`.",
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
                   },
                   "condition": {
                     "anyOf": [
@@ -27217,9 +27180,47 @@
                                 "kind",
                                 "text"
                               ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                  "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                                },
+                                "next": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "Step to run next; null ends the flow."
+                                },
+                                "kind": {
+                                  "type": "string",
+                                  "const": "turn_on_ai"
+                                },
+                                "agent_id": {
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "description": "The only step of an `assigned_to` workflow: this AI agent answers the chats it reaches while its hours hold. Nobody is reassigned."
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "next",
+                                "kind",
+                                "agent_id"
+                              ]
                             }
                           ],
-                          "description": "One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target."
+                          "description": "One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target."
                         }
                       }
                     },
@@ -31273,16 +31274,16 @@
               "trigger": {
                 "type": "string",
                 "enum": [
+                  "assigned_to",
                   "conversation_inactive",
                   "conversation_opened",
                   "first_message_received",
                   "message_received",
                   "message_sent",
-                  "team_away",
                   "team_message_unanswered",
                   "call_received"
                 ],
-                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
+                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `assigned_to` runs nothing: while a conversation of its channels is assigned to one of `assigned_user_ids` and its `condition` holds, the agent of its only `turn_on_ai` step answers it and no assignee moves; when the hours begin to hold it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
               },
               "channel_ids": {
                 "maxItems": 50,
@@ -31353,53 +31354,15 @@
                 ],
                 "additionalProperties": false
               },
-              "coverage": {
-                "description": "When a `team_away` workflow covers: one period, or every week outside the team's hours.",
-                "type": "object",
-                "properties": {
-                  "starts_at": {
-                    "description": "When the team goes away, for one period; with `ends_at`.",
-                    "type": "string",
-                    "format": "date-time",
-                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-                  },
-                  "ends_at": {
-                    "description": "When the team is back, for one period; with `starts_at`.",
-                    "type": "string",
-                    "format": "date-time",
-                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-                  },
-                  "team_hours": {
-                    "description": "The team's hours, instead of `starts_at` and `ends_at`: the agent covers every week outside them, each closing starting a period.",
-                    "$ref": "#/components/schemas/BusinessHoursInput"
-                  },
-                  "assigned_user_ids": {
-                    "description": "Covers only the conversations assigned to these members; omitted, every conversation of its channels. See `GET /members`.",
-                    "minItems": 1,
-                    "maxItems": 50,
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "uuid"
-                    }
-                  },
-                  "notice": {
-                    "anyOf": [
-                      {
-                        "type": "string",
-                        "maxLength": 2000
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ],
-                    "description": "What the agent tells customers meanwhile."
-                  }
-                },
-                "required": [
-                  "notice"
-                ],
-                "additionalProperties": false
+              "assigned_user_ids": {
+                "description": "Members whose conversations an `assigned_to` workflow reaches. See `GET /members`.",
+                "minItems": 1,
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
               },
               "condition": {
                 "anyOf": [
@@ -31964,9 +31927,48 @@
                             "text"
                           ],
                           "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "turn_on_ai"
+                            },
+                            "agent_id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "description": "The only step of an `assigned_to` workflow: this AI agent answers the chats it reaches while its hours hold. Nobody is reassigned."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "agent_id"
+                          ],
+                          "additionalProperties": false
                         }
                       ],
-                      "description": "One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target."
+                      "description": "One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target."
                     }
                   }
                 },
@@ -32115,16 +32117,16 @@
               "trigger": {
                 "type": "string",
                 "enum": [
+                  "assigned_to",
                   "conversation_inactive",
                   "conversation_opened",
                   "first_message_received",
                   "message_received",
                   "message_sent",
-                  "team_away",
                   "team_message_unanswered",
                   "call_received"
                 ],
-                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
+                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `assigned_to` runs nothing: while a conversation of its channels is assigned to one of `assigned_user_ids` and its `condition` holds, the agent of its only `turn_on_ai` step answers it and no assignee moves; when the hours begin to hold it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
               },
               "channel_ids": {
                 "maxItems": 50,
@@ -32195,53 +32197,15 @@
                 ],
                 "additionalProperties": false
               },
-              "coverage": {
-                "description": "When a `team_away` workflow covers: one period, or every week outside the team's hours.",
-                "type": "object",
-                "properties": {
-                  "starts_at": {
-                    "description": "When the team goes away, for one period; with `ends_at`.",
-                    "type": "string",
-                    "format": "date-time",
-                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-                  },
-                  "ends_at": {
-                    "description": "When the team is back, for one period; with `starts_at`.",
-                    "type": "string",
-                    "format": "date-time",
-                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
-                  },
-                  "team_hours": {
-                    "description": "The team's hours, instead of `starts_at` and `ends_at`: the agent covers every week outside them, each closing starting a period.",
-                    "$ref": "#/components/schemas/BusinessHoursInput"
-                  },
-                  "assigned_user_ids": {
-                    "description": "Covers only the conversations assigned to these members; omitted, every conversation of its channels. See `GET /members`.",
-                    "minItems": 1,
-                    "maxItems": 50,
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "uuid"
-                    }
-                  },
-                  "notice": {
-                    "anyOf": [
-                      {
-                        "type": "string",
-                        "maxLength": 2000
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ],
-                    "description": "What the agent tells customers meanwhile."
-                  }
-                },
-                "required": [
-                  "notice"
-                ],
-                "additionalProperties": false
+              "assigned_user_ids": {
+                "description": "Members whose conversations an `assigned_to` workflow reaches. See `GET /members`.",
+                "minItems": 1,
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
               },
               "condition": {
                 "anyOf": [
@@ -32806,9 +32770,48 @@
                             "text"
                           ],
                           "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run next; null ends the flow."
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "turn_on_ai"
+                            },
+                            "agent_id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "description": "The only step of an `assigned_to` workflow: this AI agent answers the chats it reaches while its hours hold. Nobody is reassigned."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "next",
+                            "kind",
+                            "agent_id"
+                          ],
+                          "additionalProperties": false
                         }
                       ],
-                      "description": "One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target."
+                      "description": "One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target."
                     }
                   }
                 },

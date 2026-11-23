@@ -3376,9 +3376,9 @@ export type Workflow = {
     type: 'conversation' | 'scheduled';
     definition: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `assigned_to` runs nothing: while a conversation of its channels is assigned to one of `assigned_user_ids` and its `condition` holds, the agent of its only `turn_on_ai` step answers it and no assignee moves; when the hours begin to hold it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
          */
-        trigger: 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'message_sent' | 'team_away' | 'team_message_unanswered' | 'call_received';
+        trigger: 'assigned_to' | 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'message_sent' | 'team_message_unanswered' | 'call_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
@@ -3418,30 +3418,9 @@ export type Workflow = {
             text_contains?: string;
         };
         /**
-         * When a `team_away` workflow covers: one period, or every week outside the team's hours.
+         * Members whose conversations an `assigned_to` workflow reaches. See `GET /members`.
          */
-        coverage?: {
-            /**
-             * When the team goes away, for one period; with `ends_at`.
-             */
-            starts_at?: string;
-            /**
-             * When the team is back, for one period; with `starts_at`.
-             */
-            ends_at?: string;
-            /**
-             * The team's hours, instead of `starts_at` and `ends_at`: the agent covers every week outside them, each closing starting a period.
-             */
-            team_hours?: BusinessHours;
-            /**
-             * Covers only the conversations assigned to these members; omitted, every conversation of its channels. See `GET /members`.
-             */
-            assigned_user_ids?: Array<string>;
-            /**
-             * What the agent tells customers meanwhile.
-             */
-            notice: string | null;
-        };
+        assigned_user_ids?: Array<string>;
         /**
          * When it runs; null runs at any hour.
          */
@@ -3461,7 +3440,7 @@ export type Workflow = {
              */
             entry: string;
             /**
-             * One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+             * One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
              */
             steps: Array<{
                 /**
@@ -3648,6 +3627,20 @@ export type Workflow = {
                  * In a `call_received` workflow: Ricky rejects the call and sends this text to the caller's WhatsApp chat.
                  */
                 text: string;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'turn_on_ai';
+                /**
+                 * The only step of an `assigned_to` workflow: this AI agent answers the chats it reaches while its hours hold. Nobody is reassigned.
+                 */
+                agent_id: string;
             }>;
         };
     } | {
@@ -5093,9 +5086,9 @@ export type CreateWorkflow = {
      */
     definition: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `assigned_to` runs nothing: while a conversation of its channels is assigned to one of `assigned_user_ids` and its `condition` holds, the agent of its only `turn_on_ai` step answers it and no assignee moves; when the hours begin to hold it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
          */
-        trigger: 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'message_sent' | 'team_away' | 'team_message_unanswered' | 'call_received';
+        trigger: 'assigned_to' | 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'message_sent' | 'team_message_unanswered' | 'call_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
@@ -5135,30 +5128,9 @@ export type CreateWorkflow = {
             text_contains?: string;
         };
         /**
-         * When a `team_away` workflow covers: one period, or every week outside the team's hours.
+         * Members whose conversations an `assigned_to` workflow reaches. See `GET /members`.
          */
-        coverage?: {
-            /**
-             * When the team goes away, for one period; with `ends_at`.
-             */
-            starts_at?: string;
-            /**
-             * When the team is back, for one period; with `starts_at`.
-             */
-            ends_at?: string;
-            /**
-             * The team's hours, instead of `starts_at` and `ends_at`: the agent covers every week outside them, each closing starting a period.
-             */
-            team_hours?: BusinessHoursInput;
-            /**
-             * Covers only the conversations assigned to these members; omitted, every conversation of its channels. See `GET /members`.
-             */
-            assigned_user_ids?: Array<string>;
-            /**
-             * What the agent tells customers meanwhile.
-             */
-            notice: string | null;
-        };
+        assigned_user_ids?: Array<string>;
         /**
          * When it runs; null runs at any hour.
          */
@@ -5178,7 +5150,7 @@ export type CreateWorkflow = {
              */
             entry: string;
             /**
-             * One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+             * One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
              */
             steps: Array<{
                 /**
@@ -5365,6 +5337,20 @@ export type CreateWorkflow = {
                  * In a `call_received` workflow: Ricky rejects the call and sends this text to the caller's WhatsApp chat.
                  */
                 text: string;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'turn_on_ai';
+                /**
+                 * The only step of an `assigned_to` workflow: this AI agent answers the chats it reaches while its hours hold. Nobody is reassigned.
+                 */
+                agent_id: string;
             }>;
         };
     };
@@ -5383,9 +5369,9 @@ export type UpdateWorkflow = {
      */
     definition?: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+         * `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `assigned_to` runs nothing: while a conversation of its channels is assigned to one of `assigned_user_ids` and its `condition` holds, the agent of its only `turn_on_ai` step answers it and no assignee moves; when the hours begin to hold it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
          */
-        trigger: 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'message_sent' | 'team_away' | 'team_message_unanswered' | 'call_received';
+        trigger: 'assigned_to' | 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'message_sent' | 'team_message_unanswered' | 'call_received';
         /**
          * Channels it listens to. See `GET /channels`.
          */
@@ -5425,30 +5411,9 @@ export type UpdateWorkflow = {
             text_contains?: string;
         };
         /**
-         * When a `team_away` workflow covers: one period, or every week outside the team's hours.
+         * Members whose conversations an `assigned_to` workflow reaches. See `GET /members`.
          */
-        coverage?: {
-            /**
-             * When the team goes away, for one period; with `ends_at`.
-             */
-            starts_at?: string;
-            /**
-             * When the team is back, for one period; with `starts_at`.
-             */
-            ends_at?: string;
-            /**
-             * The team's hours, instead of `starts_at` and `ends_at`: the agent covers every week outside them, each closing starting a period.
-             */
-            team_hours?: BusinessHoursInput;
-            /**
-             * Covers only the conversations assigned to these members; omitted, every conversation of its channels. See `GET /members`.
-             */
-            assigned_user_ids?: Array<string>;
-            /**
-             * What the agent tells customers meanwhile.
-             */
-            notice: string | null;
-        };
+        assigned_user_ids?: Array<string>;
         /**
          * When it runs; null runs at any hour.
          */
@@ -5468,7 +5433,7 @@ export type UpdateWorkflow = {
              */
             entry: string;
             /**
-             * One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+             * One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
              */
             steps: Array<{
                 /**
@@ -5655,6 +5620,20 @@ export type UpdateWorkflow = {
                  * In a `call_received` workflow: Ricky rejects the call and sends this text to the caller's WhatsApp chat.
                  */
                 text: string;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
+                kind: 'turn_on_ai';
+                /**
+                 * The only step of an `assigned_to` workflow: this AI agent answers the chats it reaches while its hours hold. Nobody is reassigned.
+                 */
+                agent_id: string;
             }>;
         };
     };

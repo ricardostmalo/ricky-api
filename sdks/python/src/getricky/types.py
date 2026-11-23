@@ -3720,33 +3720,6 @@ class WorkflowDefinitionSentMessageFilters(TypedDict):
     """
 
 
-class WorkflowDefinitionCoverage(TypedDict):
-    """
-    When a `team_away` workflow covers: one period, or every week outside the team's hours.
-    """
-
-    starts_at: NotRequired[str]
-    """
-    When the team goes away, for one period; with `ends_at`.
-    """
-    ends_at: NotRequired[str]
-    """
-    When the team is back, for one period; with `starts_at`.
-    """
-    team_hours: NotRequired[BusinessHours]
-    """
-    The team's hours, instead of `starts_at` and `ends_at`: the agent covers every week outside them, each closing starting a period.
-    """
-    assigned_user_ids: NotRequired[List[str]]
-    """
-    Covers only the conversations assigned to these members; omitted, every conversation of its channels. See `GET /members`.
-    """
-    notice: Optional[str]
-    """
-    What the agent tells customers meanwhile.
-    """
-
-
 class WorkflowDefinitionCondition(TypedDict):
     """
     When it runs; null runs at any hour.
@@ -3767,7 +3740,7 @@ class WorkflowDefinitionCondition1(TypedDict):
 
 class WorkflowDefinitionFlowSteps(TypedDict):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3802,7 +3775,7 @@ class WorkflowDefinitionFlowSteps1Choice(TypedDict):
 
 class WorkflowDefinitionFlowSteps1(TypedDict):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3842,7 +3815,7 @@ class WorkflowDefinitionFlowSteps1(TypedDict):
 
 class WorkflowDefinitionFlowSteps2(TypedDict):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3878,7 +3851,7 @@ class WorkflowDefinitionFlowSteps2(TypedDict):
 
 class WorkflowDefinitionFlowSteps3(TypedDict):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3898,7 +3871,7 @@ class WorkflowDefinitionFlowSteps3(TypedDict):
 
 class WorkflowDefinitionFlowSteps4(TypedDict):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3922,7 +3895,7 @@ class WorkflowDefinitionFlowSteps4(TypedDict):
 
 class WorkflowDefinitionFlowSteps5(TypedDict):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3942,7 +3915,7 @@ class WorkflowDefinitionFlowSteps5(TypedDict):
 
 class WorkflowDefinitionFlowSteps6(TypedDict):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3958,7 +3931,7 @@ class WorkflowDefinitionFlowSteps6(TypedDict):
 
 class WorkflowDefinitionFlowSteps7(TypedDict):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3974,7 +3947,7 @@ class WorkflowDefinitionFlowSteps7(TypedDict):
 
 class WorkflowDefinitionFlowSteps8(TypedDict):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -3994,7 +3967,7 @@ class WorkflowDefinitionFlowSteps8(TypedDict):
 
 class WorkflowDefinitionFlowSteps9(TypedDict):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -4012,6 +3985,26 @@ class WorkflowDefinitionFlowSteps9(TypedDict):
     """
 
 
+class WorkflowDefinitionFlowSteps10(TypedDict):
+    """
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["turn_on_ai"]
+    agent_id: str
+    """
+    The only step of an `assigned_to` workflow: this AI agent answers the chats it reaches while its hours hold. Nobody is reassigned.
+    """
+
+
 class WorkflowDefinitionFlow(TypedDict):
     """
     The steps and how they connect.
@@ -4021,7 +4014,7 @@ class WorkflowDefinitionFlow(TypedDict):
     """
     ID of the first step.
     """
-    steps: List[Union[WorkflowDefinitionFlowSteps, WorkflowDefinitionFlowSteps1, WorkflowDefinitionFlowSteps2, WorkflowDefinitionFlowSteps3, WorkflowDefinitionFlowSteps4, WorkflowDefinitionFlowSteps5, WorkflowDefinitionFlowSteps6, WorkflowDefinitionFlowSteps7, WorkflowDefinitionFlowSteps8, WorkflowDefinitionFlowSteps9]]
+    steps: List[Union[WorkflowDefinitionFlowSteps, WorkflowDefinitionFlowSteps1, WorkflowDefinitionFlowSteps2, WorkflowDefinitionFlowSteps3, WorkflowDefinitionFlowSteps4, WorkflowDefinitionFlowSteps5, WorkflowDefinitionFlowSteps6, WorkflowDefinitionFlowSteps7, WorkflowDefinitionFlowSteps8, WorkflowDefinitionFlowSteps9, WorkflowDefinitionFlowSteps10]]
 
 
 class WorkflowDefinition(TypedDict):
@@ -4029,9 +4022,9 @@ class WorkflowDefinition(TypedDict):
     Reacts to a conversation with messages, questions, waits and assignments.
     """
 
-    trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_away", "team_message_unanswered", "call_received"]
+    trigger: Literal["assigned_to", "conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_message_unanswered", "call_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `assigned_to` runs nothing: while a conversation of its channels is assigned to one of `assigned_user_ids` and its `condition` holds, the agent of its only `turn_on_ai` step answers it and no assignee moves; when the hours begin to hold it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """
@@ -4049,9 +4042,9 @@ class WorkflowDefinition(TypedDict):
     """
     Which outgoing messages a `message_sent` workflow reacts to; required for it.
     """
-    coverage: NotRequired[WorkflowDefinitionCoverage]
+    assigned_user_ids: NotRequired[List[str]]
     """
-    When a `team_away` workflow covers: one period, or every week outside the team's hours.
+    Members whose conversations an `assigned_to` workflow reaches. See `GET /members`.
     """
     condition: Optional[Union[WorkflowDefinitionCondition, WorkflowDefinitionCondition1]]
     """
@@ -5775,33 +5768,6 @@ class CreateWorkflowDefinitionSentMessageFilters(TypedDict, closed=True):
     """
 
 
-class CreateWorkflowDefinitionCoverage(TypedDict, closed=True):
-    """
-    When a `team_away` workflow covers: one period, or every week outside the team's hours.
-    """
-
-    starts_at: NotRequired[str]
-    """
-    When the team goes away, for one period; with `ends_at`.
-    """
-    ends_at: NotRequired[str]
-    """
-    When the team is back, for one period; with `starts_at`.
-    """
-    team_hours: NotRequired[BusinessHoursInput]
-    """
-    The team's hours, instead of `starts_at` and `ends_at`: the agent covers every week outside them, each closing starting a period.
-    """
-    assigned_user_ids: NotRequired[List[str]]
-    """
-    Covers only the conversations assigned to these members; omitted, every conversation of its channels. See `GET /members`.
-    """
-    notice: Optional[str]
-    """
-    What the agent tells customers meanwhile.
-    """
-
-
 class CreateWorkflowDefinitionCondition(TypedDict, closed=True):
     """
     When it runs; null runs at any hour.
@@ -5822,7 +5788,7 @@ class CreateWorkflowDefinitionCondition1(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5857,7 +5823,7 @@ class CreateWorkflowDefinitionFlowSteps1Choice(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5897,7 +5863,7 @@ class CreateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5933,7 +5899,7 @@ class CreateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5953,7 +5919,7 @@ class CreateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5977,7 +5943,7 @@ class CreateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -5997,7 +5963,7 @@ class CreateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -6013,7 +5979,7 @@ class CreateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -6029,7 +5995,7 @@ class CreateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps8(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -6049,7 +6015,7 @@ class CreateWorkflowDefinitionFlowSteps8(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionFlowSteps9(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -6067,6 +6033,26 @@ class CreateWorkflowDefinitionFlowSteps9(TypedDict, closed=True):
     """
 
 
+class CreateWorkflowDefinitionFlowSteps10(TypedDict, closed=True):
+    """
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["turn_on_ai"]
+    agent_id: str
+    """
+    The only step of an `assigned_to` workflow: this AI agent answers the chats it reaches while its hours hold. Nobody is reassigned.
+    """
+
+
 class CreateWorkflowDefinitionFlow(TypedDict, closed=True):
     """
     The steps and how they connect.
@@ -6076,7 +6062,7 @@ class CreateWorkflowDefinitionFlow(TypedDict, closed=True):
     """
     ID of the first step.
     """
-    steps: List[Union[CreateWorkflowDefinitionFlowSteps, CreateWorkflowDefinitionFlowSteps1, CreateWorkflowDefinitionFlowSteps2, CreateWorkflowDefinitionFlowSteps3, CreateWorkflowDefinitionFlowSteps4, CreateWorkflowDefinitionFlowSteps5, CreateWorkflowDefinitionFlowSteps6, CreateWorkflowDefinitionFlowSteps7, CreateWorkflowDefinitionFlowSteps8, CreateWorkflowDefinitionFlowSteps9]]
+    steps: List[Union[CreateWorkflowDefinitionFlowSteps, CreateWorkflowDefinitionFlowSteps1, CreateWorkflowDefinitionFlowSteps2, CreateWorkflowDefinitionFlowSteps3, CreateWorkflowDefinitionFlowSteps4, CreateWorkflowDefinitionFlowSteps5, CreateWorkflowDefinitionFlowSteps6, CreateWorkflowDefinitionFlowSteps7, CreateWorkflowDefinitionFlowSteps8, CreateWorkflowDefinitionFlowSteps9, CreateWorkflowDefinitionFlowSteps10]]
 
 
 class CreateWorkflowDefinition(TypedDict, closed=True):
@@ -6084,9 +6070,9 @@ class CreateWorkflowDefinition(TypedDict, closed=True):
     Reacts to a conversation with messages, questions, waits and assignments.
     """
 
-    trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_away", "team_message_unanswered", "call_received"]
+    trigger: Literal["assigned_to", "conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_message_unanswered", "call_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `assigned_to` runs nothing: while a conversation of its channels is assigned to one of `assigned_user_ids` and its `condition` holds, the agent of its only `turn_on_ai` step answers it and no assignee moves; when the hours begin to hold it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """
@@ -6104,9 +6090,9 @@ class CreateWorkflowDefinition(TypedDict, closed=True):
     """
     Which outgoing messages a `message_sent` workflow reacts to; required for it.
     """
-    coverage: NotRequired[CreateWorkflowDefinitionCoverage]
+    assigned_user_ids: NotRequired[List[str]]
     """
-    When a `team_away` workflow covers: one period, or every week outside the team's hours.
+    Members whose conversations an `assigned_to` workflow reaches. See `GET /members`.
     """
     condition: Optional[Union[CreateWorkflowDefinitionCondition, CreateWorkflowDefinitionCondition1]]
     """
@@ -6167,33 +6153,6 @@ class UpdateWorkflowDefinitionSentMessageFilters(TypedDict, closed=True):
     """
 
 
-class UpdateWorkflowDefinitionCoverage(TypedDict, closed=True):
-    """
-    When a `team_away` workflow covers: one period, or every week outside the team's hours.
-    """
-
-    starts_at: NotRequired[str]
-    """
-    When the team goes away, for one period; with `ends_at`.
-    """
-    ends_at: NotRequired[str]
-    """
-    When the team is back, for one period; with `starts_at`.
-    """
-    team_hours: NotRequired[BusinessHoursInput]
-    """
-    The team's hours, instead of `starts_at` and `ends_at`: the agent covers every week outside them, each closing starting a period.
-    """
-    assigned_user_ids: NotRequired[List[str]]
-    """
-    Covers only the conversations assigned to these members; omitted, every conversation of its channels. See `GET /members`.
-    """
-    notice: Optional[str]
-    """
-    What the agent tells customers meanwhile.
-    """
-
-
 class UpdateWorkflowDefinitionCondition(TypedDict, closed=True):
     """
     When it runs; null runs at any hour.
@@ -6214,7 +6173,7 @@ class UpdateWorkflowDefinitionCondition1(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -6249,7 +6208,7 @@ class UpdateWorkflowDefinitionFlowSteps1Choice(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -6289,7 +6248,7 @@ class UpdateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -6325,7 +6284,7 @@ class UpdateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -6345,7 +6304,7 @@ class UpdateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -6369,7 +6328,7 @@ class UpdateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -6389,7 +6348,7 @@ class UpdateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -6405,7 +6364,7 @@ class UpdateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -6421,7 +6380,7 @@ class UpdateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps8(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -6441,7 +6400,7 @@ class UpdateWorkflowDefinitionFlowSteps8(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionFlowSteps9(TypedDict, closed=True):
     """
-    One step. `close_conversation`, `end`, `answer_call` and `decline_call` finish the flow; every other step continues at its target.
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
     """
 
     id: str
@@ -6459,6 +6418,26 @@ class UpdateWorkflowDefinitionFlowSteps9(TypedDict, closed=True):
     """
 
 
+class UpdateWorkflowDefinitionFlowSteps10(TypedDict, closed=True):
+    """
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call` and `turn_on_ai` finish the flow; every other step continues at its target.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    next: Optional[str]
+    """
+    Step to run next; null ends the flow.
+    """
+    kind: Literal["turn_on_ai"]
+    agent_id: str
+    """
+    The only step of an `assigned_to` workflow: this AI agent answers the chats it reaches while its hours hold. Nobody is reassigned.
+    """
+
+
 class UpdateWorkflowDefinitionFlow(TypedDict, closed=True):
     """
     The steps and how they connect.
@@ -6468,7 +6447,7 @@ class UpdateWorkflowDefinitionFlow(TypedDict, closed=True):
     """
     ID of the first step.
     """
-    steps: List[Union[UpdateWorkflowDefinitionFlowSteps, UpdateWorkflowDefinitionFlowSteps1, UpdateWorkflowDefinitionFlowSteps2, UpdateWorkflowDefinitionFlowSteps3, UpdateWorkflowDefinitionFlowSteps4, UpdateWorkflowDefinitionFlowSteps5, UpdateWorkflowDefinitionFlowSteps6, UpdateWorkflowDefinitionFlowSteps7, UpdateWorkflowDefinitionFlowSteps8, UpdateWorkflowDefinitionFlowSteps9]]
+    steps: List[Union[UpdateWorkflowDefinitionFlowSteps, UpdateWorkflowDefinitionFlowSteps1, UpdateWorkflowDefinitionFlowSteps2, UpdateWorkflowDefinitionFlowSteps3, UpdateWorkflowDefinitionFlowSteps4, UpdateWorkflowDefinitionFlowSteps5, UpdateWorkflowDefinitionFlowSteps6, UpdateWorkflowDefinitionFlowSteps7, UpdateWorkflowDefinitionFlowSteps8, UpdateWorkflowDefinitionFlowSteps9, UpdateWorkflowDefinitionFlowSteps10]]
 
 
 class UpdateWorkflowDefinition(TypedDict, closed=True):
@@ -6476,9 +6455,9 @@ class UpdateWorkflowDefinition(TypedDict, closed=True):
     Replaces the whole definition.
     """
 
-    trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_away", "team_message_unanswered", "call_received"]
+    trigger: Literal["assigned_to", "conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_message_unanswered", "call_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `assigned_to` runs nothing: while a conversation of its channels is assigned to one of `assigned_user_ids` and its `condition` holds, the agent of its only `turn_on_ai` step answers it and no assignee moves; when the hours begin to hold it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """
@@ -6496,9 +6475,9 @@ class UpdateWorkflowDefinition(TypedDict, closed=True):
     """
     Which outgoing messages a `message_sent` workflow reacts to; required for it.
     """
-    coverage: NotRequired[UpdateWorkflowDefinitionCoverage]
+    assigned_user_ids: NotRequired[List[str]]
     """
-    When a `team_away` workflow covers: one period, or every week outside the team's hours.
+    Members whose conversations an `assigned_to` workflow reaches. See `GET /members`.
     """
     condition: Optional[Union[UpdateWorkflowDefinitionCondition, UpdateWorkflowDefinitionCondition1]]
     """
