@@ -6,6 +6,10 @@ URL: https://getricky.ai/en/docs/api/changelog
 
 This page records changes to the API. A breaking change only ships in a new path version and is announced here.
 
+## November 16, 2026
+
+**When a message is sent.** Backward-compatible change to v1. The `message_sent` trigger starts a flow when an outgoing message passes `sent_message_filters`: `senders` (who sent it: `person`, `ai`, `automation`, `broadcast` or `external_app`) and, optionally, `text_contains`, compared ignoring case, accents and repeated spaces. It runs on the next 15-minute deadline sweep, unless the contact replied first. It takes no `condition`.
+
 ## November 15, 2026
 
 **Closing unanswered conversations.** Workflows accept `team_message_unanswered` with `inactivity_seconds` and any conversation flow. The trigger starts the flow; closing is an explicit `close_conversation` step. Each new team message starts the wait; a customer reply cancels the close. Due closes run on the next 15-minute deadline sweep. Scheduled workflows expose `close_after_send`: close only when that send opened the chat and no later message arrived; configure this option in Ricky's editor.

@@ -3722,16 +3722,24 @@ class WorkflowDefinitionSentMessageFilters(TypedDict):
 
 class WorkflowDefinitionCoverage(TypedDict):
     """
-    The period of a `team_away` workflow.
+    When a `team_away` workflow covers: one period, or every week outside the team's hours.
     """
 
-    starts_at: str
+    starts_at: NotRequired[str]
     """
-    When the team goes away.
+    When the team goes away, for one period; with `ends_at`.
     """
-    ends_at: str
+    ends_at: NotRequired[str]
     """
-    When the team is back.
+    When the team is back, for one period; with `starts_at`.
+    """
+    team_hours: NotRequired[BusinessHours]
+    """
+    The team's hours, instead of `starts_at` and `ends_at`: the agent covers every week outside them, each closing starting a period.
+    """
+    assigned_user_ids: NotRequired[List[str]]
+    """
+    Covers only the conversations assigned to these members; omitted, every conversation of its channels. See `GET /members`.
     """
     notice: Optional[str]
     """
@@ -4023,7 +4031,7 @@ class WorkflowDefinition(TypedDict):
 
     trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_away", "team_message_unanswered", "call_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """
@@ -4043,7 +4051,7 @@ class WorkflowDefinition(TypedDict):
     """
     coverage: NotRequired[WorkflowDefinitionCoverage]
     """
-    The period of a `team_away` workflow.
+    When a `team_away` workflow covers: one period, or every week outside the team's hours.
     """
     condition: Optional[Union[WorkflowDefinitionCondition, WorkflowDefinitionCondition1]]
     """
@@ -5769,16 +5777,24 @@ class CreateWorkflowDefinitionSentMessageFilters(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionCoverage(TypedDict, closed=True):
     """
-    The period of a `team_away` workflow.
+    When a `team_away` workflow covers: one period, or every week outside the team's hours.
     """
 
-    starts_at: str
+    starts_at: NotRequired[str]
     """
-    When the team goes away.
+    When the team goes away, for one period; with `ends_at`.
     """
-    ends_at: str
+    ends_at: NotRequired[str]
     """
-    When the team is back.
+    When the team is back, for one period; with `starts_at`.
+    """
+    team_hours: NotRequired[BusinessHoursInput]
+    """
+    The team's hours, instead of `starts_at` and `ends_at`: the agent covers every week outside them, each closing starting a period.
+    """
+    assigned_user_ids: NotRequired[List[str]]
+    """
+    Covers only the conversations assigned to these members; omitted, every conversation of its channels. See `GET /members`.
     """
     notice: Optional[str]
     """
@@ -6070,7 +6086,7 @@ class CreateWorkflowDefinition(TypedDict, closed=True):
 
     trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_away", "team_message_unanswered", "call_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """
@@ -6090,7 +6106,7 @@ class CreateWorkflowDefinition(TypedDict, closed=True):
     """
     coverage: NotRequired[CreateWorkflowDefinitionCoverage]
     """
-    The period of a `team_away` workflow.
+    When a `team_away` workflow covers: one period, or every week outside the team's hours.
     """
     condition: Optional[Union[CreateWorkflowDefinitionCondition, CreateWorkflowDefinitionCondition1]]
     """
@@ -6153,16 +6169,24 @@ class UpdateWorkflowDefinitionSentMessageFilters(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionCoverage(TypedDict, closed=True):
     """
-    The period of a `team_away` workflow.
+    When a `team_away` workflow covers: one period, or every week outside the team's hours.
     """
 
-    starts_at: str
+    starts_at: NotRequired[str]
     """
-    When the team goes away.
+    When the team goes away, for one period; with `ends_at`.
     """
-    ends_at: str
+    ends_at: NotRequired[str]
     """
-    When the team is back.
+    When the team is back, for one period; with `starts_at`.
+    """
+    team_hours: NotRequired[BusinessHoursInput]
+    """
+    The team's hours, instead of `starts_at` and `ends_at`: the agent covers every week outside them, each closing starting a period.
+    """
+    assigned_user_ids: NotRequired[List[str]]
+    """
+    Covers only the conversations assigned to these members; omitted, every conversation of its channels. See `GET /members`.
     """
     notice: Optional[str]
     """
@@ -6454,7 +6478,7 @@ class UpdateWorkflowDefinition(TypedDict, closed=True):
 
     trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_away", "team_message_unanswered", "call_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers every conversation of its channels and no assignee moves. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """
@@ -6474,7 +6498,7 @@ class UpdateWorkflowDefinition(TypedDict, closed=True):
     """
     coverage: NotRequired[UpdateWorkflowDefinitionCoverage]
     """
-    The period of a `team_away` workflow.
+    When a `team_away` workflow covers: one period, or every week outside the team's hours.
     """
     condition: Optional[Union[UpdateWorkflowDefinitionCondition, UpdateWorkflowDefinitionCondition1]]
     """

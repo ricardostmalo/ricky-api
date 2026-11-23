@@ -12,15 +12,16 @@ The key needs the `workflows:read` scope to read and `workflows:write` to change
 
 Ricky starts every execution from an event. There is no operation to start a workflow from your system.
 
-| Type           | `trigger`                 | Runs when                                                                      |
-| -------------- | ------------------------- | ------------------------------------------------------------------------------ |
-| `conversation` | `conversation_opened`     | A conversation opens on one of its channels.                                   |
-| `conversation` | `first_message_received`  | The contact's first message in a conversation arrives.                         |
-| `conversation` | `message_received`        | Any message from the contact arrives; `message_filters` narrows it.            |
-| `conversation` | `call_received`           | A WhatsApp call comes in on one of its channels; it decides who answers.       |
-| `conversation` | `team_message_unanswered` | `inactivity_seconds` passes without a customer reply to the last team message. |
-| `conversation` | `conversation_inactive`   | `inactivity_seconds` passes without messages or reactions from either side.    |
-| `scheduled`    | `{ "kind": "daily" }`     | Every day at a set time, with Odoo appointments or birthdays.                  |
+| Type           | `trigger`                 | Runs when                                                                                             |
+| -------------- | ------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `conversation` | `conversation_opened`     | A conversation opens on one of its channels.                                                          |
+| `conversation` | `first_message_received`  | The contact's first message in a conversation arrives.                                                |
+| `conversation` | `message_received`        | Any message from the contact arrives; `message_filters` narrows it.                                   |
+| `conversation` | `call_received`           | A WhatsApp call comes in on one of its channels; it decides who answers.                              |
+| `conversation` | `team_message_unanswered` | `inactivity_seconds` passes without a customer reply to the last team message.                        |
+| `conversation` | `conversation_inactive`   | `inactivity_seconds` passes without messages or reactions from either side.                           |
+| `conversation` | `message_sent`            | An outgoing message passes `sent_message_filters`; runs within 15 minutes unless the contact replied. |
+| `scheduled`    | `{ "kind": "daily" }`     | Every day at a set time, with Odoo appointments or birthdays.                                         |
 
 The API creates and edits conversation workflows. Scheduled workflows are created in Ricky; the API reads, renames, activates, pauses and deletes them, sets their header file, and previews and reviews appointment reminders and their Odoo states ([below](#scheduled-workflows)).
 
