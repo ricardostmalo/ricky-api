@@ -6,6 +6,10 @@ URL: https://getricky.ai/en/docs/api/changelog
 
 This page records changes to the API. A breaking change only ships in a new path version and is announced here.
 
+## November 23, 2026
+
+**Weekly coverage, by person.** Backward-compatible change to v1. The `coverage` of a `team_away` workflow takes `team_hours` instead of `starts_at` and `ends_at`: the agent covers every week outside those hours, and each closing starts a period. `assigned_user_ids` limits the coverage to the conversations assigned to those members. When each period starts, the agent answers the conversations already waiting for a reply whose customer wrote in the last 23 hours.
+
 ## November 16, 2026
 
 **When a message is sent.** Backward-compatible change to v1. The `message_sent` trigger starts a flow when an outgoing message passes `sent_message_filters`: `senders` (who sent it: `person`, `ai`, `automation`, `broadcast` or `external_app`) and, optionally, `text_contains`, compared ignoring case, accents and repeated spaces. It runs on the next 15-minute deadline sweep, unless the contact replied first. It takes no `condition`.

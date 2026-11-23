@@ -3693,7 +3693,7 @@ class WorkflowDefinitionMessageFilters(TypedDict):
 
     first_message: NotRequired[bool]
     """
-    Match the first inbound message OR only_unassigned. Neither selected matches every message.
+    Match the contact writing first, before any message from the business, OR only_unassigned. Neither selected matches every message.
     """
     only_unassigned: bool
     """
@@ -4031,7 +4031,7 @@ class WorkflowDefinition(TypedDict):
 
     trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_away", "team_message_unanswered", "call_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """
@@ -5748,7 +5748,7 @@ class CreateWorkflowDefinitionMessageFilters(TypedDict, closed=True):
 
     first_message: NotRequired[bool]
     """
-    Match the first inbound message OR only_unassigned. Neither selected matches every message.
+    Match the contact writing first, before any message from the business, OR only_unassigned. Neither selected matches every message.
     """
     only_unassigned: bool
     """
@@ -6086,7 +6086,7 @@ class CreateWorkflowDefinition(TypedDict, closed=True):
 
     trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_away", "team_message_unanswered", "call_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """
@@ -6140,7 +6140,7 @@ class UpdateWorkflowDefinitionMessageFilters(TypedDict, closed=True):
 
     first_message: NotRequired[bool]
     """
-    Match the first inbound message OR only_unassigned. Neither selected matches every message.
+    Match the contact writing first, before any message from the business, OR only_unassigned. Neither selected matches every message.
     """
     only_unassigned: bool
     """
@@ -6478,7 +6478,7 @@ class UpdateWorkflowDefinition(TypedDict, closed=True):
 
     trigger: Literal["conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_away", "team_message_unanswered", "call_received"]
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the first message from the contact in a conversation arrives; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+    `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `team_away` runs nothing: during `coverage` the agent of its only `assign_agent` step answers the conversations of its channels (only those assigned to `coverage.assigned_user_ids` when given) and no assignee moves; when each period starts it answers those already waiting for a reply. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
     """
     channel_ids: List[str]
     """
