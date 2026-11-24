@@ -6,6 +6,10 @@ URL: https://getricky.ai/docs/api/changelog
 
 Esta página registra los cambios de la API. Un cambio incompatible solo llega en una versión nueva de la ruta y se anuncia aquí.
 
+## 23 de noviembre de 2026 (tarde)
+
+**«Chat asignado a» reemplaza a `team_away`.** El disparador `team_away` y su campo `coverage` se quitan: ningún workflow los usaba. El disparador `assigned_to` toma `assigned_user_ids` (los miembros cuyas conversaciones alcanza), un `condition` de horario obligatorio y un solo paso `turn_on_ai` con `agent_id`. Mientras una conversación está asignada a uno de esos miembros y se cumple el horario, ese agente la contesta sin cambiar la asignación; cuando empieza a cumplirse el horario, contesta las que ya esperaban respuesta y cuyo cliente escribió en las últimas 23 horas.
+
 ## 23 de noviembre de 2026
 
 **Cobertura semanal y por persona.** Cambio compatible con la v1. `coverage` de un workflow `team_away` acepta `team_hours` en lugar de `starts_at` y `ends_at`: el agente cubre cada semana fuera de ese horario, y cada cierre empieza un periodo. `assigned_user_ids` limita la cobertura a las conversaciones asignadas a esos miembros. Al empezar cada periodo, el agente contesta las conversaciones que ya esperaban respuesta y cuyo cliente escribió en las últimas 23 horas.

@@ -4,6 +4,10 @@ Also at https://getricky.ai/en/docs/api/changelog.
 
 This page records changes to the API. A breaking change only ships in a new path version and is announced here.
 
+## November 23, 2026 (night)
+
+**«At a time» and «When a chat is assigned to someone» replace `assigned_to`.** The `assigned_to` trigger and its `assigned_user_ids` field are removed: no workflow used them. Two new triggers turn the AI on or off in conversations that stay assigned to their member, with the `turn_on_ai` (with `agent_id`) and `turn_off_ai` steps, which only they take. `at_time` runs once a day at `at_time.time` (quarter hours), on the days of `at_time.weekdays` in the `at_time.timezone` zone, on each conversation assigned then to one of `conversation_filters.assigned_user_ids`; it has no `condition`. `conversation_assigned` runs when a conversation is assigned to a member (any member, or one of `conversation_filters.assigned_user_ids`) while its `condition` holds; the assignment an AI handoff makes does not run it. `conversation_filters.only_open` limits both to open conversations. When the AI turns on, if the contact wrote last within the last 23 hours, the agent answers at once.
+
 ## November 23, 2026 (afternoon)
 
 **«Chat assigned to» replaces `team_away`.** The `team_away` trigger and its `coverage` field are removed: no workflow used them. The `assigned_to` trigger takes `assigned_user_ids` (the members whose conversations it reaches), a required hours `condition` and a single `turn_on_ai` step with `agent_id`. While a conversation is assigned to one of those members and the hours hold, that agent answers it without changing the assignment; when the hours begin to hold, it answers those already waiting for a reply whose customer wrote in the last 23 hours.
