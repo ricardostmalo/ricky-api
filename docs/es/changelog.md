@@ -6,6 +6,10 @@ URL: https://getricky.ai/docs/api/changelog
 
 Esta página registra los cambios de la API. Un cambio incompatible solo llega en una versión nueva de la ruta y se anuncia aquí.
 
+## 23 de noviembre de 2026 (noche)
+
+**«A una hora» y «Cuando se le asigna un chat a alguien» reemplazan a `assigned_to`.** El disparador `assigned_to` y su campo `assigned_user_ids` se quitan: ningún workflow los usaba. Dos disparadores nuevos prenden o apagan la IA en conversaciones que siguen asignadas a su miembro, con los pasos `turn_on_ai` (con `agent_id`) y `turn_off_ai`, que solo ellos admiten. `at_time` se ejecuta una vez al día a la hora `at_time.time` (cuartos de hora), en los días de `at_time.weekdays` y la zona `at_time.timezone`, en cada conversación asignada en ese momento a alguien de `conversation_filters.assigned_user_ids`; no tiene `condition`. `conversation_assigned` se ejecuta cuando una conversación se asigna a un miembro (cualquiera, o alguien de `conversation_filters.assigned_user_ids`) mientras se cumple su `condition`; la asignación que hace un handoff de la IA no lo ejecuta. `conversation_filters.only_open` limita ambos a las conversaciones abiertas. Al prenderse la IA, si el contacto escribió de último en las últimas 23 horas, el agente contesta de una vez.
+
 ## 23 de noviembre de 2026 (tarde)
 
 **«Chat asignado a» reemplaza a `team_away`.** El disparador `team_away` y su campo `coverage` se quitan: ningún workflow los usaba. El disparador `assigned_to` toma `assigned_user_ids` (los miembros cuyas conversaciones alcanza), un `condition` de horario obligatorio y un solo paso `turn_on_ai` con `agent_id`. Mientras una conversación está asignada a uno de esos miembros y se cumple el horario, ese agente la contesta sin cambiar la asignación; cuando empieza a cumplirse el horario, contesta las que ya esperaban respuesta y cuyo cliente escribió en las últimas 23 horas.

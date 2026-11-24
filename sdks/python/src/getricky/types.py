@@ -3686,93 +3686,214 @@ class BusinessHours(TypedDict):
     """
 
 
-class WorkflowDefinitionMessageFilters(TypedDict):
+class ConditionConditionValues(TypedDict):
+    kind: Literal["person"]
+    user_id: str
     """
-    Which messages a `message_received` workflow reacts to.
-    """
-
-    first_message: NotRequired[bool]
-    """
-    Match the contact writing first, before any message from the business, OR only_unassigned. Neither selected matches every message.
-    """
-    only_unassigned: bool
-    """
-    Match while nobody has the conversation; OR first_message when selected.
-    """
-    skip_buttons: bool
-    """
-    Not when the customer taps a button.
+    A member. See `GET /members`.
     """
 
 
-class WorkflowDefinitionSentMessageFilters(TypedDict):
+class ConditionConditionValues1(TypedDict):
+    kind: Literal["agent"]
+    agent_id: str
     """
-    Which outgoing messages a `message_sent` workflow reacts to; required for it.
-    """
-
-    senders: List[Literal["person", "ai", "automation", "broadcast", "external_app"]]
-    """
-    Who sent it: `person` (the team), `ai` (an AI agent, including its tools), `automation` (a workflow), `broadcast`, or `external_app` (another app connected to the channel). Each at most once.
-    """
-    text_contains: NotRequired[str]
-    """
-    Only when the message contains this text, ignoring case, accents and repeated spaces.
+    An AI agent.
     """
 
 
-WorkflowDefinitionAtTimeWeekday: TypeAlias = int
+class ConditionConditionValues2(TypedDict):
+    kind: Literal["nobody"]
 
 
-class WorkflowDefinitionAtTime(TypedDict):
+class ConditionCondition(TypedDict):
     """
-    When an `at_time` workflow runs; required for it and only for it.
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
     """
 
+    kind: Literal["compare"]
+    field: Literal["assignee"]
+    operator: Literal["is", "is_not"]
+    """
+    `is` holds for any of `values`; `is_not` for none.
+    """
+    values: List[Union[ConditionConditionValues, ConditionConditionValues1, ConditionConditionValues2]]
+    """
+    Who has the conversation: a member, an agent or nobody.
+    """
+
+
+class ConditionCondition1(TypedDict):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["conversation_status"]
+    operator: Literal["is", "is_not"]
+    """
+    `is` holds for any of `values`; `is_not` for none.
+    """
+    values: List[Literal["open", "closed"]]
+    """
+    Open or closed.
+    """
+
+
+class ConditionCondition2(TypedDict):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["ai"]
+    operator: Literal["is", "is_not"]
+    """
+    `is` holds for any of `values`; `is_not` for none.
+    """
+    values: List[Literal["on", "off"]]
+    """
+    `on` while an AI agent answers the conversation, as its assignee or with the AI on in it.
+    """
+
+
+class ConditionCondition3(TypedDict):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["channel"]
+    operator: Literal["is", "is_not"]
+    """
+    `is` holds for any of `values`; `is_not` for none.
+    """
+    values: List[str]
+    """
+    Channels. See `GET /channels`.
+    """
+
+
+class ConditionCondition4(TypedDict):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["time"]
+    operator: Literal["within", "outside"]
+    """
+    Whether the moment of evaluation is within the hours or outside them.
+    """
+    business_hours: BusinessHours
+
+
+class ConditionCondition5(TypedDict):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["message_first"]
+    operator: Literal["is", "is_not"]
+    """
+    `is` when the contact wrote first in the conversation, before any message from the business.
+    """
+
+
+class ConditionCondition6(TypedDict):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["message_type"]
+    operator: Literal["is", "is_not"]
+    """
+    `is` holds for any of `values`; `is_not` for none.
+    """
+    values: List[Literal["text", "button", "image", "audio", "video", "document", "location", "sticker", "other"]]
+    """
+    The kind of message; `button` is a tapped button or list option on any channel.
+    """
+
+
+class ConditionCondition7(TypedDict):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["message_text"]
+    operator: Literal["contains", "not_contains"]
+    value: str
+    """
+    Compared ignoring case, accents and repeated spaces.
+    """
+
+
+class ConditionCondition8(TypedDict):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["message_sender"]
+    operator: Literal["is", "is_not"]
+    """
+    `is` holds for any of `values`; `is_not` for none.
+    """
+    values: List[Literal["person", "ai", "automation", "broadcast", "external_app"]]
+    """
+    Who sent the message: `person` (the team), `ai` (an AI agent and its tools), `automation` (a workflow), `broadcast` or `external_app` (another app connected to the channel).
+    """
+
+
+class ConditionCondition9(TypedDict):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["variable"]
+    name: str
+    """
+    The `answer_key` an earlier `ask_question` step saved.
+    """
+    operator: Literal["is", "is_not", "contains", "not_contains", "exists", "not_exists"]
+    value: NotRequired[str]
+    """
+    Compared ignoring case and accents; absent for `exists` and `not_exists`.
+    """
+
+
+WorkflowDefinitionScheduleTimeWeekday: TypeAlias = int
+
+
+class WorkflowDefinitionScheduleTime(TypedDict):
     time: str
     """
     Quarter hour it runs, `HH:MM`.
     """
+    weekdays: List[WorkflowDefinitionScheduleTimeWeekday]
+    """
+    Days it runs at that time, 0 for Sunday to 6 for Saturday.
+    """
+
+
+class WorkflowDefinitionSchedule(TypedDict):
+    """
+    When a `schedule` workflow runs; required for it and only for it.
+    """
+
     timezone: str
     """
-    IANA time zone of `time` and `weekdays`.
+    IANA time zone of every time.
     """
-    weekdays: List[WorkflowDefinitionAtTimeWeekday]
+    times: List[WorkflowDefinitionScheduleTime]
     """
-    Days it runs, 0 for Sunday to 6 for Saturday. Each at most once.
+    Each time and its days; each time of each day at most once.
     """
-
-
-class WorkflowDefinitionConversationFilters(TypedDict):
-    """
-    Which conversations `at_time` and `conversation_assigned` reach; only for them.
-    """
-
-    assigned_user_ids: NotRequired[List[str]]
-    """
-    Members the conversation is assigned to. Required for `at_time`; omitted on `conversation_assigned`, any member. See `GET /members`.
-    """
-    only_open: bool
-    """
-    Only open conversations.
-    """
-
-
-class WorkflowDefinitionCondition(TypedDict):
-    """
-    When it runs; null runs at any hour.
-    """
-
-    kind: Literal["inside_business_hours"]
-    business_hours: BusinessHours
-
-
-class WorkflowDefinitionCondition1(TypedDict):
-    """
-    When it runs; null runs at any hour.
-    """
-
-    kind: Literal["outside_business_hours"]
-    business_hours: BusinessHours
 
 
 class WorkflowDefinitionFlowSteps(TypedDict):
@@ -3830,7 +3951,7 @@ class WorkflowDefinitionFlowSteps1(TypedDict):
     """
     answer_key: str
     """
-    Name the answer is kept under, for a later `branch`.
+    Name the answer is kept under, for a later `decision` to compare as a `variable`.
     """
     choices: List[WorkflowDefinitionFlowSteps1Choice]
     """
@@ -3847,42 +3968,6 @@ class WorkflowDefinitionFlowSteps1(TypedDict):
     on_invalid: Optional[str]
     """
     Step to run when the answer matches no option.
-    """
-
-
-class WorkflowDefinitionFlowSteps2(TypedDict):
-    """
-    One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
-    """
-
-    id: str
-    """
-    Step ID: letters, digits, `_` or `-`, up to 64.
-    """
-    next: Optional[str]
-    """
-    Step to run next; null ends the flow.
-    """
-    kind: Literal["branch"]
-    answer_key: NotRequired[str]
-    """
-    Name the answer is kept under, for a later `branch`.
-    """
-    operator: NotRequired[Literal["equals", "contains", "exists"]]
-    """
-    How the answer is compared. With `answer_key` and `value`.
-    """
-    value: NotRequired[str]
-    """
-    Value compared with the answer.
-    """
-    business_hours: NotRequired[BusinessHours]
-    """
-    Holds while the business is open at the moment the step runs. Send it instead of `answer_key`, `operator` and `value`.
-    """
-    otherwise: Optional[str]
-    """
-    Step to run when the condition does not hold; `next` when it does.
     """
 
 
@@ -4058,61 +4143,6 @@ class WorkflowDefinitionFlowSteps11(TypedDict):
     kind: Literal["turn_off_ai"]
 
 
-class WorkflowDefinitionFlow(TypedDict):
-    """
-    The steps and how they connect.
-    """
-
-    entry: str
-    """
-    ID of the first step.
-    """
-    steps: List[Union[WorkflowDefinitionFlowSteps, WorkflowDefinitionFlowSteps1, WorkflowDefinitionFlowSteps2, WorkflowDefinitionFlowSteps3, WorkflowDefinitionFlowSteps4, WorkflowDefinitionFlowSteps5, WorkflowDefinitionFlowSteps6, WorkflowDefinitionFlowSteps7, WorkflowDefinitionFlowSteps8, WorkflowDefinitionFlowSteps9, WorkflowDefinitionFlowSteps10, WorkflowDefinitionFlowSteps11]]
-
-
-class WorkflowDefinition(TypedDict):
-    """
-    Reacts to a conversation with messages, questions, waits and assignments.
-    """
-
-    trigger: Literal["at_time", "conversation_assigned", "conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_message_unanswered", "call_received"]
-    """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `at_time` runs once a day at `at_time.time`, on its weekdays, on each conversation of its channels assigned then to one of `conversation_filters.assigned_user_ids` (open ones only with `conversation_filters.only_open`); it has no `condition`. `conversation_assigned` runs when a conversation of its channels is assigned to a member (any member, or one of `conversation_filters.assigned_user_ids`) while its `condition` holds; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai` and `turn_off_ai` steps, which only they take. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
-    """
-    channel_ids: List[str]
-    """
-    Channels it listens to. See `GET /channels`.
-    """
-    inactivity_seconds: NotRequired[int]
-    """
-    Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.
-    """
-    message_filters: NotRequired[WorkflowDefinitionMessageFilters]
-    """
-    Which messages a `message_received` workflow reacts to.
-    """
-    sent_message_filters: NotRequired[WorkflowDefinitionSentMessageFilters]
-    """
-    Which outgoing messages a `message_sent` workflow reacts to; required for it.
-    """
-    at_time: NotRequired[WorkflowDefinitionAtTime]
-    """
-    When an `at_time` workflow runs; required for it and only for it.
-    """
-    conversation_filters: NotRequired[WorkflowDefinitionConversationFilters]
-    """
-    Which conversations `at_time` and `conversation_assigned` reach; only for them.
-    """
-    condition: Optional[Union[WorkflowDefinitionCondition, WorkflowDefinitionCondition1]]
-    """
-    When it runs; null runs at any hour.
-    """
-    flow: WorkflowDefinitionFlow
-    """
-    The steps and how they connect.
-    """
-
-
 class WorkflowDefinition1Trigger(TypedDict):
     kind: Literal["daily"]
     time: str
@@ -4215,34 +4245,6 @@ class WorkflowDefinition1(TypedDict):
     Close only when this send opened the conversation and no later message arrived.
     """
     template: WorkflowDefinition1Template
-
-
-class Workflow(TypedDict):
-    """
-    An automation Ricky runs for the organization.
-    """
-
-    id: str
-    """
-    Workflow ID.
-    """
-    name: str
-    """
-    Display name.
-    """
-    status: Literal["draft", "active", "paused"]
-    """
-    `draft` until activated; `paused` runs nothing new; `active` runs.
-    """
-    type: Literal["conversation", "scheduled"]
-    """
-    Which `definition` it has: a conversation flow or a daily template.
-    """
-    definition: Union[WorkflowDefinition, WorkflowDefinition1]
-    updated_at: str
-    """
-    Last change to the workflow.
-    """
 
 
 class WorkflowExecution(TypedDict):
@@ -5791,9 +5793,237 @@ class BusinessHoursInput(TypedDict, closed=True):
     """
 
 
+class ConditionInputConditionInputValues(TypedDict, closed=True):
+    kind: Literal["person"]
+    user_id: str
+    """
+    A member. See `GET /members`.
+    """
+
+
+class ConditionInputConditionInputValues1(TypedDict, closed=True):
+    kind: Literal["agent"]
+    agent_id: str
+    """
+    An AI agent.
+    """
+
+
+class ConditionInputConditionInputValues2(TypedDict, closed=True):
+    kind: Literal["nobody"]
+
+
+class ConditionInputConditionInput(TypedDict, closed=True):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["assignee"]
+    operator: Literal["is", "is_not"]
+    """
+    `is` holds for any of `values`; `is_not` for none.
+    """
+    values: List[Union[ConditionInputConditionInputValues, ConditionInputConditionInputValues1, ConditionInputConditionInputValues2]]
+    """
+    Who has the conversation: a member, an agent or nobody.
+    """
+
+
+class ConditionInputConditionInput1(TypedDict, closed=True):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["conversation_status"]
+    operator: Literal["is", "is_not"]
+    """
+    `is` holds for any of `values`; `is_not` for none.
+    """
+    values: List[Literal["open", "closed"]]
+    """
+    Open or closed.
+    """
+
+
+class ConditionInputConditionInput2(TypedDict, closed=True):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["ai"]
+    operator: Literal["is", "is_not"]
+    """
+    `is` holds for any of `values`; `is_not` for none.
+    """
+    values: List[Literal["on", "off"]]
+    """
+    `on` while an AI agent answers the conversation, as its assignee or with the AI on in it.
+    """
+
+
+class ConditionInputConditionInput3(TypedDict, closed=True):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["channel"]
+    operator: Literal["is", "is_not"]
+    """
+    `is` holds for any of `values`; `is_not` for none.
+    """
+    values: List[str]
+    """
+    Channels. See `GET /channels`.
+    """
+
+
+class ConditionInputConditionInput4(TypedDict, closed=True):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["time"]
+    operator: Literal["within", "outside"]
+    """
+    Whether the moment of evaluation is within the hours or outside them.
+    """
+    business_hours: BusinessHoursInput
+
+
+class ConditionInputConditionInput5(TypedDict, closed=True):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["message_first"]
+    operator: Literal["is", "is_not"]
+    """
+    `is` when the contact wrote first in the conversation, before any message from the business.
+    """
+
+
+class ConditionInputConditionInput6(TypedDict, closed=True):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["message_type"]
+    operator: Literal["is", "is_not"]
+    """
+    `is` holds for any of `values`; `is_not` for none.
+    """
+    values: List[Literal["text", "button", "image", "audio", "video", "document", "location", "sticker", "other"]]
+    """
+    The kind of message; `button` is a tapped button or list option on any channel.
+    """
+
+
+class ConditionInputConditionInput7(TypedDict, closed=True):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["message_text"]
+    operator: Literal["contains", "not_contains"]
+    value: str
+    """
+    Compared ignoring case, accents and repeated spaces.
+    """
+
+
+class ConditionInputConditionInput8(TypedDict, closed=True):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["message_sender"]
+    operator: Literal["is", "is_not"]
+    """
+    `is` holds for any of `values`; `is_not` for none.
+    """
+    values: List[Literal["person", "ai", "automation", "broadcast", "external_app"]]
+    """
+    Who sent the message: `person` (the team), `ai` (an AI agent and its tools), `automation` (a workflow), `broadcast` or `external_app` (another app connected to the channel).
+    """
+
+
+class ConditionInputConditionInput9(TypedDict, closed=True):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["compare"]
+    field: Literal["variable"]
+    name: str
+    """
+    The `answer_key` an earlier `ask_question` step saved.
+    """
+    operator: Literal["is", "is_not", "contains", "not_contains", "exists", "not_exists"]
+    value: NotRequired[str]
+    """
+    Compared ignoring case and accents; absent for `exists` and `not_exists`.
+    """
+
+
+class CreateWorkflowDefinitionCondition(TypedDict, closed=True):
+    """
+    Deprecated: read as a `time` comparison, `within` or `outside`.
+    """
+
+    kind: Literal["inside_business_hours"]
+    business_hours: BusinessHoursInput
+
+
+class CreateWorkflowDefinitionCondition1(TypedDict, closed=True):
+    """
+    Deprecated: read as a `time` comparison, `within` or `outside`.
+    """
+
+    kind: Literal["outside_business_hours"]
+    business_hours: BusinessHoursInput
+
+
+CreateWorkflowDefinitionScheduleTimeWeekday: TypeAlias = int
+
+
+class CreateWorkflowDefinitionScheduleTime(TypedDict, closed=True):
+    time: str
+    """
+    Quarter hour it runs, `HH:MM`.
+    """
+    weekdays: List[CreateWorkflowDefinitionScheduleTimeWeekday]
+    """
+    Days it runs at that time, 0 for Sunday to 6 for Saturday.
+    """
+
+
+class CreateWorkflowDefinitionSchedule(TypedDict, closed=True):
+    """
+    When a `schedule` workflow runs; required for it and only for it.
+    """
+
+    timezone: str
+    """
+    IANA time zone of every time.
+    """
+    times: List[CreateWorkflowDefinitionScheduleTime]
+    """
+    Each time and its days; each time of each day at most once.
+    """
+
+
 class CreateWorkflowDefinitionMessageFilters(TypedDict, closed=True):
     """
-    Which messages a `message_received` workflow reacts to.
+    Deprecated, requests only: read as `condition` comparisons on `message_first`, `assignee` (nobody) and `message_type` (not `button`).
     """
 
     first_message: NotRequired[bool]
@@ -5812,7 +6042,7 @@ class CreateWorkflowDefinitionMessageFilters(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionSentMessageFilters(TypedDict, closed=True):
     """
-    Which outgoing messages a `message_sent` workflow reacts to; required for it.
+    Deprecated, requests only: read as `condition` comparisons on `message_sender` and `message_text`.
     """
 
     senders: List[Literal["person", "ai", "automation", "broadcast", "external_app"]]
@@ -5830,7 +6060,7 @@ CreateWorkflowDefinitionAtTimeWeekday: TypeAlias = int
 
 class CreateWorkflowDefinitionAtTime(TypedDict, closed=True):
     """
-    When an `at_time` workflow runs; required for it and only for it.
+    Deprecated, requests only: an `at_time` workflow is read as `schedule` with this one time.
     """
 
     time: str
@@ -5849,7 +6079,7 @@ class CreateWorkflowDefinitionAtTime(TypedDict, closed=True):
 
 class CreateWorkflowDefinitionConversationFilters(TypedDict, closed=True):
     """
-    Which conversations `at_time` and `conversation_assigned` reach; only for them.
+    Deprecated, requests only: read as `condition` comparisons on `assignee` and `conversation_status`.
     """
 
     assigned_user_ids: NotRequired[List[str]]
@@ -5860,24 +6090,6 @@ class CreateWorkflowDefinitionConversationFilters(TypedDict, closed=True):
     """
     Only open conversations.
     """
-
-
-class CreateWorkflowDefinitionCondition(TypedDict, closed=True):
-    """
-    When it runs; null runs at any hour.
-    """
-
-    kind: Literal["inside_business_hours"]
-    business_hours: BusinessHoursInput
-
-
-class CreateWorkflowDefinitionCondition1(TypedDict, closed=True):
-    """
-    When it runs; null runs at any hour.
-    """
-
-    kind: Literal["outside_business_hours"]
-    business_hours: BusinessHoursInput
 
 
 class CreateWorkflowDefinitionFlowSteps(TypedDict, closed=True):
@@ -5935,7 +6147,7 @@ class CreateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
     """
     answer_key: str
     """
-    Name the answer is kept under, for a later `branch`.
+    Name the answer is kept under, for a later `decision` to compare as a `variable`.
     """
     choices: List[CreateWorkflowDefinitionFlowSteps1Choice]
     """
@@ -5955,7 +6167,7 @@ class CreateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
     """
 
 
-class CreateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
+class CreateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -5971,7 +6183,7 @@ class CreateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
     kind: Literal["branch"]
     answer_key: NotRequired[str]
     """
-    Name the answer is kept under, for a later `branch`.
+    Name the answer is kept under, for a later `decision` to compare as a `variable`.
     """
     operator: NotRequired[Literal["equals", "contains", "exists"]]
     """
@@ -5991,7 +6203,7 @@ class CreateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
     """
 
 
-class CreateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
+class CreateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -6011,7 +6223,7 @@ class CreateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
     """
 
 
-class CreateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
+class CreateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -6035,7 +6247,7 @@ class CreateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
     """
 
 
-class CreateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
+class CreateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -6055,7 +6267,7 @@ class CreateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
     """
 
 
-class CreateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
+class CreateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -6071,7 +6283,7 @@ class CreateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
     kind: Literal["close_conversation"]
 
 
-class CreateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
+class CreateWorkflowDefinitionFlowSteps8(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -6087,7 +6299,7 @@ class CreateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
     kind: Literal["end"]
 
 
-class CreateWorkflowDefinitionFlowSteps8(TypedDict, closed=True):
+class CreateWorkflowDefinitionFlowSteps9(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -6107,7 +6319,7 @@ class CreateWorkflowDefinitionFlowSteps8(TypedDict, closed=True):
     """
 
 
-class CreateWorkflowDefinitionFlowSteps9(TypedDict, closed=True):
+class CreateWorkflowDefinitionFlowSteps10(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -6127,7 +6339,7 @@ class CreateWorkflowDefinitionFlowSteps9(TypedDict, closed=True):
     """
 
 
-class CreateWorkflowDefinitionFlowSteps10(TypedDict, closed=True):
+class CreateWorkflowDefinitionFlowSteps11(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -6147,7 +6359,7 @@ class CreateWorkflowDefinitionFlowSteps10(TypedDict, closed=True):
     """
 
 
-class CreateWorkflowDefinitionFlowSteps11(TypedDict, closed=True):
+class CreateWorkflowDefinitionFlowSteps12(TypedDict, closed=True):
     """
     Turns the AI off in the conversation, whoever turned it on.
     """
@@ -6163,79 +6375,56 @@ class CreateWorkflowDefinitionFlowSteps11(TypedDict, closed=True):
     kind: Literal["turn_off_ai"]
 
 
-class CreateWorkflowDefinitionFlow(TypedDict, closed=True):
+class UpdateWorkflowDefinitionCondition(TypedDict, closed=True):
     """
-    The steps and how they connect.
-    """
-
-    entry: str
-    """
-    ID of the first step.
-    """
-    steps: List[Union[CreateWorkflowDefinitionFlowSteps, CreateWorkflowDefinitionFlowSteps1, CreateWorkflowDefinitionFlowSteps2, CreateWorkflowDefinitionFlowSteps3, CreateWorkflowDefinitionFlowSteps4, CreateWorkflowDefinitionFlowSteps5, CreateWorkflowDefinitionFlowSteps6, CreateWorkflowDefinitionFlowSteps7, CreateWorkflowDefinitionFlowSteps8, CreateWorkflowDefinitionFlowSteps9, CreateWorkflowDefinitionFlowSteps10, CreateWorkflowDefinitionFlowSteps11]]
-
-
-class CreateWorkflowDefinition(TypedDict, closed=True):
-    """
-    Reacts to a conversation with messages, questions, waits and assignments.
+    Deprecated: read as a `time` comparison, `within` or `outside`.
     """
 
-    trigger: Literal["at_time", "conversation_assigned", "conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_message_unanswered", "call_received"]
+    kind: Literal["inside_business_hours"]
+    business_hours: BusinessHoursInput
+
+
+class UpdateWorkflowDefinitionCondition1(TypedDict, closed=True):
     """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `at_time` runs once a day at `at_time.time`, on its weekdays, on each conversation of its channels assigned then to one of `conversation_filters.assigned_user_ids` (open ones only with `conversation_filters.only_open`); it has no `condition`. `conversation_assigned` runs when a conversation of its channels is assigned to a member (any member, or one of `conversation_filters.assigned_user_ids`) while its `condition` holds; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai` and `turn_off_ai` steps, which only they take. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+    Deprecated: read as a `time` comparison, `within` or `outside`.
     """
-    channel_ids: List[str]
+
+    kind: Literal["outside_business_hours"]
+    business_hours: BusinessHoursInput
+
+
+UpdateWorkflowDefinitionScheduleTimeWeekday: TypeAlias = int
+
+
+class UpdateWorkflowDefinitionScheduleTime(TypedDict, closed=True):
+    time: str
     """
-    Channels it listens to. See `GET /channels`.
+    Quarter hour it runs, `HH:MM`.
     """
-    inactivity_seconds: NotRequired[int]
+    weekdays: List[UpdateWorkflowDefinitionScheduleTimeWeekday]
     """
-    Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.
-    """
-    message_filters: NotRequired[CreateWorkflowDefinitionMessageFilters]
-    """
-    Which messages a `message_received` workflow reacts to.
-    """
-    sent_message_filters: NotRequired[CreateWorkflowDefinitionSentMessageFilters]
-    """
-    Which outgoing messages a `message_sent` workflow reacts to; required for it.
-    """
-    at_time: NotRequired[CreateWorkflowDefinitionAtTime]
-    """
-    When an `at_time` workflow runs; required for it and only for it.
-    """
-    conversation_filters: NotRequired[CreateWorkflowDefinitionConversationFilters]
-    """
-    Which conversations `at_time` and `conversation_assigned` reach; only for them.
-    """
-    condition: Optional[Union[CreateWorkflowDefinitionCondition, CreateWorkflowDefinitionCondition1]]
-    """
-    When it runs; null runs at any hour.
-    """
-    flow: CreateWorkflowDefinitionFlow
-    """
-    The steps and how they connect.
+    Days it runs at that time, 0 for Sunday to 6 for Saturday.
     """
 
 
-class CreateWorkflow(TypedDict, closed=True):
+class UpdateWorkflowDefinitionSchedule(TypedDict, closed=True):
     """
-    Creates a conversation workflow as a `draft`. Activating it is a separate call.
+    When a `schedule` workflow runs; required for it and only for it.
     """
 
-    name: str
+    timezone: str
     """
-    Display name.
+    IANA time zone of every time.
     """
-    definition: CreateWorkflowDefinition
+    times: List[UpdateWorkflowDefinitionScheduleTime]
     """
-    Reacts to a conversation with messages, questions, waits and assignments.
+    Each time and its days; each time of each day at most once.
     """
 
 
 class UpdateWorkflowDefinitionMessageFilters(TypedDict, closed=True):
     """
-    Which messages a `message_received` workflow reacts to.
+    Deprecated, requests only: read as `condition` comparisons on `message_first`, `assignee` (nobody) and `message_type` (not `button`).
     """
 
     first_message: NotRequired[bool]
@@ -6254,7 +6443,7 @@ class UpdateWorkflowDefinitionMessageFilters(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionSentMessageFilters(TypedDict, closed=True):
     """
-    Which outgoing messages a `message_sent` workflow reacts to; required for it.
+    Deprecated, requests only: read as `condition` comparisons on `message_sender` and `message_text`.
     """
 
     senders: List[Literal["person", "ai", "automation", "broadcast", "external_app"]]
@@ -6272,7 +6461,7 @@ UpdateWorkflowDefinitionAtTimeWeekday: TypeAlias = int
 
 class UpdateWorkflowDefinitionAtTime(TypedDict, closed=True):
     """
-    When an `at_time` workflow runs; required for it and only for it.
+    Deprecated, requests only: an `at_time` workflow is read as `schedule` with this one time.
     """
 
     time: str
@@ -6291,7 +6480,7 @@ class UpdateWorkflowDefinitionAtTime(TypedDict, closed=True):
 
 class UpdateWorkflowDefinitionConversationFilters(TypedDict, closed=True):
     """
-    Which conversations `at_time` and `conversation_assigned` reach; only for them.
+    Deprecated, requests only: read as `condition` comparisons on `assignee` and `conversation_status`.
     """
 
     assigned_user_ids: NotRequired[List[str]]
@@ -6302,24 +6491,6 @@ class UpdateWorkflowDefinitionConversationFilters(TypedDict, closed=True):
     """
     Only open conversations.
     """
-
-
-class UpdateWorkflowDefinitionCondition(TypedDict, closed=True):
-    """
-    When it runs; null runs at any hour.
-    """
-
-    kind: Literal["inside_business_hours"]
-    business_hours: BusinessHoursInput
-
-
-class UpdateWorkflowDefinitionCondition1(TypedDict, closed=True):
-    """
-    When it runs; null runs at any hour.
-    """
-
-    kind: Literal["outside_business_hours"]
-    business_hours: BusinessHoursInput
 
 
 class UpdateWorkflowDefinitionFlowSteps(TypedDict, closed=True):
@@ -6377,7 +6548,7 @@ class UpdateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
     """
     answer_key: str
     """
-    Name the answer is kept under, for a later `branch`.
+    Name the answer is kept under, for a later `decision` to compare as a `variable`.
     """
     choices: List[UpdateWorkflowDefinitionFlowSteps1Choice]
     """
@@ -6397,7 +6568,7 @@ class UpdateWorkflowDefinitionFlowSteps1(TypedDict, closed=True):
     """
 
 
-class UpdateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
+class UpdateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -6413,7 +6584,7 @@ class UpdateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
     kind: Literal["branch"]
     answer_key: NotRequired[str]
     """
-    Name the answer is kept under, for a later `branch`.
+    Name the answer is kept under, for a later `decision` to compare as a `variable`.
     """
     operator: NotRequired[Literal["equals", "contains", "exists"]]
     """
@@ -6433,7 +6604,7 @@ class UpdateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
     """
 
 
-class UpdateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
+class UpdateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -6453,7 +6624,7 @@ class UpdateWorkflowDefinitionFlowSteps3(TypedDict, closed=True):
     """
 
 
-class UpdateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
+class UpdateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -6477,7 +6648,7 @@ class UpdateWorkflowDefinitionFlowSteps4(TypedDict, closed=True):
     """
 
 
-class UpdateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
+class UpdateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -6497,7 +6668,7 @@ class UpdateWorkflowDefinitionFlowSteps5(TypedDict, closed=True):
     """
 
 
-class UpdateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
+class UpdateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -6513,7 +6684,7 @@ class UpdateWorkflowDefinitionFlowSteps6(TypedDict, closed=True):
     kind: Literal["close_conversation"]
 
 
-class UpdateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
+class UpdateWorkflowDefinitionFlowSteps8(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -6529,7 +6700,7 @@ class UpdateWorkflowDefinitionFlowSteps7(TypedDict, closed=True):
     kind: Literal["end"]
 
 
-class UpdateWorkflowDefinitionFlowSteps8(TypedDict, closed=True):
+class UpdateWorkflowDefinitionFlowSteps9(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -6549,7 +6720,7 @@ class UpdateWorkflowDefinitionFlowSteps8(TypedDict, closed=True):
     """
 
 
-class UpdateWorkflowDefinitionFlowSteps9(TypedDict, closed=True):
+class UpdateWorkflowDefinitionFlowSteps10(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -6569,7 +6740,7 @@ class UpdateWorkflowDefinitionFlowSteps9(TypedDict, closed=True):
     """
 
 
-class UpdateWorkflowDefinitionFlowSteps10(TypedDict, closed=True):
+class UpdateWorkflowDefinitionFlowSteps11(TypedDict, closed=True):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -6589,7 +6760,7 @@ class UpdateWorkflowDefinitionFlowSteps10(TypedDict, closed=True):
     """
 
 
-class UpdateWorkflowDefinitionFlowSteps11(TypedDict, closed=True):
+class UpdateWorkflowDefinitionFlowSteps12(TypedDict, closed=True):
     """
     Turns the AI off in the conversation, whoever turned it on.
     """
@@ -6603,76 +6774,6 @@ class UpdateWorkflowDefinitionFlowSteps11(TypedDict, closed=True):
     Step to run next; null ends the flow.
     """
     kind: Literal["turn_off_ai"]
-
-
-class UpdateWorkflowDefinitionFlow(TypedDict, closed=True):
-    """
-    The steps and how they connect.
-    """
-
-    entry: str
-    """
-    ID of the first step.
-    """
-    steps: List[Union[UpdateWorkflowDefinitionFlowSteps, UpdateWorkflowDefinitionFlowSteps1, UpdateWorkflowDefinitionFlowSteps2, UpdateWorkflowDefinitionFlowSteps3, UpdateWorkflowDefinitionFlowSteps4, UpdateWorkflowDefinitionFlowSteps5, UpdateWorkflowDefinitionFlowSteps6, UpdateWorkflowDefinitionFlowSteps7, UpdateWorkflowDefinitionFlowSteps8, UpdateWorkflowDefinitionFlowSteps9, UpdateWorkflowDefinitionFlowSteps10, UpdateWorkflowDefinitionFlowSteps11]]
-
-
-class UpdateWorkflowDefinition(TypedDict, closed=True):
-    """
-    Replaces the whole definition.
-    """
-
-    trigger: Literal["at_time", "conversation_assigned", "conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "team_message_unanswered", "call_received"]
-    """
-    `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `at_time` runs once a day at `at_time.time`, on its weekdays, on each conversation of its channels assigned then to one of `conversation_filters.assigned_user_ids` (open ones only with `conversation_filters.only_open`); it has no `condition`. `conversation_assigned` runs when a conversation of its channels is assigned to a member (any member, or one of `conversation_filters.assigned_user_ids`) while its `condition` holds; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai` and `turn_off_ai` steps, which only they take. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
-    """
-    channel_ids: List[str]
-    """
-    Channels it listens to. See `GET /channels`.
-    """
-    inactivity_seconds: NotRequired[int]
-    """
-    Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.
-    """
-    message_filters: NotRequired[UpdateWorkflowDefinitionMessageFilters]
-    """
-    Which messages a `message_received` workflow reacts to.
-    """
-    sent_message_filters: NotRequired[UpdateWorkflowDefinitionSentMessageFilters]
-    """
-    Which outgoing messages a `message_sent` workflow reacts to; required for it.
-    """
-    at_time: NotRequired[UpdateWorkflowDefinitionAtTime]
-    """
-    When an `at_time` workflow runs; required for it and only for it.
-    """
-    conversation_filters: NotRequired[UpdateWorkflowDefinitionConversationFilters]
-    """
-    Which conversations `at_time` and `conversation_assigned` reach; only for them.
-    """
-    condition: Optional[Union[UpdateWorkflowDefinitionCondition, UpdateWorkflowDefinitionCondition1]]
-    """
-    When it runs; null runs at any hour.
-    """
-    flow: UpdateWorkflowDefinitionFlow
-    """
-    The steps and how they connect.
-    """
-
-
-class UpdateWorkflow(TypedDict, closed=True):
-    """
-    Only the fields you send change. The status stays: an active workflow runs the new definition from its next execution.
-    """
-
-    name: NotRequired[str]
-    """
-    Display name.
-    """
-    definition: NotRequired[UpdateWorkflowDefinition]
-    """
-    Replaces the whole definition.
-    """
 
 
 class CreateTemplateMediaUpload(TypedDict, closed=True):
@@ -7257,4 +7358,375 @@ class UpdateTemplate(TypedDict, closed=True):
     buttons: NotRequired[List[Union[UpdateTemplateButtonQuickReply, UpdateTemplateButtonUrl, UpdateTemplateButtonPhoneNumber]]]
     """
     Quick replies, at most two links and one phone. Quick replies cannot sit between the other buttons.
+    """
+
+
+class ConditionCondition10(TypedDict):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["all", "any"]
+    """
+    `all` holds when every condition holds; `any` when at least one does.
+    """
+    conditions: List[Condition]
+    """
+    Comparisons or groups, three levels deep at most.
+    """
+
+
+Condition: TypeAlias = Union[
+    Union[ConditionCondition, ConditionCondition1, ConditionCondition2, ConditionCondition3, ConditionCondition4, ConditionCondition5, ConditionCondition6, ConditionCondition7, ConditionCondition8, ConditionCondition9],
+    ConditionCondition10,
+]
+"""
+A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+"""
+
+
+class WorkflowDefinitionFlowSteps2Branch(TypedDict):
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    name: str
+    """
+    Branch name, unique in the decision.
+    """
+    condition: Condition
+    next: Optional[str]
+    """
+    Step to run when this branch is the first whose condition holds.
+    """
+
+
+class WorkflowDefinitionFlowSteps2(TypedDict):
+    """
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    kind: Literal["decision"]
+    branches: List[WorkflowDefinitionFlowSteps2Branch]
+    """
+    Branches in the order they are checked; the first that holds is taken.
+    """
+    next: Optional[str]
+    """
+    Step to run when no branch holds («Si no»); null ends the flow.
+    """
+
+
+class WorkflowDefinitionFlow(TypedDict):
+    """
+    The steps and how they connect.
+    """
+
+    entry: str
+    """
+    ID of the first step.
+    """
+    steps: List[Union[WorkflowDefinitionFlowSteps, WorkflowDefinitionFlowSteps1, WorkflowDefinitionFlowSteps2, WorkflowDefinitionFlowSteps3, WorkflowDefinitionFlowSteps4, WorkflowDefinitionFlowSteps5, WorkflowDefinitionFlowSteps6, WorkflowDefinitionFlowSteps7, WorkflowDefinitionFlowSteps8, WorkflowDefinitionFlowSteps9, WorkflowDefinitionFlowSteps10, WorkflowDefinitionFlowSteps11]]
+
+
+class WorkflowDefinition(TypedDict):
+    """
+    Reacts to a conversation with messages, questions, decisions, waits and assignments.
+    """
+
+    trigger: Literal["conversation_opened", "first_message_received", "message_received", "message_sent", "conversation_inactive", "team_message_unanswered", "schedule", "conversation_assigned", "call_received"]
+    """
+    The event that starts the workflow; `condition` decides whether that occurrence runs it. `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message, unless the contact replied first; `conversation_inactive` and `team_message_unanswered` after `inactivity_seconds`. `schedule` runs at each of its `schedule.times` on each conversation assigned then to a member its `condition` names with `assignee` `is`, which it requires. `conversation_assigned` runs when a conversation is assigned to a member; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai`, `turn_off_ai`, `decision` and `end` steps, and only they take `turn_on_ai` and `turn_off_ai`. `call_received` decides who answers a WhatsApp call on the WhatsApp numbers with AI calls on that its `condition` names: its flow takes only `answer_call`, `decline_call` and `decision`s on `channel` and `time`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+    """
+    condition: Optional[Condition]
+    """
+    Whether an occurrence of the trigger runs the workflow; null runs every occurrence on every channel.
+    """
+    schedule: NotRequired[WorkflowDefinitionSchedule]
+    """
+    When a `schedule` workflow runs; required for it and only for it.
+    """
+    inactivity_seconds: NotRequired[int]
+    """
+    Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.
+    """
+    flow: WorkflowDefinitionFlow
+    """
+    The steps and how they connect.
+    """
+
+
+class Workflow(TypedDict):
+    """
+    An automation Ricky runs for the organization.
+    """
+
+    id: str
+    """
+    Workflow ID.
+    """
+    name: str
+    """
+    Display name.
+    """
+    status: Literal["draft", "active", "paused"]
+    """
+    `draft` until activated; `paused` runs nothing new; `active` runs.
+    """
+    type: Literal["conversation", "scheduled"]
+    """
+    Which `definition` it has: a conversation flow or a daily template.
+    """
+    definition: Union[WorkflowDefinition, WorkflowDefinition1]
+    updated_at: str
+    """
+    Last change to the workflow.
+    """
+
+
+class ConditionInputConditionInput10(TypedDict, closed=True):
+    """
+    A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+    """
+
+    kind: Literal["all", "any"]
+    """
+    `all` holds when every condition holds; `any` when at least one does.
+    """
+    conditions: List[ConditionInput]
+    """
+    Comparisons or groups, three levels deep at most.
+    """
+
+
+ConditionInput: TypeAlias = Union[
+    Union[ConditionInputConditionInput, ConditionInputConditionInput1, ConditionInputConditionInput2, ConditionInputConditionInput3, ConditionInputConditionInput4, ConditionInputConditionInput5, ConditionInputConditionInput6, ConditionInputConditionInput7, ConditionInputConditionInput8, ConditionInputConditionInput9],
+    ConditionInputConditionInput10,
+]
+"""
+A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+"""
+
+
+class CreateWorkflowDefinitionFlowSteps2Branch(TypedDict, closed=True):
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    name: str
+    """
+    Branch name, unique in the decision.
+    """
+    condition: ConditionInput
+    next: Optional[str]
+    """
+    Step to run when this branch is the first whose condition holds.
+    """
+
+
+class CreateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
+    """
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    kind: Literal["decision"]
+    branches: List[CreateWorkflowDefinitionFlowSteps2Branch]
+    """
+    Branches in the order they are checked; the first that holds is taken.
+    """
+    next: Optional[str]
+    """
+    Step to run when no branch holds («Si no»); null ends the flow.
+    """
+
+
+class CreateWorkflowDefinitionFlow(TypedDict, closed=True):
+    """
+    The steps and how they connect.
+    """
+
+    entry: str
+    """
+    ID of the first step.
+    """
+    steps: List[Union[CreateWorkflowDefinitionFlowSteps, CreateWorkflowDefinitionFlowSteps1, CreateWorkflowDefinitionFlowSteps2, CreateWorkflowDefinitionFlowSteps3, CreateWorkflowDefinitionFlowSteps4, CreateWorkflowDefinitionFlowSteps5, CreateWorkflowDefinitionFlowSteps6, CreateWorkflowDefinitionFlowSteps7, CreateWorkflowDefinitionFlowSteps8, CreateWorkflowDefinitionFlowSteps9, CreateWorkflowDefinitionFlowSteps10, CreateWorkflowDefinitionFlowSteps11, CreateWorkflowDefinitionFlowSteps12]]
+
+
+class CreateWorkflowDefinition(TypedDict, closed=True):
+    """
+    Reacts to a conversation with messages, questions, decisions, waits and assignments.
+    """
+
+    trigger: Literal["conversation_opened", "first_message_received", "message_received", "message_sent", "conversation_inactive", "team_message_unanswered", "schedule", "conversation_assigned", "call_received", "at_time"]
+    """
+    The event that starts the workflow; `condition` decides whether that occurrence runs it. `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message, unless the contact replied first; `conversation_inactive` and `team_message_unanswered` after `inactivity_seconds`. `schedule` runs at each of its `schedule.times` on each conversation assigned then to a member its `condition` names with `assignee` `is`, which it requires. `conversation_assigned` runs when a conversation is assigned to a member; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai`, `turn_off_ai`, `decision` and `end` steps, and only they take `turn_on_ai` and `turn_off_ai`. `call_received` decides who answers a WhatsApp call on the WhatsApp numbers with AI calls on that its `condition` names: its flow takes only `answer_call`, `decline_call` and `decision`s on `channel` and `time`, and the first active one that reaches a call step decides, over whoever holds the conversation. `at_time` is deprecated: read as `schedule`.
+    """
+    condition: Optional[Union[ConditionInput, Union[CreateWorkflowDefinitionCondition, CreateWorkflowDefinitionCondition1]]]
+    """
+    Whether an occurrence of the trigger runs the workflow; null runs every occurrence on every channel.
+    """
+    schedule: NotRequired[CreateWorkflowDefinitionSchedule]
+    """
+    When a `schedule` workflow runs; required for it and only for it.
+    """
+    inactivity_seconds: NotRequired[int]
+    """
+    Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.
+    """
+    channel_ids: NotRequired[List[str]]
+    """
+    Deprecated: read as a `channel` comparison in `condition`.
+    """
+    message_filters: NotRequired[CreateWorkflowDefinitionMessageFilters]
+    """
+    Deprecated, requests only: read as `condition` comparisons on `message_first`, `assignee` (nobody) and `message_type` (not `button`).
+    """
+    sent_message_filters: NotRequired[CreateWorkflowDefinitionSentMessageFilters]
+    """
+    Deprecated, requests only: read as `condition` comparisons on `message_sender` and `message_text`.
+    """
+    at_time: NotRequired[CreateWorkflowDefinitionAtTime]
+    """
+    Deprecated, requests only: an `at_time` workflow is read as `schedule` with this one time.
+    """
+    conversation_filters: NotRequired[CreateWorkflowDefinitionConversationFilters]
+    """
+    Deprecated, requests only: read as `condition` comparisons on `assignee` and `conversation_status`.
+    """
+    flow: CreateWorkflowDefinitionFlow
+    """
+    The steps and how they connect.
+    """
+
+
+class CreateWorkflow(TypedDict, closed=True):
+    """
+    Creates a conversation workflow as a `draft`. Activating it is a separate call.
+    """
+
+    name: str
+    """
+    Display name.
+    """
+    definition: CreateWorkflowDefinition
+    """
+    Reacts to a conversation with messages, questions, decisions, waits and assignments.
+    """
+
+
+class UpdateWorkflowDefinitionFlowSteps2Branch(TypedDict, closed=True):
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    name: str
+    """
+    Branch name, unique in the decision.
+    """
+    condition: ConditionInput
+    next: Optional[str]
+    """
+    Step to run when this branch is the first whose condition holds.
+    """
+
+
+class UpdateWorkflowDefinitionFlowSteps2(TypedDict, closed=True):
+    """
+    One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
+    """
+
+    id: str
+    """
+    Step ID: letters, digits, `_` or `-`, up to 64.
+    """
+    kind: Literal["decision"]
+    branches: List[UpdateWorkflowDefinitionFlowSteps2Branch]
+    """
+    Branches in the order they are checked; the first that holds is taken.
+    """
+    next: Optional[str]
+    """
+    Step to run when no branch holds («Si no»); null ends the flow.
+    """
+
+
+class UpdateWorkflowDefinitionFlow(TypedDict, closed=True):
+    """
+    The steps and how they connect.
+    """
+
+    entry: str
+    """
+    ID of the first step.
+    """
+    steps: List[Union[UpdateWorkflowDefinitionFlowSteps, UpdateWorkflowDefinitionFlowSteps1, UpdateWorkflowDefinitionFlowSteps2, UpdateWorkflowDefinitionFlowSteps3, UpdateWorkflowDefinitionFlowSteps4, UpdateWorkflowDefinitionFlowSteps5, UpdateWorkflowDefinitionFlowSteps6, UpdateWorkflowDefinitionFlowSteps7, UpdateWorkflowDefinitionFlowSteps8, UpdateWorkflowDefinitionFlowSteps9, UpdateWorkflowDefinitionFlowSteps10, UpdateWorkflowDefinitionFlowSteps11, UpdateWorkflowDefinitionFlowSteps12]]
+
+
+class UpdateWorkflowDefinition(TypedDict, closed=True):
+    """
+    Replaces the whole definition.
+    """
+
+    trigger: Literal["conversation_opened", "first_message_received", "message_received", "message_sent", "conversation_inactive", "team_message_unanswered", "schedule", "conversation_assigned", "call_received", "at_time"]
+    """
+    The event that starts the workflow; `condition` decides whether that occurrence runs it. `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message, unless the contact replied first; `conversation_inactive` and `team_message_unanswered` after `inactivity_seconds`. `schedule` runs at each of its `schedule.times` on each conversation assigned then to a member its `condition` names with `assignee` `is`, which it requires. `conversation_assigned` runs when a conversation is assigned to a member; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai`, `turn_off_ai`, `decision` and `end` steps, and only they take `turn_on_ai` and `turn_off_ai`. `call_received` decides who answers a WhatsApp call on the WhatsApp numbers with AI calls on that its `condition` names: its flow takes only `answer_call`, `decline_call` and `decision`s on `channel` and `time`, and the first active one that reaches a call step decides, over whoever holds the conversation. `at_time` is deprecated: read as `schedule`.
+    """
+    condition: Optional[Union[ConditionInput, Union[UpdateWorkflowDefinitionCondition, UpdateWorkflowDefinitionCondition1]]]
+    """
+    Whether an occurrence of the trigger runs the workflow; null runs every occurrence on every channel.
+    """
+    schedule: NotRequired[UpdateWorkflowDefinitionSchedule]
+    """
+    When a `schedule` workflow runs; required for it and only for it.
+    """
+    inactivity_seconds: NotRequired[int]
+    """
+    Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.
+    """
+    channel_ids: NotRequired[List[str]]
+    """
+    Deprecated: read as a `channel` comparison in `condition`.
+    """
+    message_filters: NotRequired[UpdateWorkflowDefinitionMessageFilters]
+    """
+    Deprecated, requests only: read as `condition` comparisons on `message_first`, `assignee` (nobody) and `message_type` (not `button`).
+    """
+    sent_message_filters: NotRequired[UpdateWorkflowDefinitionSentMessageFilters]
+    """
+    Deprecated, requests only: read as `condition` comparisons on `message_sender` and `message_text`.
+    """
+    at_time: NotRequired[UpdateWorkflowDefinitionAtTime]
+    """
+    Deprecated, requests only: an `at_time` workflow is read as `schedule` with this one time.
+    """
+    conversation_filters: NotRequired[UpdateWorkflowDefinitionConversationFilters]
+    """
+    Deprecated, requests only: read as `condition` comparisons on `assignee` and `conversation_status`.
+    """
+    flow: UpdateWorkflowDefinitionFlow
+    """
+    The steps and how they connect.
+    """
+
+
+class UpdateWorkflow(TypedDict, closed=True):
+    """
+    Only the fields you send change. The status stays: an active workflow runs the new definition from its next execution.
+    """
+
+    name: NotRequired[str]
+    """
+    Display name.
+    """
+    definition: NotRequired[UpdateWorkflowDefinition]
+    """
+    Replaces the whole definition.
     """

@@ -3355,6 +3355,135 @@ export type BusinessHours = {
 };
 
 /**
+ * A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+ */
+export type Condition = {
+    kind: 'compare';
+    field: 'assignee';
+    /**
+     * `is` holds for any of `values`; `is_not` for none.
+     */
+    operator: 'is' | 'is_not';
+    /**
+     * Who has the conversation: a member, an agent or nobody.
+     */
+    values: Array<{
+        kind: 'person';
+        /**
+         * A member. See `GET /members`.
+         */
+        user_id: string;
+    } | {
+        kind: 'agent';
+        /**
+         * An AI agent.
+         */
+        agent_id: string;
+    } | {
+        kind: 'nobody';
+    }>;
+} | {
+    kind: 'compare';
+    field: 'conversation_status';
+    /**
+     * `is` holds for any of `values`; `is_not` for none.
+     */
+    operator: 'is' | 'is_not';
+    /**
+     * Open or closed.
+     */
+    values: Array<'open' | 'closed'>;
+} | {
+    kind: 'compare';
+    field: 'ai';
+    /**
+     * `is` holds for any of `values`; `is_not` for none.
+     */
+    operator: 'is' | 'is_not';
+    /**
+     * `on` while an AI agent answers the conversation, as its assignee or with the AI on in it.
+     */
+    values: Array<'on' | 'off'>;
+} | {
+    kind: 'compare';
+    field: 'channel';
+    /**
+     * `is` holds for any of `values`; `is_not` for none.
+     */
+    operator: 'is' | 'is_not';
+    /**
+     * Channels. See `GET /channels`.
+     */
+    values: Array<string>;
+} | {
+    kind: 'compare';
+    field: 'time';
+    /**
+     * Whether the moment of evaluation is within the hours or outside them.
+     */
+    operator: 'within' | 'outside';
+    business_hours: BusinessHours;
+} | {
+    kind: 'compare';
+    field: 'message_first';
+    /**
+     * `is` when the contact wrote first in the conversation, before any message from the business.
+     */
+    operator: 'is' | 'is_not';
+} | {
+    kind: 'compare';
+    field: 'message_type';
+    /**
+     * `is` holds for any of `values`; `is_not` for none.
+     */
+    operator: 'is' | 'is_not';
+    /**
+     * The kind of message; `button` is a tapped button or list option on any channel.
+     */
+    values: Array<'text' | 'button' | 'image' | 'audio' | 'video' | 'document' | 'location' | 'sticker' | 'other'>;
+} | {
+    kind: 'compare';
+    field: 'message_text';
+    operator: 'contains' | 'not_contains';
+    /**
+     * Compared ignoring case, accents and repeated spaces.
+     */
+    value: string;
+} | {
+    kind: 'compare';
+    field: 'message_sender';
+    /**
+     * `is` holds for any of `values`; `is_not` for none.
+     */
+    operator: 'is' | 'is_not';
+    /**
+     * Who sent the message: `person` (the team), `ai` (an AI agent and its tools), `automation` (a workflow), `broadcast` or `external_app` (another app connected to the channel).
+     */
+    values: Array<'person' | 'ai' | 'automation' | 'broadcast' | 'external_app'>;
+} | {
+    kind: 'compare';
+    field: 'variable';
+    /**
+     * The `answer_key` an earlier `ask_question` step saved.
+     */
+    name: string;
+    operator: 'is' | 'is_not' | 'contains' | 'not_contains' | 'exists' | 'not_exists';
+    /**
+     * Compared ignoring case and accents; absent for `exists` and `not_exists`.
+     */
+    value?: string;
+} | {
+    /**
+     * `all` holds when every condition holds; `any` when at least one does.
+     */
+    kind: 'all' | 'any';
+    /**
+     * Comparisons or groups, three levels deep at most.
+     */
+    conditions: Array<Condition>;
+};
+
+/**
  * An automation Ricky runs for the organization.
  */
 export type Workflow = {
@@ -3376,87 +3505,39 @@ export type Workflow = {
     type: 'conversation' | 'scheduled';
     definition: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `at_time` runs once a day at `at_time.time`, on its weekdays, on each conversation of its channels assigned then to one of `conversation_filters.assigned_user_ids` (open ones only with `conversation_filters.only_open`); it has no `condition`. `conversation_assigned` runs when a conversation of its channels is assigned to a member (any member, or one of `conversation_filters.assigned_user_ids`) while its `condition` holds; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai` and `turn_off_ai` steps, which only they take. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+         * The event that starts the workflow; `condition` decides whether that occurrence runs it. `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message, unless the contact replied first; `conversation_inactive` and `team_message_unanswered` after `inactivity_seconds`. `schedule` runs at each of its `schedule.times` on each conversation assigned then to a member its `condition` names with `assignee` `is`, which it requires. `conversation_assigned` runs when a conversation is assigned to a member; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai`, `turn_off_ai`, `decision` and `end` steps, and only they take `turn_on_ai` and `turn_off_ai`. `call_received` decides who answers a WhatsApp call on the WhatsApp numbers with AI calls on that its `condition` names: its flow takes only `answer_call`, `decline_call` and `decision`s on `channel` and `time`, and the first active one that reaches a call step decides, over whoever holds the conversation.
          */
-        trigger: 'at_time' | 'conversation_assigned' | 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'message_sent' | 'team_message_unanswered' | 'call_received';
+        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'message_sent' | 'conversation_inactive' | 'team_message_unanswered' | 'schedule' | 'conversation_assigned' | 'call_received';
         /**
-         * Channels it listens to. See `GET /channels`.
+         * Whether an occurrence of the trigger runs the workflow; null runs every occurrence on every channel.
          */
-        channel_ids: Array<string>;
+        condition: Condition | null;
+        /**
+         * When a `schedule` workflow runs; required for it and only for it.
+         */
+        schedule?: {
+            /**
+             * IANA time zone of every time.
+             */
+            timezone: string;
+            /**
+             * Each time and its days; each time of each day at most once.
+             */
+            times: Array<{
+                /**
+                 * Quarter hour it runs, `HH:MM`.
+                 */
+                time: string;
+                /**
+                 * Days it runs at that time, 0 for Sunday to 6 for Saturday.
+                 */
+                weekdays: Array<number>;
+            }>;
+        };
         /**
          * Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.
          */
         inactivity_seconds?: number;
-        /**
-         * Which messages a `message_received` workflow reacts to.
-         */
-        message_filters?: {
-            /**
-             * Match the contact writing first, before any message from the business, OR only_unassigned. Neither selected matches every message.
-             */
-            first_message?: boolean;
-            /**
-             * Match while nobody has the conversation; OR first_message when selected.
-             */
-            only_unassigned: boolean;
-            /**
-             * Not when the customer taps a button.
-             */
-            skip_buttons: boolean;
-        };
-        /**
-         * Which outgoing messages a `message_sent` workflow reacts to; required for it.
-         */
-        sent_message_filters?: {
-            /**
-             * Who sent it: `person` (the team), `ai` (an AI agent, including its tools), `automation` (a workflow), `broadcast`, or `external_app` (another app connected to the channel). Each at most once.
-             */
-            senders: Array<'person' | 'ai' | 'automation' | 'broadcast' | 'external_app'>;
-            /**
-             * Only when the message contains this text, ignoring case, accents and repeated spaces.
-             */
-            text_contains?: string;
-        };
-        /**
-         * When an `at_time` workflow runs; required for it and only for it.
-         */
-        at_time?: {
-            /**
-             * Quarter hour it runs, `HH:MM`.
-             */
-            time: string;
-            /**
-             * IANA time zone of `time` and `weekdays`.
-             */
-            timezone: string;
-            /**
-             * Days it runs, 0 for Sunday to 6 for Saturday. Each at most once.
-             */
-            weekdays: Array<number>;
-        };
-        /**
-         * Which conversations `at_time` and `conversation_assigned` reach; only for them.
-         */
-        conversation_filters?: {
-            /**
-             * Members the conversation is assigned to. Required for `at_time`; omitted on `conversation_assigned`, any member. See `GET /members`.
-             */
-            assigned_user_ids?: Array<string>;
-            /**
-             * Only open conversations.
-             */
-            only_open: boolean;
-        };
-        /**
-         * When it runs; null runs at any hour.
-         */
-        condition: {
-            kind: 'inside_business_hours';
-            business_hours: BusinessHours;
-        } | {
-            kind: 'outside_business_hours';
-            business_hours: BusinessHours;
-        } | null;
         /**
          * The steps and how they connect.
          */
@@ -3497,7 +3578,7 @@ export type Workflow = {
                  */
                 text: string;
                 /**
-                 * Name the answer is kept under, for a later `branch`.
+                 * Name the answer is kept under, for a later `decision` to compare as a `variable`.
                  */
                 answer_key: string;
                 /**
@@ -3534,31 +3615,29 @@ export type Workflow = {
                  * Step ID: letters, digits, `_` or `-`, up to 64.
                  */
                 id: string;
+                kind: 'decision';
                 /**
-                 * Step to run next; null ends the flow.
+                 * Branches in the order they are checked; the first that holds is taken.
+                 */
+                branches: Array<{
+                    /**
+                     * Step ID: letters, digits, `_` or `-`, up to 64.
+                     */
+                    id: string;
+                    /**
+                     * Branch name, unique in the decision.
+                     */
+                    name: string;
+                    condition: Condition;
+                    /**
+                     * Step to run when this branch is the first whose condition holds.
+                     */
+                    next: string | null;
+                }>;
+                /**
+                 * Step to run when no branch holds («Si no»); null ends the flow.
                  */
                 next: string | null;
-                kind: 'branch';
-                /**
-                 * Name the answer is kept under, for a later `branch`.
-                 */
-                answer_key?: string;
-                /**
-                 * How the answer is compared. With `answer_key` and `value`.
-                 */
-                operator?: 'equals' | 'contains' | 'exists';
-                /**
-                 * Value compared with the answer.
-                 */
-                value?: string;
-                /**
-                 * Holds while the business is open at the moment the step runs. Send it instead of `answer_key`, `operator` and `value`.
-                 */
-                business_hours?: BusinessHours;
-                /**
-                 * Step to run when the condition does not hold; `next` when it does.
-                 */
-                otherwise: string | null;
             } | {
                 /**
                  * Step ID: letters, digits, `_` or `-`, up to 64.
@@ -5110,6 +5189,135 @@ export type BusinessHoursInput = {
 };
 
 /**
+ * A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
+ */
+export type ConditionInput = {
+    kind: 'compare';
+    field: 'assignee';
+    /**
+     * `is` holds for any of `values`; `is_not` for none.
+     */
+    operator: 'is' | 'is_not';
+    /**
+     * Who has the conversation: a member, an agent or nobody.
+     */
+    values: Array<{
+        kind: 'person';
+        /**
+         * A member. See `GET /members`.
+         */
+        user_id: string;
+    } | {
+        kind: 'agent';
+        /**
+         * An AI agent.
+         */
+        agent_id: string;
+    } | {
+        kind: 'nobody';
+    }>;
+} | {
+    kind: 'compare';
+    field: 'conversation_status';
+    /**
+     * `is` holds for any of `values`; `is_not` for none.
+     */
+    operator: 'is' | 'is_not';
+    /**
+     * Open or closed.
+     */
+    values: Array<'open' | 'closed'>;
+} | {
+    kind: 'compare';
+    field: 'ai';
+    /**
+     * `is` holds for any of `values`; `is_not` for none.
+     */
+    operator: 'is' | 'is_not';
+    /**
+     * `on` while an AI agent answers the conversation, as its assignee or with the AI on in it.
+     */
+    values: Array<'on' | 'off'>;
+} | {
+    kind: 'compare';
+    field: 'channel';
+    /**
+     * `is` holds for any of `values`; `is_not` for none.
+     */
+    operator: 'is' | 'is_not';
+    /**
+     * Channels. See `GET /channels`.
+     */
+    values: Array<string>;
+} | {
+    kind: 'compare';
+    field: 'time';
+    /**
+     * Whether the moment of evaluation is within the hours or outside them.
+     */
+    operator: 'within' | 'outside';
+    business_hours: BusinessHoursInput;
+} | {
+    kind: 'compare';
+    field: 'message_first';
+    /**
+     * `is` when the contact wrote first in the conversation, before any message from the business.
+     */
+    operator: 'is' | 'is_not';
+} | {
+    kind: 'compare';
+    field: 'message_type';
+    /**
+     * `is` holds for any of `values`; `is_not` for none.
+     */
+    operator: 'is' | 'is_not';
+    /**
+     * The kind of message; `button` is a tapped button or list option on any channel.
+     */
+    values: Array<'text' | 'button' | 'image' | 'audio' | 'video' | 'document' | 'location' | 'sticker' | 'other'>;
+} | {
+    kind: 'compare';
+    field: 'message_text';
+    operator: 'contains' | 'not_contains';
+    /**
+     * Compared ignoring case, accents and repeated spaces.
+     */
+    value: string;
+} | {
+    kind: 'compare';
+    field: 'message_sender';
+    /**
+     * `is` holds for any of `values`; `is_not` for none.
+     */
+    operator: 'is' | 'is_not';
+    /**
+     * Who sent the message: `person` (the team), `ai` (an AI agent and its tools), `automation` (a workflow), `broadcast` or `external_app` (another app connected to the channel).
+     */
+    values: Array<'person' | 'ai' | 'automation' | 'broadcast' | 'external_app'>;
+} | {
+    kind: 'compare';
+    field: 'variable';
+    /**
+     * The `answer_key` an earlier `ask_question` step saved.
+     */
+    name: string;
+    operator: 'is' | 'is_not' | 'contains' | 'not_contains' | 'exists' | 'not_exists';
+    /**
+     * Compared ignoring case and accents; absent for `exists` and `not_exists`.
+     */
+    value?: string;
+} | {
+    /**
+     * `all` holds when every condition holds; `any` when at least one does.
+     */
+    kind: 'all' | 'any';
+    /**
+     * Comparisons or groups, three levels deep at most.
+     */
+    conditions: Array<ConditionInput>;
+};
+
+/**
  * Creates a conversation workflow as a `draft`. Activating it is a separate call.
  */
 export type CreateWorkflow = {
@@ -5118,23 +5326,55 @@ export type CreateWorkflow = {
      */
     name: string;
     /**
-     * Reacts to a conversation with messages, questions, waits and assignments.
+     * Reacts to a conversation with messages, questions, decisions, waits and assignments.
      */
     definition: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `at_time` runs once a day at `at_time.time`, on its weekdays, on each conversation of its channels assigned then to one of `conversation_filters.assigned_user_ids` (open ones only with `conversation_filters.only_open`); it has no `condition`. `conversation_assigned` runs when a conversation of its channels is assigned to a member (any member, or one of `conversation_filters.assigned_user_ids`) while its `condition` holds; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai` and `turn_off_ai` steps, which only they take. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+         * The event that starts the workflow; `condition` decides whether that occurrence runs it. `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message, unless the contact replied first; `conversation_inactive` and `team_message_unanswered` after `inactivity_seconds`. `schedule` runs at each of its `schedule.times` on each conversation assigned then to a member its `condition` names with `assignee` `is`, which it requires. `conversation_assigned` runs when a conversation is assigned to a member; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai`, `turn_off_ai`, `decision` and `end` steps, and only they take `turn_on_ai` and `turn_off_ai`. `call_received` decides who answers a WhatsApp call on the WhatsApp numbers with AI calls on that its `condition` names: its flow takes only `answer_call`, `decline_call` and `decision`s on `channel` and `time`, and the first active one that reaches a call step decides, over whoever holds the conversation. `at_time` is deprecated: read as `schedule`.
          */
-        trigger: 'at_time' | 'conversation_assigned' | 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'message_sent' | 'team_message_unanswered' | 'call_received';
+        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'message_sent' | 'conversation_inactive' | 'team_message_unanswered' | 'schedule' | 'conversation_assigned' | 'call_received' | 'at_time';
         /**
-         * Channels it listens to. See `GET /channels`.
+         * Whether an occurrence of the trigger runs the workflow; null runs every occurrence on every channel.
          */
-        channel_ids: Array<string>;
+        condition: ConditionInput | {
+            kind: 'inside_business_hours';
+            business_hours: BusinessHoursInput;
+        } | {
+            kind: 'outside_business_hours';
+            business_hours: BusinessHoursInput;
+        } | null;
+        /**
+         * When a `schedule` workflow runs; required for it and only for it.
+         */
+        schedule?: {
+            /**
+             * IANA time zone of every time.
+             */
+            timezone: string;
+            /**
+             * Each time and its days; each time of each day at most once.
+             */
+            times: Array<{
+                /**
+                 * Quarter hour it runs, `HH:MM`.
+                 */
+                time: string;
+                /**
+                 * Days it runs at that time, 0 for Sunday to 6 for Saturday.
+                 */
+                weekdays: Array<number>;
+            }>;
+        };
         /**
          * Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.
          */
         inactivity_seconds?: number;
         /**
-         * Which messages a `message_received` workflow reacts to.
+         * Deprecated: read as a `channel` comparison in `condition`.
+         */
+        channel_ids?: Array<string>;
+        /**
+         * Deprecated, requests only: read as `condition` comparisons on `message_first`, `assignee` (nobody) and `message_type` (not `button`).
          */
         message_filters?: {
             /**
@@ -5151,7 +5391,7 @@ export type CreateWorkflow = {
             skip_buttons: boolean;
         };
         /**
-         * Which outgoing messages a `message_sent` workflow reacts to; required for it.
+         * Deprecated, requests only: read as `condition` comparisons on `message_sender` and `message_text`.
          */
         sent_message_filters?: {
             /**
@@ -5164,7 +5404,7 @@ export type CreateWorkflow = {
             text_contains?: string;
         };
         /**
-         * When an `at_time` workflow runs; required for it and only for it.
+         * Deprecated, requests only: an `at_time` workflow is read as `schedule` with this one time.
          */
         at_time?: {
             /**
@@ -5181,7 +5421,7 @@ export type CreateWorkflow = {
             weekdays: Array<number>;
         };
         /**
-         * Which conversations `at_time` and `conversation_assigned` reach; only for them.
+         * Deprecated, requests only: read as `condition` comparisons on `assignee` and `conversation_status`.
          */
         conversation_filters?: {
             /**
@@ -5193,16 +5433,6 @@ export type CreateWorkflow = {
              */
             only_open: boolean;
         };
-        /**
-         * When it runs; null runs at any hour.
-         */
-        condition: {
-            kind: 'inside_business_hours';
-            business_hours: BusinessHoursInput;
-        } | {
-            kind: 'outside_business_hours';
-            business_hours: BusinessHoursInput;
-        } | null;
         /**
          * The steps and how they connect.
          */
@@ -5243,7 +5473,7 @@ export type CreateWorkflow = {
                  */
                 text: string;
                 /**
-                 * Name the answer is kept under, for a later `branch`.
+                 * Name the answer is kept under, for a later `decision` to compare as a `variable`.
                  */
                 answer_key: string;
                 /**
@@ -5280,13 +5510,41 @@ export type CreateWorkflow = {
                  * Step ID: letters, digits, `_` or `-`, up to 64.
                  */
                 id: string;
+                kind: 'decision';
+                /**
+                 * Branches in the order they are checked; the first that holds is taken.
+                 */
+                branches: Array<{
+                    /**
+                     * Step ID: letters, digits, `_` or `-`, up to 64.
+                     */
+                    id: string;
+                    /**
+                     * Branch name, unique in the decision.
+                     */
+                    name: string;
+                    condition: ConditionInput;
+                    /**
+                     * Step to run when this branch is the first whose condition holds.
+                     */
+                    next: string | null;
+                }>;
+                /**
+                 * Step to run when no branch holds («Si no»); null ends the flow.
+                 */
+                next: string | null;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
                 /**
                  * Step to run next; null ends the flow.
                  */
                 next: string | null;
                 kind: 'branch';
                 /**
-                 * Name the answer is kept under, for a later `branch`.
+                 * Name the answer is kept under, for a later `decision` to compare as a `variable`.
                  */
                 answer_key?: string;
                 /**
@@ -5441,19 +5699,51 @@ export type UpdateWorkflow = {
      */
     definition?: {
         /**
-         * `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `at_time` runs once a day at `at_time.time`, on its weekdays, on each conversation of its channels assigned then to one of `conversation_filters.assigned_user_ids` (open ones only with `conversation_filters.only_open`); it has no `condition`. `conversation_assigned` runs when a conversation of its channels is assigned to a member (any member, or one of `conversation_filters.assigned_user_ids`) while its `condition` holds; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai` and `turn_off_ai` steps, which only they take. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation.
+         * The event that starts the workflow; `condition` decides whether that occurrence runs it. `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message, unless the contact replied first; `conversation_inactive` and `team_message_unanswered` after `inactivity_seconds`. `schedule` runs at each of its `schedule.times` on each conversation assigned then to a member its `condition` names with `assignee` `is`, which it requires. `conversation_assigned` runs when a conversation is assigned to a member; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai`, `turn_off_ai`, `decision` and `end` steps, and only they take `turn_on_ai` and `turn_off_ai`. `call_received` decides who answers a WhatsApp call on the WhatsApp numbers with AI calls on that its `condition` names: its flow takes only `answer_call`, `decline_call` and `decision`s on `channel` and `time`, and the first active one that reaches a call step decides, over whoever holds the conversation. `at_time` is deprecated: read as `schedule`.
          */
-        trigger: 'at_time' | 'conversation_assigned' | 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'message_sent' | 'team_message_unanswered' | 'call_received';
+        trigger: 'conversation_opened' | 'first_message_received' | 'message_received' | 'message_sent' | 'conversation_inactive' | 'team_message_unanswered' | 'schedule' | 'conversation_assigned' | 'call_received' | 'at_time';
         /**
-         * Channels it listens to. See `GET /channels`.
+         * Whether an occurrence of the trigger runs the workflow; null runs every occurrence on every channel.
          */
-        channel_ids: Array<string>;
+        condition: ConditionInput | {
+            kind: 'inside_business_hours';
+            business_hours: BusinessHoursInput;
+        } | {
+            kind: 'outside_business_hours';
+            business_hours: BusinessHoursInput;
+        } | null;
+        /**
+         * When a `schedule` workflow runs; required for it and only for it.
+         */
+        schedule?: {
+            /**
+             * IANA time zone of every time.
+             */
+            timezone: string;
+            /**
+             * Each time and its days; each time of each day at most once.
+             */
+            times: Array<{
+                /**
+                 * Quarter hour it runs, `HH:MM`.
+                 */
+                time: string;
+                /**
+                 * Days it runs at that time, 0 for Sunday to 6 for Saturday.
+                 */
+                weekdays: Array<number>;
+            }>;
+        };
         /**
          * Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.
          */
         inactivity_seconds?: number;
         /**
-         * Which messages a `message_received` workflow reacts to.
+         * Deprecated: read as a `channel` comparison in `condition`.
+         */
+        channel_ids?: Array<string>;
+        /**
+         * Deprecated, requests only: read as `condition` comparisons on `message_first`, `assignee` (nobody) and `message_type` (not `button`).
          */
         message_filters?: {
             /**
@@ -5470,7 +5760,7 @@ export type UpdateWorkflow = {
             skip_buttons: boolean;
         };
         /**
-         * Which outgoing messages a `message_sent` workflow reacts to; required for it.
+         * Deprecated, requests only: read as `condition` comparisons on `message_sender` and `message_text`.
          */
         sent_message_filters?: {
             /**
@@ -5483,7 +5773,7 @@ export type UpdateWorkflow = {
             text_contains?: string;
         };
         /**
-         * When an `at_time` workflow runs; required for it and only for it.
+         * Deprecated, requests only: an `at_time` workflow is read as `schedule` with this one time.
          */
         at_time?: {
             /**
@@ -5500,7 +5790,7 @@ export type UpdateWorkflow = {
             weekdays: Array<number>;
         };
         /**
-         * Which conversations `at_time` and `conversation_assigned` reach; only for them.
+         * Deprecated, requests only: read as `condition` comparisons on `assignee` and `conversation_status`.
          */
         conversation_filters?: {
             /**
@@ -5512,16 +5802,6 @@ export type UpdateWorkflow = {
              */
             only_open: boolean;
         };
-        /**
-         * When it runs; null runs at any hour.
-         */
-        condition: {
-            kind: 'inside_business_hours';
-            business_hours: BusinessHoursInput;
-        } | {
-            kind: 'outside_business_hours';
-            business_hours: BusinessHoursInput;
-        } | null;
         /**
          * The steps and how they connect.
          */
@@ -5562,7 +5842,7 @@ export type UpdateWorkflow = {
                  */
                 text: string;
                 /**
-                 * Name the answer is kept under, for a later `branch`.
+                 * Name the answer is kept under, for a later `decision` to compare as a `variable`.
                  */
                 answer_key: string;
                 /**
@@ -5599,13 +5879,41 @@ export type UpdateWorkflow = {
                  * Step ID: letters, digits, `_` or `-`, up to 64.
                  */
                 id: string;
+                kind: 'decision';
+                /**
+                 * Branches in the order they are checked; the first that holds is taken.
+                 */
+                branches: Array<{
+                    /**
+                     * Step ID: letters, digits, `_` or `-`, up to 64.
+                     */
+                    id: string;
+                    /**
+                     * Branch name, unique in the decision.
+                     */
+                    name: string;
+                    condition: ConditionInput;
+                    /**
+                     * Step to run when this branch is the first whose condition holds.
+                     */
+                    next: string | null;
+                }>;
+                /**
+                 * Step to run when no branch holds («Si no»); null ends the flow.
+                 */
+                next: string | null;
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
                 /**
                  * Step to run next; null ends the flow.
                  */
                 next: string | null;
                 kind: 'branch';
                 /**
-                 * Name the answer is kept under, for a later `branch`.
+                 * Name the answer is kept under, for a later `decision` to compare as a `variable`.
                  */
                 answer_key?: string;
                 /**

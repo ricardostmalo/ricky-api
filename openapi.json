@@ -26502,6 +26502,462 @@
           "weekdays"
         ]
       },
+      "Condition": {
+        "anyOf": [
+          {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "assignee"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ],
+                    "description": "`is` holds for any of `values`; `is_not` for none."
+                  },
+                  "values": {
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "person"
+                            },
+                            "user_id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "description": "A member. See `GET /members`."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "user_id"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "agent"
+                            },
+                            "agent_id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "description": "An AI agent."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "agent_id"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "nobody"
+                            }
+                          },
+                          "required": [
+                            "kind"
+                          ]
+                        }
+                      ]
+                    },
+                    "description": "Who has the conversation: a member, an agent or nobody."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator",
+                  "values"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "conversation_status"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ],
+                    "description": "`is` holds for any of `values`; `is_not` for none."
+                  },
+                  "values": {
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "open",
+                        "closed"
+                      ]
+                    },
+                    "description": "Open or closed."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator",
+                  "values"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "ai"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ],
+                    "description": "`is` holds for any of `values`; `is_not` for none."
+                  },
+                  "values": {
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "on",
+                        "off"
+                      ]
+                    },
+                    "description": "`on` while an AI agent answers the conversation, as its assignee or with the AI on in it."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator",
+                  "values"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "channel"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ],
+                    "description": "`is` holds for any of `values`; `is_not` for none."
+                  },
+                  "values": {
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "description": "Channels. See `GET /channels`."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator",
+                  "values"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "time"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "within",
+                      "outside"
+                    ],
+                    "description": "Whether the moment of evaluation is within the hours or outside them."
+                  },
+                  "business_hours": {
+                    "$ref": "#/components/schemas/BusinessHours"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator",
+                  "business_hours"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "message_first"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ],
+                    "description": "`is` when the contact wrote first in the conversation, before any message from the business."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "message_type"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ],
+                    "description": "`is` holds for any of `values`; `is_not` for none."
+                  },
+                  "values": {
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "text",
+                        "button",
+                        "image",
+                        "audio",
+                        "video",
+                        "document",
+                        "location",
+                        "sticker",
+                        "other"
+                      ]
+                    },
+                    "description": "The kind of message; `button` is a tapped button or list option on any channel."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator",
+                  "values"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "message_text"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "contains",
+                      "not_contains"
+                    ]
+                  },
+                  "value": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500,
+                    "description": "Compared ignoring case, accents and repeated spaces."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator",
+                  "value"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "message_sender"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ],
+                    "description": "`is` holds for any of `values`; `is_not` for none."
+                  },
+                  "values": {
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "person",
+                        "ai",
+                        "automation",
+                        "broadcast",
+                        "external_app"
+                      ]
+                    },
+                    "description": "Who sent the message: `person` (the team), `ai` (an AI agent and its tools), `automation` (a workflow), `broadcast` or `external_app` (another app connected to the channel)."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator",
+                  "values"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "variable"
+                  },
+                  "name": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                    "description": "The `answer_key` an earlier `ask_question` step saved."
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not",
+                      "contains",
+                      "not_contains",
+                      "exists",
+                      "not_exists"
+                    ]
+                  },
+                  "value": {
+                    "description": "Compared ignoring case and accents; absent for `exists` and `not_exists`.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "name",
+                  "operator"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "all",
+                  "any"
+                ],
+                "description": "`all` holds when every condition holds; `any` when at least one does."
+              },
+              "conditions": {
+                "minItems": 1,
+                "maxItems": 20,
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Condition"
+                },
+                "description": "Comparisons or groups, three levels deep at most."
+              }
+            },
+            "required": [
+              "kind",
+              "conditions"
+            ]
+          }
+        ],
+        "description": "A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`."
+      },
       "Workflow": {
         "type": "object",
         "properties": {
@@ -26542,182 +26998,79 @@
                   "trigger": {
                     "type": "string",
                     "enum": [
-                      "at_time",
-                      "conversation_assigned",
-                      "conversation_inactive",
                       "conversation_opened",
                       "first_message_received",
                       "message_received",
                       "message_sent",
+                      "conversation_inactive",
                       "team_message_unanswered",
+                      "schedule",
+                      "conversation_assigned",
                       "call_received"
                     ],
-                    "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `at_time` runs once a day at `at_time.time`, on its weekdays, on each conversation of its channels assigned then to one of `conversation_filters.assigned_user_ids` (open ones only with `conversation_filters.only_open`); it has no `condition`. `conversation_assigned` runs when a conversation of its channels is assigned to a member (any member, or one of `conversation_filters.assigned_user_ids`) while its `condition` holds; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai` and `turn_off_ai` steps, which only they take. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
+                    "description": "The event that starts the workflow; `condition` decides whether that occurrence runs it. `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message, unless the contact replied first; `conversation_inactive` and `team_message_unanswered` after `inactivity_seconds`. `schedule` runs at each of its `schedule.times` on each conversation assigned then to a member its `condition` names with `assignee` `is`, which it requires. `conversation_assigned` runs when a conversation is assigned to a member; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai`, `turn_off_ai`, `decision` and `end` steps, and only they take `turn_on_ai` and `turn_off_ai`. `call_received` decides who answers a WhatsApp call on the WhatsApp numbers with AI calls on that its `condition` names: its flow takes only `answer_call`, `decline_call` and `decision`s on `channel` and `time`, and the first active one that reaches a call step decides, over whoever holds the conversation."
                   },
-                  "channel_ids": {
-                    "maxItems": 50,
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "uuid"
+                  "condition": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/Condition"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Whether an occurrence of the trigger runs the workflow; null runs every occurrence on every channel."
+                  },
+                  "schedule": {
+                    "description": "When a `schedule` workflow runs; required for it and only for it.",
+                    "type": "object",
+                    "properties": {
+                      "timezone": {
+                        "type": "string",
+                        "description": "IANA time zone of every time."
+                      },
+                      "times": {
+                        "minItems": 1,
+                        "maxItems": 20,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "time": {
+                              "type": "string",
+                              "pattern": "^([01]\\d|2[0-3]):(00|15|30|45)$",
+                              "description": "Quarter hour it runs, `HH:MM`."
+                            },
+                            "weekdays": {
+                              "minItems": 1,
+                              "maxItems": 7,
+                              "type": "array",
+                              "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 6
+                              },
+                              "description": "Days it runs at that time, 0 for Sunday to 6 for Saturday."
+                            }
+                          },
+                          "required": [
+                            "time",
+                            "weekdays"
+                          ]
+                        },
+                        "description": "Each time and its days; each time of each day at most once."
+                      }
                     },
-                    "description": "Channels it listens to. See `GET /channels`."
+                    "required": [
+                      "timezone",
+                      "times"
+                    ]
                   },
                   "inactivity_seconds": {
                     "description": "Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.",
                     "type": "integer",
                     "minimum": 60,
                     "maximum": 31536000
-                  },
-                  "message_filters": {
-                    "description": "Which messages a `message_received` workflow reacts to.",
-                    "type": "object",
-                    "properties": {
-                      "first_message": {
-                        "description": "Match the contact writing first, before any message from the business, OR only_unassigned. Neither selected matches every message.",
-                        "type": "boolean"
-                      },
-                      "only_unassigned": {
-                        "type": "boolean",
-                        "description": "Match while nobody has the conversation; OR first_message when selected."
-                      },
-                      "skip_buttons": {
-                        "type": "boolean",
-                        "description": "Not when the customer taps a button."
-                      }
-                    },
-                    "required": [
-                      "only_unassigned",
-                      "skip_buttons"
-                    ]
-                  },
-                  "sent_message_filters": {
-                    "description": "Which outgoing messages a `message_sent` workflow reacts to; required for it.",
-                    "type": "object",
-                    "properties": {
-                      "senders": {
-                        "minItems": 1,
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "enum": [
-                            "person",
-                            "ai",
-                            "automation",
-                            "broadcast",
-                            "external_app"
-                          ]
-                        },
-                        "description": "Who sent it: `person` (the team), `ai` (an AI agent, including its tools), `automation` (a workflow), `broadcast`, or `external_app` (another app connected to the channel). Each at most once."
-                      },
-                      "text_contains": {
-                        "description": "Only when the message contains this text, ignoring case, accents and repeated spaces.",
-                        "type": "string",
-                        "minLength": 1,
-                        "maxLength": 500
-                      }
-                    },
-                    "required": [
-                      "senders"
-                    ]
-                  },
-                  "at_time": {
-                    "description": "When an `at_time` workflow runs; required for it and only for it.",
-                    "type": "object",
-                    "properties": {
-                      "time": {
-                        "type": "string",
-                        "pattern": "^([01]\\d|2[0-3]):(00|15|30|45)$",
-                        "description": "Quarter hour it runs, `HH:MM`."
-                      },
-                      "timezone": {
-                        "type": "string",
-                        "description": "IANA time zone of `time` and `weekdays`."
-                      },
-                      "weekdays": {
-                        "minItems": 1,
-                        "maxItems": 7,
-                        "type": "array",
-                        "items": {
-                          "type": "integer",
-                          "minimum": 0,
-                          "maximum": 6
-                        },
-                        "description": "Days it runs, 0 for Sunday to 6 for Saturday. Each at most once."
-                      }
-                    },
-                    "required": [
-                      "time",
-                      "timezone",
-                      "weekdays"
-                    ]
-                  },
-                  "conversation_filters": {
-                    "description": "Which conversations `at_time` and `conversation_assigned` reach; only for them.",
-                    "type": "object",
-                    "properties": {
-                      "assigned_user_ids": {
-                        "description": "Members the conversation is assigned to. Required for `at_time`; omitted on `conversation_assigned`, any member. See `GET /members`.",
-                        "minItems": 1,
-                        "maxItems": 50,
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "format": "uuid"
-                        }
-                      },
-                      "only_open": {
-                        "type": "boolean",
-                        "description": "Only open conversations."
-                      }
-                    },
-                    "required": [
-                      "only_open"
-                    ]
-                  },
-                  "condition": {
-                    "anyOf": [
-                      {
-                        "oneOf": [
-                          {
-                            "type": "object",
-                            "properties": {
-                              "kind": {
-                                "type": "string",
-                                "const": "inside_business_hours"
-                              },
-                              "business_hours": {
-                                "$ref": "#/components/schemas/BusinessHours"
-                              }
-                            },
-                            "required": [
-                              "kind",
-                              "business_hours"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "kind": {
-                                "type": "string",
-                                "const": "outside_business_hours"
-                              },
-                              "business_hours": {
-                                "$ref": "#/components/schemas/BusinessHours"
-                              }
-                            },
-                            "required": [
-                              "kind",
-                              "business_hours"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ],
-                    "description": "When it runs; null runs at any hour."
                   },
                   "flow": {
                     "type": "object",
@@ -26806,7 +27159,7 @@
                                 "answer_key": {
                                   "type": "string",
                                   "pattern": "^[a-zA-Z0-9_-]{1,64}$",
-                                  "description": "Name the answer is kept under, for a later `branch`."
+                                  "description": "Name the answer is kept under, for a later `decision` to compare as a `variable`."
                                 },
                                 "choices": {
                                   "maxItems": 10,
@@ -26900,6 +27253,54 @@
                                   "pattern": "^[a-zA-Z0-9_-]{1,64}$",
                                   "description": "Step ID: letters, digits, `_` or `-`, up to 64."
                                 },
+                                "kind": {
+                                  "type": "string",
+                                  "const": "decision"
+                                },
+                                "branches": {
+                                  "minItems": 1,
+                                  "maxItems": 10,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "id": {
+                                        "type": "string",
+                                        "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                        "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                                      },
+                                      "name": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 40,
+                                        "description": "Branch name, unique in the decision."
+                                      },
+                                      "condition": {
+                                        "$ref": "#/components/schemas/Condition"
+                                      },
+                                      "next": {
+                                        "anyOf": [
+                                          {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 64
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ],
+                                        "description": "Step to run when this branch is the first whose condition holds."
+                                      }
+                                    },
+                                    "required": [
+                                      "id",
+                                      "name",
+                                      "condition",
+                                      "next"
+                                    ]
+                                  },
+                                  "description": "Branches in the order they are checked; the first that holds is taken."
+                                },
                                 "next": {
                                   "anyOf": [
                                     {
@@ -26911,54 +27312,14 @@
                                       "type": "null"
                                     }
                                   ],
-                                  "description": "Step to run next; null ends the flow."
-                                },
-                                "kind": {
-                                  "type": "string",
-                                  "const": "branch"
-                                },
-                                "answer_key": {
-                                  "type": "string",
-                                  "pattern": "^[a-zA-Z0-9_-]{1,64}$",
-                                  "description": "Name the answer is kept under, for a later `branch`."
-                                },
-                                "operator": {
-                                  "description": "How the answer is compared. With `answer_key` and `value`.",
-                                  "type": "string",
-                                  "enum": [
-                                    "equals",
-                                    "contains",
-                                    "exists"
-                                  ]
-                                },
-                                "value": {
-                                  "description": "Value compared with the answer.",
-                                  "type": "string",
-                                  "maxLength": 1024
-                                },
-                                "business_hours": {
-                                  "description": "Holds while the business is open at the moment the step runs. Send it instead of `answer_key`, `operator` and `value`.",
-                                  "$ref": "#/components/schemas/BusinessHours"
-                                },
-                                "otherwise": {
-                                  "anyOf": [
-                                    {
-                                      "type": "string",
-                                      "minLength": 1,
-                                      "maxLength": 64
-                                    },
-                                    {
-                                      "type": "null"
-                                    }
-                                  ],
-                                  "description": "Step to run when the condition does not hold; `next` when it does."
+                                  "description": "Step to run when no branch holds («Si no»); null ends the flow."
                                 }
                               },
                               "required": [
                                 "id",
-                                "next",
                                 "kind",
-                                "otherwise"
+                                "branches",
+                                "next"
                               ]
                             },
                             {
@@ -27311,11 +27672,10 @@
                 },
                 "required": [
                   "trigger",
-                  "channel_ids",
                   "condition",
                   "flow"
                 ],
-                "description": "Reacts to a conversation with messages, questions, waits and assignments."
+                "description": "Reacts to a conversation with messages, questions, decisions, waits and assignments."
               },
               {
                 "type": "object",
@@ -27525,66 +27885,78 @@
             "type": "conversation",
             "definition": {
               "trigger": "conversation_opened",
-              "channel_ids": [
-                "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f"
-              ],
               "condition": {
-                "kind": "outside_business_hours",
-                "business_hours": {
-                  "timezone": "America/Panama",
-                  "days": {
-                    "monday": [
-                      {
-                        "start": "09:00",
-                        "end": "18:00"
-                      }
-                    ],
-                    "tuesday": [
-                      {
-                        "start": "09:00",
-                        "end": "18:00"
-                      }
-                    ],
-                    "wednesday": [
-                      {
-                        "start": "09:00",
-                        "end": "18:00"
-                      }
-                    ],
-                    "thursday": [
-                      {
-                        "start": "09:00",
-                        "end": "18:00"
-                      }
-                    ],
-                    "friday": [
-                      {
-                        "start": "09:00",
-                        "end": "18:00"
-                      }
-                    ],
-                    "saturday": [
-                      {
-                        "start": "09:00",
-                        "end": "13:00"
-                      }
-                    ],
-                    "sunday": []
+                "kind": "all",
+                "conditions": [
+                  {
+                    "kind": "compare",
+                    "field": "channel",
+                    "operator": "is",
+                    "values": [
+                      "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f"
+                    ]
                   },
-                  "closed_dates": [
-                    "2026-12-25"
-                  ],
-                  "start": "09:00",
-                  "end": "18:00",
-                  "weekdays": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6
-                  ]
-                }
+                  {
+                    "kind": "compare",
+                    "field": "time",
+                    "operator": "outside",
+                    "business_hours": {
+                      "timezone": "America/Panama",
+                      "days": {
+                        "monday": [
+                          {
+                            "start": "09:00",
+                            "end": "18:00"
+                          }
+                        ],
+                        "tuesday": [
+                          {
+                            "start": "09:00",
+                            "end": "18:00"
+                          }
+                        ],
+                        "wednesday": [
+                          {
+                            "start": "09:00",
+                            "end": "18:00"
+                          }
+                        ],
+                        "thursday": [
+                          {
+                            "start": "09:00",
+                            "end": "18:00"
+                          }
+                        ],
+                        "friday": [
+                          {
+                            "start": "09:00",
+                            "end": "18:00"
+                          }
+                        ],
+                        "saturday": [
+                          {
+                            "start": "09:00",
+                            "end": "13:00"
+                          }
+                        ],
+                        "sunday": []
+                      },
+                      "closed_dates": [
+                        "2026-12-25"
+                      ],
+                      "start": "09:00",
+                      "end": "18:00",
+                      "weekdays": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6
+                      ]
+                    }
+                  }
+                ]
               },
               "flow": {
                 "entry": "bienvenida",
@@ -31337,6 +31709,476 @@
         ],
         "additionalProperties": false
       },
+      "ConditionInput": {
+        "anyOf": [
+          {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "assignee"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ],
+                    "description": "`is` holds for any of `values`; `is_not` for none."
+                  },
+                  "values": {
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "person"
+                            },
+                            "user_id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "description": "A member. See `GET /members`."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "user_id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "agent"
+                            },
+                            "agent_id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "description": "An AI agent."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "agent_id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "nobody"
+                            }
+                          },
+                          "required": [
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "description": "Who has the conversation: a member, an agent or nobody."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator",
+                  "values"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "conversation_status"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ],
+                    "description": "`is` holds for any of `values`; `is_not` for none."
+                  },
+                  "values": {
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "open",
+                        "closed"
+                      ]
+                    },
+                    "description": "Open or closed."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator",
+                  "values"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "ai"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ],
+                    "description": "`is` holds for any of `values`; `is_not` for none."
+                  },
+                  "values": {
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "on",
+                        "off"
+                      ]
+                    },
+                    "description": "`on` while an AI agent answers the conversation, as its assignee or with the AI on in it."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator",
+                  "values"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "channel"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ],
+                    "description": "`is` holds for any of `values`; `is_not` for none."
+                  },
+                  "values": {
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "description": "Channels. See `GET /channels`."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator",
+                  "values"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "time"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "within",
+                      "outside"
+                    ],
+                    "description": "Whether the moment of evaluation is within the hours or outside them."
+                  },
+                  "business_hours": {
+                    "$ref": "#/components/schemas/BusinessHoursInput"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator",
+                  "business_hours"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "message_first"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ],
+                    "description": "`is` when the contact wrote first in the conversation, before any message from the business."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "message_type"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ],
+                    "description": "`is` holds for any of `values`; `is_not` for none."
+                  },
+                  "values": {
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "text",
+                        "button",
+                        "image",
+                        "audio",
+                        "video",
+                        "document",
+                        "location",
+                        "sticker",
+                        "other"
+                      ]
+                    },
+                    "description": "The kind of message; `button` is a tapped button or list option on any channel."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator",
+                  "values"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "message_text"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "contains",
+                      "not_contains"
+                    ]
+                  },
+                  "value": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500,
+                    "description": "Compared ignoring case, accents and repeated spaces."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator",
+                  "value"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "message_sender"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ],
+                    "description": "`is` holds for any of `values`; `is_not` for none."
+                  },
+                  "values": {
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "person",
+                        "ai",
+                        "automation",
+                        "broadcast",
+                        "external_app"
+                      ]
+                    },
+                    "description": "Who sent the message: `person` (the team), `ai` (an AI agent and its tools), `automation` (a workflow), `broadcast` or `external_app` (another app connected to the channel)."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "operator",
+                  "values"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "variable"
+                  },
+                  "name": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                    "description": "The `answer_key` an earlier `ask_question` step saved."
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not",
+                      "contains",
+                      "not_contains",
+                      "exists",
+                      "not_exists"
+                    ]
+                  },
+                  "value": {
+                    "description": "Compared ignoring case and accents; absent for `exists` and `not_exists`.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field",
+                  "name",
+                  "operator"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "all",
+                  "any"
+                ],
+                "description": "`all` holds when every condition holds; `any` when at least one does."
+              },
+              "conditions": {
+                "minItems": 1,
+                "maxItems": 20,
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ConditionInput"
+                },
+                "description": "Comparisons or groups, three levels deep at most."
+              }
+            },
+            "required": [
+              "kind",
+              "conditions"
+            ],
+            "additionalProperties": false
+          }
+        ],
+        "description": "A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`."
+      },
       "CreateWorkflow": {
         "type": "object",
         "properties": {
@@ -31352,26 +32194,119 @@
               "trigger": {
                 "type": "string",
                 "enum": [
-                  "at_time",
-                  "conversation_assigned",
-                  "conversation_inactive",
                   "conversation_opened",
                   "first_message_received",
                   "message_received",
                   "message_sent",
+                  "conversation_inactive",
                   "team_message_unanswered",
-                  "call_received"
+                  "schedule",
+                  "conversation_assigned",
+                  "call_received",
+                  "at_time"
                 ],
-                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `at_time` runs once a day at `at_time.time`, on its weekdays, on each conversation of its channels assigned then to one of `conversation_filters.assigned_user_ids` (open ones only with `conversation_filters.only_open`); it has no `condition`. `conversation_assigned` runs when a conversation of its channels is assigned to a member (any member, or one of `conversation_filters.assigned_user_ids`) while its `condition` holds; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai` and `turn_off_ai` steps, which only they take. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
+                "description": "The event that starts the workflow; `condition` decides whether that occurrence runs it. `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message, unless the contact replied first; `conversation_inactive` and `team_message_unanswered` after `inactivity_seconds`. `schedule` runs at each of its `schedule.times` on each conversation assigned then to a member its `condition` names with `assignee` `is`, which it requires. `conversation_assigned` runs when a conversation is assigned to a member; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai`, `turn_off_ai`, `decision` and `end` steps, and only they take `turn_on_ai` and `turn_off_ai`. `call_received` decides who answers a WhatsApp call on the WhatsApp numbers with AI calls on that its `condition` names: its flow takes only `answer_call`, `decline_call` and `decision`s on `channel` and `time`, and the first active one that reaches a call step decides, over whoever holds the conversation. `at_time` is deprecated: read as `schedule`."
               },
-              "channel_ids": {
-                "maxItems": 50,
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "format": "uuid"
+              "condition": {
+                "anyOf": [
+                  {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/ConditionInput"
+                      },
+                      {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "inside_business_hours"
+                              },
+                              "business_hours": {
+                                "$ref": "#/components/schemas/BusinessHoursInput"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "business_hours"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "outside_business_hours"
+                              },
+                              "business_hours": {
+                                "$ref": "#/components/schemas/BusinessHoursInput"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "business_hours"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ],
+                        "description": "Deprecated: read as a `time` comparison, `within` or `outside`."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Whether an occurrence of the trigger runs the workflow; null runs every occurrence on every channel."
+              },
+              "schedule": {
+                "description": "When a `schedule` workflow runs; required for it and only for it.",
+                "type": "object",
+                "properties": {
+                  "timezone": {
+                    "type": "string",
+                    "description": "IANA time zone of every time."
+                  },
+                  "times": {
+                    "minItems": 1,
+                    "maxItems": 20,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "time": {
+                          "type": "string",
+                          "pattern": "^([01]\\d|2[0-3]):(00|15|30|45)$",
+                          "description": "Quarter hour it runs, `HH:MM`."
+                        },
+                        "weekdays": {
+                          "minItems": 1,
+                          "maxItems": 7,
+                          "type": "array",
+                          "items": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 6
+                          },
+                          "description": "Days it runs at that time, 0 for Sunday to 6 for Saturday."
+                        }
+                      },
+                      "required": [
+                        "time",
+                        "weekdays"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "description": "Each time and its days; each time of each day at most once."
+                  }
                 },
-                "description": "Channels it listens to. See `GET /channels`."
+                "required": [
+                  "timezone",
+                  "times"
+                ],
+                "additionalProperties": false
               },
               "inactivity_seconds": {
                 "description": "Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.",
@@ -31379,8 +32314,17 @@
                 "minimum": 60,
                 "maximum": 31536000
               },
+              "channel_ids": {
+                "description": "Deprecated: read as a `channel` comparison in `condition`.",
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
               "message_filters": {
-                "description": "Which messages a `message_received` workflow reacts to.",
+                "description": "Deprecated, requests only: read as `condition` comparisons on `message_first`, `assignee` (nobody) and `message_type` (not `button`).",
                 "type": "object",
                 "properties": {
                   "first_message": {
@@ -31403,7 +32347,7 @@
                 "additionalProperties": false
               },
               "sent_message_filters": {
-                "description": "Which outgoing messages a `message_sent` workflow reacts to; required for it.",
+                "description": "Deprecated, requests only: read as `condition` comparisons on `message_sender` and `message_text`.",
                 "type": "object",
                 "properties": {
                   "senders": {
@@ -31434,7 +32378,7 @@
                 "additionalProperties": false
               },
               "at_time": {
-                "description": "When an `at_time` workflow runs; required for it and only for it.",
+                "description": "Deprecated, requests only: an `at_time` workflow is read as `schedule` with this one time.",
                 "type": "object",
                 "properties": {
                   "time": {
@@ -31466,7 +32410,7 @@
                 "additionalProperties": false
               },
               "conversation_filters": {
-                "description": "Which conversations `at_time` and `conversation_assigned` reach; only for them.",
+                "description": "Deprecated, requests only: read as `condition` comparisons on `assignee` and `conversation_status`.",
                 "type": "object",
                 "properties": {
                   "assigned_user_ids": {
@@ -31488,52 +32432,6 @@
                   "only_open"
                 ],
                 "additionalProperties": false
-              },
-              "condition": {
-                "anyOf": [
-                  {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "properties": {
-                          "kind": {
-                            "type": "string",
-                            "const": "inside_business_hours"
-                          },
-                          "business_hours": {
-                            "$ref": "#/components/schemas/BusinessHoursInput"
-                          }
-                        },
-                        "required": [
-                          "kind",
-                          "business_hours"
-                        ],
-                        "additionalProperties": false
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "kind": {
-                            "type": "string",
-                            "const": "outside_business_hours"
-                          },
-                          "business_hours": {
-                            "$ref": "#/components/schemas/BusinessHoursInput"
-                          }
-                        },
-                        "required": [
-                          "kind",
-                          "business_hours"
-                        ],
-                        "additionalProperties": false
-                      }
-                    ]
-                  },
-                  {
-                    "type": "null"
-                  }
-                ],
-                "description": "When it runs; null runs at any hour."
               },
               "flow": {
                 "type": "object",
@@ -31623,7 +32521,7 @@
                             "answer_key": {
                               "type": "string",
                               "pattern": "^[a-zA-Z0-9_-]{1,64}$",
-                              "description": "Name the answer is kept under, for a later `branch`."
+                              "description": "Name the answer is kept under, for a later `decision` to compare as a `variable`."
                             },
                             "choices": {
                               "maxItems": 10,
@@ -31719,6 +32617,85 @@
                               "pattern": "^[a-zA-Z0-9_-]{1,64}$",
                               "description": "Step ID: letters, digits, `_` or `-`, up to 64."
                             },
+                            "kind": {
+                              "type": "string",
+                              "const": "decision"
+                            },
+                            "branches": {
+                              "minItems": 1,
+                              "maxItems": 10,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                    "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                                  },
+                                  "name": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 40,
+                                    "description": "Branch name, unique in the decision."
+                                  },
+                                  "condition": {
+                                    "$ref": "#/components/schemas/ConditionInput"
+                                  },
+                                  "next": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 64
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ],
+                                    "description": "Step to run when this branch is the first whose condition holds."
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name",
+                                  "condition",
+                                  "next"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "description": "Branches in the order they are checked; the first that holds is taken."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run when no branch holds («Si no»); null ends the flow."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind",
+                            "branches",
+                            "next"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
                             "next": {
                               "anyOf": [
                                 {
@@ -31739,7 +32716,7 @@
                             "answer_key": {
                               "type": "string",
                               "pattern": "^[a-zA-Z0-9_-]{1,64}$",
-                              "description": "Name the answer is kept under, for a later `branch`."
+                              "description": "Name the answer is kept under, for a later `decision` to compare as a `variable`."
                             },
                             "operator": {
                               "description": "How the answer is compared. With `answer_key` and `value`.",
@@ -32141,12 +33118,11 @@
             },
             "required": [
               "trigger",
-              "channel_ids",
               "condition",
               "flow"
             ],
             "additionalProperties": false,
-            "description": "Reacts to a conversation with messages, questions, waits and assignments."
+            "description": "Reacts to a conversation with messages, questions, decisions, waits and assignments."
           }
         },
         "required": [
@@ -32160,56 +33136,68 @@
             "name": "Fuera de horario",
             "definition": {
               "trigger": "conversation_opened",
-              "channel_ids": [
-                "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f"
-              ],
               "condition": {
-                "kind": "outside_business_hours",
-                "business_hours": {
-                  "timezone": "America/Panama",
-                  "days": {
-                    "monday": [
-                      {
-                        "start": "09:00",
-                        "end": "18:00"
-                      }
-                    ],
-                    "tuesday": [
-                      {
-                        "start": "09:00",
-                        "end": "18:00"
-                      }
-                    ],
-                    "wednesday": [
-                      {
-                        "start": "09:00",
-                        "end": "18:00"
-                      }
-                    ],
-                    "thursday": [
-                      {
-                        "start": "09:00",
-                        "end": "18:00"
-                      }
-                    ],
-                    "friday": [
-                      {
-                        "start": "09:00",
-                        "end": "18:00"
-                      }
-                    ],
-                    "saturday": [
-                      {
-                        "start": "09:00",
-                        "end": "13:00"
-                      }
-                    ],
-                    "sunday": []
+                "kind": "all",
+                "conditions": [
+                  {
+                    "kind": "compare",
+                    "field": "channel",
+                    "operator": "is",
+                    "values": [
+                      "8f3c2a5e-6b1d-4c7a-9e2f-1a2b3c4d5e6f"
+                    ]
                   },
-                  "closed_dates": [
-                    "2026-12-25"
-                  ]
-                }
+                  {
+                    "kind": "compare",
+                    "field": "time",
+                    "operator": "outside",
+                    "business_hours": {
+                      "timezone": "America/Panama",
+                      "days": {
+                        "monday": [
+                          {
+                            "start": "09:00",
+                            "end": "18:00"
+                          }
+                        ],
+                        "tuesday": [
+                          {
+                            "start": "09:00",
+                            "end": "18:00"
+                          }
+                        ],
+                        "wednesday": [
+                          {
+                            "start": "09:00",
+                            "end": "18:00"
+                          }
+                        ],
+                        "thursday": [
+                          {
+                            "start": "09:00",
+                            "end": "18:00"
+                          }
+                        ],
+                        "friday": [
+                          {
+                            "start": "09:00",
+                            "end": "18:00"
+                          }
+                        ],
+                        "saturday": [
+                          {
+                            "start": "09:00",
+                            "end": "13:00"
+                          }
+                        ],
+                        "sunday": []
+                      },
+                      "closed_dates": [
+                        "2026-12-25"
+                      ]
+                    }
+                  }
+                ]
               },
               "flow": {
                 "entry": "bienvenida",
@@ -32276,26 +33264,119 @@
               "trigger": {
                 "type": "string",
                 "enum": [
-                  "at_time",
-                  "conversation_assigned",
-                  "conversation_inactive",
                   "conversation_opened",
                   "first_message_received",
                   "message_received",
                   "message_sent",
+                  "conversation_inactive",
                   "team_message_unanswered",
-                  "call_received"
+                  "schedule",
+                  "conversation_assigned",
+                  "call_received",
+                  "at_time"
                 ],
-                "description": "`conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message that passes `sent_message_filters`, unless the contact replied first. `at_time` runs once a day at `at_time.time`, on its weekdays, on each conversation of its channels assigned then to one of `conversation_filters.assigned_user_ids` (open ones only with `conversation_filters.only_open`); it has no `condition`. `conversation_assigned` runs when a conversation of its channels is assigned to a member (any member, or one of `conversation_filters.assigned_user_ids`) while its `condition` holds; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai` and `turn_off_ai` steps, which only they take. `call_received` decides who answers a WhatsApp call on its channels (WhatsApp numbers with AI calls on): its flow takes only `answer_call`, `decline_call` and a `branch` on `business_hours`, and the first active one that reaches a call step decides, over whoever holds the conversation."
+                "description": "The event that starts the workflow; `condition` decides whether that occurrence runs it. `conversation_opened` runs when a conversation opens; `first_message_received` when the contact writes first in a conversation, before any message from the business; `message_received` on every incoming message; `message_sent` within 15 minutes of an outgoing message, unless the contact replied first; `conversation_inactive` and `team_message_unanswered` after `inactivity_seconds`. `schedule` runs at each of its `schedule.times` on each conversation assigned then to a member its `condition` names with `assignee` `is`, which it requires. `conversation_assigned` runs when a conversation is assigned to a member; the assignment an AI handoff makes does not run it. Both take only `turn_on_ai`, `turn_off_ai`, `decision` and `end` steps, and only they take `turn_on_ai` and `turn_off_ai`. `call_received` decides who answers a WhatsApp call on the WhatsApp numbers with AI calls on that its `condition` names: its flow takes only `answer_call`, `decline_call` and `decision`s on `channel` and `time`, and the first active one that reaches a call step decides, over whoever holds the conversation. `at_time` is deprecated: read as `schedule`."
               },
-              "channel_ids": {
-                "maxItems": 50,
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "format": "uuid"
+              "condition": {
+                "anyOf": [
+                  {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/ConditionInput"
+                      },
+                      {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "inside_business_hours"
+                              },
+                              "business_hours": {
+                                "$ref": "#/components/schemas/BusinessHoursInput"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "business_hours"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "outside_business_hours"
+                              },
+                              "business_hours": {
+                                "$ref": "#/components/schemas/BusinessHoursInput"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "business_hours"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ],
+                        "description": "Deprecated: read as a `time` comparison, `within` or `outside`."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Whether an occurrence of the trigger runs the workflow; null runs every occurrence on every channel."
+              },
+              "schedule": {
+                "description": "When a `schedule` workflow runs; required for it and only for it.",
+                "type": "object",
+                "properties": {
+                  "timezone": {
+                    "type": "string",
+                    "description": "IANA time zone of every time."
+                  },
+                  "times": {
+                    "minItems": 1,
+                    "maxItems": 20,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "time": {
+                          "type": "string",
+                          "pattern": "^([01]\\d|2[0-3]):(00|15|30|45)$",
+                          "description": "Quarter hour it runs, `HH:MM`."
+                        },
+                        "weekdays": {
+                          "minItems": 1,
+                          "maxItems": 7,
+                          "type": "array",
+                          "items": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 6
+                          },
+                          "description": "Days it runs at that time, 0 for Sunday to 6 for Saturday."
+                        }
+                      },
+                      "required": [
+                        "time",
+                        "weekdays"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "description": "Each time and its days; each time of each day at most once."
+                  }
                 },
-                "description": "Channels it listens to. See `GET /channels`."
+                "required": [
+                  "timezone",
+                  "times"
+                ],
+                "additionalProperties": false
               },
               "inactivity_seconds": {
                 "description": "Seconds without activity before starting the flow: since the last team reply for team_message_unanswered, or the last message or reaction from either side for conversation_inactive.",
@@ -32303,8 +33384,17 @@
                 "minimum": 60,
                 "maximum": 31536000
               },
+              "channel_ids": {
+                "description": "Deprecated: read as a `channel` comparison in `condition`.",
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
               "message_filters": {
-                "description": "Which messages a `message_received` workflow reacts to.",
+                "description": "Deprecated, requests only: read as `condition` comparisons on `message_first`, `assignee` (nobody) and `message_type` (not `button`).",
                 "type": "object",
                 "properties": {
                   "first_message": {
@@ -32327,7 +33417,7 @@
                 "additionalProperties": false
               },
               "sent_message_filters": {
-                "description": "Which outgoing messages a `message_sent` workflow reacts to; required for it.",
+                "description": "Deprecated, requests only: read as `condition` comparisons on `message_sender` and `message_text`.",
                 "type": "object",
                 "properties": {
                   "senders": {
@@ -32358,7 +33448,7 @@
                 "additionalProperties": false
               },
               "at_time": {
-                "description": "When an `at_time` workflow runs; required for it and only for it.",
+                "description": "Deprecated, requests only: an `at_time` workflow is read as `schedule` with this one time.",
                 "type": "object",
                 "properties": {
                   "time": {
@@ -32390,7 +33480,7 @@
                 "additionalProperties": false
               },
               "conversation_filters": {
-                "description": "Which conversations `at_time` and `conversation_assigned` reach; only for them.",
+                "description": "Deprecated, requests only: read as `condition` comparisons on `assignee` and `conversation_status`.",
                 "type": "object",
                 "properties": {
                   "assigned_user_ids": {
@@ -32412,52 +33502,6 @@
                   "only_open"
                 ],
                 "additionalProperties": false
-              },
-              "condition": {
-                "anyOf": [
-                  {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "properties": {
-                          "kind": {
-                            "type": "string",
-                            "const": "inside_business_hours"
-                          },
-                          "business_hours": {
-                            "$ref": "#/components/schemas/BusinessHoursInput"
-                          }
-                        },
-                        "required": [
-                          "kind",
-                          "business_hours"
-                        ],
-                        "additionalProperties": false
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "kind": {
-                            "type": "string",
-                            "const": "outside_business_hours"
-                          },
-                          "business_hours": {
-                            "$ref": "#/components/schemas/BusinessHoursInput"
-                          }
-                        },
-                        "required": [
-                          "kind",
-                          "business_hours"
-                        ],
-                        "additionalProperties": false
-                      }
-                    ]
-                  },
-                  {
-                    "type": "null"
-                  }
-                ],
-                "description": "When it runs; null runs at any hour."
               },
               "flow": {
                 "type": "object",
@@ -32547,7 +33591,7 @@
                             "answer_key": {
                               "type": "string",
                               "pattern": "^[a-zA-Z0-9_-]{1,64}$",
-                              "description": "Name the answer is kept under, for a later `branch`."
+                              "description": "Name the answer is kept under, for a later `decision` to compare as a `variable`."
                             },
                             "choices": {
                               "maxItems": 10,
@@ -32643,6 +33687,85 @@
                               "pattern": "^[a-zA-Z0-9_-]{1,64}$",
                               "description": "Step ID: letters, digits, `_` or `-`, up to 64."
                             },
+                            "kind": {
+                              "type": "string",
+                              "const": "decision"
+                            },
+                            "branches": {
+                              "minItems": 1,
+                              "maxItems": 10,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                                    "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                                  },
+                                  "name": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 40,
+                                    "description": "Branch name, unique in the decision."
+                                  },
+                                  "condition": {
+                                    "$ref": "#/components/schemas/ConditionInput"
+                                  },
+                                  "next": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 64
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ],
+                                    "description": "Step to run when this branch is the first whose condition holds."
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name",
+                                  "condition",
+                                  "next"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "description": "Branches in the order they are checked; the first that holds is taken."
+                            },
+                            "next": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "description": "Step to run when no branch holds («Si no»); null ends the flow."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind",
+                            "branches",
+                            "next"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+                              "description": "Step ID: letters, digits, `_` or `-`, up to 64."
+                            },
                             "next": {
                               "anyOf": [
                                 {
@@ -32663,7 +33786,7 @@
                             "answer_key": {
                               "type": "string",
                               "pattern": "^[a-zA-Z0-9_-]{1,64}$",
-                              "description": "Name the answer is kept under, for a later `branch`."
+                              "description": "Name the answer is kept under, for a later `decision` to compare as a `variable`."
                             },
                             "operator": {
                               "description": "How the answer is compared. With `answer_key` and `value`.",
@@ -33065,7 +34188,6 @@
             },
             "required": [
               "trigger",
-              "channel_ids",
               "condition",
               "flow"
             ],
