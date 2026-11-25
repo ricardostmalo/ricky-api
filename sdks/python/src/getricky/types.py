@@ -4548,6 +4548,29 @@ class WhatsAppNumber(TypedDict):
     """
 
 
+class WorkflowMutationWorkflowMutation(TypedDict):
+    """
+    Only metadata is returned if the stored definition is unreadable.
+    """
+
+    id: str
+    """
+    Workflow ID.
+    """
+    name: str
+    """
+    Display name.
+    """
+    status: Literal["draft", "active", "paused"]
+    """
+    `draft` until activated; `paused` runs nothing new; `active` runs.
+    """
+    updated_at: str
+    """
+    Last change to the workflow.
+    """
+
+
 class ResolveHandoff(TypedDict, closed=True):
     """
     How the handoff ends.
@@ -5638,6 +5661,10 @@ class UploadWorkflowHeaderMedia(TypedDict, closed=True):
     The file every send of the workflow carries in its template header.
     """
 
+    expected_updated_at: NotRequired[str]
+    """
+    Copy updated_at from the workflow you read. A concurrent change returns 409 conflict.
+    """
     url: str
     """
     Public HTTPS address Ricky downloads the file from. It must not redirect or resolve to a private address, and its `Content-Type` must be the kind the template header takes (image, video or document) within WhatsApp’s size limit for it.
@@ -7488,6 +7515,9 @@ class Workflow(TypedDict):
     """
 
 
+WorkflowMutation: TypeAlias = Union[Workflow, WorkflowMutationWorkflowMutation]
+
+
 class ConditionInputConditionInput10(TypedDict, closed=True):
     """
     A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
@@ -7722,6 +7752,10 @@ class UpdateWorkflow(TypedDict, closed=True):
     Only the fields you send change. The status stays: an active workflow runs the new definition from its next execution.
     """
 
+    expected_updated_at: NotRequired[str]
+    """
+    Copy updated_at from the workflow you read. A concurrent change returns 409 conflict.
+    """
     name: NotRequired[str]
     """
     Display name.

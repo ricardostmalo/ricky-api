@@ -103,6 +103,7 @@ from .types import (
     WhatsAppNumber,
     Workflow,
     WorkflowExecution,
+    WorkflowMutation,
 )
 
 
@@ -784,14 +785,14 @@ class SyncOperations:
     def delete_workflow(
         self,
         workflow_id: str,
-    ) -> Resource[Workflow]:
+    ) -> Resource[WorkflowMutation]:
         """Delete a workflow.
 
         Deletes the workflow and answers it as it was. Sends already queued still go out. Deleting twice answers `404`.
 
         Scope: `workflows:write`.
         """
-        return cast(Resource[Workflow], self._request(
+        return cast(Resource[WorkflowMutation], self._request(
             "DELETE",
             "/workflows/{workflow_id}",
             path_parameters={"workflow_id": workflow_id},
@@ -816,14 +817,14 @@ class SyncOperations:
     def pause_workflow(
         self,
         workflow_id: str,
-    ) -> Resource[Workflow]:
+    ) -> Resource[WorkflowMutation]:
         """Pause a workflow.
 
         It starts no new executions; sends already queued still go out. Pausing a paused workflow changes nothing. Send no body.
 
         Scope: `workflows:write`.
         """
-        return cast(Resource[Workflow], self._request(
+        return cast(Resource[WorkflowMutation], self._request(
             "POST",
             "/workflows/{workflow_id}/pause",
             path_parameters={"workflow_id": workflow_id},
@@ -3366,14 +3367,14 @@ class AsyncOperations:
     async def delete_workflow(
         self,
         workflow_id: str,
-    ) -> Resource[Workflow]:
+    ) -> Resource[WorkflowMutation]:
         """Delete a workflow.
 
         Deletes the workflow and answers it as it was. Sends already queued still go out. Deleting twice answers `404`.
 
         Scope: `workflows:write`.
         """
-        return cast(Resource[Workflow], await self._request(
+        return cast(Resource[WorkflowMutation], await self._request(
             "DELETE",
             "/workflows/{workflow_id}",
             path_parameters={"workflow_id": workflow_id},
@@ -3398,14 +3399,14 @@ class AsyncOperations:
     async def pause_workflow(
         self,
         workflow_id: str,
-    ) -> Resource[Workflow]:
+    ) -> Resource[WorkflowMutation]:
         """Pause a workflow.
 
         It starts no new executions; sends already queued still go out. Pausing a paused workflow changes nothing. Send no body.
 
         Scope: `workflows:write`.
         """
-        return cast(Resource[Workflow], await self._request(
+        return cast(Resource[WorkflowMutation], await self._request(
             "POST",
             "/workflows/{workflow_id}/pause",
             path_parameters={"workflow_id": workflow_id},

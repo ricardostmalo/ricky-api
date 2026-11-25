@@ -4108,6 +4108,25 @@ export type WhatsAppNumber = {
     };
 };
 
+export type WorkflowMutation = Workflow | {
+    /**
+     * Workflow ID.
+     */
+    id: string;
+    /**
+     * Display name.
+     */
+    name: string;
+    /**
+     * `draft` until activated; `paused` runs nothing new; `active` runs.
+     */
+    status: 'draft' | 'active' | 'paused';
+    /**
+     * Last change to the workflow.
+     */
+    updated_at: string;
+};
+
 /**
  * How the handoff ends.
  */
@@ -5060,6 +5079,10 @@ export type UpdateKnowledgeFile = {
  */
 export type UploadWorkflowHeaderMedia = {
     /**
+     * Copy updated_at from the workflow you read. A concurrent change returns 409 conflict.
+     */
+    expected_updated_at?: string;
+    /**
      * Public HTTPS address Ricky downloads the file from. It must not redirect or resolve to a private address, and its `Content-Type` must be the kind the template header takes (image, video or document) within WhatsApp’s size limit for it.
      */
     url: string;
@@ -5690,6 +5713,10 @@ export type CreateWorkflow = {
  * Only the fields you send change. The status stays: an active workflow runs the new definition from its next execution.
  */
 export type UpdateWorkflow = {
+    /**
+     * Copy updated_at from the workflow you read. A concurrent change returns 409 conflict.
+     */
+    expected_updated_at?: string;
     /**
      * Display name.
      */
@@ -8423,7 +8450,7 @@ export type DeleteWorkflowResponses = {
      * Success.
      */
     200: {
-        data: Workflow;
+        data: WorkflowMutation;
     };
 };
 
@@ -8522,6 +8549,8 @@ export type UpdateWorkflowErrors = {
      * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
      *
      * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
      */
     409: Error;
     /**
@@ -8661,7 +8690,7 @@ export type PauseWorkflowResponses = {
      * Success.
      */
     200: {
-        data: Workflow;
+        data: WorkflowMutation;
     };
 };
 
@@ -8773,6 +8802,8 @@ export type UploadWorkflowHeaderMediaErrors = {
      * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
      *
      * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
      */
     409: Error;
     /**

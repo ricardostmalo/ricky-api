@@ -4473,7 +4473,7 @@
             }
           },
           "409": {
-            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.\n\n`conflict`: The resource changed in a way that prevents the operation.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4579,7 +4579,7 @@
                   ],
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Workflow"
+                      "$ref": "#/components/schemas/WorkflowMutation"
                     }
                   }
                 }
@@ -4821,7 +4821,7 @@
                   ],
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Workflow"
+                      "$ref": "#/components/schemas/WorkflowMutation"
                     }
                   }
                 }
@@ -5147,7 +5147,7 @@
             }
           },
           "409": {
-            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.",
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.\n\n`conflict`: The resource changed in a way that prevents the operation.",
             "content": {
               "application/json": {
                 "schema": {
@@ -28691,6 +28691,55 @@
         ],
         "description": "A WhatsApp number, with its status, quality and messaging limit at Meta."
       },
+      "WorkflowMutation": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/Workflow"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Workflow ID.",
+                "examples": [
+                  "a3b4c5d6-e7f8-4a9b-8c0d-2e3f4a5b6c7d"
+                ]
+              },
+              "name": {
+                "type": "string",
+                "description": "Display name."
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "draft",
+                  "active",
+                  "paused"
+                ],
+                "description": "`draft` until activated; `paused` runs nothing new; `active` runs."
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                "description": "Last change to the workflow.",
+                "examples": [
+                  "2026-10-14T15:30:00.000Z"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "status",
+              "updated_at"
+            ],
+            "description": "Only metadata is returned if the stored definition is unreadable."
+          }
+        ]
+      },
       "ResolveHandoff": {
         "type": "object",
         "properties": {
@@ -31457,6 +31506,12 @@
       "UploadWorkflowHeaderMedia": {
         "type": "object",
         "properties": {
+          "expected_updated_at": {
+            "description": "Copy updated_at from the workflow you read. A concurrent change returns 409 conflict.",
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
           "url": {
             "type": "string",
             "maxLength": 2048,
@@ -33251,6 +33306,12 @@
       "UpdateWorkflow": {
         "type": "object",
         "properties": {
+          "expected_updated_at": {
+            "description": "Copy updated_at from the workflow you read. A concurrent change returns 409 conflict.",
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
           "name": {
             "type": "string",
             "minLength": 1,
