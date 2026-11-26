@@ -4884,6 +4884,130 @@ class WorkflowMutationWorkflowMutation(TypedDict):
     """
 
 
+class WorkflowRunCoverage(TypedDict):
+    capability: Literal["runs", "calls_unsupported", "reminder_history", "unconfigured"]
+    capture_enabled: bool
+    history_since: Optional[str]
+    """
+    Earliest guaranteed capture for this workflow and organization.
+    """
+    retention_days: Literal[30]
+
+
+class WorkflowEffectSummary(TypedDict):
+    status: NotRequired[Literal["queued", "already_queued", "conversation_missing", "message_missing", "already_closed", "not_opened_by_send", "message_after_send", "closed", "unchanged", "changed", "applied", "already_on", "already_off", "assigned_to_agent"]]
+    """
+    Observed effect result. Absent when the visit did not record it.
+    """
+    assignee_id: NotRequired[str]
+    resume: NotRequired[Literal["answer", "choice", "timeout", "invalid", "accepted", "elapsed"]]
+    deadline: NotRequired[str]
+    exit: NotRequired[Literal["branch", "default"]]
+
+
+class WorkflowRunLastStep(TypedDict):
+    step_id: str
+    kind: str
+    state: str
+    exit_key: Optional[str]
+    error_code: Optional[str]
+    output: WorkflowEffectSummary
+
+
+class WorkflowRunBatchMemberResult(TypedDict):
+    step_id: Optional[str]
+    kind: Optional[str]
+    effect_status: Optional[Literal["queued", "already_queued", "conversation_missing", "message_missing", "already_closed", "not_opened_by_send", "message_after_send", "closed", "unchanged", "changed", "applied", "already_on", "already_off", "assigned_to_agent"]]
+    run_status: Literal["queued", "running", "waiting", "retrying", "completed", "skipped", "failed", "cancelled"]
+    members: int
+
+
+class WorkflowRunBatch(TypedDict):
+    matched: Optional[int]
+    expired_members: Optional[int]
+    """
+    Firing match count minus retained members. Null when the original count is unknown.
+    """
+    by_status: Dict[Literal["queued", "running", "waiting", "retrying", "completed", "skipped", "failed", "cancelled"], int]
+    member_results: Optional[List[WorkflowRunBatchMemberResult]]
+
+
+class WorkflowRun(TypedDict):
+    id: str
+    workflow_id: str
+    version_id: str
+    version_number: int
+    is_first_version: bool
+    role: Literal["single", "member", "batch"]
+    batch_run_id: Optional[str]
+    trigger_kind: str
+    channel_type: Optional[str]
+    conversation_id: Optional[str]
+    trigger_message_id: Optional[str]
+    trigger_assignee_id: Optional[str]
+    chat_restricted: bool
+    display_name: Optional[str]
+    occurred_at: str
+    queued_at: str
+    started_at: Optional[str]
+    finished_at: Optional[str]
+    status: Literal["queued", "running", "waiting", "retrying", "completed", "skipped", "failed", "cancelled"]
+    reason_code: Optional[str]
+    current_step_id: Optional[str]
+    last_step: Optional[WorkflowRunLastStep]
+    batch: Optional[WorkflowRunBatch]
+
+
+class WorkflowRunPage(TypedDict):
+    history: WorkflowRunCoverage
+    items: List[WorkflowRun]
+    next_cursor: Optional[str]
+
+
+class WorkflowRunStepInput(TypedDict):
+    revision: NotRequired[int]
+
+
+class WorkflowRunStep(TypedDict):
+    step_id: str
+    kind: str
+    state: str
+    exit_key: Optional[str]
+    error_code: Optional[str]
+    output: WorkflowEffectSummary
+    seq: int
+    attempt: int
+    started_at: str
+    finished_at: Optional[str]
+    input: WorkflowRunStepInput
+    sent_message_id: Optional[str]
+    answer_message_id: Optional[str]
+    send_state: Optional[Literal["queued", "sent", "failed", "cancelled"]]
+    provider_receipt: Optional[Literal["accepted", "delivered", "read", "failed"]]
+    """
+    Current receipt from a provider correlation that names this send. Null means unknown.
+    """
+
+
+class WorkflowRunSummaryLastRun(TypedDict):
+    id: str
+    queued_at: str
+    status: Literal["queued", "running", "waiting", "retrying", "completed", "skipped", "failed", "cancelled"]
+
+
+class WorkflowRunSummaryFailureWindow(TypedDict):
+    finished_since: str
+    finished_until: str
+
+
+class WorkflowRunSummary(TypedDict):
+    workflow_id: str
+    history: WorkflowRunCoverage
+    last_run: Optional[WorkflowRunSummaryLastRun]
+    failed_last_seven_days: Optional[int]
+    failure_window: Optional[WorkflowRunSummaryFailureWindow]
+
+
 class ResolveHandoff(TypedDict, closed=True):
     """
     How the handoff ends.

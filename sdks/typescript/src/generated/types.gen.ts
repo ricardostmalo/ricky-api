@@ -4416,6 +4416,120 @@ export type WorkflowMutation = Workflow | {
     updated_at: string;
 };
 
+export type WorkflowRunCoverage = {
+    capability: 'runs' | 'calls_unsupported' | 'reminder_history' | 'unconfigured';
+    capture_enabled: boolean;
+    /**
+     * Earliest guaranteed capture for this workflow and organization.
+     */
+    history_since: string | null;
+    retention_days: 30;
+};
+
+export type WorkflowEffectSummary = {
+    /**
+     * Observed effect result. Absent when the visit did not record it.
+     */
+    status?: 'queued' | 'already_queued' | 'conversation_missing' | 'message_missing' | 'already_closed' | 'not_opened_by_send' | 'message_after_send' | 'closed' | 'unchanged' | 'changed' | 'applied' | 'already_on' | 'already_off' | 'assigned_to_agent';
+    assignee_id?: string;
+    resume?: 'answer' | 'choice' | 'timeout' | 'invalid' | 'accepted' | 'elapsed';
+    deadline?: string;
+    exit?: 'branch' | 'default';
+};
+
+export type WorkflowRun = {
+    id: string;
+    workflow_id: string;
+    version_id: string;
+    version_number: number;
+    is_first_version: boolean;
+    role: 'single' | 'member' | 'batch';
+    batch_run_id: string | null;
+    trigger_kind: string;
+    channel_type: string | null;
+    conversation_id: string | null;
+    trigger_message_id: string | null;
+    trigger_assignee_id: string | null;
+    chat_restricted: boolean;
+    display_name: string | null;
+    occurred_at: string;
+    queued_at: string;
+    started_at: string | null;
+    finished_at: string | null;
+    status: 'queued' | 'running' | 'waiting' | 'retrying' | 'completed' | 'skipped' | 'failed' | 'cancelled';
+    reason_code: string | null;
+    current_step_id: string | null;
+    last_step: {
+        step_id: string;
+        kind: string;
+        state: string;
+        exit_key: string | null;
+        error_code: string | null;
+        output: WorkflowEffectSummary;
+    } | null;
+    batch: {
+        matched: number | null;
+        /**
+         * Firing match count minus retained members. Null when the original count is unknown.
+         */
+        expired_members: number | null;
+        by_status: {
+            [key: string]: number;
+        };
+        member_results: Array<{
+            step_id: string | null;
+            kind: string | null;
+            effect_status: 'queued' | 'already_queued' | 'conversation_missing' | 'message_missing' | 'already_closed' | 'not_opened_by_send' | 'message_after_send' | 'closed' | 'unchanged' | 'changed' | 'applied' | 'already_on' | 'already_off' | 'assigned_to_agent' | null;
+            run_status: 'queued' | 'running' | 'waiting' | 'retrying' | 'completed' | 'skipped' | 'failed' | 'cancelled';
+            members: number;
+        }> | null;
+    } | null;
+};
+
+export type WorkflowRunPage = {
+    history: WorkflowRunCoverage;
+    items: Array<WorkflowRun>;
+    next_cursor: string | null;
+};
+
+export type WorkflowRunStep = {
+    step_id: string;
+    kind: string;
+    state: string;
+    exit_key: string | null;
+    error_code: string | null;
+    output: WorkflowEffectSummary;
+    seq: number;
+    attempt: number;
+    started_at: string;
+    finished_at: string | null;
+    input: {
+        revision?: number;
+    };
+    sent_message_id: string | null;
+    answer_message_id: string | null;
+    send_state: 'queued' | 'sent' | 'failed' | 'cancelled' | null;
+    /**
+     * Current receipt from a provider correlation that names this send. Null means unknown.
+     */
+    provider_receipt: 'accepted' | 'delivered' | 'read' | 'failed' | null;
+};
+
+export type WorkflowRunSummary = {
+    workflow_id: string;
+    history: WorkflowRunCoverage;
+    last_run: {
+        id: string;
+        queued_at: string;
+        status: 'queued' | 'running' | 'waiting' | 'retrying' | 'completed' | 'skipped' | 'failed' | 'cancelled';
+    } | null;
+    failed_last_seven_days: number | null;
+    failure_window: {
+        finished_since: string;
+        finished_until: string;
+    } | null;
+};
+
 /**
  * How the handoff ends.
  */
@@ -9997,6 +10111,264 @@ export type RestoreWorkflowVersionToDraftResponses = {
 };
 
 export type RestoreWorkflowVersionToDraftResponse = RestoreWorkflowVersionToDraftResponses[keyof RestoreWorkflowVersionToDraftResponses];
+
+export type ListWorkflowRunsData = {
+    body?: never;
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query?: {
+        /**
+         * Items per page.
+         */
+        page_size?: number;
+        /**
+         * `next_cursor` from the previous page. Use it unchanged.
+         */
+        cursor?: string;
+        finished_since?: string;
+        finished_until?: string;
+        since?: string;
+        until?: string;
+        status?: 'queued' | 'running' | 'waiting' | 'retrying' | 'completed' | 'skipped' | 'failed' | 'cancelled';
+        conversation_id?: string;
+        version_id?: string;
+        batch_run_id?: string;
+    };
+    url: '/workflows/{workflow_id}/runs';
+};
+
+export type ListWorkflowRunsErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListWorkflowRunsError = ListWorkflowRunsErrors[keyof ListWorkflowRunsErrors];
+
+export type ListWorkflowRunsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: WorkflowRunPage;
+    };
+};
+
+export type ListWorkflowRunsResponse = ListWorkflowRunsResponses[keyof ListWorkflowRunsResponses];
+
+export type GetWorkflowRunData = {
+    body?: never;
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+        /**
+         * Run ID.
+         */
+        run_id: string;
+    };
+    query?: never;
+    url: '/workflows/{workflow_id}/runs/{run_id}';
+};
+
+export type GetWorkflowRunErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetWorkflowRunError = GetWorkflowRunErrors[keyof GetWorkflowRunErrors];
+
+export type GetWorkflowRunResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: WorkflowRun;
+    };
+};
+
+export type GetWorkflowRunResponse = GetWorkflowRunResponses[keyof GetWorkflowRunResponses];
+
+export type ListWorkflowRunStepsData = {
+    body?: never;
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+        /**
+         * Run ID.
+         */
+        run_id: string;
+    };
+    query?: {
+        /**
+         * Items per page.
+         */
+        page_size?: number;
+        /**
+         * `next_cursor` from the previous page. Use it unchanged.
+         */
+        cursor?: string;
+    };
+    url: '/workflows/{workflow_id}/runs/{run_id}/steps';
+};
+
+export type ListWorkflowRunStepsErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListWorkflowRunStepsError = ListWorkflowRunStepsErrors[keyof ListWorkflowRunStepsErrors];
+
+export type ListWorkflowRunStepsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<WorkflowRunStep>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListWorkflowRunStepsResponse = ListWorkflowRunStepsResponses[keyof ListWorkflowRunStepsResponses];
+
+export type ListWorkflowRunSummariesData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Items per page.
+         */
+        page_size?: number;
+        /**
+         * `next_cursor` from the previous page. Use it unchanged.
+         */
+        cursor?: string;
+        /**
+         * Comma-separated workflow IDs.
+         */
+        workflow_ids?: string;
+    };
+    url: '/workflow-run-summaries';
+};
+
+export type ListWorkflowRunSummariesErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListWorkflowRunSummariesError = ListWorkflowRunSummariesErrors[keyof ListWorkflowRunSummariesErrors];
+
+export type ListWorkflowRunSummariesResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<WorkflowRunSummary>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListWorkflowRunSummariesResponse = ListWorkflowRunSummariesResponses[keyof ListWorkflowRunSummariesResponses];
 
 export type UploadWorkflowHeaderMediaData = {
     body: UploadWorkflowHeaderMedia;

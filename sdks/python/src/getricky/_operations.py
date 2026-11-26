@@ -113,6 +113,10 @@ from .types import (
     WorkflowPublishDraftBodyInput,
     WorkflowRenameDraftBodyInput,
     WorkflowRestoreDraftBodyInput,
+    WorkflowRun,
+    WorkflowRunPage,
+    WorkflowRunStep,
+    WorkflowRunSummary,
     WorkflowSaveDraftBodyInput,
     WorkflowVersionDetail,
     WorkflowVersionSummary,
@@ -1090,6 +1094,104 @@ class SyncOperations:
             body=body,
             idempotent=True,
             idempotency_key=idempotency_key,
+        ))
+
+    def list_workflow_runs(
+        self,
+        workflow_id: str,
+        *,
+        page_size: Optional[int] = None,
+        cursor: Optional[str] = None,
+        finished_since: Optional[str] = None,
+        finished_until: Optional[str] = None,
+        since: Optional[str] = None,
+        until: Optional[str] = None,
+        status: Optional[Literal["queued", "running", "waiting", "retrying", "completed", "skipped", "failed", "cancelled"]] = None,
+        conversation_id: Optional[str] = None,
+        version_id: Optional[str] = None,
+        batch_run_id: Optional[str] = None,
+    ) -> Resource[WorkflowRunPage]:
+        """List workflow runs.
+
+        Lists root runs in descending queue order. since/until filter queue time and finished_since/finished_until filter effective finish time. Both intervals include the start and exclude the end. Chat and batch filters include members.
+
+        Scope: `workflows:read`.
+
+        Args:
+            page_size: Items per page.
+            cursor: `next_cursor` from the previous page. Use it unchanged.
+        """
+        return cast(Resource[WorkflowRunPage], self._request(
+            "GET",
+            "/workflows/{workflow_id}/runs",
+            path_parameters={"workflow_id": workflow_id},
+            query={"page_size": page_size, "cursor": cursor, "finished_since": finished_since, "finished_until": finished_until, "since": since, "until": until, "status": status, "conversation_id": conversation_id, "version_id": version_id, "batch_run_id": batch_run_id},
+        ))
+
+    def get_workflow_run(
+        self,
+        workflow_id: str,
+        run_id: str,
+    ) -> Resource[WorkflowRun]:
+        """Read a workflow run.
+
+        Returns the pinned version, timing, outcome and batch totals.
+
+        Scope: `workflows:read`.
+        """
+        return cast(Resource[WorkflowRun], self._request(
+            "GET",
+            "/workflows/{workflow_id}/runs/{run_id}",
+            path_parameters={"workflow_id": workflow_id, "run_id": run_id},
+        ))
+
+    def list_workflow_run_steps(
+        self,
+        workflow_id: str,
+        run_id: str,
+        *,
+        page_size: Optional[int] = None,
+        cursor: Optional[str] = None,
+    ) -> Page[WorkflowRunStep]:
+        """List workflow run steps.
+
+        Lists observed visits and attempts in execution order with current delivery evidence.
+
+        Scope: `workflows:read`.
+
+        Args:
+            page_size: Items per page.
+            cursor: `next_cursor` from the previous page. Use it unchanged.
+        """
+        return cast(Page[WorkflowRunStep], self._request(
+            "GET",
+            "/workflows/{workflow_id}/runs/{run_id}/steps",
+            path_parameters={"workflow_id": workflow_id, "run_id": run_id},
+            query={"page_size": page_size, "cursor": cursor},
+        ))
+
+    def list_workflow_run_summaries(
+        self,
+        *,
+        page_size: Optional[int] = None,
+        cursor: Optional[str] = None,
+        workflow_ids: Optional[str] = None,
+    ) -> Page[WorkflowRunSummary]:
+        """List workflow run summaries.
+
+        Returns history coverage, the latest root run and the number of root runs that finished with a failure in the last seven days. Use status=failed with failure_window to open the counted list.
+
+        Scope: `workflows:read`.
+
+        Args:
+            page_size: Items per page.
+            cursor: `next_cursor` from the previous page. Use it unchanged.
+            workflow_ids: Comma-separated workflow IDs.
+        """
+        return cast(Page[WorkflowRunSummary], self._request(
+            "GET",
+            "/workflow-run-summaries",
+            query={"page_size": page_size, "cursor": cursor, "workflow_ids": workflow_ids},
         ))
 
     def upload_workflow_header_media(
@@ -3898,6 +4000,104 @@ class AsyncOperations:
             body=body,
             idempotent=True,
             idempotency_key=idempotency_key,
+        ))
+
+    async def list_workflow_runs(
+        self,
+        workflow_id: str,
+        *,
+        page_size: Optional[int] = None,
+        cursor: Optional[str] = None,
+        finished_since: Optional[str] = None,
+        finished_until: Optional[str] = None,
+        since: Optional[str] = None,
+        until: Optional[str] = None,
+        status: Optional[Literal["queued", "running", "waiting", "retrying", "completed", "skipped", "failed", "cancelled"]] = None,
+        conversation_id: Optional[str] = None,
+        version_id: Optional[str] = None,
+        batch_run_id: Optional[str] = None,
+    ) -> Resource[WorkflowRunPage]:
+        """List workflow runs.
+
+        Lists root runs in descending queue order. since/until filter queue time and finished_since/finished_until filter effective finish time. Both intervals include the start and exclude the end. Chat and batch filters include members.
+
+        Scope: `workflows:read`.
+
+        Args:
+            page_size: Items per page.
+            cursor: `next_cursor` from the previous page. Use it unchanged.
+        """
+        return cast(Resource[WorkflowRunPage], await self._request(
+            "GET",
+            "/workflows/{workflow_id}/runs",
+            path_parameters={"workflow_id": workflow_id},
+            query={"page_size": page_size, "cursor": cursor, "finished_since": finished_since, "finished_until": finished_until, "since": since, "until": until, "status": status, "conversation_id": conversation_id, "version_id": version_id, "batch_run_id": batch_run_id},
+        ))
+
+    async def get_workflow_run(
+        self,
+        workflow_id: str,
+        run_id: str,
+    ) -> Resource[WorkflowRun]:
+        """Read a workflow run.
+
+        Returns the pinned version, timing, outcome and batch totals.
+
+        Scope: `workflows:read`.
+        """
+        return cast(Resource[WorkflowRun], await self._request(
+            "GET",
+            "/workflows/{workflow_id}/runs/{run_id}",
+            path_parameters={"workflow_id": workflow_id, "run_id": run_id},
+        ))
+
+    async def list_workflow_run_steps(
+        self,
+        workflow_id: str,
+        run_id: str,
+        *,
+        page_size: Optional[int] = None,
+        cursor: Optional[str] = None,
+    ) -> Page[WorkflowRunStep]:
+        """List workflow run steps.
+
+        Lists observed visits and attempts in execution order with current delivery evidence.
+
+        Scope: `workflows:read`.
+
+        Args:
+            page_size: Items per page.
+            cursor: `next_cursor` from the previous page. Use it unchanged.
+        """
+        return cast(Page[WorkflowRunStep], await self._request(
+            "GET",
+            "/workflows/{workflow_id}/runs/{run_id}/steps",
+            path_parameters={"workflow_id": workflow_id, "run_id": run_id},
+            query={"page_size": page_size, "cursor": cursor},
+        ))
+
+    async def list_workflow_run_summaries(
+        self,
+        *,
+        page_size: Optional[int] = None,
+        cursor: Optional[str] = None,
+        workflow_ids: Optional[str] = None,
+    ) -> Page[WorkflowRunSummary]:
+        """List workflow run summaries.
+
+        Returns history coverage, the latest root run and the number of root runs that finished with a failure in the last seven days. Use status=failed with failure_window to open the counted list.
+
+        Scope: `workflows:read`.
+
+        Args:
+            page_size: Items per page.
+            cursor: `next_cursor` from the previous page. Use it unchanged.
+            workflow_ids: Comma-separated workflow IDs.
+        """
+        return cast(Page[WorkflowRunSummary], await self._request(
+            "GET",
+            "/workflow-run-summaries",
+            query={"page_size": page_size, "cursor": cursor, "workflow_ids": workflow_ids},
         ))
 
     async def upload_workflow_header_media(
