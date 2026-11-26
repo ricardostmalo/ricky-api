@@ -4027,7 +4027,7 @@
           "Workflows"
         ],
         "summary": "List workflows",
-        "description": "Every workflow of the organization with its definition, last changed first.\n\nScope: `workflows:read`.",
+        "description": "Workflows representable by this API, last changed first. omitted_count counts published workflows that require a newer operation.\n\nScope: `workflows:read`.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -4051,6 +4051,7 @@
                   "type": "object",
                   "required": [
                     "data",
+                    "omitted_count",
                     "next_cursor"
                   ],
                   "properties": {
@@ -4059,6 +4060,10 @@
                       "items": {
                         "$ref": "#/components/schemas/Workflow"
                       }
+                    },
+                    "omitted_count": {
+                      "type": "integer",
+                      "minimum": 0
                     },
                     "next_cursor": {
                       "type": [

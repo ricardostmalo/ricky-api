@@ -552,7 +552,7 @@ export class RickyApi extends HeyApiClient {
     /**
      * List workflows
      *
-     * Every workflow of the organization with its definition, last changed first.
+     * Workflows representable by this API, last changed first. omitted_count counts published workflows that require a newer operation.
      *
      * Scope: `workflows:read`.
      */

@@ -8936,6 +8936,7 @@ export type ListWorkflowsResponses = {
      */
     200: {
         data: Array<Workflow>;
+        omitted_count: number;
         /**
          * Pass as `cursor` for the next page; null on the last page.
          */
