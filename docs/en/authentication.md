@@ -126,6 +126,10 @@ The table below is generated from the API contract: it is the exact list of oper
 | [List published versions](https://getricky.ai/en/docs/api/reference/workflows/list-workflow-versions) | `GET /workflows/{workflow_id}/versions` | `workflows:read` |
 | [Read a published version](https://getricky.ai/en/docs/api/reference/workflows/get-workflow-version) | `GET /workflows/{workflow_id}/versions/{version_id}` | `workflows:read` |
 | [Restore a version to the draft](https://getricky.ai/en/docs/api/reference/workflows/restore-workflow-version-to-draft) | `POST /workflows/{workflow_id}/versions/{version_id}/restore` | `workflows:write` |
+| [List workflow runs](https://getricky.ai/en/docs/api/reference/workflows/list-workflow-runs) | `GET /workflows/{workflow_id}/runs` | `workflows:read` |
+| [Read a workflow run](https://getricky.ai/en/docs/api/reference/workflows/get-workflow-run) | `GET /workflows/{workflow_id}/runs/{run_id}` | `workflows:read` |
+| [List workflow run steps](https://getricky.ai/en/docs/api/reference/workflows/list-workflow-run-steps) | `GET /workflows/{workflow_id}/runs/{run_id}/steps` | `workflows:read` |
+| [List workflow run summaries](https://getricky.ai/en/docs/api/reference/workflows/list-workflow-run-summaries) | `GET /workflow-run-summaries` | `workflows:read` |
 | [Set the header file of a scheduled workflow](https://getricky.ai/en/docs/api/reference/workflows/upload-workflow-header-media) | `POST /workflows/{workflow_id}/header-media` | `workflows:write` |
 | [Preview appointment reminders](https://getricky.ai/en/docs/api/reference/workflows/preview-workflow-reminders) | `GET /workflows/{workflow_id}/reminders/preview` | `workflows:read` |
 | [Get appointment reminder history](https://getricky.ai/en/docs/api/reference/workflows/get-workflow-reminder-history) | `GET /workflows/{workflow_id}/reminders/history` | `workflows:read` |

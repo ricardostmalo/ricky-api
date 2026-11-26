@@ -5184,7 +5184,7 @@
           "Workflows"
         ],
         "summary": "Create a shared draft",
-        "description": "Creates a canvas draft. The name and definition may be empty.\n\nScope: `workflows:write`.",
+        "description": "Creates a canvas draft. The name and definition may be empty. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete.\n\nScope: `workflows:write`.",
         "parameters": [
           {
             "$ref": "#/components/parameters/IdempotencyKey"
@@ -5467,7 +5467,7 @@
           "Workflows"
         ],
         "summary": "Save a shared draft",
-        "description": "Replaces the partial definition, up to 256 KiB and 32 levels. Copy the observed revision, head and candidate token. After reviewing a conflict, overwrite adopts the observed head. Saving never publishes.\n\nScope: `workflows:write`.",
+        "description": "Replaces the partial definition, up to 256 KiB and 32 levels. Copy the observed revision, head and candidate token. After reviewing a conflict, overwrite adopts the observed head. Saving never publishes. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete.\n\nScope: `workflows:write`.",
         "parameters": [
           {
             "name": "workflow_id",
@@ -31103,6 +31103,9 @@
                 }
               }
             },
+            "required": [
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
@@ -31134,6 +31137,10 @@
                 }
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -31198,6 +31205,10 @@
                 }
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -31225,6 +31236,10 @@
                 }
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -31256,6 +31271,10 @@
                 }
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -31294,6 +31313,10 @@
                 }
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -31328,6 +31351,10 @@
                 }
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -31349,6 +31376,10 @@
                 ]
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -31415,6 +31446,10 @@
                 "additionalProperties": false
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -31446,6 +31481,10 @@
                 "type": "string"
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -31470,6 +31509,10 @@
                 "type": "string"
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           }
         ]
@@ -31480,7 +31523,8 @@
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -31496,13 +31540,18 @@
                 ]
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -31521,13 +31570,18 @@
                 "type": "string"
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -31547,13 +31601,18 @@
                 "type": "string"
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -31575,13 +31634,18 @@
                 }
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -31618,13 +31682,18 @@
                 }
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -31679,13 +31748,18 @@
                 ]
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -31701,13 +31775,18 @@
                 "type": "number"
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -31723,13 +31802,18 @@
                 "type": "boolean"
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -31819,6 +31903,10 @@
                 "additionalProperties": false
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           }
         ]
@@ -39855,6 +39943,9 @@
                 }
               }
             },
+            "required": [
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
@@ -39886,6 +39977,10 @@
                 }
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -39950,6 +40045,10 @@
                 }
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -39977,6 +40076,10 @@
                 }
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -40008,6 +40111,10 @@
                 }
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -40046,6 +40153,10 @@
                 }
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -40080,6 +40191,10 @@
                 }
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -40101,6 +40216,10 @@
                 ]
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -40167,6 +40286,10 @@
                 "additionalProperties": false
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -40198,6 +40321,10 @@
                 "type": "string"
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           },
           {
@@ -40222,6 +40349,10 @@
                 "type": "string"
               }
             },
+            "required": [
+              "kind",
+              "field"
+            ],
             "additionalProperties": false
           }
         ]
@@ -40232,7 +40363,8 @@
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -40248,13 +40380,18 @@
                 ]
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -40273,13 +40410,18 @@
                 "type": "string"
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -40299,13 +40441,18 @@
                 "type": "string"
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -40327,13 +40474,18 @@
                 }
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -40370,13 +40522,18 @@
                 }
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -40431,13 +40588,18 @@
                 ]
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -40453,13 +40615,18 @@
                 "type": "number"
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -40475,13 +40642,18 @@
                 "type": "boolean"
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           },
           {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "pattern": "\\S"
               },
               "next": {
                 "type": [
@@ -40571,6 +40743,10 @@
                 "additionalProperties": false
               }
             },
+            "required": [
+              "id",
+              "kind"
+            ],
             "additionalProperties": false
           }
         ]

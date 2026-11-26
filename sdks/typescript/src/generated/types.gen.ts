@@ -4145,16 +4145,16 @@ export type RenamedWorkflowIdentity = {
 };
 
 export type WorkflowDraftCondition = {
-    kind?: 'all' | 'any';
+    kind: 'all' | 'any';
     conditions?: Array<WorkflowDraftCondition>;
 } | {
-    kind?: 'compare';
-    field?: 'ai';
+    kind: 'compare';
+    field: 'ai';
     operator?: 'is' | 'is_not';
     values?: Array<'on' | 'off'>;
 } | {
-    kind?: 'compare';
-    field?: 'assignee';
+    kind: 'compare';
+    field: 'assignee';
     operator?: 'is' | 'is_not';
     values?: Array<{
         kind?: 'agent';
@@ -4166,32 +4166,32 @@ export type WorkflowDraftCondition = {
         kind?: 'nobody';
     }>;
 } | {
-    kind?: 'compare';
-    field?: 'channel';
+    kind: 'compare';
+    field: 'channel';
     operator?: 'is' | 'is_not';
     values?: Array<string>;
 } | {
-    kind?: 'compare';
-    field?: 'conversation_status';
+    kind: 'compare';
+    field: 'conversation_status';
     operator?: 'is' | 'is_not';
     values?: Array<'open' | 'closed'>;
 } | {
-    kind?: 'compare';
-    field?: 'message_type';
+    kind: 'compare';
+    field: 'message_type';
     operator?: 'is' | 'is_not';
     values?: Array<'text' | 'button' | 'image' | 'audio' | 'video' | 'document' | 'location' | 'sticker' | 'other'>;
 } | {
-    kind?: 'compare';
-    field?: 'message_sender';
+    kind: 'compare';
+    field: 'message_sender';
     operator?: 'is' | 'is_not';
     values?: Array<'person' | 'ai' | 'automation' | 'broadcast' | 'external_app'>;
 } | {
-    kind?: 'compare';
-    field?: 'message_first';
+    kind: 'compare';
+    field: 'message_first';
     operator?: 'is' | 'is_not';
 } | {
-    kind?: 'compare';
-    field?: 'time';
+    kind: 'compare';
+    field: 'time';
     operator?: 'within' | 'outside';
     business_hours?: {
         timezone?: string;
@@ -4204,42 +4204,42 @@ export type WorkflowDraftCondition = {
         };
     };
 } | {
-    kind?: 'compare';
-    field?: 'variable';
+    kind: 'compare';
+    field: 'variable';
     operator?: 'is' | 'is_not' | 'contains' | 'not_contains' | 'exists' | 'not_exists';
     name?: string;
     value?: string;
 } | {
-    kind?: 'compare';
-    field?: 'message_text';
+    kind: 'compare';
+    field: 'message_text';
     operator?: 'contains' | 'not_contains';
     value?: string;
 };
 
 export type WorkflowDraftStep = {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'end' | 'turn_off_ai';
+    kind: 'end' | 'turn_off_ai';
 } | {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'send_message' | 'decline_call';
+    kind: 'send_message' | 'decline_call';
     text?: string;
 } | {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'assign_agent' | 'turn_on_ai' | 'answer_call';
+    kind: 'assign_agent' | 'turn_on_ai' | 'answer_call';
     agent_id?: string;
 } | {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'assign_user';
+    kind: 'assign_user';
     user_id?: string;
     user_ids?: Array<string>;
 } | {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'decision';
+    kind: 'decision';
     branches?: Array<{
         id?: string;
         name?: string;
@@ -4247,9 +4247,9 @@ export type WorkflowDraftStep = {
         next?: string | null;
     }>;
 } | {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'ask_question';
+    kind: 'ask_question';
     text?: string;
     answer_key?: string;
     choices?: Array<{
@@ -4261,19 +4261,19 @@ export type WorkflowDraftStep = {
     on_invalid?: string | null;
     on_timeout?: string | null;
 } | {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'wait';
+    kind: 'wait';
     seconds?: number;
 } | {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'close_conversation';
+    kind: 'close_conversation';
     only_if_opened_by_send?: boolean;
 } | {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'send_whatsapp_template';
+    kind: 'send_whatsapp_template';
     template?: {
         id?: string;
         next?: string | null;
@@ -6923,16 +6923,16 @@ export type UpdateTemplate = {
 };
 
 export type WorkflowDraftConditionInput = {
-    kind?: 'all' | 'any';
+    kind: 'all' | 'any';
     conditions?: Array<WorkflowDraftConditionInput>;
 } | {
-    kind?: 'compare';
-    field?: 'ai';
+    kind: 'compare';
+    field: 'ai';
     operator?: 'is' | 'is_not';
     values?: Array<'on' | 'off'>;
 } | {
-    kind?: 'compare';
-    field?: 'assignee';
+    kind: 'compare';
+    field: 'assignee';
     operator?: 'is' | 'is_not';
     values?: Array<{
         kind?: 'agent';
@@ -6944,32 +6944,32 @@ export type WorkflowDraftConditionInput = {
         kind?: 'nobody';
     }>;
 } | {
-    kind?: 'compare';
-    field?: 'channel';
+    kind: 'compare';
+    field: 'channel';
     operator?: 'is' | 'is_not';
     values?: Array<string>;
 } | {
-    kind?: 'compare';
-    field?: 'conversation_status';
+    kind: 'compare';
+    field: 'conversation_status';
     operator?: 'is' | 'is_not';
     values?: Array<'open' | 'closed'>;
 } | {
-    kind?: 'compare';
-    field?: 'message_type';
+    kind: 'compare';
+    field: 'message_type';
     operator?: 'is' | 'is_not';
     values?: Array<'text' | 'button' | 'image' | 'audio' | 'video' | 'document' | 'location' | 'sticker' | 'other'>;
 } | {
-    kind?: 'compare';
-    field?: 'message_sender';
+    kind: 'compare';
+    field: 'message_sender';
     operator?: 'is' | 'is_not';
     values?: Array<'person' | 'ai' | 'automation' | 'broadcast' | 'external_app'>;
 } | {
-    kind?: 'compare';
-    field?: 'message_first';
+    kind: 'compare';
+    field: 'message_first';
     operator?: 'is' | 'is_not';
 } | {
-    kind?: 'compare';
-    field?: 'time';
+    kind: 'compare';
+    field: 'time';
     operator?: 'within' | 'outside';
     business_hours?: {
         timezone?: string;
@@ -6982,42 +6982,42 @@ export type WorkflowDraftConditionInput = {
         };
     };
 } | {
-    kind?: 'compare';
-    field?: 'variable';
+    kind: 'compare';
+    field: 'variable';
     operator?: 'is' | 'is_not' | 'contains' | 'not_contains' | 'exists' | 'not_exists';
     name?: string;
     value?: string;
 } | {
-    kind?: 'compare';
-    field?: 'message_text';
+    kind: 'compare';
+    field: 'message_text';
     operator?: 'contains' | 'not_contains';
     value?: string;
 };
 
 export type WorkflowDraftStepInput = {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'end' | 'turn_off_ai';
+    kind: 'end' | 'turn_off_ai';
 } | {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'send_message' | 'decline_call';
+    kind: 'send_message' | 'decline_call';
     text?: string;
 } | {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'assign_agent' | 'turn_on_ai' | 'answer_call';
+    kind: 'assign_agent' | 'turn_on_ai' | 'answer_call';
     agent_id?: string;
 } | {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'assign_user';
+    kind: 'assign_user';
     user_id?: string;
     user_ids?: Array<string>;
 } | {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'decision';
+    kind: 'decision';
     branches?: Array<{
         id?: string;
         name?: string;
@@ -7025,9 +7025,9 @@ export type WorkflowDraftStepInput = {
         next?: string | null;
     }>;
 } | {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'ask_question';
+    kind: 'ask_question';
     text?: string;
     answer_key?: string;
     choices?: Array<{
@@ -7039,19 +7039,19 @@ export type WorkflowDraftStepInput = {
     on_invalid?: string | null;
     on_timeout?: string | null;
 } | {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'wait';
+    kind: 'wait';
     seconds?: number;
 } | {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'close_conversation';
+    kind: 'close_conversation';
     only_if_opened_by_send?: boolean;
 } | {
-    id?: string;
+    id: string;
     next?: string | null;
-    kind?: 'send_whatsapp_template';
+    kind: 'send_whatsapp_template';
     template?: {
         id?: string;
         next?: string | null;

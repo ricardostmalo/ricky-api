@@ -4595,8 +4595,8 @@ class RenamedWorkflowIdentity(TypedDict):
 
 
 class WorkflowDraftConditionWorkflowDraftCondition1(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["ai"]]
+    kind: Literal["compare"]
+    field: Literal["ai"]
     operator: NotRequired[Literal["is", "is_not"]]
     values: NotRequired[List[Literal["on", "off"]]]
 
@@ -4616,43 +4616,43 @@ class WorkflowDraftConditionWorkflowDraftCondition2Values2(TypedDict, closed=Tru
 
 
 class WorkflowDraftConditionWorkflowDraftCondition2(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["assignee"]]
+    kind: Literal["compare"]
+    field: Literal["assignee"]
     operator: NotRequired[Literal["is", "is_not"]]
     values: NotRequired[List[Union[WorkflowDraftConditionWorkflowDraftCondition2Values, WorkflowDraftConditionWorkflowDraftCondition2Values1, WorkflowDraftConditionWorkflowDraftCondition2Values2]]]
 
 
 class WorkflowDraftConditionWorkflowDraftCondition3(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["channel"]]
+    kind: Literal["compare"]
+    field: Literal["channel"]
     operator: NotRequired[Literal["is", "is_not"]]
     values: NotRequired[List[str]]
 
 
 class WorkflowDraftConditionWorkflowDraftCondition4(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["conversation_status"]]
+    kind: Literal["compare"]
+    field: Literal["conversation_status"]
     operator: NotRequired[Literal["is", "is_not"]]
     values: NotRequired[List[Literal["open", "closed"]]]
 
 
 class WorkflowDraftConditionWorkflowDraftCondition5(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["message_type"]]
+    kind: Literal["compare"]
+    field: Literal["message_type"]
     operator: NotRequired[Literal["is", "is_not"]]
     values: NotRequired[List[Literal["text", "button", "image", "audio", "video", "document", "location", "sticker", "other"]]]
 
 
 class WorkflowDraftConditionWorkflowDraftCondition6(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["message_sender"]]
+    kind: Literal["compare"]
+    field: Literal["message_sender"]
     operator: NotRequired[Literal["is", "is_not"]]
     values: NotRequired[List[Literal["person", "ai", "automation", "broadcast", "external_app"]]]
 
 
 class WorkflowDraftConditionWorkflowDraftCondition7(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["message_first"]]
+    kind: Literal["compare"]
+    field: Literal["message_first"]
     operator: NotRequired[Literal["is", "is_not"]]
 
 
@@ -4668,51 +4668,51 @@ class WorkflowDraftConditionWorkflowDraftCondition8BusinessHours(TypedDict, clos
 
 
 class WorkflowDraftConditionWorkflowDraftCondition8(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["time"]]
+    kind: Literal["compare"]
+    field: Literal["time"]
     operator: NotRequired[Literal["within", "outside"]]
     business_hours: NotRequired[WorkflowDraftConditionWorkflowDraftCondition8BusinessHours]
 
 
 class WorkflowDraftConditionWorkflowDraftCondition9(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["variable"]]
+    kind: Literal["compare"]
+    field: Literal["variable"]
     operator: NotRequired[Literal["is", "is_not", "contains", "not_contains", "exists", "not_exists"]]
     name: NotRequired[str]
     value: NotRequired[str]
 
 
 class WorkflowDraftConditionWorkflowDraftCondition10(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["message_text"]]
+    kind: Literal["compare"]
+    field: Literal["message_text"]
     operator: NotRequired[Literal["contains", "not_contains"]]
     value: NotRequired[str]
 
 
 class WorkflowDraftStepWorkflowDraftStep(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["end", "turn_off_ai"]]
+    kind: Literal["end", "turn_off_ai"]
 
 
 class WorkflowDraftStepWorkflowDraftStep1(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["send_message", "decline_call"]]
+    kind: Literal["send_message", "decline_call"]
     text: NotRequired[str]
 
 
 class WorkflowDraftStepWorkflowDraftStep2(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["assign_agent", "turn_on_ai", "answer_call"]]
+    kind: Literal["assign_agent", "turn_on_ai", "answer_call"]
     agent_id: NotRequired[str]
 
 
 class WorkflowDraftStepWorkflowDraftStep3(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["assign_user"]]
+    kind: Literal["assign_user"]
     user_id: NotRequired[str]
     user_ids: NotRequired[List[str]]
 
@@ -4724,9 +4724,9 @@ class WorkflowDraftStepWorkflowDraftStep5Choice(TypedDict, closed=True):
 
 
 class WorkflowDraftStepWorkflowDraftStep5(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["ask_question"]]
+    kind: Literal["ask_question"]
     text: NotRequired[str]
     answer_key: NotRequired[str]
     choices: NotRequired[List[WorkflowDraftStepWorkflowDraftStep5Choice]]
@@ -4736,16 +4736,16 @@ class WorkflowDraftStepWorkflowDraftStep5(TypedDict, closed=True):
 
 
 class WorkflowDraftStepWorkflowDraftStep6(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["wait"]]
+    kind: Literal["wait"]
     seconds: NotRequired[float]
 
 
 class WorkflowDraftStepWorkflowDraftStep7(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["close_conversation"]]
+    kind: Literal["close_conversation"]
     only_if_opened_by_send: NotRequired[bool]
 
 
@@ -4773,9 +4773,9 @@ class WorkflowDraftStepWorkflowDraftStep8Template(TypedDict, closed=True):
 
 
 class WorkflowDraftStepWorkflowDraftStep8(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["send_whatsapp_template"]]
+    kind: Literal["send_whatsapp_template"]
     template: NotRequired[WorkflowDraftStepWorkflowDraftStep8Template]
 
 
@@ -7826,8 +7826,8 @@ class UpdateTemplate(TypedDict, closed=True):
 
 
 class WorkflowDraftConditionInputWorkflowDraftConditionInput1(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["ai"]]
+    kind: Literal["compare"]
+    field: Literal["ai"]
     operator: NotRequired[Literal["is", "is_not"]]
     values: NotRequired[List[Literal["on", "off"]]]
 
@@ -7847,43 +7847,43 @@ class WorkflowDraftConditionInputWorkflowDraftConditionInput2Values2(TypedDict, 
 
 
 class WorkflowDraftConditionInputWorkflowDraftConditionInput2(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["assignee"]]
+    kind: Literal["compare"]
+    field: Literal["assignee"]
     operator: NotRequired[Literal["is", "is_not"]]
     values: NotRequired[List[Union[WorkflowDraftConditionInputWorkflowDraftConditionInput2Values, WorkflowDraftConditionInputWorkflowDraftConditionInput2Values1, WorkflowDraftConditionInputWorkflowDraftConditionInput2Values2]]]
 
 
 class WorkflowDraftConditionInputWorkflowDraftConditionInput3(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["channel"]]
+    kind: Literal["compare"]
+    field: Literal["channel"]
     operator: NotRequired[Literal["is", "is_not"]]
     values: NotRequired[List[str]]
 
 
 class WorkflowDraftConditionInputWorkflowDraftConditionInput4(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["conversation_status"]]
+    kind: Literal["compare"]
+    field: Literal["conversation_status"]
     operator: NotRequired[Literal["is", "is_not"]]
     values: NotRequired[List[Literal["open", "closed"]]]
 
 
 class WorkflowDraftConditionInputWorkflowDraftConditionInput5(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["message_type"]]
+    kind: Literal["compare"]
+    field: Literal["message_type"]
     operator: NotRequired[Literal["is", "is_not"]]
     values: NotRequired[List[Literal["text", "button", "image", "audio", "video", "document", "location", "sticker", "other"]]]
 
 
 class WorkflowDraftConditionInputWorkflowDraftConditionInput6(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["message_sender"]]
+    kind: Literal["compare"]
+    field: Literal["message_sender"]
     operator: NotRequired[Literal["is", "is_not"]]
     values: NotRequired[List[Literal["person", "ai", "automation", "broadcast", "external_app"]]]
 
 
 class WorkflowDraftConditionInputWorkflowDraftConditionInput7(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["message_first"]]
+    kind: Literal["compare"]
+    field: Literal["message_first"]
     operator: NotRequired[Literal["is", "is_not"]]
 
 
@@ -7899,51 +7899,51 @@ class WorkflowDraftConditionInputWorkflowDraftConditionInput8BusinessHours(Typed
 
 
 class WorkflowDraftConditionInputWorkflowDraftConditionInput8(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["time"]]
+    kind: Literal["compare"]
+    field: Literal["time"]
     operator: NotRequired[Literal["within", "outside"]]
     business_hours: NotRequired[WorkflowDraftConditionInputWorkflowDraftConditionInput8BusinessHours]
 
 
 class WorkflowDraftConditionInputWorkflowDraftConditionInput9(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["variable"]]
+    kind: Literal["compare"]
+    field: Literal["variable"]
     operator: NotRequired[Literal["is", "is_not", "contains", "not_contains", "exists", "not_exists"]]
     name: NotRequired[str]
     value: NotRequired[str]
 
 
 class WorkflowDraftConditionInputWorkflowDraftConditionInput10(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["message_text"]]
+    kind: Literal["compare"]
+    field: Literal["message_text"]
     operator: NotRequired[Literal["contains", "not_contains"]]
     value: NotRequired[str]
 
 
 class WorkflowDraftStepInputWorkflowDraftStepInput(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["end", "turn_off_ai"]]
+    kind: Literal["end", "turn_off_ai"]
 
 
 class WorkflowDraftStepInputWorkflowDraftStepInput1(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["send_message", "decline_call"]]
+    kind: Literal["send_message", "decline_call"]
     text: NotRequired[str]
 
 
 class WorkflowDraftStepInputWorkflowDraftStepInput2(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["assign_agent", "turn_on_ai", "answer_call"]]
+    kind: Literal["assign_agent", "turn_on_ai", "answer_call"]
     agent_id: NotRequired[str]
 
 
 class WorkflowDraftStepInputWorkflowDraftStepInput3(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["assign_user"]]
+    kind: Literal["assign_user"]
     user_id: NotRequired[str]
     user_ids: NotRequired[List[str]]
 
@@ -7955,9 +7955,9 @@ class WorkflowDraftStepInputWorkflowDraftStepInput5Choice(TypedDict, closed=True
 
 
 class WorkflowDraftStepInputWorkflowDraftStepInput5(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["ask_question"]]
+    kind: Literal["ask_question"]
     text: NotRequired[str]
     answer_key: NotRequired[str]
     choices: NotRequired[List[WorkflowDraftStepInputWorkflowDraftStepInput5Choice]]
@@ -7967,16 +7967,16 @@ class WorkflowDraftStepInputWorkflowDraftStepInput5(TypedDict, closed=True):
 
 
 class WorkflowDraftStepInputWorkflowDraftStepInput6(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["wait"]]
+    kind: Literal["wait"]
     seconds: NotRequired[float]
 
 
 class WorkflowDraftStepInputWorkflowDraftStepInput7(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["close_conversation"]]
+    kind: Literal["close_conversation"]
     only_if_opened_by_send: NotRequired[bool]
 
 
@@ -8004,9 +8004,9 @@ class WorkflowDraftStepInputWorkflowDraftStepInput8Template(TypedDict, closed=Tr
 
 
 class WorkflowDraftStepInputWorkflowDraftStepInput8(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["send_whatsapp_template"]]
+    kind: Literal["send_whatsapp_template"]
     template: NotRequired[WorkflowDraftStepInputWorkflowDraftStepInput8Template]
 
 
@@ -8168,7 +8168,7 @@ class Workflow(TypedDict):
 
 
 class WorkflowDraftConditionWorkflowDraftCondition(TypedDict, closed=True):
-    kind: NotRequired[Literal["all", "any"]]
+    kind: Literal["all", "any"]
     conditions: NotRequired[List[WorkflowDraftCondition]]
 
 
@@ -8195,9 +8195,9 @@ class WorkflowDraftStepWorkflowDraftStep4Branch(TypedDict, closed=True):
 
 
 class WorkflowDraftStepWorkflowDraftStep4(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["decision"]]
+    kind: Literal["decision"]
     branches: NotRequired[List[WorkflowDraftStepWorkflowDraftStep4Branch]]
 
 
@@ -8503,7 +8503,7 @@ class UpdateWorkflow(TypedDict, closed=True):
 
 
 class WorkflowDraftConditionInputWorkflowDraftConditionInput(TypedDict, closed=True):
-    kind: NotRequired[Literal["all", "any"]]
+    kind: Literal["all", "any"]
     conditions: NotRequired[List[WorkflowDraftConditionInput]]
 
 
@@ -8530,9 +8530,9 @@ class WorkflowDraftStepInputWorkflowDraftStepInput4Branch(TypedDict, closed=True
 
 
 class WorkflowDraftStepInputWorkflowDraftStepInput4(TypedDict, closed=True):
-    id: NotRequired[str]
+    id: str
     next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["decision"]]
+    kind: Literal["decision"]
     branches: NotRequired[List[WorkflowDraftStepInputWorkflowDraftStepInput4Branch]]
 
 

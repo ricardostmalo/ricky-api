@@ -704,7 +704,7 @@ export class RickyApi extends HeyApiClient {
     /**
      * Create a shared draft
      *
-     * Creates a canvas draft. The name and definition may be empty.
+     * Creates a canvas draft. The name and definition may be empty. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete.
      *
      * Scope: `workflows:write`.
      */
@@ -740,7 +740,7 @@ export class RickyApi extends HeyApiClient {
     /**
      * Save a shared draft
      *
-     * Replaces the partial definition, up to 256 KiB and 32 levels. Copy the observed revision, head and candidate token. After reviewing a conflict, overwrite adopts the observed head. Saving never publishes.
+     * Replaces the partial definition, up to 256 KiB and 32 levels. Copy the observed revision, head and candidate token. After reviewing a conflict, overwrite adopts the observed head. Saving never publishes. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete.
      *
      * Scope: `workflows:write`.
      */

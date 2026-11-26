@@ -126,6 +126,10 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Listar versiones publicadas](https://getricky.ai/docs/api/reference/workflows/list-workflow-versions) | `GET /workflows/{workflow_id}/versions` | `workflows:read` |
 | [Leer una versión publicada](https://getricky.ai/docs/api/reference/workflows/get-workflow-version) | `GET /workflows/{workflow_id}/versions/{version_id}` | `workflows:read` |
 | [Restaurar una versión al borrador](https://getricky.ai/docs/api/reference/workflows/restore-workflow-version-to-draft) | `POST /workflows/{workflow_id}/versions/{version_id}/restore` | `workflows:write` |
+| [Listar ejecuciones](https://getricky.ai/docs/api/reference/workflows/list-workflow-runs) | `GET /workflows/{workflow_id}/runs` | `workflows:read` |
+| [Consultar una ejecución](https://getricky.ai/docs/api/reference/workflows/get-workflow-run) | `GET /workflows/{workflow_id}/runs/{run_id}` | `workflows:read` |
+| [Listar pasos ejecutados](https://getricky.ai/docs/api/reference/workflows/list-workflow-run-steps) | `GET /workflows/{workflow_id}/runs/{run_id}/steps` | `workflows:read` |
+| [Listar resúmenes de ejecuciones](https://getricky.ai/docs/api/reference/workflows/list-workflow-run-summaries) | `GET /workflow-run-summaries` | `workflows:read` |
 | [Definir el archivo del encabezado de una automatización programada](https://getricky.ai/docs/api/reference/workflows/upload-workflow-header-media) | `POST /workflows/{workflow_id}/header-media` | `workflows:write` |
 | [Previsualizar recordatorios de citas](https://getricky.ai/docs/api/reference/workflows/preview-workflow-reminders) | `GET /workflows/{workflow_id}/reminders/preview` | `workflows:read` |
 | [Consultar el historial de recordatorios de citas](https://getricky.ai/docs/api/reference/workflows/get-workflow-reminder-history) | `GET /workflows/{workflow_id}/reminders/history` | `workflows:read` |
