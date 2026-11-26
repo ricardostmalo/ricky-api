@@ -7143,7 +7143,7 @@
           "Workflows"
         ],
         "summary": "List workflow run summaries",
-        "description": "Returns history coverage, the latest root run and the number of root runs that finished with a failure in the last seven days. Use status=failed with failure_window to open the counted list.\n\nScope: `workflows:read`.",
+        "description": "Returns history coverage, the latest root run and the number of root runs that finished with a failure in the last seven days. Use status=failed with failure_window to open the counted list. For a scheduled firing, last_run.occurred_at is its due time and last_run.queued_at is the time it was admitted.\n\nScope: `workflows:read`.",
         "parameters": [
           {
             "name": "page_size",
@@ -33104,6 +33104,18 @@
                     "type": "string",
                     "format": "uuid"
                   },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "single",
+                      "batch"
+                    ]
+                  },
+                  "occurred_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                  },
                   "queued_at": {
                     "type": "string",
                     "format": "date-time",
@@ -33125,6 +33137,8 @@
                 },
                 "required": [
                   "id",
+                  "role",
+                  "occurred_at",
                   "queued_at",
                   "status"
                 ]

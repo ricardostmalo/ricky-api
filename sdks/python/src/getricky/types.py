@@ -4985,6 +4985,8 @@ class WorkflowRunStep(TypedDict):
 
 class WorkflowRunSummaryLastRun(TypedDict):
     id: str
+    role: Literal["single", "batch"]
+    occurred_at: str
     queued_at: str
     status: Literal["queued", "running", "waiting", "retrying", "completed", "skipped", "failed", "cancelled"]
 

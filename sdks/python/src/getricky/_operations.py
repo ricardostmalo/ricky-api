@@ -1179,7 +1179,7 @@ class SyncOperations:
     ) -> Page[WorkflowRunSummary]:
         """List workflow run summaries.
 
-        Returns history coverage, the latest root run and the number of root runs that finished with a failure in the last seven days. Use status=failed with failure_window to open the counted list.
+        Returns history coverage, the latest root run and the number of root runs that finished with a failure in the last seven days. Use status=failed with failure_window to open the counted list. For a scheduled firing, last_run.occurred_at is its due time and last_run.queued_at is the time it was admitted.
 
         Scope: `workflows:read`.
 
@@ -4085,7 +4085,7 @@ class AsyncOperations:
     ) -> Page[WorkflowRunSummary]:
         """List workflow run summaries.
 
-        Returns history coverage, the latest root run and the number of root runs that finished with a failure in the last seven days. Use status=failed with failure_window to open the counted list.
+        Returns history coverage, the latest root run and the number of root runs that finished with a failure in the last seven days. Use status=failed with failure_window to open the counted list. For a scheduled firing, last_run.occurred_at is its due time and last_run.queued_at is the time it was admitted.
 
         Scope: `workflows:read`.
 

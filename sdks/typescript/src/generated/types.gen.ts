@@ -4521,6 +4521,8 @@ export type WorkflowRunSummary = {
     history: WorkflowRunCoverage;
     last_run: {
         id: string;
+        role: 'single' | 'batch';
+        occurred_at: string;
         queued_at: string;
         status: 'queued' | 'running' | 'waiting' | 'retrying' | 'completed' | 'skipped' | 'failed' | 'cancelled';
     } | null;
