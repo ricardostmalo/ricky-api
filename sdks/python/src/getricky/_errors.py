@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 import httpx
 
@@ -20,7 +20,6 @@ class RickyError(Exception):
         param: Optional[str],
         request_id: Optional[str],
         headers: httpx.Headers,
-        current: Optional[Dict[str, Any]] = None,
     ) -> None:
         super().__init__(message)
         self.message = message
@@ -29,7 +28,6 @@ class RickyError(Exception):
         self.param = param
         self.request_id = request_id
         self.headers = headers
-        self.current = current
 
     def __repr__(self) -> str:
         return f"RickyError(status={self.status}, code={self.code!r}, request_id={self.request_id!r})"
@@ -56,7 +54,6 @@ class RickyError(Exception):
             param=text(error.get("param")),
             request_id=text(error.get("request_id")) or response.headers.get("x-request-id"),
             headers=response.headers,
-            current=error.get("current") if isinstance(error.get("current"), dict) else None,
         )
 
 

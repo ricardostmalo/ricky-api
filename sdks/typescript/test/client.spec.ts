@@ -143,23 +143,6 @@ describe('Ricky client', () => {
     assert.equal(error.message, 'invalid_input happened');
   });
 
-  it('exposes the current tokens after a draft conflict', async () => {
-    const current = { revision: '42', head_id: null, candidate_token: null };
-    const { fetch } = fakeFetch(json(409, { error: { code: 'conflict', current } }));
-    const client = new Ricky(API_KEY, { fetch });
-    const error = await client
-      .saveWorkflowDraft({
-        path: { workflow_id: 'x' },
-        body: {
-          document: {},
-          expected: { revision: null, head_id: null },
-        },
-      })
-      .catch((e: unknown) => e);
-    assert.ok(error instanceof RickyError);
-    assert.deepEqual(error.current, current);
-  });
-
   it('reports a non-JSON error with a null code and the X-Request-Id header', async () => {
     const { fetch } = fakeFetch(
       new Response('Bad gateway', { headers: { 'X-Request-Id': 'req_2' }, status: 502 }),

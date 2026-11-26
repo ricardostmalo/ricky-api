@@ -8,12 +8,6 @@ from typing import Any, Dict, List, Literal, Optional, Union
 from typing_extensions import NotRequired, TypeAlias, TypedDict
 
 
-class ErrorErrorCurrent(TypedDict):
-    revision: Optional[str]
-    head_id: Optional[str]
-    candidate_token: Optional[str]
-
-
 class ErrorError(TypedDict):
     code: Literal["invalid_input", "invalid_json", "unauthorized", "insufficient_scope", "forbidden", "not_found", "conflict", "idempotency_conflict", "request_processing", "body_too_large", "unsupported_media_type", "outside_messaging_window", "rule_violation", "rate_limited", "internal_error", "upstream_error", "unavailable"]
     """
@@ -23,7 +17,6 @@ class ErrorError(TypedDict):
     """
     Human-readable explanation. Do not parse it.
     """
-    current: NotRequired[ErrorErrorCurrent]
     param: NotRequired[str]
     """
     The request field or parameter that caused it.
@@ -3923,37 +3916,7 @@ class WorkflowDefinitionFlowSteps(TypedDict):
     """
 
 
-class WorkflowDefinitionFlowSteps1TemplateParameters(TypedDict):
-    text: str
-
-
-class WorkflowDefinitionFlowSteps1Template(TypedDict):
-    channel_id: str
-    template_id: str
-    template_name: str
-    language: str
-    parameters: Dict[str, Union[str, WorkflowDefinitionFlowSteps1TemplateParameters]]
-    has_header_image: bool
-
-
-class WorkflowDefinitionFlowSteps1(TypedDict):
-    """
-    Readable in the complete workflow. Creating or replacing a complete definition through the legacy workflow route rejects this template step.
-    """
-
-    id: str
-    """
-    Step ID: letters, digits, `_` or `-`, up to 64.
-    """
-    next: Optional[str]
-    """
-    Step to run next; null ends the flow.
-    """
-    kind: Literal["send_whatsapp_template"]
-    template: WorkflowDefinitionFlowSteps1Template
-
-
-class WorkflowDefinitionFlowSteps2Choice(TypedDict):
+class WorkflowDefinitionFlowSteps1Choice(TypedDict):
     id: str
     """
     Step ID: letters, digits, `_` or `-`, up to 64.
@@ -3968,7 +3931,7 @@ class WorkflowDefinitionFlowSteps2Choice(TypedDict):
     """
 
 
-class WorkflowDefinitionFlowSteps2(TypedDict):
+class WorkflowDefinitionFlowSteps1(TypedDict):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -3990,7 +3953,7 @@ class WorkflowDefinitionFlowSteps2(TypedDict):
     """
     Name the answer is kept under, for a later `decision` to compare as a `variable`.
     """
-    choices: List[WorkflowDefinitionFlowSteps2Choice]
+    choices: List[WorkflowDefinitionFlowSteps1Choice]
     """
     Buttons or list options, WhatsApp only. Empty for a free-text answer, which goes to `next`.
     """
@@ -4008,7 +3971,7 @@ class WorkflowDefinitionFlowSteps2(TypedDict):
     """
 
 
-class WorkflowDefinitionFlowSteps4(TypedDict):
+class WorkflowDefinitionFlowSteps3(TypedDict):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -4028,7 +3991,7 @@ class WorkflowDefinitionFlowSteps4(TypedDict):
     """
 
 
-class WorkflowDefinitionFlowSteps5(TypedDict):
+class WorkflowDefinitionFlowSteps4(TypedDict):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -4052,7 +4015,7 @@ class WorkflowDefinitionFlowSteps5(TypedDict):
     """
 
 
-class WorkflowDefinitionFlowSteps6(TypedDict):
+class WorkflowDefinitionFlowSteps5(TypedDict):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -4072,7 +4035,7 @@ class WorkflowDefinitionFlowSteps6(TypedDict):
     """
 
 
-class WorkflowDefinitionFlowSteps7(TypedDict):
+class WorkflowDefinitionFlowSteps6(TypedDict):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -4088,7 +4051,7 @@ class WorkflowDefinitionFlowSteps7(TypedDict):
     kind: Literal["close_conversation"]
 
 
-class WorkflowDefinitionFlowSteps8(TypedDict):
+class WorkflowDefinitionFlowSteps7(TypedDict):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -4104,7 +4067,7 @@ class WorkflowDefinitionFlowSteps8(TypedDict):
     kind: Literal["end"]
 
 
-class WorkflowDefinitionFlowSteps9(TypedDict):
+class WorkflowDefinitionFlowSteps8(TypedDict):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -4124,7 +4087,7 @@ class WorkflowDefinitionFlowSteps9(TypedDict):
     """
 
 
-class WorkflowDefinitionFlowSteps10(TypedDict):
+class WorkflowDefinitionFlowSteps9(TypedDict):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -4144,7 +4107,7 @@ class WorkflowDefinitionFlowSteps10(TypedDict):
     """
 
 
-class WorkflowDefinitionFlowSteps11(TypedDict):
+class WorkflowDefinitionFlowSteps10(TypedDict):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -4164,7 +4127,7 @@ class WorkflowDefinitionFlowSteps11(TypedDict):
     """
 
 
-class WorkflowDefinitionFlowSteps12(TypedDict):
+class WorkflowDefinitionFlowSteps11(TypedDict):
     """
     Turns the AI off in the conversation, whoever turned it on.
     """
@@ -4583,282 +4546,6 @@ class WhatsAppNumber(TypedDict):
     """
     The business profile customers see on WhatsApp, as Ricky last read it from Meta.
     """
-
-
-class WorkflowIdentity(TypedDict):
-    id: str
-
-
-class RenamedWorkflowIdentity(TypedDict):
-    id: str
-    name: str
-
-
-class WorkflowDraftConditionWorkflowDraftCondition1(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["ai"]]
-    operator: NotRequired[Literal["is", "is_not"]]
-    values: NotRequired[List[Literal["on", "off"]]]
-
-
-class WorkflowDraftConditionWorkflowDraftCondition2Values(TypedDict, closed=True):
-    kind: NotRequired[Literal["agent"]]
-    agent_id: NotRequired[str]
-
-
-class WorkflowDraftConditionWorkflowDraftCondition2Values1(TypedDict, closed=True):
-    kind: NotRequired[Literal["person"]]
-    user_id: NotRequired[str]
-
-
-class WorkflowDraftConditionWorkflowDraftCondition2Values2(TypedDict, closed=True):
-    kind: NotRequired[Literal["nobody"]]
-
-
-class WorkflowDraftConditionWorkflowDraftCondition2(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["assignee"]]
-    operator: NotRequired[Literal["is", "is_not"]]
-    values: NotRequired[List[Union[WorkflowDraftConditionWorkflowDraftCondition2Values, WorkflowDraftConditionWorkflowDraftCondition2Values1, WorkflowDraftConditionWorkflowDraftCondition2Values2]]]
-
-
-class WorkflowDraftConditionWorkflowDraftCondition3(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["channel"]]
-    operator: NotRequired[Literal["is", "is_not"]]
-    values: NotRequired[List[str]]
-
-
-class WorkflowDraftConditionWorkflowDraftCondition4(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["conversation_status"]]
-    operator: NotRequired[Literal["is", "is_not"]]
-    values: NotRequired[List[Literal["open", "closed"]]]
-
-
-class WorkflowDraftConditionWorkflowDraftCondition5(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["message_type"]]
-    operator: NotRequired[Literal["is", "is_not"]]
-    values: NotRequired[List[Literal["text", "button", "image", "audio", "video", "document", "location", "sticker", "other"]]]
-
-
-class WorkflowDraftConditionWorkflowDraftCondition6(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["message_sender"]]
-    operator: NotRequired[Literal["is", "is_not"]]
-    values: NotRequired[List[Literal["person", "ai", "automation", "broadcast", "external_app"]]]
-
-
-class WorkflowDraftConditionWorkflowDraftCondition7(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["message_first"]]
-    operator: NotRequired[Literal["is", "is_not"]]
-
-
-class WorkflowDraftConditionWorkflowDraftCondition8BusinessHoursDay(TypedDict, closed=True):
-    start: NotRequired[str]
-    end: NotRequired[str]
-
-
-class WorkflowDraftConditionWorkflowDraftCondition8BusinessHours(TypedDict, closed=True):
-    timezone: NotRequired[str]
-    closed_dates: NotRequired[List[str]]
-    days: NotRequired[Dict[Literal["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"], List[WorkflowDraftConditionWorkflowDraftCondition8BusinessHoursDay]]]
-
-
-class WorkflowDraftConditionWorkflowDraftCondition8(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["time"]]
-    operator: NotRequired[Literal["within", "outside"]]
-    business_hours: NotRequired[WorkflowDraftConditionWorkflowDraftCondition8BusinessHours]
-
-
-class WorkflowDraftConditionWorkflowDraftCondition9(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["variable"]]
-    operator: NotRequired[Literal["is", "is_not", "contains", "not_contains", "exists", "not_exists"]]
-    name: NotRequired[str]
-    value: NotRequired[str]
-
-
-class WorkflowDraftConditionWorkflowDraftCondition10(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["message_text"]]
-    operator: NotRequired[Literal["contains", "not_contains"]]
-    value: NotRequired[str]
-
-
-class WorkflowDraftStepWorkflowDraftStep(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["end", "turn_off_ai"]]
-
-
-class WorkflowDraftStepWorkflowDraftStep1(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["send_message", "decline_call"]]
-    text: NotRequired[str]
-
-
-class WorkflowDraftStepWorkflowDraftStep2(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["assign_agent", "turn_on_ai", "answer_call"]]
-    agent_id: NotRequired[str]
-
-
-class WorkflowDraftStepWorkflowDraftStep3(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["assign_user"]]
-    user_id: NotRequired[str]
-    user_ids: NotRequired[List[str]]
-
-
-class WorkflowDraftStepWorkflowDraftStep5Choice(TypedDict, closed=True):
-    id: NotRequired[str]
-    label: NotRequired[str]
-    next: NotRequired[Optional[str]]
-
-
-class WorkflowDraftStepWorkflowDraftStep5(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["ask_question"]]
-    text: NotRequired[str]
-    answer_key: NotRequired[str]
-    choices: NotRequired[List[WorkflowDraftStepWorkflowDraftStep5Choice]]
-    timeout_seconds: NotRequired[float]
-    on_invalid: NotRequired[Optional[str]]
-    on_timeout: NotRequired[Optional[str]]
-
-
-class WorkflowDraftStepWorkflowDraftStep6(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["wait"]]
-    seconds: NotRequired[float]
-
-
-class WorkflowDraftStepWorkflowDraftStep7(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["close_conversation"]]
-    only_if_opened_by_send: NotRequired[bool]
-
-
-class WorkflowDraftStepWorkflowDraftStep8TemplateHeaderMedia(TypedDict, closed=True):
-    file_name: NotRequired[str]
-    mime_type: NotRequired[str]
-    size: NotRequired[float]
-    attachment_id: NotRequired[str]
-
-
-class WorkflowDraftStepWorkflowDraftStep8TemplateParameters(TypedDict, closed=True):
-    text: NotRequired[str]
-
-
-class WorkflowDraftStepWorkflowDraftStep8Template(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["send_whatsapp_template"]]
-    channel_id: NotRequired[str]
-    template_id: NotRequired[str]
-    template_name: NotRequired[str]
-    language: NotRequired[str]
-    header_media: NotRequired[WorkflowDraftStepWorkflowDraftStep8TemplateHeaderMedia]
-    parameters: NotRequired[Dict[str, Union[Literal["appointment_start", "branch_name", "customer_first_name"], WorkflowDraftStepWorkflowDraftStep8TemplateParameters]]]
-
-
-class WorkflowDraftStepWorkflowDraftStep8(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["send_whatsapp_template"]]
-    template: NotRequired[WorkflowDraftStepWorkflowDraftStep8Template]
-
-
-class WorkflowDraftDocumentScheduleTime(TypedDict, closed=True):
-    time: NotRequired[str]
-    weekdays: NotRequired[List[float]]
-
-
-class WorkflowDraftDocumentSchedule(TypedDict, closed=True):
-    timezone: NotRequired[str]
-    times: NotRequired[List[WorkflowDraftDocumentScheduleTime]]
-
-
-class WorkflowDraftSummary(TypedDict):
-    id: str
-    name: str
-    head_id: Optional[str]
-    created_at: str
-
-
-class WorkflowVersionSummary(TypedDict):
-    id: str
-    number: int
-    schema_version: int
-    created_at: str
-    origin: Literal["baseline", "publish", "legacy_write"]
-    via: str
-    actor_user_id: Optional[str]
-    actor_api_key_id: Optional[str]
-
-
-class WorkflowVersionDetailDefinitionTrigger(TypedDict):
-    kind: Literal["daily"]
-    time: str
-    timezone: str
-
-
-class WorkflowVersionDetailDefinitionSource(TypedDict):
-    kind: str
-    days_ahead: NotRequired[float]
-    appointment_states: NotRequired[List[str]]
-
-
-class WorkflowVersionDetailDefinitionFlowStepHeaderMedia(TypedDict, closed=True):
-    file_name: NotRequired[str]
-    mime_type: NotRequired[str]
-    size: NotRequired[float]
-    attachment_id: NotRequired[str]
-
-
-class WorkflowVersionDetailDefinitionFlowStepParameters(TypedDict, closed=True):
-    text: NotRequired[str]
-
-
-class WorkflowVersionDetailDefinitionFlowStep(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["send_whatsapp_template"]]
-    channel_id: NotRequired[str]
-    template_id: NotRequired[str]
-    template_name: NotRequired[str]
-    language: NotRequired[str]
-    header_media: NotRequired[WorkflowVersionDetailDefinitionFlowStepHeaderMedia]
-    parameters: NotRequired[Dict[str, Union[Literal["appointment_start", "branch_name", "customer_first_name"], WorkflowVersionDetailDefinitionFlowStepParameters]]]
-
-
-class WorkflowVersionDetailDefinitionFlow(TypedDict):
-    entry: str
-    steps: List[WorkflowVersionDetailDefinitionFlowStep]
-
-
-class WorkflowVersionDetailDefinition(TypedDict):
-    channels: List[str]
-    trigger: WorkflowVersionDetailDefinitionTrigger
-    source: WorkflowVersionDetailDefinitionSource
-    flow: WorkflowVersionDetailDefinitionFlow
-    close_after_send: NotRequired[bool]
-
-
-class WorkflowPublication(TypedDict):
-    head_id: str
-    number: int
-    status: Literal["active", "paused"]
 
 
 class WorkflowMutationWorkflowMutation(TypedDict):
@@ -7701,221 +7388,6 @@ class UpdateTemplate(TypedDict, closed=True):
     """
 
 
-class WorkflowDraftConditionInputWorkflowDraftConditionInput1(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["ai"]]
-    operator: NotRequired[Literal["is", "is_not"]]
-    values: NotRequired[List[Literal["on", "off"]]]
-
-
-class WorkflowDraftConditionInputWorkflowDraftConditionInput2Values(TypedDict, closed=True):
-    kind: NotRequired[Literal["agent"]]
-    agent_id: NotRequired[str]
-
-
-class WorkflowDraftConditionInputWorkflowDraftConditionInput2Values1(TypedDict, closed=True):
-    kind: NotRequired[Literal["person"]]
-    user_id: NotRequired[str]
-
-
-class WorkflowDraftConditionInputWorkflowDraftConditionInput2Values2(TypedDict, closed=True):
-    kind: NotRequired[Literal["nobody"]]
-
-
-class WorkflowDraftConditionInputWorkflowDraftConditionInput2(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["assignee"]]
-    operator: NotRequired[Literal["is", "is_not"]]
-    values: NotRequired[List[Union[WorkflowDraftConditionInputWorkflowDraftConditionInput2Values, WorkflowDraftConditionInputWorkflowDraftConditionInput2Values1, WorkflowDraftConditionInputWorkflowDraftConditionInput2Values2]]]
-
-
-class WorkflowDraftConditionInputWorkflowDraftConditionInput3(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["channel"]]
-    operator: NotRequired[Literal["is", "is_not"]]
-    values: NotRequired[List[str]]
-
-
-class WorkflowDraftConditionInputWorkflowDraftConditionInput4(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["conversation_status"]]
-    operator: NotRequired[Literal["is", "is_not"]]
-    values: NotRequired[List[Literal["open", "closed"]]]
-
-
-class WorkflowDraftConditionInputWorkflowDraftConditionInput5(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["message_type"]]
-    operator: NotRequired[Literal["is", "is_not"]]
-    values: NotRequired[List[Literal["text", "button", "image", "audio", "video", "document", "location", "sticker", "other"]]]
-
-
-class WorkflowDraftConditionInputWorkflowDraftConditionInput6(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["message_sender"]]
-    operator: NotRequired[Literal["is", "is_not"]]
-    values: NotRequired[List[Literal["person", "ai", "automation", "broadcast", "external_app"]]]
-
-
-class WorkflowDraftConditionInputWorkflowDraftConditionInput7(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["message_first"]]
-    operator: NotRequired[Literal["is", "is_not"]]
-
-
-class WorkflowDraftConditionInputWorkflowDraftConditionInput8BusinessHoursDay(TypedDict, closed=True):
-    start: NotRequired[str]
-    end: NotRequired[str]
-
-
-class WorkflowDraftConditionInputWorkflowDraftConditionInput8BusinessHours(TypedDict, closed=True):
-    timezone: NotRequired[str]
-    closed_dates: NotRequired[List[str]]
-    days: NotRequired[Dict[Literal["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"], List[WorkflowDraftConditionInputWorkflowDraftConditionInput8BusinessHoursDay]]]
-
-
-class WorkflowDraftConditionInputWorkflowDraftConditionInput8(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["time"]]
-    operator: NotRequired[Literal["within", "outside"]]
-    business_hours: NotRequired[WorkflowDraftConditionInputWorkflowDraftConditionInput8BusinessHours]
-
-
-class WorkflowDraftConditionInputWorkflowDraftConditionInput9(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["variable"]]
-    operator: NotRequired[Literal["is", "is_not", "contains", "not_contains", "exists", "not_exists"]]
-    name: NotRequired[str]
-    value: NotRequired[str]
-
-
-class WorkflowDraftConditionInputWorkflowDraftConditionInput10(TypedDict, closed=True):
-    kind: NotRequired[Literal["compare"]]
-    field: NotRequired[Literal["message_text"]]
-    operator: NotRequired[Literal["contains", "not_contains"]]
-    value: NotRequired[str]
-
-
-class WorkflowDraftStepInputWorkflowDraftStepInput(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["end", "turn_off_ai"]]
-
-
-class WorkflowDraftStepInputWorkflowDraftStepInput1(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["send_message", "decline_call"]]
-    text: NotRequired[str]
-
-
-class WorkflowDraftStepInputWorkflowDraftStepInput2(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["assign_agent", "turn_on_ai", "answer_call"]]
-    agent_id: NotRequired[str]
-
-
-class WorkflowDraftStepInputWorkflowDraftStepInput3(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["assign_user"]]
-    user_id: NotRequired[str]
-    user_ids: NotRequired[List[str]]
-
-
-class WorkflowDraftStepInputWorkflowDraftStepInput5Choice(TypedDict, closed=True):
-    id: NotRequired[str]
-    label: NotRequired[str]
-    next: NotRequired[Optional[str]]
-
-
-class WorkflowDraftStepInputWorkflowDraftStepInput5(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["ask_question"]]
-    text: NotRequired[str]
-    answer_key: NotRequired[str]
-    choices: NotRequired[List[WorkflowDraftStepInputWorkflowDraftStepInput5Choice]]
-    timeout_seconds: NotRequired[float]
-    on_invalid: NotRequired[Optional[str]]
-    on_timeout: NotRequired[Optional[str]]
-
-
-class WorkflowDraftStepInputWorkflowDraftStepInput6(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["wait"]]
-    seconds: NotRequired[float]
-
-
-class WorkflowDraftStepInputWorkflowDraftStepInput7(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["close_conversation"]]
-    only_if_opened_by_send: NotRequired[bool]
-
-
-class WorkflowDraftStepInputWorkflowDraftStepInput8TemplateHeaderMedia(TypedDict, closed=True):
-    file_name: NotRequired[str]
-    mime_type: NotRequired[str]
-    size: NotRequired[float]
-    attachment_id: NotRequired[str]
-
-
-class WorkflowDraftStepInputWorkflowDraftStepInput8TemplateParameters(TypedDict, closed=True):
-    text: NotRequired[str]
-
-
-class WorkflowDraftStepInputWorkflowDraftStepInput8Template(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["send_whatsapp_template"]]
-    channel_id: NotRequired[str]
-    template_id: NotRequired[str]
-    template_name: NotRequired[str]
-    language: NotRequired[str]
-    header_media: NotRequired[WorkflowDraftStepInputWorkflowDraftStepInput8TemplateHeaderMedia]
-    parameters: NotRequired[Dict[str, Union[Literal["appointment_start", "branch_name", "customer_first_name"], WorkflowDraftStepInputWorkflowDraftStepInput8TemplateParameters]]]
-
-
-class WorkflowDraftStepInputWorkflowDraftStepInput8(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["send_whatsapp_template"]]
-    template: NotRequired[WorkflowDraftStepInputWorkflowDraftStepInput8Template]
-
-
-class WorkflowDraftDocumentInputScheduleTime(TypedDict, closed=True):
-    time: NotRequired[str]
-    weekdays: NotRequired[List[float]]
-
-
-class WorkflowDraftDocumentInputSchedule(TypedDict, closed=True):
-    timezone: NotRequired[str]
-    times: NotRequired[List[WorkflowDraftDocumentInputScheduleTime]]
-
-
-class WorkflowExpectedDraftInput(TypedDict, closed=True):
-    revision: Optional[str]
-    head_id: Optional[str]
-    candidate_token: NotRequired[Optional[str]]
-
-
-class WorkflowRenameDraftBodyInput(TypedDict, closed=True):
-    name: str
-
-
-class WorkflowPublishDraftBodyInput(TypedDict, closed=True):
-    expected: WorkflowExpectedDraftInput
-    activate: NotRequired[bool]
-    confirm_candidate: NotRequired[bool]
-
-
-class WorkflowRestoreDraftBodyInput(TypedDict, closed=True):
-    expected: WorkflowExpectedDraftInput
-
-
 class ConditionCondition10(TypedDict):
     """
     A yes-or-no question: a comparison of one field, or a group. Each trigger offers its own fields; a `decision` also reads `variable`.
@@ -7940,7 +7412,7 @@ A yes-or-no question: a comparison of one field, or a group. Each trigger offers
 """
 
 
-class WorkflowDefinitionFlowSteps3Branch(TypedDict):
+class WorkflowDefinitionFlowSteps2Branch(TypedDict):
     id: str
     """
     Step ID: letters, digits, `_` or `-`, up to 64.
@@ -7956,7 +7428,7 @@ class WorkflowDefinitionFlowSteps3Branch(TypedDict):
     """
 
 
-class WorkflowDefinitionFlowSteps3(TypedDict):
+class WorkflowDefinitionFlowSteps2(TypedDict):
     """
     One step. `close_conversation`, `end`, `answer_call`, `decline_call`, `turn_on_ai` and `turn_off_ai` finish the flow; every other step continues at its target.
     """
@@ -7966,7 +7438,7 @@ class WorkflowDefinitionFlowSteps3(TypedDict):
     Step ID: letters, digits, `_` or `-`, up to 64.
     """
     kind: Literal["decision"]
-    branches: List[WorkflowDefinitionFlowSteps3Branch]
+    branches: List[WorkflowDefinitionFlowSteps2Branch]
     """
     Branches in the order they are checked; the first that holds is taken.
     """
@@ -7985,7 +7457,7 @@ class WorkflowDefinitionFlow(TypedDict):
     """
     ID of the first step.
     """
-    steps: List[Union[WorkflowDefinitionFlowSteps, WorkflowDefinitionFlowSteps1, WorkflowDefinitionFlowSteps2, WorkflowDefinitionFlowSteps3, WorkflowDefinitionFlowSteps4, WorkflowDefinitionFlowSteps5, WorkflowDefinitionFlowSteps6, WorkflowDefinitionFlowSteps7, WorkflowDefinitionFlowSteps8, WorkflowDefinitionFlowSteps9, WorkflowDefinitionFlowSteps10, WorkflowDefinitionFlowSteps11, WorkflowDefinitionFlowSteps12]]
+    steps: List[Union[WorkflowDefinitionFlowSteps, WorkflowDefinitionFlowSteps1, WorkflowDefinitionFlowSteps2, WorkflowDefinitionFlowSteps3, WorkflowDefinitionFlowSteps4, WorkflowDefinitionFlowSteps5, WorkflowDefinitionFlowSteps6, WorkflowDefinitionFlowSteps7, WorkflowDefinitionFlowSteps8, WorkflowDefinitionFlowSteps9, WorkflowDefinitionFlowSteps10, WorkflowDefinitionFlowSteps11]]
 
 
 class WorkflowDefinition(TypedDict):
@@ -8041,90 +7513,6 @@ class Workflow(TypedDict):
     """
     Last change to the workflow.
     """
-
-
-class WorkflowDraftConditionWorkflowDraftCondition(TypedDict, closed=True):
-    kind: NotRequired[Literal["all", "any"]]
-    conditions: NotRequired[List[WorkflowDraftCondition]]
-
-
-WorkflowDraftCondition: TypeAlias = Union[
-    WorkflowDraftConditionWorkflowDraftCondition,
-    WorkflowDraftConditionWorkflowDraftCondition1,
-    WorkflowDraftConditionWorkflowDraftCondition2,
-    WorkflowDraftConditionWorkflowDraftCondition3,
-    WorkflowDraftConditionWorkflowDraftCondition4,
-    WorkflowDraftConditionWorkflowDraftCondition5,
-    WorkflowDraftConditionWorkflowDraftCondition6,
-    WorkflowDraftConditionWorkflowDraftCondition7,
-    WorkflowDraftConditionWorkflowDraftCondition8,
-    WorkflowDraftConditionWorkflowDraftCondition9,
-    WorkflowDraftConditionWorkflowDraftCondition10,
-]
-
-
-class WorkflowDraftStepWorkflowDraftStep4Branch(TypedDict, closed=True):
-    id: NotRequired[str]
-    name: NotRequired[str]
-    condition: NotRequired[WorkflowDraftCondition]
-    next: NotRequired[Optional[str]]
-
-
-class WorkflowDraftStepWorkflowDraftStep4(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["decision"]]
-    branches: NotRequired[List[WorkflowDraftStepWorkflowDraftStep4Branch]]
-
-
-WorkflowDraftStep: TypeAlias = Union[
-    WorkflowDraftStepWorkflowDraftStep,
-    WorkflowDraftStepWorkflowDraftStep1,
-    WorkflowDraftStepWorkflowDraftStep2,
-    WorkflowDraftStepWorkflowDraftStep3,
-    WorkflowDraftStepWorkflowDraftStep4,
-    WorkflowDraftStepWorkflowDraftStep5,
-    WorkflowDraftStepWorkflowDraftStep6,
-    WorkflowDraftStepWorkflowDraftStep7,
-    WorkflowDraftStepWorkflowDraftStep8,
-]
-
-
-class WorkflowDraftDocumentFlow(TypedDict, closed=True):
-    entry: NotRequired[str]
-    steps: NotRequired[List[WorkflowDraftStep]]
-
-
-class WorkflowDraftDocument(TypedDict, closed=True):
-    trigger: NotRequired[Literal["call_received", "conversation_assigned", "conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "schedule", "team_message_unanswered"]]
-    condition: NotRequired[Optional[WorkflowDraftCondition]]
-    inactivity_seconds: NotRequired[float]
-    schedule: NotRequired[WorkflowDraftDocumentSchedule]
-    flow: NotRequired[WorkflowDraftDocumentFlow]
-
-
-class WorkflowDraftCopy(TypedDict):
-    id: str
-    name: str
-    source: Literal["draft", "head", "legacy", "empty"]
-    document: WorkflowDraftDocument
-    revision: Optional[str]
-    head_id: Optional[str]
-    base_version_id: Optional[str]
-    candidate_token: Optional[str]
-    unpublished_changes: bool
-
-
-class WorkflowVersionDetail(TypedDict):
-    id: str
-    number: int
-    schema_version: int
-    created_at: str
-    origin: Literal["baseline", "publish", "legacy_write"]
-    via: str
-    actor_user_id: Optional[str]
-    actor_api_key_id: Optional[str]
-    definition: Union[WorkflowVersionDetailDefinition, WorkflowDraftDocument]
 
 
 WorkflowMutation: TypeAlias = Union[Workflow, WorkflowMutationWorkflowMutation]
@@ -8376,74 +7764,3 @@ class UpdateWorkflow(TypedDict, closed=True):
     """
     Replaces the whole definition.
     """
-
-
-class WorkflowDraftConditionInputWorkflowDraftConditionInput(TypedDict, closed=True):
-    kind: NotRequired[Literal["all", "any"]]
-    conditions: NotRequired[List[WorkflowDraftConditionInput]]
-
-
-WorkflowDraftConditionInput: TypeAlias = Union[
-    WorkflowDraftConditionInputWorkflowDraftConditionInput,
-    WorkflowDraftConditionInputWorkflowDraftConditionInput1,
-    WorkflowDraftConditionInputWorkflowDraftConditionInput2,
-    WorkflowDraftConditionInputWorkflowDraftConditionInput3,
-    WorkflowDraftConditionInputWorkflowDraftConditionInput4,
-    WorkflowDraftConditionInputWorkflowDraftConditionInput5,
-    WorkflowDraftConditionInputWorkflowDraftConditionInput6,
-    WorkflowDraftConditionInputWorkflowDraftConditionInput7,
-    WorkflowDraftConditionInputWorkflowDraftConditionInput8,
-    WorkflowDraftConditionInputWorkflowDraftConditionInput9,
-    WorkflowDraftConditionInputWorkflowDraftConditionInput10,
-]
-
-
-class WorkflowDraftStepInputWorkflowDraftStepInput4Branch(TypedDict, closed=True):
-    id: NotRequired[str]
-    name: NotRequired[str]
-    condition: NotRequired[WorkflowDraftConditionInput]
-    next: NotRequired[Optional[str]]
-
-
-class WorkflowDraftStepInputWorkflowDraftStepInput4(TypedDict, closed=True):
-    id: NotRequired[str]
-    next: NotRequired[Optional[str]]
-    kind: NotRequired[Literal["decision"]]
-    branches: NotRequired[List[WorkflowDraftStepInputWorkflowDraftStepInput4Branch]]
-
-
-WorkflowDraftStepInput: TypeAlias = Union[
-    WorkflowDraftStepInputWorkflowDraftStepInput,
-    WorkflowDraftStepInputWorkflowDraftStepInput1,
-    WorkflowDraftStepInputWorkflowDraftStepInput2,
-    WorkflowDraftStepInputWorkflowDraftStepInput3,
-    WorkflowDraftStepInputWorkflowDraftStepInput4,
-    WorkflowDraftStepInputWorkflowDraftStepInput5,
-    WorkflowDraftStepInputWorkflowDraftStepInput6,
-    WorkflowDraftStepInputWorkflowDraftStepInput7,
-    WorkflowDraftStepInputWorkflowDraftStepInput8,
-]
-
-
-class WorkflowDraftDocumentInputFlow(TypedDict, closed=True):
-    entry: NotRequired[str]
-    steps: NotRequired[List[WorkflowDraftStepInput]]
-
-
-class WorkflowDraftDocumentInput(TypedDict, closed=True):
-    trigger: NotRequired[Literal["call_received", "conversation_assigned", "conversation_inactive", "conversation_opened", "first_message_received", "message_received", "message_sent", "schedule", "team_message_unanswered"]]
-    condition: NotRequired[Optional[WorkflowDraftConditionInput]]
-    inactivity_seconds: NotRequired[float]
-    schedule: NotRequired[WorkflowDraftDocumentInputSchedule]
-    flow: NotRequired[WorkflowDraftDocumentInputFlow]
-
-
-class WorkflowCreateDraftBodyInput(TypedDict, closed=True):
-    name: NotRequired[str]
-    document: NotRequired[WorkflowDraftDocumentInput]
-
-
-class WorkflowSaveDraftBodyInput(TypedDict, closed=True):
-    expected: WorkflowExpectedDraftInput
-    document: WorkflowDraftDocumentInput
-    overwrite: NotRequired[bool]
