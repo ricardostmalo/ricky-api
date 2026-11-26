@@ -796,7 +796,7 @@ export class RickyApi extends HeyApiClient {
     /**
      * Publish a workflow revision
      *
-     * Publishes the reviewed revision. The first publication stays paused unless activation is requested. A changed legacy candidate must be explicitly confirmed.
+     * Publishes the reviewed revision. The first publication stays paused unless activation is requested. A changed legacy candidate must be explicitly confirmed. Publishing fills only equivalent empty conditions, routes and collections and returns the published definition.
      *
      * Scope: `workflows:write`.
      */
