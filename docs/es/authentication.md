@@ -116,6 +116,16 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Activar un workflow](https://getricky.ai/docs/api/reference/workflows/activate-workflow) | `POST /workflows/{workflow_id}/activate` | `workflows:write` |
 | [Pausar un workflow](https://getricky.ai/docs/api/reference/workflows/pause-workflow) | `POST /workflows/{workflow_id}/pause` | `workflows:write` |
 | [Listar ejecuciones](https://getricky.ai/docs/api/reference/workflows/list-workflow-executions) | `GET /workflows/{workflow_id}/executions` | `workflows:read` |
+| [Listar workflows editables](https://getricky.ai/docs/api/reference/workflows/list-workflow-drafts) | `GET /workflow-drafts` | `workflows:read` |
+| [Crear un borrador compartido](https://getricky.ai/docs/api/reference/workflows/create-workflow-draft) | `POST /workflow-drafts` | `workflows:write` |
+| [Leer la copia de trabajo](https://getricky.ai/docs/api/reference/workflows/get-workflow-draft) | `GET /workflows/{workflow_id}/draft` | `workflows:read` |
+| [Guardar un borrador compartido](https://getricky.ai/docs/api/reference/workflows/save-workflow-draft) | `PUT /workflows/{workflow_id}/draft` | `workflows:write` |
+| [Renombrar un workflow](https://getricky.ai/docs/api/reference/workflows/rename-workflow-draft) | `PATCH /workflow-drafts/{workflow_id}` | `workflows:write` |
+| [Eliminar un borrador sin materializar](https://getricky.ai/docs/api/reference/workflows/delete-workflow-draft) | `DELETE /workflow-drafts/{workflow_id}` | `workflows:write` |
+| [Publicar una revisión](https://getricky.ai/docs/api/reference/workflows/publish-workflow) | `POST /workflows/{workflow_id}/publish` | `workflows:write` |
+| [Listar versiones publicadas](https://getricky.ai/docs/api/reference/workflows/list-workflow-versions) | `GET /workflows/{workflow_id}/versions` | `workflows:read` |
+| [Leer una versión publicada](https://getricky.ai/docs/api/reference/workflows/get-workflow-version) | `GET /workflows/{workflow_id}/versions/{version_id}` | `workflows:read` |
+| [Restaurar una versión al borrador](https://getricky.ai/docs/api/reference/workflows/restore-workflow-version-to-draft) | `POST /workflows/{workflow_id}/versions/{version_id}/restore` | `workflows:write` |
 | [Definir el archivo del encabezado de una automatización programada](https://getricky.ai/docs/api/reference/workflows/upload-workflow-header-media) | `POST /workflows/{workflow_id}/header-media` | `workflows:write` |
 | [Previsualizar recordatorios de citas](https://getricky.ai/docs/api/reference/workflows/preview-workflow-reminders) | `GET /workflows/{workflow_id}/reminders/preview` | `workflows:read` |
 | [Consultar el historial de recordatorios de citas](https://getricky.ai/docs/api/reference/workflows/get-workflow-reminder-history) | `GET /workflows/{workflow_id}/reminders/history` | `workflows:read` |

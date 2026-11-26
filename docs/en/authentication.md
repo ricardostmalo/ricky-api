@@ -116,6 +116,16 @@ The table below is generated from the API contract: it is the exact list of oper
 | [Activate a workflow](https://getricky.ai/en/docs/api/reference/workflows/activate-workflow) | `POST /workflows/{workflow_id}/activate` | `workflows:write` |
 | [Pause a workflow](https://getricky.ai/en/docs/api/reference/workflows/pause-workflow) | `POST /workflows/{workflow_id}/pause` | `workflows:write` |
 | [List executions](https://getricky.ai/en/docs/api/reference/workflows/list-workflow-executions) | `GET /workflows/{workflow_id}/executions` | `workflows:read` |
+| [List editable workflows](https://getricky.ai/en/docs/api/reference/workflows/list-workflow-drafts) | `GET /workflow-drafts` | `workflows:read` |
+| [Create a shared draft](https://getricky.ai/en/docs/api/reference/workflows/create-workflow-draft) | `POST /workflow-drafts` | `workflows:write` |
+| [Read the working copy](https://getricky.ai/en/docs/api/reference/workflows/get-workflow-draft) | `GET /workflows/{workflow_id}/draft` | `workflows:read` |
+| [Save a shared draft](https://getricky.ai/en/docs/api/reference/workflows/save-workflow-draft) | `PUT /workflows/{workflow_id}/draft` | `workflows:write` |
+| [Rename a workflow identity](https://getricky.ai/en/docs/api/reference/workflows/rename-workflow-draft) | `PATCH /workflow-drafts/{workflow_id}` | `workflows:write` |
+| [Delete an unpublished identity](https://getricky.ai/en/docs/api/reference/workflows/delete-workflow-draft) | `DELETE /workflow-drafts/{workflow_id}` | `workflows:write` |
+| [Publish a workflow revision](https://getricky.ai/en/docs/api/reference/workflows/publish-workflow) | `POST /workflows/{workflow_id}/publish` | `workflows:write` |
+| [List published versions](https://getricky.ai/en/docs/api/reference/workflows/list-workflow-versions) | `GET /workflows/{workflow_id}/versions` | `workflows:read` |
+| [Read a published version](https://getricky.ai/en/docs/api/reference/workflows/get-workflow-version) | `GET /workflows/{workflow_id}/versions/{version_id}` | `workflows:read` |
+| [Restore a version to the draft](https://getricky.ai/en/docs/api/reference/workflows/restore-workflow-version-to-draft) | `POST /workflows/{workflow_id}/versions/{version_id}/restore` | `workflows:write` |
 | [Set the header file of a scheduled workflow](https://getricky.ai/en/docs/api/reference/workflows/upload-workflow-header-media) | `POST /workflows/{workflow_id}/header-media` | `workflows:write` |
 | [Preview appointment reminders](https://getricky.ai/en/docs/api/reference/workflows/preview-workflow-reminders) | `GET /workflows/{workflow_id}/reminders/preview` | `workflows:read` |
 | [Get appointment reminder history](https://getricky.ai/en/docs/api/reference/workflows/get-workflow-reminder-history) | `GET /workflows/{workflow_id}/reminders/history` | `workflows:read` |

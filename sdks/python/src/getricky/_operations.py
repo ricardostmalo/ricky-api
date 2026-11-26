@@ -69,6 +69,7 @@ from .types import (
     QuickReply,
     ReminderHistory,
     ReminderPreview,
+    RenamedWorkflowIdentity,
     ReplaceTemplateFieldMappings,
     RequestDisplayName,
     ResolutionsReport,
@@ -102,8 +103,19 @@ from .types import (
     WebhookTestResult,
     WhatsAppNumber,
     Workflow,
+    WorkflowCreateDraftBodyInput,
+    WorkflowDraftCopy,
+    WorkflowDraftSummary,
     WorkflowExecution,
+    WorkflowIdentity,
     WorkflowMutation,
+    WorkflowPublication,
+    WorkflowPublishDraftBodyInput,
+    WorkflowRenameDraftBodyInput,
+    WorkflowRestoreDraftBodyInput,
+    WorkflowSaveDraftBodyInput,
+    WorkflowVersionDetail,
+    WorkflowVersionSummary,
 )
 
 
@@ -852,6 +864,232 @@ class SyncOperations:
             "/workflows/{workflow_id}/executions",
             path_parameters={"workflow_id": workflow_id},
             query={"page_size": page_size, "cursor": cursor},
+        ))
+
+    def list_workflow_drafts(
+        self,
+        *,
+        page_size: Optional[int] = None,
+        cursor: Optional[str] = None,
+    ) -> Page[WorkflowDraftSummary]:
+        """List editable workflows.
+
+        Lists canvas workflows, including drafts with no complete definition, newest created first.
+
+        Scope: `workflows:read`.
+
+        Args:
+            page_size: Items per page.
+            cursor: `next_cursor` from the previous page. Use it unchanged.
+        """
+        return cast(Page[WorkflowDraftSummary], self._request(
+            "GET",
+            "/workflow-drafts",
+            query={"page_size": page_size, "cursor": cursor},
+        ))
+
+    def create_workflow_draft(
+        self,
+        body: WorkflowCreateDraftBodyInput,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WorkflowDraftCopy]:
+        """Create a shared draft.
+
+        Creates a canvas draft. The name and definition may be empty.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WorkflowDraftCopy], self._request(
+            "POST",
+            "/workflow-drafts",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def get_workflow_draft(
+        self,
+        workflow_id: str,
+    ) -> Resource[WorkflowDraftCopy]:
+        """Read the working copy.
+
+        Returns the saved draft or the current complete candidate and its concurrency tokens.
+
+        Scope: `workflows:read`.
+        """
+        return cast(Resource[WorkflowDraftCopy], self._request(
+            "GET",
+            "/workflows/{workflow_id}/draft",
+            path_parameters={"workflow_id": workflow_id},
+        ))
+
+    def save_workflow_draft(
+        self,
+        workflow_id: str,
+        body: WorkflowSaveDraftBodyInput,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WorkflowDraftCopy]:
+        """Save a shared draft.
+
+        Replaces the partial definition, up to 256 KiB and 32 levels. Copy the observed revision, head and candidate token. After reviewing a conflict, overwrite adopts the observed head. Saving never publishes.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WorkflowDraftCopy], self._request(
+            "PUT",
+            "/workflows/{workflow_id}/draft",
+            path_parameters={"workflow_id": workflow_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def rename_workflow_draft(
+        self,
+        workflow_id: str,
+        body: WorkflowRenameDraftBodyInput,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[RenamedWorkflowIdentity]:
+        """Rename a workflow identity.
+
+        Changes the name immediately, including on the existing complete workflow.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[RenamedWorkflowIdentity], self._request(
+            "PATCH",
+            "/workflow-drafts/{workflow_id}",
+            path_parameters={"workflow_id": workflow_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def delete_workflow_draft(
+        self,
+        workflow_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WorkflowIdentity]:
+        """Delete an unpublished identity.
+
+        Removes a draft that has never had a complete workflow row.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WorkflowIdentity], self._request(
+            "DELETE",
+            "/workflow-drafts/{workflow_id}",
+            path_parameters={"workflow_id": workflow_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def publish_workflow(
+        self,
+        workflow_id: str,
+        body: WorkflowPublishDraftBodyInput,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WorkflowPublication]:
+        """Publish a workflow revision.
+
+        Publishes the reviewed revision. The first publication stays paused unless activation is requested. A changed legacy candidate must be explicitly confirmed.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WorkflowPublication], self._request(
+            "POST",
+            "/workflows/{workflow_id}/publish",
+            path_parameters={"workflow_id": workflow_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    def list_workflow_versions(
+        self,
+        workflow_id: str,
+        *,
+        page_size: Optional[int] = None,
+        cursor: Optional[str] = None,
+    ) -> Page[WorkflowVersionSummary]:
+        """List published versions.
+
+        Lists immutable versions, most recent first, including daily workflows.
+
+        Scope: `workflows:read`.
+
+        Args:
+            page_size: Items per page.
+            cursor: `next_cursor` from the previous page. Use it unchanged.
+        """
+        return cast(Page[WorkflowVersionSummary], self._request(
+            "GET",
+            "/workflows/{workflow_id}/versions",
+            path_parameters={"workflow_id": workflow_id},
+            query={"page_size": page_size, "cursor": cursor},
+        ))
+
+    def get_workflow_version(
+        self,
+        workflow_id: str,
+        version_id: str,
+    ) -> Resource[WorkflowVersionDetail]:
+        """Read a published version.
+
+        Returns the published configuration with public attachment references.
+
+        Scope: `workflows:read`.
+        """
+        return cast(Resource[WorkflowVersionDetail], self._request(
+            "GET",
+            "/workflows/{workflow_id}/versions/{version_id}",
+            path_parameters={"workflow_id": workflow_id, "version_id": version_id},
+        ))
+
+    def restore_workflow_version_to_draft(
+        self,
+        workflow_id: str,
+        version_id: str,
+        body: WorkflowRestoreDraftBodyInput,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WorkflowDraftCopy]:
+        """Restore a version to the draft.
+
+        Replaces the observed canvas draft with a copy of this version. The current name and live version are preserved.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WorkflowDraftCopy], self._request(
+            "POST",
+            "/workflows/{workflow_id}/versions/{version_id}/restore",
+            path_parameters={"workflow_id": workflow_id, "version_id": version_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
         ))
 
     def upload_workflow_header_media(
@@ -3434,6 +3672,232 @@ class AsyncOperations:
             "/workflows/{workflow_id}/executions",
             path_parameters={"workflow_id": workflow_id},
             query={"page_size": page_size, "cursor": cursor},
+        ))
+
+    async def list_workflow_drafts(
+        self,
+        *,
+        page_size: Optional[int] = None,
+        cursor: Optional[str] = None,
+    ) -> Page[WorkflowDraftSummary]:
+        """List editable workflows.
+
+        Lists canvas workflows, including drafts with no complete definition, newest created first.
+
+        Scope: `workflows:read`.
+
+        Args:
+            page_size: Items per page.
+            cursor: `next_cursor` from the previous page. Use it unchanged.
+        """
+        return cast(Page[WorkflowDraftSummary], await self._request(
+            "GET",
+            "/workflow-drafts",
+            query={"page_size": page_size, "cursor": cursor},
+        ))
+
+    async def create_workflow_draft(
+        self,
+        body: WorkflowCreateDraftBodyInput,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WorkflowDraftCopy]:
+        """Create a shared draft.
+
+        Creates a canvas draft. The name and definition may be empty.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WorkflowDraftCopy], await self._request(
+            "POST",
+            "/workflow-drafts",
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def get_workflow_draft(
+        self,
+        workflow_id: str,
+    ) -> Resource[WorkflowDraftCopy]:
+        """Read the working copy.
+
+        Returns the saved draft or the current complete candidate and its concurrency tokens.
+
+        Scope: `workflows:read`.
+        """
+        return cast(Resource[WorkflowDraftCopy], await self._request(
+            "GET",
+            "/workflows/{workflow_id}/draft",
+            path_parameters={"workflow_id": workflow_id},
+        ))
+
+    async def save_workflow_draft(
+        self,
+        workflow_id: str,
+        body: WorkflowSaveDraftBodyInput,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WorkflowDraftCopy]:
+        """Save a shared draft.
+
+        Replaces the partial definition, up to 256 KiB and 32 levels. Copy the observed revision, head and candidate token. After reviewing a conflict, overwrite adopts the observed head. Saving never publishes.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WorkflowDraftCopy], await self._request(
+            "PUT",
+            "/workflows/{workflow_id}/draft",
+            path_parameters={"workflow_id": workflow_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def rename_workflow_draft(
+        self,
+        workflow_id: str,
+        body: WorkflowRenameDraftBodyInput,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[RenamedWorkflowIdentity]:
+        """Rename a workflow identity.
+
+        Changes the name immediately, including on the existing complete workflow.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[RenamedWorkflowIdentity], await self._request(
+            "PATCH",
+            "/workflow-drafts/{workflow_id}",
+            path_parameters={"workflow_id": workflow_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def delete_workflow_draft(
+        self,
+        workflow_id: str,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WorkflowIdentity]:
+        """Delete an unpublished identity.
+
+        Removes a draft that has never had a complete workflow row.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WorkflowIdentity], await self._request(
+            "DELETE",
+            "/workflow-drafts/{workflow_id}",
+            path_parameters={"workflow_id": workflow_id},
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def publish_workflow(
+        self,
+        workflow_id: str,
+        body: WorkflowPublishDraftBodyInput,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WorkflowPublication]:
+        """Publish a workflow revision.
+
+        Publishes the reviewed revision. The first publication stays paused unless activation is requested. A changed legacy candidate must be explicitly confirmed.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WorkflowPublication], await self._request(
+            "POST",
+            "/workflows/{workflow_id}/publish",
+            path_parameters={"workflow_id": workflow_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
+    async def list_workflow_versions(
+        self,
+        workflow_id: str,
+        *,
+        page_size: Optional[int] = None,
+        cursor: Optional[str] = None,
+    ) -> Page[WorkflowVersionSummary]:
+        """List published versions.
+
+        Lists immutable versions, most recent first, including daily workflows.
+
+        Scope: `workflows:read`.
+
+        Args:
+            page_size: Items per page.
+            cursor: `next_cursor` from the previous page. Use it unchanged.
+        """
+        return cast(Page[WorkflowVersionSummary], await self._request(
+            "GET",
+            "/workflows/{workflow_id}/versions",
+            path_parameters={"workflow_id": workflow_id},
+            query={"page_size": page_size, "cursor": cursor},
+        ))
+
+    async def get_workflow_version(
+        self,
+        workflow_id: str,
+        version_id: str,
+    ) -> Resource[WorkflowVersionDetail]:
+        """Read a published version.
+
+        Returns the published configuration with public attachment references.
+
+        Scope: `workflows:read`.
+        """
+        return cast(Resource[WorkflowVersionDetail], await self._request(
+            "GET",
+            "/workflows/{workflow_id}/versions/{version_id}",
+            path_parameters={"workflow_id": workflow_id, "version_id": version_id},
+        ))
+
+    async def restore_workflow_version_to_draft(
+        self,
+        workflow_id: str,
+        version_id: str,
+        body: WorkflowRestoreDraftBodyInput,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WorkflowDraftCopy]:
+        """Restore a version to the draft.
+
+        Replaces the observed canvas draft with a copy of this version. The current name and live version are preserved.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WorkflowDraftCopy], await self._request(
+            "POST",
+            "/workflows/{workflow_id}/versions/{version_id}/restore",
+            path_parameters={"workflow_id": workflow_id, "version_id": version_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
         ))
 
     async def upload_workflow_header_media(

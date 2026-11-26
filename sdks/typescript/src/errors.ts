@@ -15,6 +15,7 @@ export class RickyError extends Error {
   readonly param: string | null;
   readonly requestId: string | null;
   readonly headers: Headers;
+  readonly current: ErrorBody['error']['current'] | null;
 
   constructor(options: {
     code: RickyErrorCode | null;
@@ -23,6 +24,7 @@ export class RickyError extends Error {
     param: string | null;
     requestId: string | null;
     status: number;
+    current?: ErrorBody['error']['current'] | null;
   }) {
     super(options.message);
     this.status = options.status;
@@ -30,6 +32,7 @@ export class RickyError extends Error {
     this.param = options.param;
     this.requestId = options.requestId;
     this.headers = options.headers;
+    this.current = options.current ?? null;
   }
 
   /** Builds the error from a non-2xx response and its body, parsed when it was JSON. */
@@ -38,6 +41,13 @@ export class RickyError extends Error {
     const text = (value: unknown): string | null => (typeof value === 'string' ? value : null);
     return new RickyError({
       code: text(error?.code),
+      current: isRecord(error?.current)
+        ? {
+            revision: text(error.current.revision),
+            head_id: text(error.current.head_id),
+            candidate_token: text(error.current.candidate_token),
+          }
+        : null,
       headers: response.headers,
       message:
         text(error?.message) ??

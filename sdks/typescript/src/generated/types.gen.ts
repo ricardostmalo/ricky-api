@@ -19,6 +19,11 @@ export type Error = {
          * Human-readable explanation. Do not parse it.
          */
         message: string;
+        current?: {
+            revision: string | null;
+            head_id: string | null;
+            candidate_token: string | null;
+        };
         /**
          * The request field or parameter that caused it.
          */
@@ -3572,6 +3577,28 @@ export type Workflow = {
                  * Step to run next; null ends the flow.
                  */
                 next: string | null;
+                kind: 'send_whatsapp_template';
+                template: {
+                    channel_id: string;
+                    template_id: string;
+                    template_name: string;
+                    language: string;
+                    parameters: {
+                        [key: string]: string | {
+                            text: string;
+                        };
+                    };
+                    has_header_image: boolean;
+                };
+            } | {
+                /**
+                 * Step ID: letters, digits, `_` or `-`, up to 64.
+                 */
+                id: string;
+                /**
+                 * Step to run next; null ends the flow.
+                 */
+                next: string | null;
                 kind: 'ask_question';
                 /**
                  * Text sent to the contact.
@@ -4106,6 +4133,268 @@ export type WhatsAppNumber = {
          */
         profile_picture_url: string | null;
     };
+};
+
+export type WorkflowIdentity = {
+    id: string;
+};
+
+export type RenamedWorkflowIdentity = {
+    id: string;
+    name: string;
+};
+
+export type WorkflowDraftCondition = {
+    kind?: 'all' | 'any';
+    conditions?: Array<WorkflowDraftCondition>;
+} | {
+    kind?: 'compare';
+    field?: 'ai';
+    operator?: 'is' | 'is_not';
+    values?: Array<'on' | 'off'>;
+} | {
+    kind?: 'compare';
+    field?: 'assignee';
+    operator?: 'is' | 'is_not';
+    values?: Array<{
+        kind?: 'agent';
+        agent_id?: string;
+    } | {
+        kind?: 'person';
+        user_id?: string;
+    } | {
+        kind?: 'nobody';
+    }>;
+} | {
+    kind?: 'compare';
+    field?: 'channel';
+    operator?: 'is' | 'is_not';
+    values?: Array<string>;
+} | {
+    kind?: 'compare';
+    field?: 'conversation_status';
+    operator?: 'is' | 'is_not';
+    values?: Array<'open' | 'closed'>;
+} | {
+    kind?: 'compare';
+    field?: 'message_type';
+    operator?: 'is' | 'is_not';
+    values?: Array<'text' | 'button' | 'image' | 'audio' | 'video' | 'document' | 'location' | 'sticker' | 'other'>;
+} | {
+    kind?: 'compare';
+    field?: 'message_sender';
+    operator?: 'is' | 'is_not';
+    values?: Array<'person' | 'ai' | 'automation' | 'broadcast' | 'external_app'>;
+} | {
+    kind?: 'compare';
+    field?: 'message_first';
+    operator?: 'is' | 'is_not';
+} | {
+    kind?: 'compare';
+    field?: 'time';
+    operator?: 'within' | 'outside';
+    business_hours?: {
+        timezone?: string;
+        closed_dates?: Array<string>;
+        days?: {
+            [key: string]: Array<{
+                start?: string;
+                end?: string;
+            }>;
+        };
+    };
+} | {
+    kind?: 'compare';
+    field?: 'variable';
+    operator?: 'is' | 'is_not' | 'contains' | 'not_contains' | 'exists' | 'not_exists';
+    name?: string;
+    value?: string;
+} | {
+    kind?: 'compare';
+    field?: 'message_text';
+    operator?: 'contains' | 'not_contains';
+    value?: string;
+};
+
+export type WorkflowDraftStep = {
+    id?: string;
+    next?: string | null;
+    kind?: 'end' | 'turn_off_ai';
+} | {
+    id?: string;
+    next?: string | null;
+    kind?: 'send_message' | 'decline_call';
+    text?: string;
+} | {
+    id?: string;
+    next?: string | null;
+    kind?: 'assign_agent' | 'turn_on_ai' | 'answer_call';
+    agent_id?: string;
+} | {
+    id?: string;
+    next?: string | null;
+    kind?: 'assign_user';
+    user_id?: string;
+    user_ids?: Array<string>;
+} | {
+    id?: string;
+    next?: string | null;
+    kind?: 'decision';
+    branches?: Array<{
+        id?: string;
+        name?: string;
+        condition?: WorkflowDraftCondition;
+        next?: string | null;
+    }>;
+} | {
+    id?: string;
+    next?: string | null;
+    kind?: 'ask_question';
+    text?: string;
+    answer_key?: string;
+    choices?: Array<{
+        id?: string;
+        label?: string;
+        next?: string | null;
+    }>;
+    timeout_seconds?: number;
+    on_invalid?: string | null;
+    on_timeout?: string | null;
+} | {
+    id?: string;
+    next?: string | null;
+    kind?: 'wait';
+    seconds?: number;
+} | {
+    id?: string;
+    next?: string | null;
+    kind?: 'close_conversation';
+    only_if_opened_by_send?: boolean;
+} | {
+    id?: string;
+    next?: string | null;
+    kind?: 'send_whatsapp_template';
+    template?: {
+        id?: string;
+        next?: string | null;
+        kind?: 'send_whatsapp_template';
+        channel_id?: string;
+        template_id?: string;
+        template_name?: string;
+        language?: string;
+        header_media?: {
+            file_name?: string;
+            mime_type?: string;
+            size?: number;
+            attachment_id?: string;
+        };
+        parameters?: {
+            [key: string]: 'appointment_start' | 'branch_name' | 'customer_first_name' | {
+                text?: string;
+            };
+        };
+    };
+};
+
+export type WorkflowDraftDocument = {
+    trigger?: 'call_received' | 'conversation_assigned' | 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'message_sent' | 'schedule' | 'team_message_unanswered';
+    condition?: WorkflowDraftCondition | null;
+    inactivity_seconds?: number;
+    schedule?: {
+        timezone?: string;
+        times?: Array<{
+            time?: string;
+            weekdays?: Array<number>;
+        }>;
+    };
+    flow?: {
+        entry?: string;
+        steps?: Array<WorkflowDraftStep>;
+    };
+};
+
+export type WorkflowDraftCopy = {
+    id: string;
+    name: string;
+    source: 'draft' | 'head' | 'legacy' | 'empty';
+    document: WorkflowDraftDocument;
+    revision: string | null;
+    head_id: string | null;
+    base_version_id: string | null;
+    candidate_token: string | null;
+    unpublished_changes: boolean;
+};
+
+export type WorkflowDraftSummary = {
+    id: string;
+    name: string;
+    head_id: string | null;
+    created_at: string;
+};
+
+export type WorkflowVersionSummary = {
+    id: string;
+    number: number;
+    schema_version: number;
+    created_at: string;
+    origin: 'baseline' | 'publish' | 'legacy_write';
+    via: string;
+    actor_user_id: string | null;
+    actor_api_key_id: string | null;
+};
+
+export type WorkflowVersionDetail = {
+    id: string;
+    number: number;
+    schema_version: number;
+    created_at: string;
+    origin: 'baseline' | 'publish' | 'legacy_write';
+    via: string;
+    actor_user_id: string | null;
+    actor_api_key_id: string | null;
+    definition: {
+        channels: Array<string>;
+        trigger: {
+            kind: 'daily';
+            time: string;
+            timezone: string;
+        };
+        source: {
+            kind: string;
+            days_ahead?: number;
+            appointment_states?: Array<string>;
+        };
+        flow: {
+            entry: string;
+            steps: Array<{
+                id?: string;
+                next?: string | null;
+                kind?: 'send_whatsapp_template';
+                channel_id?: string;
+                template_id?: string;
+                template_name?: string;
+                language?: string;
+                header_media?: {
+                    file_name?: string;
+                    mime_type?: string;
+                    size?: number;
+                    attachment_id?: string;
+                };
+                parameters?: {
+                    [key: string]: 'appointment_start' | 'branch_name' | 'customer_first_name' | {
+                        text?: string;
+                    };
+                };
+            }>;
+        };
+        close_after_send?: boolean;
+    } | WorkflowDraftDocument;
+};
+
+export type WorkflowPublication = {
+    head_id: string;
+    number: number;
+    status: 'active' | 'paused';
 };
 
 export type WorkflowMutation = Workflow | {
@@ -6519,6 +6808,206 @@ export type UpdateTemplate = {
     }>;
 };
 
+export type WorkflowDraftConditionInput = {
+    kind?: 'all' | 'any';
+    conditions?: Array<WorkflowDraftConditionInput>;
+} | {
+    kind?: 'compare';
+    field?: 'ai';
+    operator?: 'is' | 'is_not';
+    values?: Array<'on' | 'off'>;
+} | {
+    kind?: 'compare';
+    field?: 'assignee';
+    operator?: 'is' | 'is_not';
+    values?: Array<{
+        kind?: 'agent';
+        agent_id?: string;
+    } | {
+        kind?: 'person';
+        user_id?: string;
+    } | {
+        kind?: 'nobody';
+    }>;
+} | {
+    kind?: 'compare';
+    field?: 'channel';
+    operator?: 'is' | 'is_not';
+    values?: Array<string>;
+} | {
+    kind?: 'compare';
+    field?: 'conversation_status';
+    operator?: 'is' | 'is_not';
+    values?: Array<'open' | 'closed'>;
+} | {
+    kind?: 'compare';
+    field?: 'message_type';
+    operator?: 'is' | 'is_not';
+    values?: Array<'text' | 'button' | 'image' | 'audio' | 'video' | 'document' | 'location' | 'sticker' | 'other'>;
+} | {
+    kind?: 'compare';
+    field?: 'message_sender';
+    operator?: 'is' | 'is_not';
+    values?: Array<'person' | 'ai' | 'automation' | 'broadcast' | 'external_app'>;
+} | {
+    kind?: 'compare';
+    field?: 'message_first';
+    operator?: 'is' | 'is_not';
+} | {
+    kind?: 'compare';
+    field?: 'time';
+    operator?: 'within' | 'outside';
+    business_hours?: {
+        timezone?: string;
+        closed_dates?: Array<string>;
+        days?: {
+            [key: string]: Array<{
+                start?: string;
+                end?: string;
+            }>;
+        };
+    };
+} | {
+    kind?: 'compare';
+    field?: 'variable';
+    operator?: 'is' | 'is_not' | 'contains' | 'not_contains' | 'exists' | 'not_exists';
+    name?: string;
+    value?: string;
+} | {
+    kind?: 'compare';
+    field?: 'message_text';
+    operator?: 'contains' | 'not_contains';
+    value?: string;
+};
+
+export type WorkflowDraftStepInput = {
+    id?: string;
+    next?: string | null;
+    kind?: 'end' | 'turn_off_ai';
+} | {
+    id?: string;
+    next?: string | null;
+    kind?: 'send_message' | 'decline_call';
+    text?: string;
+} | {
+    id?: string;
+    next?: string | null;
+    kind?: 'assign_agent' | 'turn_on_ai' | 'answer_call';
+    agent_id?: string;
+} | {
+    id?: string;
+    next?: string | null;
+    kind?: 'assign_user';
+    user_id?: string;
+    user_ids?: Array<string>;
+} | {
+    id?: string;
+    next?: string | null;
+    kind?: 'decision';
+    branches?: Array<{
+        id?: string;
+        name?: string;
+        condition?: WorkflowDraftConditionInput;
+        next?: string | null;
+    }>;
+} | {
+    id?: string;
+    next?: string | null;
+    kind?: 'ask_question';
+    text?: string;
+    answer_key?: string;
+    choices?: Array<{
+        id?: string;
+        label?: string;
+        next?: string | null;
+    }>;
+    timeout_seconds?: number;
+    on_invalid?: string | null;
+    on_timeout?: string | null;
+} | {
+    id?: string;
+    next?: string | null;
+    kind?: 'wait';
+    seconds?: number;
+} | {
+    id?: string;
+    next?: string | null;
+    kind?: 'close_conversation';
+    only_if_opened_by_send?: boolean;
+} | {
+    id?: string;
+    next?: string | null;
+    kind?: 'send_whatsapp_template';
+    template?: {
+        id?: string;
+        next?: string | null;
+        kind?: 'send_whatsapp_template';
+        channel_id?: string;
+        template_id?: string;
+        template_name?: string;
+        language?: string;
+        header_media?: {
+            file_name?: string;
+            mime_type?: string;
+            size?: number;
+            attachment_id?: string;
+        };
+        parameters?: {
+            [key: string]: 'appointment_start' | 'branch_name' | 'customer_first_name' | {
+                text?: string;
+            };
+        };
+    };
+};
+
+export type WorkflowDraftDocumentInput = {
+    trigger?: 'call_received' | 'conversation_assigned' | 'conversation_inactive' | 'conversation_opened' | 'first_message_received' | 'message_received' | 'message_sent' | 'schedule' | 'team_message_unanswered';
+    condition?: WorkflowDraftConditionInput | null;
+    inactivity_seconds?: number;
+    schedule?: {
+        timezone?: string;
+        times?: Array<{
+            time?: string;
+            weekdays?: Array<number>;
+        }>;
+    };
+    flow?: {
+        entry?: string;
+        steps?: Array<WorkflowDraftStepInput>;
+    };
+};
+
+export type WorkflowExpectedDraftInput = {
+    revision: string | null;
+    head_id: string | null;
+    candidate_token?: string | null;
+};
+
+export type WorkflowCreateDraftBodyInput = {
+    name?: string;
+    document?: WorkflowDraftDocumentInput;
+};
+
+export type WorkflowSaveDraftBodyInput = {
+    expected: WorkflowExpectedDraftInput;
+    document: WorkflowDraftDocumentInput;
+    overwrite?: boolean;
+};
+
+export type WorkflowRenameDraftBodyInput = {
+    name: string;
+};
+
+export type WorkflowPublishDraftBodyInput = {
+    expected: WorkflowExpectedDraftInput;
+    activate?: boolean;
+    confirm_candidate?: boolean;
+};
+
+export type WorkflowRestoreDraftBodyInput = {
+    expected: WorkflowExpectedDraftInput;
+};
+
 /**
  * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
  */
@@ -6655,7 +7144,7 @@ export type CreateContactErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -6783,7 +7272,7 @@ export type UpdateContactErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -6857,7 +7346,7 @@ export type AddContactNoteErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -6967,7 +7456,7 @@ export type CreateContactFieldErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -7157,7 +7646,7 @@ export type StartConversationErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -7297,7 +7786,7 @@ export type AssignConversationErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -7375,7 +7864,7 @@ export type CloseConversationErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -7574,7 +8063,7 @@ export type SendMessageErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -7892,7 +8381,7 @@ export type CreateTagErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -7988,7 +8477,7 @@ export type CreateWebhookErrors = {
      */
     403: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -8154,7 +8643,7 @@ export type RotateWebhookSecretErrors = {
      */
     404: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -8374,7 +8863,7 @@ export type CreateWorkflowErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -8554,7 +9043,7 @@ export type UpdateWorkflowErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -8761,6 +9250,754 @@ export type ListWorkflowExecutionsResponses = {
 
 export type ListWorkflowExecutionsResponse = ListWorkflowExecutionsResponses[keyof ListWorkflowExecutionsResponses];
 
+export type ListWorkflowDraftsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Items per page.
+         */
+        page_size?: number;
+        /**
+         * `next_cursor` from the previous page. Use it unchanged.
+         */
+        cursor?: string;
+    };
+    url: '/workflow-drafts';
+};
+
+export type ListWorkflowDraftsErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListWorkflowDraftsError = ListWorkflowDraftsErrors[keyof ListWorkflowDraftsErrors];
+
+export type ListWorkflowDraftsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<WorkflowDraftSummary>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListWorkflowDraftsResponse = ListWorkflowDraftsResponses[keyof ListWorkflowDraftsResponses];
+
+export type CreateWorkflowDraftData = {
+    body: WorkflowCreateDraftBodyInput;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/workflow-drafts';
+};
+
+export type CreateWorkflowDraftErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `forbidden`: The organization does not allow the operation.
+     *
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type CreateWorkflowDraftError = CreateWorkflowDraftErrors[keyof CreateWorkflowDraftErrors];
+
+export type CreateWorkflowDraftResponses = {
+    /**
+     * Success.
+     */
+    201: {
+        data: WorkflowDraftCopy;
+    };
+};
+
+export type CreateWorkflowDraftResponse = CreateWorkflowDraftResponses[keyof CreateWorkflowDraftResponses];
+
+export type GetWorkflowDraftData = {
+    body?: never;
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query?: never;
+    url: '/workflows/{workflow_id}/draft';
+};
+
+export type GetWorkflowDraftErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetWorkflowDraftError = GetWorkflowDraftErrors[keyof GetWorkflowDraftErrors];
+
+export type GetWorkflowDraftResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: WorkflowDraftCopy;
+    };
+};
+
+export type GetWorkflowDraftResponse = GetWorkflowDraftResponses[keyof GetWorkflowDraftResponses];
+
+export type SaveWorkflowDraftData = {
+    body: WorkflowSaveDraftBodyInput;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query?: never;
+    url: '/workflows/{workflow_id}/draft';
+};
+
+export type SaveWorkflowDraftErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `forbidden`: The organization does not allow the operation.
+     *
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type SaveWorkflowDraftError = SaveWorkflowDraftErrors[keyof SaveWorkflowDraftErrors];
+
+export type SaveWorkflowDraftResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: WorkflowDraftCopy;
+    };
+};
+
+export type SaveWorkflowDraftResponse = SaveWorkflowDraftResponses[keyof SaveWorkflowDraftResponses];
+
+export type DeleteWorkflowDraftData = {
+    body?: never;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query?: never;
+    url: '/workflow-drafts/{workflow_id}';
+};
+
+export type DeleteWorkflowDraftErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `forbidden`: The organization does not allow the operation.
+     *
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type DeleteWorkflowDraftError = DeleteWorkflowDraftErrors[keyof DeleteWorkflowDraftErrors];
+
+export type DeleteWorkflowDraftResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: WorkflowIdentity;
+    };
+};
+
+export type DeleteWorkflowDraftResponse = DeleteWorkflowDraftResponses[keyof DeleteWorkflowDraftResponses];
+
+export type RenameWorkflowDraftData = {
+    body: WorkflowRenameDraftBodyInput;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query?: never;
+    url: '/workflow-drafts/{workflow_id}';
+};
+
+export type RenameWorkflowDraftErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `forbidden`: The organization does not allow the operation.
+     *
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type RenameWorkflowDraftError = RenameWorkflowDraftErrors[keyof RenameWorkflowDraftErrors];
+
+export type RenameWorkflowDraftResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: RenamedWorkflowIdentity;
+    };
+};
+
+export type RenameWorkflowDraftResponse = RenameWorkflowDraftResponses[keyof RenameWorkflowDraftResponses];
+
+export type PublishWorkflowData = {
+    body: WorkflowPublishDraftBodyInput;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query?: never;
+    url: '/workflows/{workflow_id}/publish';
+};
+
+export type PublishWorkflowErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `forbidden`: The organization does not allow the operation.
+     *
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type PublishWorkflowError = PublishWorkflowErrors[keyof PublishWorkflowErrors];
+
+export type PublishWorkflowResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: WorkflowPublication;
+    };
+};
+
+export type PublishWorkflowResponse = PublishWorkflowResponses[keyof PublishWorkflowResponses];
+
+export type ListWorkflowVersionsData = {
+    body?: never;
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query?: {
+        /**
+         * Items per page.
+         */
+        page_size?: number;
+        /**
+         * `next_cursor` from the previous page. Use it unchanged.
+         */
+        cursor?: string;
+    };
+    url: '/workflows/{workflow_id}/versions';
+};
+
+export type ListWorkflowVersionsErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type ListWorkflowVersionsError = ListWorkflowVersionsErrors[keyof ListWorkflowVersionsErrors];
+
+export type ListWorkflowVersionsResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: Array<WorkflowVersionSummary>;
+        /**
+         * Pass as `cursor` for the next page; null on the last page.
+         */
+        next_cursor: string | null;
+    };
+};
+
+export type ListWorkflowVersionsResponse = ListWorkflowVersionsResponses[keyof ListWorkflowVersionsResponses];
+
+export type GetWorkflowVersionData = {
+    body?: never;
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+        /**
+         * Version ID.
+         */
+        version_id: string;
+    };
+    query?: never;
+    url: '/workflows/{workflow_id}/versions/{version_id}';
+};
+
+export type GetWorkflowVersionErrors = {
+    /**
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type GetWorkflowVersionError = GetWorkflowVersionErrors[keyof GetWorkflowVersionErrors];
+
+export type GetWorkflowVersionResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: WorkflowVersionDetail;
+    };
+};
+
+export type GetWorkflowVersionResponse = GetWorkflowVersionResponses[keyof GetWorkflowVersionResponses];
+
+export type RestoreWorkflowVersionToDraftData = {
+    body: WorkflowRestoreDraftBodyInput;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+        /**
+         * Version ID.
+         */
+        version_id: string;
+    };
+    query?: never;
+    url: '/workflows/{workflow_id}/versions/{version_id}/restore';
+};
+
+export type RestoreWorkflowVersionToDraftErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `forbidden`: The organization does not allow the operation.
+     *
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+    /**
+     * `upstream_error`: The messaging provider failed. Retry later.
+     */
+    502: Error;
+};
+
+export type RestoreWorkflowVersionToDraftError = RestoreWorkflowVersionToDraftErrors[keyof RestoreWorkflowVersionToDraftErrors];
+
+export type RestoreWorkflowVersionToDraftResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: WorkflowDraftCopy;
+    };
+};
+
+export type RestoreWorkflowVersionToDraftResponse = RestoreWorkflowVersionToDraftResponses[keyof RestoreWorkflowVersionToDraftResponses];
+
 export type UploadWorkflowHeaderMediaData = {
     body: UploadWorkflowHeaderMedia;
     headers?: {
@@ -8807,7 +10044,7 @@ export type UploadWorkflowHeaderMediaErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -9968,7 +11205,7 @@ export type CreateAgentErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -10146,7 +11383,7 @@ export type UpdateAgentErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -10259,7 +11496,7 @@ export type AssignConversationAgentErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -10367,7 +11604,7 @@ export type CreateKnowledgeLocationErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -10549,7 +11786,7 @@ export type UpdateKnowledgeLocationErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -10679,7 +11916,7 @@ export type CreateKnowledgeLocationPhotoErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -10861,7 +12098,7 @@ export type CreateKnowledgeContactErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -11039,7 +12276,7 @@ export type UpdateKnowledgeContactErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -11147,7 +12384,7 @@ export type CreateKnowledgeFileErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -11227,7 +12464,7 @@ export type CompleteKnowledgeFileErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -11419,7 +12656,7 @@ export type UpdateKnowledgeFileErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -11544,7 +12781,7 @@ export type ChangeContactsTagsErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -11752,7 +12989,7 @@ export type UpdateTagErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -11882,7 +13119,7 @@ export type ChangeConversationTagsErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -12176,7 +13413,7 @@ export type CreateQuickReplyErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -12368,7 +13605,7 @@ export type UpdateQuickReplyErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -12484,7 +13721,7 @@ export type CreateTemplateErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -12702,7 +13939,7 @@ export type UpdateTemplateErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -12763,7 +14000,7 @@ export type ValidateTemplateErrors = {
      */
     403: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -12932,7 +14169,7 @@ export type UpdateWhatsAppNumberErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -13013,7 +14250,7 @@ export type CreateTemplateMediaUploadErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -13094,7 +14331,7 @@ export type CompleteTemplateMediaUploadErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -13242,7 +14479,7 @@ export type ReplaceTemplateFieldMappingsErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -13320,7 +14557,7 @@ export type UpdateWhatsAppBusinessProfileErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -13406,7 +14643,7 @@ export type CreateProfilePhotoUploadErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -13492,7 +14729,7 @@ export type CompleteProfilePhotoUploadErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -13578,7 +14815,7 @@ export type RequestWhatsAppDisplayNameErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -13791,7 +15028,7 @@ export type CreateBroadcastErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -14051,7 +15288,7 @@ export type AssignConversationsErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -14129,7 +15366,7 @@ export type ResolveConversationHandoffErrors = {
      */
     409: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**
@@ -14254,7 +15491,7 @@ export type PreviewBroadcastAudienceErrors = {
      */
     404: Error;
     /**
-     * `body_too_large`: The JSON body exceeds 64 KiB.
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
      */
     413: Error;
     /**

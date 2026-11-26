@@ -35,6 +35,8 @@ A conversation workflow has three parts:
 
 The API creates and edits conversation workflows. Scheduled workflows are created in Ricky; the API reads, renames, activates, pauses and deletes them, sets their header file, and previews and reviews appointment reminders and their Odoo states ([below](#scheduled-workflows)).
 
+A conversation workflow can contain a WhatsApp template step (`send_whatsapp_template`). The workflow read endpoints return its template and whether it has a header image. The complete-definition POST and PATCH endpoints reject this step. The existing MCP tools accept the header value they return in `headerMedia.storagePath` as an opaque reference. Pass it back unchanged when editing a canvas workflow.
+
 ## Conditions
 
 `condition` is a yes-or-no question. It takes one of two forms:
@@ -362,7 +364,7 @@ Preview, history and states are only for appointment reminder workflows; a birth
 
 You want this: when an order is ready, the customer gets a template. If they have not picked it up in 3 days, they get a reminder.
 
-A workflow cannot do it. Ricky does not start a workflow from your system, and its steps neither send templates nor check tags. Do it with the API from your system:
+This example needs an order-ready event from your system and a later check of the pickup tag. The workflow editor supports neither operation. Use the API from your system for those steps.
 
 1. **Send the template.** Call `POST /conversations` with the phone and the `pedido_listo` template. Use `Idempotency-Key: order-10482-ready`. Keep the `conversation_id` of the response. See [Sending messages](./sending-messages.md).
 2. **Schedule the check.** In your system, schedule a job 3 days later with the order number and the `conversation_id`.
@@ -370,3 +372,15 @@ A workflow cannot do it. Ricky does not start a workflow from your system, and i
 4. **Send the reminder.** If the tag is missing, call `POST /conversations/{conversation_id}/messages` with `type: "template"` and the `pedido_recordatorio` template. Use `Idempotency-Key: order-10482-reminder`, so a retry does not send it twice.
 
 A template can be sent at any time, even when the reply window is closed.
+
+## Shared canvas drafts
+
+Use `POST /workflow-drafts` to create an incomplete conversation, chat-state or call workflow. Use `GET /workflow-drafts` to list editable identities. A new identity appears in the complete-workflow list once it has a complete legacy row. Daily reminders use their existing editor.
+
+`GET /workflows/{workflow_id}/draft` identifies the source of the working copy and returns its revision, published head and candidate token. Pass these values in `expected` with `PUT` to save the partial `document`. The document holds the fields actually entered into the definition, up to 256 KiB and 32 levels. Keep an attachment's public `attachment_id` when editing its step. A save or restore leaves the live graph alone.
+
+After a 409, read the working copy again. To replace the reviewed shared draft, send its fresh tokens and `overwrite: true`. An intervening edit produces another 409. If a complete legacy candidate changed before first publication, review that candidate and supply its current token and `confirm_candidate: true` when publishing.
+
+Use `PATCH /workflow-drafts/{workflow_id}` to change the name immediately. Use `POST /workflows/{workflow_id}/publish` with the observed tokens to publish. First publication stays paused unless `activate` is true. Later publication keeps the workflow's status unless activation is requested. Reuse the same Idempotency-Key when retrying a write.
+
+`GET /workflows/{workflow_id}/versions` pages through publications. Append `/{version_id}` for the definition. POST to `/{version_id}/restore` with `expected` to copy it into the canvas draft. For a never-materialized draft, use `DELETE /workflow-drafts/{workflow_id}`. For a complete workflow, use the existing workflow delete operation.

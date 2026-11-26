@@ -23,6 +23,12 @@ Recomendamos enviarla en todo envío de mensajes. Estas operaciones la aceptan:
 | [Crear una etiqueta](https://getricky.ai/docs/api/reference/catalogs/create-tag) | `POST /tags` | `tags:write` o, en claves anteriores, `contacts:write` |
 | [Crear un workflow](https://getricky.ai/docs/api/reference/workflows/create-workflow) | `POST /workflows` | `workflows:write` |
 | [Actualizar un workflow](https://getricky.ai/docs/api/reference/workflows/update-workflow) | `PATCH /workflows/{workflow_id}` | `workflows:write` |
+| [Crear un borrador compartido](https://getricky.ai/docs/api/reference/workflows/create-workflow-draft) | `POST /workflow-drafts` | `workflows:write` |
+| [Guardar un borrador compartido](https://getricky.ai/docs/api/reference/workflows/save-workflow-draft) | `PUT /workflows/{workflow_id}/draft` | `workflows:write` |
+| [Renombrar un workflow](https://getricky.ai/docs/api/reference/workflows/rename-workflow-draft) | `PATCH /workflow-drafts/{workflow_id}` | `workflows:write` |
+| [Eliminar un borrador sin materializar](https://getricky.ai/docs/api/reference/workflows/delete-workflow-draft) | `DELETE /workflow-drafts/{workflow_id}` | `workflows:write` |
+| [Publicar una revisión](https://getricky.ai/docs/api/reference/workflows/publish-workflow) | `POST /workflows/{workflow_id}/publish` | `workflows:write` |
+| [Restaurar una versión al borrador](https://getricky.ai/docs/api/reference/workflows/restore-workflow-version-to-draft) | `POST /workflows/{workflow_id}/versions/{version_id}/restore` | `workflows:write` |
 | [Definir el archivo del encabezado de una automatización programada](https://getricky.ai/docs/api/reference/workflows/upload-workflow-header-media) | `POST /workflows/{workflow_id}/header-media` | `workflows:write` |
 | [Crear un agente](https://getricky.ai/docs/api/reference/agents/create-agent) | `POST /agents` | `agents:write` |
 | [Actualizar un agente](https://getricky.ai/docs/api/reference/agents/update-agent) | `PATCH /agents/{agent_id}` | `agents:write` |

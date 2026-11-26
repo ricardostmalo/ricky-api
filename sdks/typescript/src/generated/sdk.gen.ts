@@ -2,7 +2,7 @@
 
 import { client } from './client.gen.js';
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client/index.js';
-import type { ActivateWorkflowData, ActivateWorkflowErrors, ActivateWorkflowResponses, AddContactNoteData, AddContactNoteErrors, AddContactNoteResponses, ArchiveAgentData, ArchiveAgentErrors, ArchiveAgentResponses, AssignConversationAgentData, AssignConversationAgentErrors, AssignConversationAgentResponses, AssignConversationData, AssignConversationErrors, AssignConversationResponses, AssignConversationsData, AssignConversationsErrors, AssignConversationsResponses, CancelBroadcastData, CancelBroadcastErrors, CancelBroadcastResponses, ChangeContactsTagsData, ChangeContactsTagsErrors, ChangeContactsTagsResponses, ChangeConversationTagsData, ChangeConversationTagsErrors, ChangeConversationTagsResponses, CloseConversationData, CloseConversationErrors, CloseConversationResponses, CompleteKnowledgeFileData, CompleteKnowledgeFileErrors, CompleteKnowledgeFileResponses, CompleteKnowledgeLocationPhotoData, CompleteKnowledgeLocationPhotoErrors, CompleteKnowledgeLocationPhotoResponses, CompleteProfilePhotoUploadData, CompleteProfilePhotoUploadErrors, CompleteProfilePhotoUploadResponses, CompleteTemplateMediaUploadData, CompleteTemplateMediaUploadErrors, CompleteTemplateMediaUploadResponses, CreateAgentData, CreateAgentErrors, CreateAgentResponses, CreateBroadcastData, CreateBroadcastErrors, CreateBroadcastResponses, CreateContactData, CreateContactErrors, CreateContactFieldData, CreateContactFieldErrors, CreateContactFieldResponses, CreateContactResponses, CreateKnowledgeContactData, CreateKnowledgeContactErrors, CreateKnowledgeContactResponses, CreateKnowledgeFileData, CreateKnowledgeFileErrors, CreateKnowledgeFileResponses, CreateKnowledgeLocationData, CreateKnowledgeLocationErrors, CreateKnowledgeLocationPhotoData, CreateKnowledgeLocationPhotoErrors, CreateKnowledgeLocationPhotoResponses, CreateKnowledgeLocationResponses, CreateProfilePhotoUploadData, CreateProfilePhotoUploadErrors, CreateProfilePhotoUploadResponses, CreateQuickReplyData, CreateQuickReplyErrors, CreateQuickReplyResponses, CreateTagData, CreateTagErrors, CreateTagResponses, CreateTemplateData, CreateTemplateErrors, CreateTemplateMediaUploadData, CreateTemplateMediaUploadErrors, CreateTemplateMediaUploadResponses, CreateTemplateResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, CreateWorkflowData, CreateWorkflowErrors, CreateWorkflowResponses, DeleteContactFieldData, DeleteContactFieldErrors, DeleteContactFieldResponses, DeleteKnowledgeContactData, DeleteKnowledgeContactErrors, DeleteKnowledgeContactResponses, DeleteKnowledgeFileData, DeleteKnowledgeFileErrors, DeleteKnowledgeFileResponses, DeleteKnowledgeLocationData, DeleteKnowledgeLocationErrors, DeleteKnowledgeLocationPhotoData, DeleteKnowledgeLocationPhotoErrors, DeleteKnowledgeLocationPhotoResponses, DeleteKnowledgeLocationResponses, DeleteQuickReplyData, DeleteQuickReplyErrors, DeleteQuickReplyResponses, DeleteTagData, DeleteTagErrors, DeleteTagResponses, DeleteTemplateData, DeleteTemplateErrors, DeleteTemplateResponses, DeleteWorkflowData, DeleteWorkflowErrors, DeleteWorkflowResponses, DisableWebhookData, DisableWebhookErrors, DisableWebhookResponses, FetchMessageMediaData, FetchMessageMediaErrors, FetchMessageMediaResponses, GetAdsReportData, GetAdsReportErrors, GetAdsReportResponses, GetAgentData, GetAgentErrors, GetAgentOptionsData, GetAgentOptionsErrors, GetAgentOptionsResponses, GetAgentResponses, GetBroadcastData, GetBroadcastErrors, GetBroadcastResponses, GetBroadcastsReportData, GetBroadcastsReportErrors, GetBroadcastsReportResponses, GetContactData, GetContactErrors, GetContactResponses, GetConversationData, GetConversationErrors, GetConversationResponses, GetConversationsReportData, GetConversationsReportErrors, GetConversationsReportResponses, GetDashboardReportData, GetDashboardReportErrors, GetDashboardReportResponses, GetGoogleAdsCampaignReportData, GetGoogleAdsCampaignReportErrors, GetGoogleAdsCampaignReportResponses, GetKnowledgeContactData, GetKnowledgeContactErrors, GetKnowledgeContactResponses, GetKnowledgeFileData, GetKnowledgeFileErrors, GetKnowledgeFileReadingData, GetKnowledgeFileReadingErrors, GetKnowledgeFileReadingResponses, GetKnowledgeFileResponses, GetKnowledgeLocationData, GetKnowledgeLocationErrors, GetKnowledgeLocationResponses, GetMessageData, GetMessageErrors, GetMessageResponses, GetMessagesReportData, GetMessagesReportErrors, GetMessagesReportResponses, GetMetaAdsInsightsData, GetMetaAdsInsightsErrors, GetMetaAdsInsightsResponses, GetQuickReplyData, GetQuickReplyErrors, GetQuickReplyResponses, GetResolutionsReportData, GetResolutionsReportErrors, GetResolutionsReportResponses, GetResponsesReportData, GetResponsesReportErrors, GetResponsesReportResponses, GetSendData, GetSendErrors, GetSendResponses, GetTeamReportData, GetTeamReportErrors, GetTeamReportResponses, GetTemplateData, GetTemplateErrors, GetTemplateFieldMappingsData, GetTemplateFieldMappingsErrors, GetTemplateFieldMappingsResponses, GetTemplateResponses, GetWhatsAppNumberData, GetWhatsAppNumberErrors, GetWhatsAppNumberResponses, GetWorkflowData, GetWorkflowErrors, GetWorkflowReminderHistoryData, GetWorkflowReminderHistoryErrors, GetWorkflowReminderHistoryResponses, GetWorkflowResponses, ListAdConversationsData, ListAdConversationsErrors, ListAdConversationsResponses, ListAgentsData, ListAgentsErrors, ListAgentsResponses, ListBroadcastRecipientsData, ListBroadcastRecipientsErrors, ListBroadcastRecipientsResponses, ListBroadcastsData, ListBroadcastsErrors, ListBroadcastsResponses, ListChannelsData, ListChannelsErrors, ListChannelsResponses, ListContactFieldsData, ListContactFieldsErrors, ListContactFieldsResponses, ListContactsData, ListContactsErrors, ListContactsResponses, ListConversationsData, ListConversationsErrors, ListConversationsResponses, ListKnowledgeContactsData, ListKnowledgeContactsErrors, ListKnowledgeContactsResponses, ListKnowledgeFilesData, ListKnowledgeFilesErrors, ListKnowledgeFilesResponses, ListKnowledgeLocationsData, ListKnowledgeLocationsErrors, ListKnowledgeLocationsResponses, ListMembersData, ListMembersErrors, ListMembersResponses, ListMessagesData, ListMessagesErrors, ListMessagesResponses, ListMetaAdsAdSetsData, ListMetaAdsAdSetsErrors, ListMetaAdsAdSetsResponses, ListMetaAdsCampaignsData, ListMetaAdsCampaignsErrors, ListMetaAdsCampaignsResponses, ListMetaAdsData, ListMetaAdsErrors, ListMetaAdsResponses, ListQuickRepliesData, ListQuickRepliesErrors, ListQuickRepliesResponses, ListTagsData, ListTagsErrors, ListTagsResponses, ListTemplatesData, ListTemplatesErrors, ListTemplatesResponses, ListWebhookDeliveriesData, ListWebhookDeliveriesErrors, ListWebhookDeliveriesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, ListWhatsAppNumbersData, ListWhatsAppNumbersErrors, ListWhatsAppNumbersResponses, ListWorkflowExecutionsData, ListWorkflowExecutionsErrors, ListWorkflowExecutionsResponses, ListWorkflowReminderStatesData, ListWorkflowReminderStatesErrors, ListWorkflowReminderStatesResponses, ListWorkflowsData, ListWorkflowsErrors, ListWorkflowsResponses, MarkConversationReadData, MarkConversationReadErrors, MarkConversationReadResponses, MarkConversationUnreadData, MarkConversationUnreadErrors, MarkConversationUnreadResponses, PauseWorkflowData, PauseWorkflowErrors, PauseWorkflowResponses, PreviewBroadcastAudienceData, PreviewBroadcastAudienceErrors, PreviewBroadcastAudienceResponses, PreviewWorkflowRemindersData, PreviewWorkflowRemindersErrors, PreviewWorkflowRemindersResponses, RefreshWhatsAppNumberData, RefreshWhatsAppNumberErrors, RefreshWhatsAppNumberResponses, ReopenConversationData, ReopenConversationErrors, ReopenConversationResponses, ReplaceTemplateFieldMappingsData, ReplaceTemplateFieldMappingsErrors, ReplaceTemplateFieldMappingsResponses, RequestWhatsAppDisplayNameData, RequestWhatsAppDisplayNameErrors, RequestWhatsAppDisplayNameResponses, ResolveConversationHandoffData, ResolveConversationHandoffErrors, ResolveConversationHandoffResponses, RetryWebhookDeliveryData, RetryWebhookDeliveryErrors, RetryWebhookDeliveryResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SearchConversationsData, SearchConversationsErrors, SearchConversationsResponses, SearchMessagesData, SearchMessagesErrors, SearchMessagesResponses, SendMessageData, SendMessageErrors, SendMessageResponses, StartConversationData, StartConversationErrors, StartConversationResponses, TestWebhookData, TestWebhookErrors, TestWebhookResponses, UpdateAgentData, UpdateAgentErrors, UpdateAgentResponses, UpdateContactData, UpdateContactErrors, UpdateContactResponses, UpdateKnowledgeContactData, UpdateKnowledgeContactErrors, UpdateKnowledgeContactResponses, UpdateKnowledgeFileData, UpdateKnowledgeFileErrors, UpdateKnowledgeFileResponses, UpdateKnowledgeLocationData, UpdateKnowledgeLocationErrors, UpdateKnowledgeLocationResponses, UpdateQuickReplyData, UpdateQuickReplyErrors, UpdateQuickReplyResponses, UpdateTagData, UpdateTagErrors, UpdateTagResponses, UpdateTemplateData, UpdateTemplateErrors, UpdateTemplateResponses, UpdateWhatsAppBusinessProfileData, UpdateWhatsAppBusinessProfileErrors, UpdateWhatsAppBusinessProfileResponses, UpdateWhatsAppNumberData, UpdateWhatsAppNumberErrors, UpdateWhatsAppNumberResponses, UpdateWorkflowData, UpdateWorkflowErrors, UpdateWorkflowResponses, UploadWorkflowHeaderMediaData, UploadWorkflowHeaderMediaErrors, UploadWorkflowHeaderMediaResponses, ValidateTemplateData, ValidateTemplateErrors, ValidateTemplateResponses } from './types.gen.js';
+import type { ActivateWorkflowData, ActivateWorkflowErrors, ActivateWorkflowResponses, AddContactNoteData, AddContactNoteErrors, AddContactNoteResponses, ArchiveAgentData, ArchiveAgentErrors, ArchiveAgentResponses, AssignConversationAgentData, AssignConversationAgentErrors, AssignConversationAgentResponses, AssignConversationData, AssignConversationErrors, AssignConversationResponses, AssignConversationsData, AssignConversationsErrors, AssignConversationsResponses, CancelBroadcastData, CancelBroadcastErrors, CancelBroadcastResponses, ChangeContactsTagsData, ChangeContactsTagsErrors, ChangeContactsTagsResponses, ChangeConversationTagsData, ChangeConversationTagsErrors, ChangeConversationTagsResponses, CloseConversationData, CloseConversationErrors, CloseConversationResponses, CompleteKnowledgeFileData, CompleteKnowledgeFileErrors, CompleteKnowledgeFileResponses, CompleteKnowledgeLocationPhotoData, CompleteKnowledgeLocationPhotoErrors, CompleteKnowledgeLocationPhotoResponses, CompleteProfilePhotoUploadData, CompleteProfilePhotoUploadErrors, CompleteProfilePhotoUploadResponses, CompleteTemplateMediaUploadData, CompleteTemplateMediaUploadErrors, CompleteTemplateMediaUploadResponses, CreateAgentData, CreateAgentErrors, CreateAgentResponses, CreateBroadcastData, CreateBroadcastErrors, CreateBroadcastResponses, CreateContactData, CreateContactErrors, CreateContactFieldData, CreateContactFieldErrors, CreateContactFieldResponses, CreateContactResponses, CreateKnowledgeContactData, CreateKnowledgeContactErrors, CreateKnowledgeContactResponses, CreateKnowledgeFileData, CreateKnowledgeFileErrors, CreateKnowledgeFileResponses, CreateKnowledgeLocationData, CreateKnowledgeLocationErrors, CreateKnowledgeLocationPhotoData, CreateKnowledgeLocationPhotoErrors, CreateKnowledgeLocationPhotoResponses, CreateKnowledgeLocationResponses, CreateProfilePhotoUploadData, CreateProfilePhotoUploadErrors, CreateProfilePhotoUploadResponses, CreateQuickReplyData, CreateQuickReplyErrors, CreateQuickReplyResponses, CreateTagData, CreateTagErrors, CreateTagResponses, CreateTemplateData, CreateTemplateErrors, CreateTemplateMediaUploadData, CreateTemplateMediaUploadErrors, CreateTemplateMediaUploadResponses, CreateTemplateResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, CreateWorkflowData, CreateWorkflowDraftData, CreateWorkflowDraftErrors, CreateWorkflowDraftResponses, CreateWorkflowErrors, CreateWorkflowResponses, DeleteContactFieldData, DeleteContactFieldErrors, DeleteContactFieldResponses, DeleteKnowledgeContactData, DeleteKnowledgeContactErrors, DeleteKnowledgeContactResponses, DeleteKnowledgeFileData, DeleteKnowledgeFileErrors, DeleteKnowledgeFileResponses, DeleteKnowledgeLocationData, DeleteKnowledgeLocationErrors, DeleteKnowledgeLocationPhotoData, DeleteKnowledgeLocationPhotoErrors, DeleteKnowledgeLocationPhotoResponses, DeleteKnowledgeLocationResponses, DeleteQuickReplyData, DeleteQuickReplyErrors, DeleteQuickReplyResponses, DeleteTagData, DeleteTagErrors, DeleteTagResponses, DeleteTemplateData, DeleteTemplateErrors, DeleteTemplateResponses, DeleteWorkflowData, DeleteWorkflowDraftData, DeleteWorkflowDraftErrors, DeleteWorkflowDraftResponses, DeleteWorkflowErrors, DeleteWorkflowResponses, DisableWebhookData, DisableWebhookErrors, DisableWebhookResponses, FetchMessageMediaData, FetchMessageMediaErrors, FetchMessageMediaResponses, GetAdsReportData, GetAdsReportErrors, GetAdsReportResponses, GetAgentData, GetAgentErrors, GetAgentOptionsData, GetAgentOptionsErrors, GetAgentOptionsResponses, GetAgentResponses, GetBroadcastData, GetBroadcastErrors, GetBroadcastResponses, GetBroadcastsReportData, GetBroadcastsReportErrors, GetBroadcastsReportResponses, GetContactData, GetContactErrors, GetContactResponses, GetConversationData, GetConversationErrors, GetConversationResponses, GetConversationsReportData, GetConversationsReportErrors, GetConversationsReportResponses, GetDashboardReportData, GetDashboardReportErrors, GetDashboardReportResponses, GetGoogleAdsCampaignReportData, GetGoogleAdsCampaignReportErrors, GetGoogleAdsCampaignReportResponses, GetKnowledgeContactData, GetKnowledgeContactErrors, GetKnowledgeContactResponses, GetKnowledgeFileData, GetKnowledgeFileErrors, GetKnowledgeFileReadingData, GetKnowledgeFileReadingErrors, GetKnowledgeFileReadingResponses, GetKnowledgeFileResponses, GetKnowledgeLocationData, GetKnowledgeLocationErrors, GetKnowledgeLocationResponses, GetMessageData, GetMessageErrors, GetMessageResponses, GetMessagesReportData, GetMessagesReportErrors, GetMessagesReportResponses, GetMetaAdsInsightsData, GetMetaAdsInsightsErrors, GetMetaAdsInsightsResponses, GetQuickReplyData, GetQuickReplyErrors, GetQuickReplyResponses, GetResolutionsReportData, GetResolutionsReportErrors, GetResolutionsReportResponses, GetResponsesReportData, GetResponsesReportErrors, GetResponsesReportResponses, GetSendData, GetSendErrors, GetSendResponses, GetTeamReportData, GetTeamReportErrors, GetTeamReportResponses, GetTemplateData, GetTemplateErrors, GetTemplateFieldMappingsData, GetTemplateFieldMappingsErrors, GetTemplateFieldMappingsResponses, GetTemplateResponses, GetWhatsAppNumberData, GetWhatsAppNumberErrors, GetWhatsAppNumberResponses, GetWorkflowData, GetWorkflowDraftData, GetWorkflowDraftErrors, GetWorkflowDraftResponses, GetWorkflowErrors, GetWorkflowReminderHistoryData, GetWorkflowReminderHistoryErrors, GetWorkflowReminderHistoryResponses, GetWorkflowResponses, GetWorkflowVersionData, GetWorkflowVersionErrors, GetWorkflowVersionResponses, ListAdConversationsData, ListAdConversationsErrors, ListAdConversationsResponses, ListAgentsData, ListAgentsErrors, ListAgentsResponses, ListBroadcastRecipientsData, ListBroadcastRecipientsErrors, ListBroadcastRecipientsResponses, ListBroadcastsData, ListBroadcastsErrors, ListBroadcastsResponses, ListChannelsData, ListChannelsErrors, ListChannelsResponses, ListContactFieldsData, ListContactFieldsErrors, ListContactFieldsResponses, ListContactsData, ListContactsErrors, ListContactsResponses, ListConversationsData, ListConversationsErrors, ListConversationsResponses, ListKnowledgeContactsData, ListKnowledgeContactsErrors, ListKnowledgeContactsResponses, ListKnowledgeFilesData, ListKnowledgeFilesErrors, ListKnowledgeFilesResponses, ListKnowledgeLocationsData, ListKnowledgeLocationsErrors, ListKnowledgeLocationsResponses, ListMembersData, ListMembersErrors, ListMembersResponses, ListMessagesData, ListMessagesErrors, ListMessagesResponses, ListMetaAdsAdSetsData, ListMetaAdsAdSetsErrors, ListMetaAdsAdSetsResponses, ListMetaAdsCampaignsData, ListMetaAdsCampaignsErrors, ListMetaAdsCampaignsResponses, ListMetaAdsData, ListMetaAdsErrors, ListMetaAdsResponses, ListQuickRepliesData, ListQuickRepliesErrors, ListQuickRepliesResponses, ListTagsData, ListTagsErrors, ListTagsResponses, ListTemplatesData, ListTemplatesErrors, ListTemplatesResponses, ListWebhookDeliveriesData, ListWebhookDeliveriesErrors, ListWebhookDeliveriesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, ListWhatsAppNumbersData, ListWhatsAppNumbersErrors, ListWhatsAppNumbersResponses, ListWorkflowDraftsData, ListWorkflowDraftsErrors, ListWorkflowDraftsResponses, ListWorkflowExecutionsData, ListWorkflowExecutionsErrors, ListWorkflowExecutionsResponses, ListWorkflowReminderStatesData, ListWorkflowReminderStatesErrors, ListWorkflowReminderStatesResponses, ListWorkflowsData, ListWorkflowsErrors, ListWorkflowsResponses, ListWorkflowVersionsData, ListWorkflowVersionsErrors, ListWorkflowVersionsResponses, MarkConversationReadData, MarkConversationReadErrors, MarkConversationReadResponses, MarkConversationUnreadData, MarkConversationUnreadErrors, MarkConversationUnreadResponses, PauseWorkflowData, PauseWorkflowErrors, PauseWorkflowResponses, PreviewBroadcastAudienceData, PreviewBroadcastAudienceErrors, PreviewBroadcastAudienceResponses, PreviewWorkflowRemindersData, PreviewWorkflowRemindersErrors, PreviewWorkflowRemindersResponses, PublishWorkflowData, PublishWorkflowErrors, PublishWorkflowResponses, RefreshWhatsAppNumberData, RefreshWhatsAppNumberErrors, RefreshWhatsAppNumberResponses, RenameWorkflowDraftData, RenameWorkflowDraftErrors, RenameWorkflowDraftResponses, ReopenConversationData, ReopenConversationErrors, ReopenConversationResponses, ReplaceTemplateFieldMappingsData, ReplaceTemplateFieldMappingsErrors, ReplaceTemplateFieldMappingsResponses, RequestWhatsAppDisplayNameData, RequestWhatsAppDisplayNameErrors, RequestWhatsAppDisplayNameResponses, ResolveConversationHandoffData, ResolveConversationHandoffErrors, ResolveConversationHandoffResponses, RestoreWorkflowVersionToDraftData, RestoreWorkflowVersionToDraftErrors, RestoreWorkflowVersionToDraftResponses, RetryWebhookDeliveryData, RetryWebhookDeliveryErrors, RetryWebhookDeliveryResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SaveWorkflowDraftData, SaveWorkflowDraftErrors, SaveWorkflowDraftResponses, SearchConversationsData, SearchConversationsErrors, SearchConversationsResponses, SearchMessagesData, SearchMessagesErrors, SearchMessagesResponses, SendMessageData, SendMessageErrors, SendMessageResponses, StartConversationData, StartConversationErrors, StartConversationResponses, TestWebhookData, TestWebhookErrors, TestWebhookResponses, UpdateAgentData, UpdateAgentErrors, UpdateAgentResponses, UpdateContactData, UpdateContactErrors, UpdateContactResponses, UpdateKnowledgeContactData, UpdateKnowledgeContactErrors, UpdateKnowledgeContactResponses, UpdateKnowledgeFileData, UpdateKnowledgeFileErrors, UpdateKnowledgeFileResponses, UpdateKnowledgeLocationData, UpdateKnowledgeLocationErrors, UpdateKnowledgeLocationResponses, UpdateQuickReplyData, UpdateQuickReplyErrors, UpdateQuickReplyResponses, UpdateTagData, UpdateTagErrors, UpdateTagResponses, UpdateTemplateData, UpdateTemplateErrors, UpdateTemplateResponses, UpdateWhatsAppBusinessProfileData, UpdateWhatsAppBusinessProfileErrors, UpdateWhatsAppBusinessProfileResponses, UpdateWhatsAppNumberData, UpdateWhatsAppNumberErrors, UpdateWhatsAppNumberResponses, UpdateWorkflowData, UpdateWorkflowErrors, UpdateWorkflowResponses, UploadWorkflowHeaderMediaData, UploadWorkflowHeaderMediaErrors, UploadWorkflowHeaderMediaResponses, ValidateTemplateData, ValidateTemplateErrors, ValidateTemplateResponses } from './types.gen.js';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -682,6 +682,186 @@ export class RickyApi extends HeyApiClient {
             security: [{ scheme: 'bearer', type: 'http' }],
             url: '/workflows/{workflow_id}/executions',
             ...options
+        });
+    }
+    
+    /**
+     * List editable workflows
+     *
+     * Lists canvas workflows, including drafts with no complete definition, newest created first.
+     *
+     * Scope: `workflows:read`.
+     */
+    public listWorkflowDrafts<ThrowOnError extends boolean = true>(options?: Options<ListWorkflowDraftsData, ThrowOnError>): RequestResult<ListWorkflowDraftsResponses, ListWorkflowDraftsErrors, ThrowOnError, 'data'> {
+        return (options?.client ?? this.client).get<ListWorkflowDraftsResponses, ListWorkflowDraftsErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflow-drafts',
+            ...options
+        });
+    }
+    
+    /**
+     * Create a shared draft
+     *
+     * Creates a canvas draft. The name and definition may be empty.
+     *
+     * Scope: `workflows:write`.
+     */
+    public createWorkflowDraft<ThrowOnError extends boolean = true>(options: Options<CreateWorkflowDraftData, ThrowOnError>): RequestResult<CreateWorkflowDraftResponses, CreateWorkflowDraftErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<CreateWorkflowDraftResponses, CreateWorkflowDraftErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflow-drafts',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Read the working copy
+     *
+     * Returns the saved draft or the current complete candidate and its concurrency tokens.
+     *
+     * Scope: `workflows:read`.
+     */
+    public getWorkflowDraft<ThrowOnError extends boolean = true>(options: Options<GetWorkflowDraftData, ThrowOnError>): RequestResult<GetWorkflowDraftResponses, GetWorkflowDraftErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).get<GetWorkflowDraftResponses, GetWorkflowDraftErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflows/{workflow_id}/draft',
+            ...options
+        });
+    }
+    
+    /**
+     * Save a shared draft
+     *
+     * Replaces the partial definition, up to 256 KiB and 32 levels. Copy the observed revision, head and candidate token. After reviewing a conflict, overwrite adopts the observed head. Saving never publishes.
+     *
+     * Scope: `workflows:write`.
+     */
+    public saveWorkflowDraft<ThrowOnError extends boolean = true>(options: Options<SaveWorkflowDraftData, ThrowOnError>): RequestResult<SaveWorkflowDraftResponses, SaveWorkflowDraftErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).put<SaveWorkflowDraftResponses, SaveWorkflowDraftErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflows/{workflow_id}/draft',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Delete an unpublished identity
+     *
+     * Removes a draft that has never had a complete workflow row.
+     *
+     * Scope: `workflows:write`.
+     */
+    public deleteWorkflowDraft<ThrowOnError extends boolean = true>(options: Options<DeleteWorkflowDraftData, ThrowOnError>): RequestResult<DeleteWorkflowDraftResponses, DeleteWorkflowDraftErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).delete<DeleteWorkflowDraftResponses, DeleteWorkflowDraftErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflow-drafts/{workflow_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Rename a workflow identity
+     *
+     * Changes the name immediately, including on the existing complete workflow.
+     *
+     * Scope: `workflows:write`.
+     */
+    public renameWorkflowDraft<ThrowOnError extends boolean = true>(options: Options<RenameWorkflowDraftData, ThrowOnError>): RequestResult<RenameWorkflowDraftResponses, RenameWorkflowDraftErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).patch<RenameWorkflowDraftResponses, RenameWorkflowDraftErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflow-drafts/{workflow_id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Publish a workflow revision
+     *
+     * Publishes the reviewed revision. The first publication stays paused unless activation is requested. A changed legacy candidate must be explicitly confirmed.
+     *
+     * Scope: `workflows:write`.
+     */
+    public publishWorkflow<ThrowOnError extends boolean = true>(options: Options<PublishWorkflowData, ThrowOnError>): RequestResult<PublishWorkflowResponses, PublishWorkflowErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<PublishWorkflowResponses, PublishWorkflowErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflows/{workflow_id}/publish',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * List published versions
+     *
+     * Lists immutable versions, most recent first, including daily workflows.
+     *
+     * Scope: `workflows:read`.
+     */
+    public listWorkflowVersions<ThrowOnError extends boolean = true>(options: Options<ListWorkflowVersionsData, ThrowOnError>): RequestResult<ListWorkflowVersionsResponses, ListWorkflowVersionsErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).get<ListWorkflowVersionsResponses, ListWorkflowVersionsErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflows/{workflow_id}/versions',
+            ...options
+        });
+    }
+    
+    /**
+     * Read a published version
+     *
+     * Returns the published configuration with public attachment references.
+     *
+     * Scope: `workflows:read`.
+     */
+    public getWorkflowVersion<ThrowOnError extends boolean = true>(options: Options<GetWorkflowVersionData, ThrowOnError>): RequestResult<GetWorkflowVersionResponses, GetWorkflowVersionErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).get<GetWorkflowVersionResponses, GetWorkflowVersionErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflows/{workflow_id}/versions/{version_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Restore a version to the draft
+     *
+     * Replaces the observed canvas draft with a copy of this version. The current name and live version are preserved.
+     *
+     * Scope: `workflows:write`.
+     */
+    public restoreWorkflowVersionToDraft<ThrowOnError extends boolean = true>(options: Options<RestoreWorkflowVersionToDraftData, ThrowOnError>): RequestResult<RestoreWorkflowVersionToDraftResponses, RestoreWorkflowVersionToDraftErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<RestoreWorkflowVersionToDraftResponses, RestoreWorkflowVersionToDraftErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflows/{workflow_id}/versions/{version_id}/restore',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
         });
     }
     

@@ -104,6 +104,15 @@ def test_raises_a_ricky_error_with_code_status_param_and_request_id(ricky):
 
 
 @respx.mock
+def test_draft_conflict_exposes_current_tokens(ricky):
+    current = {"revision": "42", "head_id": None, "candidate_token": None}
+    respx.put(f"{BASE}/workflows/x/draft").respond(409, json={"error": {"code": "conflict", "current": current}})
+    with pytest.raises(RickyError) as raised:
+        ricky.save_workflow_draft("x", {"document": {}, "expected": {"revision": None, "head_id": None}})
+    assert raised.value.current == current
+
+
+@respx.mock
 def test_a_non_json_error_has_no_code_and_the_request_id_header():
     respx.get(f"{BASE}/tags").respond(502, text="Bad gateway", headers={"X-Request-Id": "req_2"})
 

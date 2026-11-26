@@ -23,6 +23,12 @@ We recommend sending it with every message send. These operations accept it:
 | [Create a tag](https://getricky.ai/en/docs/api/reference/catalogs/create-tag) | `POST /tags` | `tags:write` or, on older keys, `contacts:write` |
 | [Create a workflow](https://getricky.ai/en/docs/api/reference/workflows/create-workflow) | `POST /workflows` | `workflows:write` |
 | [Update a workflow](https://getricky.ai/en/docs/api/reference/workflows/update-workflow) | `PATCH /workflows/{workflow_id}` | `workflows:write` |
+| [Create a shared draft](https://getricky.ai/en/docs/api/reference/workflows/create-workflow-draft) | `POST /workflow-drafts` | `workflows:write` |
+| [Save a shared draft](https://getricky.ai/en/docs/api/reference/workflows/save-workflow-draft) | `PUT /workflows/{workflow_id}/draft` | `workflows:write` |
+| [Rename a workflow identity](https://getricky.ai/en/docs/api/reference/workflows/rename-workflow-draft) | `PATCH /workflow-drafts/{workflow_id}` | `workflows:write` |
+| [Delete an unpublished identity](https://getricky.ai/en/docs/api/reference/workflows/delete-workflow-draft) | `DELETE /workflow-drafts/{workflow_id}` | `workflows:write` |
+| [Publish a workflow revision](https://getricky.ai/en/docs/api/reference/workflows/publish-workflow) | `POST /workflows/{workflow_id}/publish` | `workflows:write` |
+| [Restore a version to the draft](https://getricky.ai/en/docs/api/reference/workflows/restore-workflow-version-to-draft) | `POST /workflows/{workflow_id}/versions/{version_id}/restore` | `workflows:write` |
 | [Set the header file of a scheduled workflow](https://getricky.ai/en/docs/api/reference/workflows/upload-workflow-header-media) | `POST /workflows/{workflow_id}/header-media` | `workflows:write` |
 | [Create an agent](https://getricky.ai/en/docs/api/reference/agents/create-agent) | `POST /agents` | `agents:write` |
 | [Update an agent](https://getricky.ai/en/docs/api/reference/agents/update-agent) | `PATCH /agents/{agent_id}` | `agents:write` |

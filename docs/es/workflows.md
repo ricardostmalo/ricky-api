@@ -35,6 +35,8 @@ Un workflow de conversación tiene tres partes:
 
 La API crea y edita workflows de conversación. Los workflows programados se crean en Ricky; la API los lee, les cambia el nombre, los activa, los pausa y los elimina, define su archivo de encabezado, y previsualiza y revisa los recordatorios de citas y sus estados de Odoo ([más abajo](#workflows-programados)).
 
+Un workflow de conversación puede contener un paso de plantilla de WhatsApp (`send_whatsapp_template`). Las rutas de lectura devuelven la plantilla e indican si tiene imagen de encabezado. Las rutas POST y PATCH de definición completa rechazan ese paso. Las herramientas MCP existentes aceptan la referencia opaca que devuelven en `headerMedia.storagePath`. Conserva ese valor al editar el workflow de lienzo.
+
 ## Condiciones
 
 `condition` es una pregunta de sí o no. Tiene una de dos formas:
@@ -362,7 +364,7 @@ La vista previa, el historial y los estados son solo para workflows de recordato
 
 Quieres esto: cuando un pedido está listo, el cliente recibe una plantilla. Si en 3 días no lo retiró, recibe un recordatorio.
 
-Un workflow no lo puede hacer. Ricky no inicia un workflow desde tu sistema, sus pasos no envían plantillas y no revisan etiquetas. Hazlo con la API desde tu sistema:
+Este ejemplo necesita recibir el aviso de pedido listo de tu sistema y consultar después la etiqueta de retiro. El editor de workflows no admite esas dos operaciones. Usa la API desde tu sistema para estos pasos.
 
 1. **Envía la plantilla.** Llama a `POST /conversations` con el teléfono y la plantilla `pedido_listo`. Usa `Idempotency-Key: pedido-10482-listo`. Guarda `conversation_id` de la respuesta. Consulta [Enviar mensajes](./sending-messages.md).
 2. **Programa la revisión.** En tu sistema, agenda una tarea para dentro de 3 días con el número de pedido y `conversation_id`.
@@ -370,3 +372,15 @@ Un workflow no lo puede hacer. Ricky no inicia un workflow desde tu sistema, sus
 4. **Envía el recordatorio.** Si no tiene la etiqueta, llama a `POST /conversations/{conversation_id}/messages` con `type: "template"` y la plantilla `pedido_recordatorio`. Usa `Idempotency-Key: pedido-10482-recordatorio`, para que un reintento no lo envíe dos veces.
 
 Una plantilla se puede enviar en cualquier momento, aunque la ventana de respuesta esté cerrada.
+
+## Borradores compartidos del lienzo
+
+Usa `POST /workflow-drafts` para crear un workflow incompleto de conversación, estado del chat o llamada. `GET /workflow-drafts` lista los workflows editables. Una identidad nueva aparece en la lista clásica cuando ya tiene una fila completa. Los recordatorios diarios conservan su editor.
+
+`GET /workflows/{workflow_id}/draft` indica el origen de la copia y devuelve su revisión, la versión publicada y el token del candidato. Envía esos valores en `expected` con `PUT` para guardar el `document` parcial. El documento conserva los campos ingresados en la definición, hasta 256 KiB y 32 niveles. Conserva el `attachment_id` público de un archivo si editas su paso. Guardar y restaurar mantienen la definición publicada.
+
+Ante un 409, vuelve a leer la copia. Para reemplazar el borrador compartido que acabas de revisar, envía sus valores nuevos y `overwrite: true`. Si alguien lo cambia otra vez, recibes otro 409. Si el candidato completo cambió antes de la primera publicación, revísalo y envía su token actual y `confirm_candidate: true` al publicar.
+
+`PATCH /workflow-drafts/{workflow_id}` cambia el nombre de inmediato. `POST /workflows/{workflow_id}/publish` publica con los valores observados. La primera publicación queda pausada salvo que `activate` sea verdadero. Las siguientes conservan el estado salvo que pidas activar el workflow. Reutiliza la misma Idempotency-Key al reintentar una escritura.
+
+`GET /workflows/{workflow_id}/versions` pagina las publicaciones. Añade `/{version_id}` para leer la definición. Envía un POST a `/{version_id}/restore` con `expected` para copiarla al borrador del lienzo. `DELETE /workflow-drafts/{workflow_id}` elimina una identidad que nunca tuvo fila completa. Para un workflow completo, usa la operación clásica de eliminar.

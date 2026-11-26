@@ -41,7 +41,7 @@ La tabla sale del contrato de la API. Cada página de la referencia lista los c�
 | `conflict` | 409 | El recurso cambió de una forma que impide la operación. |
 | `idempotency_conflict` | 409 | La `Idempotency-Key` ya se usó para otra solicitud. |
 | `request_processing` | 409 | Una solicitud con esta `Idempotency-Key` sigue en proceso o terminó en un estado desconocido. |
-| `body_too_large` | 413 | El cuerpo JSON supera 64 KiB. |
+| `body_too_large` | 413 | El cuerpo JSON supera el tamaño permitido para esta operación. |
 | `unsupported_media_type` | 415 | El cuerpo debe ser `application/json`. |
 | `outside_messaging_window` | 422 | El canal solo admite texto libre dentro de su ventana de respuesta; envía una plantilla. |
 | `rule_violation` | 422 | La solicitud incumple una regla de negocio; `message` dice cuál. |
