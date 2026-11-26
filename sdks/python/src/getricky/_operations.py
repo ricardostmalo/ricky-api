@@ -1013,7 +1013,7 @@ class SyncOperations:
     ) -> Resource[WorkflowPublication]:
         """Publish a workflow revision.
 
-        Publishes the reviewed revision. The first publication stays paused unless activation is requested. A changed legacy candidate must be explicitly confirmed. Publishing fills only equivalent empty conditions, routes and collections and returns the published definition.
+        Publishes the reviewed revision. The first publication stays paused unless activation is requested. A changed legacy candidate must be explicitly confirmed.
 
         Scope: `workflows:write`.
 
@@ -3919,7 +3919,7 @@ class AsyncOperations:
     ) -> Resource[WorkflowPublication]:
         """Publish a workflow revision.
 
-        Publishes the reviewed revision. The first publication stays paused unless activation is requested. A changed legacy candidate must be explicitly confirmed. Publishing fills only equivalent empty conditions, routes and collections and returns the published definition.
+        Publishes the reviewed revision. The first publication stays paused unless activation is requested. A changed legacy candidate must be explicitly confirmed.
 
         Scope: `workflows:write`.
 

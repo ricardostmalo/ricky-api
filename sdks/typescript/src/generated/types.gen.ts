@@ -4392,7 +4392,6 @@ export type WorkflowVersionDetail = {
 };
 
 export type WorkflowPublication = {
-    definition: WorkflowDraftDocument;
     head_id: string;
     number: number;
     status: 'active' | 'paused';

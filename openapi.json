@@ -5992,7 +5992,7 @@
           "Workflows"
         ],
         "summary": "Publish a workflow revision",
-        "description": "Publishes the reviewed revision. The first publication stays paused unless activation is requested. A changed legacy candidate must be explicitly confirmed. Publishing fills only equivalent empty conditions, routes and collections and returns the published definition.\n\nScope: `workflows:write`.",
+        "description": "Publishes the reviewed revision. The first publication stays paused unless activation is requested. A changed legacy candidate must be explicitly confirmed.\n\nScope: `workflows:write`.",
         "parameters": [
           {
             "name": "workflow_id",
@@ -32389,9 +32389,6 @@
       "WorkflowPublication": {
         "type": "object",
         "properties": {
-          "definition": {
-            "$ref": "#/components/schemas/WorkflowDraftDocument"
-          },
           "head_id": {
             "type": "string",
             "format": "uuid"
@@ -32410,7 +32407,6 @@
           }
         },
         "required": [
-          "definition",
           "head_id",
           "number",
           "status"

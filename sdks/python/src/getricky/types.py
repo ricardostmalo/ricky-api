@@ -4855,6 +4855,12 @@ class WorkflowVersionDetailDefinition(TypedDict):
     close_after_send: NotRequired[bool]
 
 
+class WorkflowPublication(TypedDict):
+    head_id: str
+    number: int
+    status: Literal["active", "paused"]
+
+
 class WorkflowMutationWorkflowMutation(TypedDict):
     """
     Only metadata is returned if the stored definition is unreadable.
@@ -8243,13 +8249,6 @@ class WorkflowVersionDetail(TypedDict):
     actor_user_id: Optional[str]
     actor_api_key_id: Optional[str]
     definition: Union[WorkflowVersionDetailDefinition, WorkflowDraftDocument]
-
-
-class WorkflowPublication(TypedDict):
-    definition: WorkflowDraftDocument
-    head_id: str
-    number: int
-    status: Literal["active", "paused"]
 
 
 WorkflowMutation: TypeAlias = Union[Workflow, WorkflowMutationWorkflowMutation]
