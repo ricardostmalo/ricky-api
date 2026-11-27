@@ -3820,6 +3820,10 @@ export type Workflow = {
              * GesDen appointment states it reminds, by their GesDen id.
              */
             appointment_states: Array<string>;
+            /**
+             * GesDen "Solicitante" an appointment must carry to be reminded, compared trimmed and case-insensitive; null reminds every appointment of the day.
+             */
+            requested_by: string | null;
         } | {
             kind: 'odoo_birthdays';
         } | {
@@ -4677,6 +4681,7 @@ export type WorkflowVersionDetail = {
             kind: string;
             days_ahead?: number;
             appointment_states?: Array<string>;
+            requested_by?: string | null;
         };
         flow: {
             entry: string;

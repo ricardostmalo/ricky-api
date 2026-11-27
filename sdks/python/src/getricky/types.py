@@ -4222,6 +4222,10 @@ class WorkflowDefinition1Source1(TypedDict):
     """
     GesDen appointment states it reminds, by their GesDen id.
     """
+    requested_by: Optional[str]
+    """
+    GesDen "Solicitante" an appointment must carry to be reminded, compared trimmed and case-insensitive; null reminds every appointment of the day.
+    """
 
 
 class WorkflowDefinition1Source2(TypedDict):
@@ -5193,6 +5197,7 @@ class WorkflowVersionDetailDefinitionSource(TypedDict):
     kind: str
     days_ahead: NotRequired[float]
     appointment_states: NotRequired[List[str]]
+    requested_by: NotRequired[Optional[str]]
 
 
 class WorkflowVersionDetailDefinitionFlowStepHeaderMedia(TypedDict, closed=True):

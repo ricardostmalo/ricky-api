@@ -30335,12 +30335,20 @@
                               "type": "string"
                             },
                             "description": "GesDen appointment states it reminds, by their GesDen id."
+                          },
+                          "requested_by": {
+                            "description": "GesDen \"Solicitante\" an appointment must carry to be reminded, compared trimmed and case-insensitive; null reminds every appointment of the day.",
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           }
                         },
                         "required": [
                           "kind",
                           "days_ahead",
-                          "appointment_states"
+                          "appointment_states",
+                          "requested_by"
                         ]
                       },
                       {
@@ -34165,6 +34173,12 @@
                         "items": {
                           "type": "string"
                         }
+                      },
+                      "requested_by": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                       }
                     },
                     "required": [
