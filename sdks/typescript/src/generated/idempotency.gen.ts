@@ -55,6 +55,7 @@ export const idempotentOperations: ReadonlySet<string> = new Set([
     'POST /workflow-drafts',
     'POST /workflows',
     'POST /workflows/{workflow_id}/header-media',
+    'POST /workflows/{workflow_id}/publication/status',
     'POST /workflows/{workflow_id}/publish',
     'POST /workflows/{workflow_id}/versions/{version_id}/restore',
     'PUT /templates/{template_id}/field-mappings',

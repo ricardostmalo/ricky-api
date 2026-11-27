@@ -14,7 +14,7 @@ export type Error = {
         /**
          * Stable, machine-readable error code.
          */
-        code: 'invalid_input' | 'invalid_json' | 'unauthorized' | 'insufficient_scope' | 'forbidden' | 'not_found' | 'conflict' | 'idempotency_conflict' | 'request_processing' | 'body_too_large' | 'unsupported_media_type' | 'outside_messaging_window' | 'rule_violation' | 'rate_limited' | 'internal_error' | 'upstream_error' | 'unavailable';
+        code: 'requires_newer_api' | 'invalid_input' | 'invalid_json' | 'unauthorized' | 'insufficient_scope' | 'forbidden' | 'not_found' | 'conflict' | 'idempotency_conflict' | 'request_processing' | 'body_too_large' | 'unsupported_media_type' | 'outside_messaging_window' | 'rule_violation' | 'rate_limited' | 'internal_error' | 'upstream_error' | 'unavailable';
         /**
          * Human-readable explanation. Do not parse it.
          */
@@ -4144,6 +4144,93 @@ export type RenamedWorkflowIdentity = {
     name: string;
 };
 
+export type WorkflowV2DraftCondition = {
+    kind: 'compare';
+    operator?: 'is' | 'is_not';
+    field: 'trigger_kind';
+    values?: Array<string>;
+} | {
+    kind: 'compare';
+    operator?: 'is' | 'is_not';
+    field: 'previous_conversation_status';
+    values?: Array<'open' | 'closed'>;
+} | {
+    kind: 'compare';
+    operator?: 'is' | 'is_not';
+    field: 'previous_assignee_kind' | 'new_assignee_kind';
+    values?: Array<'person' | 'agent' | 'nobody'>;
+} | {
+    kind: 'all' | 'any';
+    conditions?: Array<WorkflowV2DraftCondition>;
+} | {
+    kind: 'compare';
+    field: 'ai';
+    operator?: 'is' | 'is_not';
+    values?: Array<'on' | 'off'>;
+} | {
+    kind: 'compare';
+    field: 'assignee';
+    operator?: 'is' | 'is_not';
+    values?: Array<{
+        kind?: 'agent';
+        agent_id?: string;
+    } | {
+        kind?: 'person';
+        user_id?: string;
+    } | {
+        kind?: 'nobody';
+    }>;
+} | {
+    kind: 'compare';
+    field: 'channel';
+    operator?: 'is' | 'is_not';
+    values?: Array<string>;
+} | {
+    kind: 'compare';
+    field: 'conversation_status';
+    operator?: 'is' | 'is_not';
+    values?: Array<'open' | 'closed'>;
+} | {
+    kind: 'compare';
+    field: 'message_type';
+    operator?: 'is' | 'is_not';
+    values?: Array<'text' | 'button' | 'image' | 'audio' | 'video' | 'document' | 'location' | 'sticker' | 'other'>;
+} | {
+    kind: 'compare';
+    field: 'message_sender';
+    operator?: 'is' | 'is_not';
+    values?: Array<'person' | 'ai' | 'automation' | 'broadcast' | 'external_app'>;
+} | {
+    kind: 'compare';
+    field: 'message_first';
+    operator?: 'is' | 'is_not';
+} | {
+    kind: 'compare';
+    field: 'time';
+    operator?: 'within' | 'outside';
+    business_hours?: {
+        timezone?: string;
+        closed_dates?: Array<string>;
+        days?: {
+            [key: string]: Array<{
+                start?: string;
+                end?: string;
+            }>;
+        };
+    };
+} | {
+    kind: 'compare';
+    field: 'variable';
+    operator?: 'is' | 'is_not' | 'contains' | 'not_contains' | 'exists' | 'not_exists';
+    name?: string;
+    value?: string;
+} | {
+    kind: 'compare';
+    field: 'message_text';
+    operator?: 'contains' | 'not_contains';
+    value?: string;
+};
+
 export type WorkflowDraftCondition = {
     kind: 'all' | 'any';
     conditions?: Array<WorkflowDraftCondition>;
@@ -4311,6 +4398,191 @@ export type WorkflowDraftDocument = {
         entry?: string;
         steps?: Array<WorkflowDraftStep>;
     };
+} | {
+    format: 2;
+    triggers: Array<{
+        kind: 'schedule';
+        config: {
+            audience?: {
+                kind: 'conversations';
+            } | {
+                kind: 'conversations';
+                selection: 'all';
+            } | {
+                kind: 'conversations';
+                selection: 'matching';
+                condition?: WorkflowV2DraftCondition;
+            } | {
+                kind: 'connector';
+                source_id?: string;
+                parameters?: {
+                    [key: string]: unknown;
+                };
+            };
+            times?: Array<{
+                time?: string;
+                weekdays?: Array<number>;
+            }>;
+            timezone?: string;
+        };
+    } | {
+        kind: 'call_received';
+        config: {
+            [key: string]: never;
+        };
+    } | {
+        kind: 'conversation_assigned';
+        config: {
+            [key: string]: never;
+        };
+    } | {
+        kind: 'conversation_inactive';
+        config: {
+            inactivity_seconds?: number;
+        };
+    } | {
+        kind: 'conversation_opened';
+        config: {
+            [key: string]: never;
+        };
+    } | {
+        kind: 'first_message_received';
+        config: {
+            [key: string]: never;
+        };
+    } | {
+        kind: 'message_received';
+        config: {
+            [key: string]: never;
+        };
+    } | {
+        kind: 'message_sent';
+        config: {
+            [key: string]: never;
+        };
+    } | {
+        kind: 'team_message_unanswered';
+        config: {
+            inactivity_seconds?: number;
+        };
+    } | {
+        kind: 'outbound_message_sent';
+        config: {
+            [key: string]: never;
+        };
+    } | {
+        kind: 'assignee_changed';
+        config: {
+            [key: string]: never;
+        };
+    } | {
+        kind: 'conversation_opening';
+        config: {
+            [key: string]: never;
+        };
+    }>;
+    condition?: WorkflowV2DraftCondition | null;
+    flow?: {
+        entry?: string;
+        steps?: Array<{
+            id: string;
+            kind: 'end';
+            next?: string | null;
+        } | {
+            text?: string;
+            id: string;
+            kind: 'send_message';
+            next?: string | null;
+        } | {
+            template?: {
+                id?: string;
+                next?: string | null;
+                kind?: 'send_whatsapp_template';
+                channel_id?: string;
+                template_id?: string;
+                template_name?: string;
+                language?: string;
+                header_media?: {
+                    file_name?: string;
+                    mime_type?: string;
+                    size?: number;
+                    attachment_id?: string;
+                };
+                parameters?: {
+                    [key: string]: 'appointment_start' | 'branch_name' | 'customer_first_name' | {
+                        text?: string;
+                    };
+                };
+            };
+            id: string;
+            kind: 'send_whatsapp_template';
+            next?: string | null;
+        } | {
+            text?: string;
+            answer_key?: string;
+            choices?: Array<{
+                id?: string;
+                label?: string;
+                next?: string | null;
+            }>;
+            timeout_seconds?: number;
+            on_invalid?: string | null;
+            on_timeout?: string | null;
+            id: string;
+            kind: 'ask_question';
+            next?: string | null;
+        } | {
+            branches?: Array<{
+                id?: string;
+                name?: string;
+                condition?: WorkflowV2DraftCondition;
+                next?: string | null;
+            }>;
+            id: string;
+            kind: 'decision';
+            next?: string | null;
+        } | {
+            seconds?: number;
+            id: string;
+            kind: 'wait';
+            next?: string | null;
+        } | {
+            user_id?: string;
+            user_ids?: Array<string>;
+            id: string;
+            kind: 'assign_user';
+            next?: string | null;
+        } | {
+            agent_id?: string;
+            id: string;
+            kind: 'assign_agent';
+            next?: string | null;
+        } | {
+            only_if_opened_by_send?: boolean;
+            id: string;
+            kind: 'close_conversation';
+            next?: string | null;
+        } | {
+            agent_id?: string;
+            id: string;
+            kind: 'turn_on_ai';
+            next?: string | null;
+        } | {
+            id: string;
+            kind: 'turn_off_ai';
+            next?: string | null;
+        } | {
+            agent_id?: string;
+            id: string;
+            kind: 'answer_call';
+            next?: string | null;
+        } | {
+            text?: string;
+            id: string;
+            kind: 'decline_call';
+            next?: string | null;
+        }>;
+    };
 };
 
 export type WorkflowDraftCopy = {
@@ -4396,6 +4668,12 @@ export type WorkflowPublication = {
     head_id: string;
     number: number;
     status: 'active' | 'paused';
+};
+
+export type WorkflowPublicationStatus = {
+    head_id: string;
+    status: 'active' | 'paused';
+    id: string;
 };
 
 export type WorkflowMutation = Workflow | {
@@ -6925,6 +7203,93 @@ export type UpdateTemplate = {
     }>;
 };
 
+export type WorkflowV2DraftConditionInput = {
+    kind: 'compare';
+    operator?: 'is' | 'is_not';
+    field: 'trigger_kind';
+    values?: Array<string>;
+} | {
+    kind: 'compare';
+    operator?: 'is' | 'is_not';
+    field: 'previous_conversation_status';
+    values?: Array<'open' | 'closed'>;
+} | {
+    kind: 'compare';
+    operator?: 'is' | 'is_not';
+    field: 'previous_assignee_kind' | 'new_assignee_kind';
+    values?: Array<'person' | 'agent' | 'nobody'>;
+} | {
+    kind: 'all' | 'any';
+    conditions?: Array<WorkflowV2DraftConditionInput>;
+} | {
+    kind: 'compare';
+    field: 'ai';
+    operator?: 'is' | 'is_not';
+    values?: Array<'on' | 'off'>;
+} | {
+    kind: 'compare';
+    field: 'assignee';
+    operator?: 'is' | 'is_not';
+    values?: Array<{
+        kind?: 'agent';
+        agent_id?: string;
+    } | {
+        kind?: 'person';
+        user_id?: string;
+    } | {
+        kind?: 'nobody';
+    }>;
+} | {
+    kind: 'compare';
+    field: 'channel';
+    operator?: 'is' | 'is_not';
+    values?: Array<string>;
+} | {
+    kind: 'compare';
+    field: 'conversation_status';
+    operator?: 'is' | 'is_not';
+    values?: Array<'open' | 'closed'>;
+} | {
+    kind: 'compare';
+    field: 'message_type';
+    operator?: 'is' | 'is_not';
+    values?: Array<'text' | 'button' | 'image' | 'audio' | 'video' | 'document' | 'location' | 'sticker' | 'other'>;
+} | {
+    kind: 'compare';
+    field: 'message_sender';
+    operator?: 'is' | 'is_not';
+    values?: Array<'person' | 'ai' | 'automation' | 'broadcast' | 'external_app'>;
+} | {
+    kind: 'compare';
+    field: 'message_first';
+    operator?: 'is' | 'is_not';
+} | {
+    kind: 'compare';
+    field: 'time';
+    operator?: 'within' | 'outside';
+    business_hours?: {
+        timezone?: string;
+        closed_dates?: Array<string>;
+        days?: {
+            [key: string]: Array<{
+                start?: string;
+                end?: string;
+            }>;
+        };
+    };
+} | {
+    kind: 'compare';
+    field: 'variable';
+    operator?: 'is' | 'is_not' | 'contains' | 'not_contains' | 'exists' | 'not_exists';
+    name?: string;
+    value?: string;
+} | {
+    kind: 'compare';
+    field: 'message_text';
+    operator?: 'contains' | 'not_contains';
+    value?: string;
+};
+
 export type WorkflowDraftConditionInput = {
     kind: 'all' | 'any';
     conditions?: Array<WorkflowDraftConditionInput>;
@@ -7092,6 +7457,191 @@ export type WorkflowDraftDocumentInput = {
         entry?: string;
         steps?: Array<WorkflowDraftStepInput>;
     };
+} | {
+    format: 2;
+    triggers: Array<{
+        kind: 'schedule';
+        config: {
+            audience?: {
+                kind: 'conversations';
+            } | {
+                kind: 'conversations';
+                selection: 'all';
+            } | {
+                kind: 'conversations';
+                selection: 'matching';
+                condition?: WorkflowV2DraftConditionInput;
+            } | {
+                kind: 'connector';
+                source_id?: string;
+                parameters?: {
+                    [key: string]: unknown;
+                };
+            };
+            times?: Array<{
+                time?: string;
+                weekdays?: Array<number>;
+            }>;
+            timezone?: string;
+        };
+    } | {
+        kind: 'call_received';
+        config: {
+            [key: string]: never;
+        };
+    } | {
+        kind: 'conversation_assigned';
+        config: {
+            [key: string]: never;
+        };
+    } | {
+        kind: 'conversation_inactive';
+        config: {
+            inactivity_seconds?: number;
+        };
+    } | {
+        kind: 'conversation_opened';
+        config: {
+            [key: string]: never;
+        };
+    } | {
+        kind: 'first_message_received';
+        config: {
+            [key: string]: never;
+        };
+    } | {
+        kind: 'message_received';
+        config: {
+            [key: string]: never;
+        };
+    } | {
+        kind: 'message_sent';
+        config: {
+            [key: string]: never;
+        };
+    } | {
+        kind: 'team_message_unanswered';
+        config: {
+            inactivity_seconds?: number;
+        };
+    } | {
+        kind: 'outbound_message_sent';
+        config: {
+            [key: string]: never;
+        };
+    } | {
+        kind: 'assignee_changed';
+        config: {
+            [key: string]: never;
+        };
+    } | {
+        kind: 'conversation_opening';
+        config: {
+            [key: string]: never;
+        };
+    }>;
+    condition?: WorkflowV2DraftConditionInput | null;
+    flow?: {
+        entry?: string;
+        steps?: Array<{
+            id: string;
+            kind: 'end';
+            next?: string | null;
+        } | {
+            text?: string;
+            id: string;
+            kind: 'send_message';
+            next?: string | null;
+        } | {
+            template?: {
+                id?: string;
+                next?: string | null;
+                kind?: 'send_whatsapp_template';
+                channel_id?: string;
+                template_id?: string;
+                template_name?: string;
+                language?: string;
+                header_media?: {
+                    file_name?: string;
+                    mime_type?: string;
+                    size?: number;
+                    attachment_id?: string;
+                };
+                parameters?: {
+                    [key: string]: 'appointment_start' | 'branch_name' | 'customer_first_name' | {
+                        text?: string;
+                    };
+                };
+            };
+            id: string;
+            kind: 'send_whatsapp_template';
+            next?: string | null;
+        } | {
+            text?: string;
+            answer_key?: string;
+            choices?: Array<{
+                id?: string;
+                label?: string;
+                next?: string | null;
+            }>;
+            timeout_seconds?: number;
+            on_invalid?: string | null;
+            on_timeout?: string | null;
+            id: string;
+            kind: 'ask_question';
+            next?: string | null;
+        } | {
+            branches?: Array<{
+                id?: string;
+                name?: string;
+                condition?: WorkflowV2DraftConditionInput;
+                next?: string | null;
+            }>;
+            id: string;
+            kind: 'decision';
+            next?: string | null;
+        } | {
+            seconds?: number;
+            id: string;
+            kind: 'wait';
+            next?: string | null;
+        } | {
+            user_id?: string;
+            user_ids?: Array<string>;
+            id: string;
+            kind: 'assign_user';
+            next?: string | null;
+        } | {
+            agent_id?: string;
+            id: string;
+            kind: 'assign_agent';
+            next?: string | null;
+        } | {
+            only_if_opened_by_send?: boolean;
+            id: string;
+            kind: 'close_conversation';
+            next?: string | null;
+        } | {
+            agent_id?: string;
+            id: string;
+            kind: 'turn_on_ai';
+            next?: string | null;
+        } | {
+            id: string;
+            kind: 'turn_off_ai';
+            next?: string | null;
+        } | {
+            agent_id?: string;
+            id: string;
+            kind: 'answer_call';
+            next?: string | null;
+        } | {
+            text?: string;
+            id: string;
+            kind: 'decline_call';
+            next?: string | null;
+        }>;
+    };
 };
 
 export type WorkflowExpectedDraftInput = {
@@ -7123,6 +7673,11 @@ export type WorkflowPublishDraftBodyInput = {
 
 export type WorkflowRestoreDraftBodyInput = {
     expected: WorkflowExpectedDraftInput;
+};
+
+export type WorkflowPublicationStatusInput = {
+    head_id: string;
+    status: 'active' | 'paused';
 };
 
 /**
@@ -9041,6 +9596,10 @@ export type DeleteWorkflowErrors = {
      */
     404: Error;
     /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
      * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
      */
     429: Error;
@@ -9092,6 +9651,10 @@ export type GetWorkflowErrors = {
      * `not_found`: The resource does not exist in this organization.
      */
     404: Error;
+    /**
+     * `requires_newer_api`: Use the workflow operation named in the message to work with this definition.
+     */
+    409: Error;
     /**
      * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
      */
@@ -9153,6 +9716,8 @@ export type UpdateWorkflowErrors = {
      */
     404: Error;
     /**
+     * `requires_newer_api`: Use the workflow operation named in the message to work with this definition.
+     *
      * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
      *
      * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
@@ -9225,6 +9790,10 @@ export type ActivateWorkflowErrors = {
      */
     404: Error;
     /**
+     * `requires_newer_api`: Use the workflow operation named in the message to work with this definition.
+     */
+    409: Error;
+    /**
      * `rule_violation`: The request breaks a business rule; `message` says which.
      */
     422: Error;
@@ -9280,6 +9849,10 @@ export type PauseWorkflowErrors = {
      * `not_found`: The resource does not exist in this organization.
      */
     404: Error;
+    /**
+     * `requires_newer_api`: Use the workflow operation named in the message to work with this definition.
+     */
+    409: Error;
     /**
      * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
      */
@@ -9367,6 +9940,86 @@ export type ListWorkflowExecutionsResponses = {
 };
 
 export type ListWorkflowExecutionsResponse = ListWorkflowExecutionsResponses[keyof ListWorkflowExecutionsResponses];
+
+export type SetWorkflowPublicationStatusData = {
+    body: WorkflowPublicationStatusInput;
+    headers?: {
+        /**
+         * Optional. A value you choose, unique per logical write, 8–200 characters: a UUID or an ID from your system such as `order-10482-ready`. Retrying with the same key and body replays the first response instead of repeating the write.
+         */
+        'Idempotency-Key'?: string;
+    };
+    path: {
+        /**
+         * Workflow ID.
+         */
+        workflow_id: string;
+    };
+    query?: never;
+    url: '/workflows/{workflow_id}/publication/status';
+};
+
+export type SetWorkflowPublicationStatusErrors = {
+    /**
+     * `invalid_json`: The body is not valid JSON.
+     *
+     * `invalid_input`: A parameter or body field is invalid; `param` names it when known.
+     */
+    400: Error;
+    /**
+     * `unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.
+     */
+    401: Error;
+    /**
+     * `insufficient_scope`: The key lacks the scope this operation requires.
+     */
+    403: Error;
+    /**
+     * `not_found`: The resource does not exist in this organization.
+     */
+    404: Error;
+    /**
+     * `idempotency_conflict`: The `Idempotency-Key` was used for a different request.
+     *
+     * `request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.
+     *
+     * `conflict`: The resource changed in a way that prevents the operation.
+     */
+    409: Error;
+    /**
+     * `body_too_large`: The JSON body exceeds the size limit for this operation.
+     */
+    413: Error;
+    /**
+     * `unsupported_media_type`: The body must be `application/json`.
+     */
+    415: Error;
+    /**
+     * `rule_violation`: The request breaks a business rule; `message` says which.
+     */
+    422: Error;
+    /**
+     * `rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.
+     */
+    429: Error;
+    /**
+     * `internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.
+     */
+    500: Error;
+};
+
+export type SetWorkflowPublicationStatusError = SetWorkflowPublicationStatusErrors[keyof SetWorkflowPublicationStatusErrors];
+
+export type SetWorkflowPublicationStatusResponses = {
+    /**
+     * Success.
+     */
+    200: {
+        data: WorkflowPublicationStatus;
+    };
+};
+
+export type SetWorkflowPublicationStatusResponse = SetWorkflowPublicationStatusResponses[keyof SetWorkflowPublicationStatusResponses];
 
 export type ListWorkflowDraftsData = {
     body?: never;

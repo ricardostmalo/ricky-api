@@ -110,6 +110,8 @@ from .types import (
     WorkflowIdentity,
     WorkflowMutation,
     WorkflowPublication,
+    WorkflowPublicationStatus,
+    WorkflowPublicationStatusInput,
     WorkflowPublishDraftBodyInput,
     WorkflowRenameDraftBodyInput,
     WorkflowRestoreDraftBodyInput,
@@ -870,6 +872,31 @@ class SyncOperations:
             query={"page_size": page_size, "cursor": cursor},
         ))
 
+    def set_workflow_publication_status(
+        self,
+        workflow_id: str,
+        body: WorkflowPublicationStatusInput,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WorkflowPublicationStatus]:
+        """Change native workflow status.
+
+        Activates or pauses the named published version without publishing a draft. A changed head returns a conflict.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WorkflowPublicationStatus], self._request(
+            "POST",
+            "/workflows/{workflow_id}/publication/status",
+            path_parameters={"workflow_id": workflow_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
     def list_workflow_drafts(
         self,
         *,
@@ -900,7 +927,7 @@ class SyncOperations:
     ) -> Resource[WorkflowDraftCopy]:
         """Create a shared draft.
 
-        Creates a canvas draft. The name and definition may be empty. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete.
+        Creates a canvas draft. The name and definition may be empty. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete. Format 2 documents require enrollment for this organization.
 
         Scope: `workflows:write`.
 
@@ -940,7 +967,7 @@ class SyncOperations:
     ) -> Resource[WorkflowDraftCopy]:
         """Save a shared draft.
 
-        Replaces the partial definition, up to 256 KiB and 32 levels. Copy the observed revision, head and candidate token. After reviewing a conflict, overwrite adopts the observed head. Saving never publishes. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete.
+        Replaces the partial definition, up to 256 KiB and 32 levels. Copy the observed revision, head and candidate token. After reviewing a conflict, overwrite adopts the observed head. Saving never publishes. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete. Format 2 documents require enrollment for this organization.
 
         Scope: `workflows:write`.
 
@@ -3776,6 +3803,31 @@ class AsyncOperations:
             query={"page_size": page_size, "cursor": cursor},
         ))
 
+    async def set_workflow_publication_status(
+        self,
+        workflow_id: str,
+        body: WorkflowPublicationStatusInput,
+        *,
+        idempotency_key: Optional[str] = None,
+    ) -> Resource[WorkflowPublicationStatus]:
+        """Change native workflow status.
+
+        Activates or pauses the named published version without publishing a draft. A changed head returns a conflict.
+
+        Scope: `workflows:write`.
+
+        Args:
+            idempotency_key: Retrying with the same key replays the first response. The client sends a random one when you pass none.
+        """
+        return cast(Resource[WorkflowPublicationStatus], await self._request(
+            "POST",
+            "/workflows/{workflow_id}/publication/status",
+            path_parameters={"workflow_id": workflow_id},
+            body=body,
+            idempotent=True,
+            idempotency_key=idempotency_key,
+        ))
+
     async def list_workflow_drafts(
         self,
         *,
@@ -3806,7 +3858,7 @@ class AsyncOperations:
     ) -> Resource[WorkflowDraftCopy]:
         """Create a shared draft.
 
-        Creates a canvas draft. The name and definition may be empty. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete.
+        Creates a canvas draft. The name and definition may be empty. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete. Format 2 documents require enrollment for this organization.
 
         Scope: `workflows:write`.
 
@@ -3846,7 +3898,7 @@ class AsyncOperations:
     ) -> Resource[WorkflowDraftCopy]:
         """Save a shared draft.
 
-        Replaces the partial definition, up to 256 KiB and 32 levels. Copy the observed revision, head and candidate token. After reviewing a conflict, overwrite adopts the observed head. Saving never publishes. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete.
+        Replaces the partial definition, up to 256 KiB and 32 levels. Copy the observed revision, head and candidate token. After reviewing a conflict, overwrite adopts the observed head. Saving never publishes. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete. Format 2 documents require enrollment for this organization.
 
         Scope: `workflows:write`.
 

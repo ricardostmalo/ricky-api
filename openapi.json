@@ -4350,6 +4350,16 @@
               }
             }
           },
+          "409": {
+            "description": "`requires_newer_api`: Use the workflow operation named in the message to work with this definition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "429": {
             "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
             "content": {
@@ -4478,7 +4488,7 @@
             }
           },
           "409": {
-            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.\n\n`conflict`: The resource changed in a way that prevents the operation.",
+            "description": "`requires_newer_api`: Use the workflow operation named in the message to work with this definition.\n\n`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.\n\n`conflict`: The resource changed in a way that prevents the operation.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4631,6 +4641,16 @@
               }
             }
           },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "429": {
             "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
             "content": {
@@ -4739,6 +4759,16 @@
           },
           "404": {
             "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`requires_newer_api`: Use the workflow operation named in the message to work with this definition.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4865,6 +4895,16 @@
           },
           "404": {
             "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`requires_newer_api`: Use the workflow operation named in the message to work with this definition.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5045,6 +5085,175 @@
         }
       }
     },
+    "/workflows/{workflow_id}/publication/status": {
+      "post": {
+        "operationId": "setWorkflowPublicationStatus",
+        "tags": [
+          "Workflows"
+        ],
+        "summary": "Change native workflow status",
+        "description": "Activates or pauses the named published version without publishing a draft. A changed head returns a conflict.\n\nScope: `workflows:write`.",
+        "parameters": [
+          {
+            "name": "workflow_id",
+            "in": "path",
+            "required": true,
+            "description": "Workflow ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkflowPublicationStatusInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/X-Request-Id"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/X-RateLimit-Limit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/X-RateLimit-Remaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/X-RateLimit-Reset"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/WorkflowPublicationStatus"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`invalid_json`: The body is not valid JSON.\n\n`invalid_input`: A parameter or body field is invalid; `param` names it when known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`unauthorized`: The `Authorization` header is missing, malformed, expired or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`insufficient_scope`: The key lacks the scope this operation requires.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`not_found`: The resource does not exist in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`idempotency_conflict`: The `Idempotency-Key` was used for a different request.\n\n`request_processing`: A request with this `Idempotency-Key` is still processing or ended in an unknown state.\n\n`conflict`: The resource changed in a way that prevents the operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "`body_too_large`: The JSON body exceeds the size limit for this operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "`unsupported_media_type`: The body must be `application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`rule_violation`: The request breaks a business rule; `message` says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`rate_limited`: More than 120 requests this minute with this key; see `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "`internal_error`: Ricky failed. Retry a read. Before retrying a write, read the resource: the same `Idempotency-Key` answers `request_processing`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/workflow-drafts": {
       "get": {
         "operationId": "listWorkflowDrafts",
@@ -5189,7 +5398,7 @@
           "Workflows"
         ],
         "summary": "Create a shared draft",
-        "description": "Creates a canvas draft. The name and definition may be empty. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete.\n\nScope: `workflows:write`.",
+        "description": "Creates a canvas draft. The name and definition may be empty. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete. Format 2 documents require enrollment for this organization.\n\nScope: `workflows:write`.",
         "parameters": [
           {
             "$ref": "#/components/parameters/IdempotencyKey"
@@ -5472,7 +5681,7 @@
           "Workflows"
         ],
         "summary": "Save a shared draft",
-        "description": "Replaces the partial definition, up to 256 KiB and 32 levels. Copy the observed revision, head and candidate token. After reviewing a conflict, overwrite adopts the observed head. Saving never publishes. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete.\n\nScope: `workflows:write`.",
+        "description": "Replaces the partial definition, up to 256 KiB and 32 levels. Copy the observed revision, head and candidate token. After reviewing a conflict, overwrite adopts the observed head. Saving never publishes. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete. Format 2 documents require enrollment for this organization.\n\nScope: `workflows:write`.",
         "parameters": [
           {
             "name": "workflow_id",
@@ -20465,6 +20674,7 @@
               "code": {
                 "type": "string",
                 "enum": [
+                  "requires_newer_api",
                   "invalid_input",
                   "invalid_json",
                   "unauthorized",
@@ -31089,6 +31299,548 @@
           "name"
         ]
       },
+      "WorkflowV2DraftCondition": {
+        "anyOf": [
+          {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ]
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "trigger_kind"
+                  },
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ]
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "previous_conversation_status"
+                  },
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "open",
+                        "closed"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ]
+                  },
+                  "field": {
+                    "type": "string",
+                    "enum": [
+                      "previous_assignee_kind",
+                      "new_assignee_kind"
+                    ]
+                  },
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "person",
+                        "agent",
+                        "nobody"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "all",
+                  "any"
+                ]
+              },
+              "conditions": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/WorkflowV2DraftCondition"
+                }
+              }
+            },
+            "required": [
+              "kind"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "ai"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not"
+                ]
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "on",
+                    "off"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "assignee"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not"
+                ]
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "agent"
+                        },
+                        "agent_id": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "person"
+                        },
+                        "user_id": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "nobody"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "channel"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not"
+                ]
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "conversation_status"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not"
+                ]
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "open",
+                    "closed"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "message_type"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not"
+                ]
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "text",
+                    "button",
+                    "image",
+                    "audio",
+                    "video",
+                    "document",
+                    "location",
+                    "sticker",
+                    "other"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "message_sender"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not"
+                ]
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "person",
+                    "ai",
+                    "automation",
+                    "broadcast",
+                    "external_app"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "message_first"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not"
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "time"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "within",
+                  "outside"
+                ]
+              },
+              "business_hours": {
+                "type": "object",
+                "properties": {
+                  "timezone": {
+                    "type": "string"
+                  },
+                  "closed_dates": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "days": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string",
+                      "enum": [
+                        "monday",
+                        "tuesday",
+                        "wednesday",
+                        "thursday",
+                        "friday",
+                        "saturday",
+                        "sunday"
+                      ]
+                    },
+                    "additionalProperties": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "start": {
+                            "type": "string"
+                          },
+                          "end": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    }
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "variable"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not",
+                  "contains",
+                  "not_contains",
+                  "exists",
+                  "not_exists"
+                ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "message_text"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "contains",
+                  "not_contains"
+                ]
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
       "WorkflowDraftCondition": {
         "anyOf": [
           {
@@ -31917,79 +32669,957 @@
         ]
       },
       "WorkflowDraftDocument": {
-        "type": "object",
-        "properties": {
-          "trigger": {
-            "type": "string",
-            "enum": [
-              "call_received",
-              "conversation_assigned",
-              "conversation_inactive",
-              "conversation_opened",
-              "first_message_received",
-              "message_received",
-              "message_sent",
-              "schedule",
-              "team_message_unanswered"
-            ]
-          },
-          "condition": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/WorkflowDraftCondition"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "inactivity_seconds": {
-            "type": "number"
-          },
-          "schedule": {
+        "anyOf": [
+          {
             "type": "object",
             "properties": {
-              "timezone": {
-                "type": "string"
+              "trigger": {
+                "type": "string",
+                "enum": [
+                  "call_received",
+                  "conversation_assigned",
+                  "conversation_inactive",
+                  "conversation_opened",
+                  "first_message_received",
+                  "message_received",
+                  "message_sent",
+                  "schedule",
+                  "team_message_unanswered"
+                ]
               },
-              "times": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "time": {
-                      "type": "string"
-                    },
-                    "weekdays": {
-                      "type": "array",
-                      "items": {
-                        "type": "number"
-                      }
-                    }
+              "condition": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/WorkflowDraftCondition"
                   },
-                  "additionalProperties": false
-                }
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "inactivity_seconds": {
+                "type": "number"
+              },
+              "schedule": {
+                "type": "object",
+                "properties": {
+                  "timezone": {
+                    "type": "string"
+                  },
+                  "times": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "time": {
+                          "type": "string"
+                        },
+                        "weekdays": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          }
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "additionalProperties": false
+              },
+              "flow": {
+                "type": "object",
+                "properties": {
+                  "entry": {
+                    "type": "string"
+                  },
+                  "steps": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/WorkflowDraftStep"
+                    }
+                  }
+                },
+                "additionalProperties": false
               }
             },
             "additionalProperties": false
           },
-          "flow": {
+          {
             "type": "object",
             "properties": {
-              "entry": {
-                "type": "string"
+              "format": {
+                "type": "number",
+                "const": 2
               },
-              "steps": {
+              "triggers": {
+                "minItems": 1,
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/WorkflowDraftStep"
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "schedule"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {
+                            "audience": {
+                              "anyOf": [
+                                {
+                                  "anyOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "kind": {
+                                          "type": "string",
+                                          "const": "conversations"
+                                        }
+                                      },
+                                      "required": [
+                                        "kind"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "kind": {
+                                          "type": "string",
+                                          "const": "conversations"
+                                        },
+                                        "selection": {
+                                          "type": "string",
+                                          "const": "all"
+                                        }
+                                      },
+                                      "required": [
+                                        "kind",
+                                        "selection"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "kind": {
+                                          "type": "string",
+                                          "const": "conversations"
+                                        },
+                                        "selection": {
+                                          "type": "string",
+                                          "const": "matching"
+                                        },
+                                        "condition": {
+                                          "$ref": "#/components/schemas/WorkflowV2DraftCondition"
+                                        }
+                                      },
+                                      "required": [
+                                        "kind",
+                                        "selection"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "connector"
+                                    },
+                                    "source_id": {
+                                      "type": "string"
+                                    },
+                                    "parameters": {
+                                      "type": "object",
+                                      "propertyNames": {
+                                        "type": "string"
+                                      },
+                                      "additionalProperties": {}
+                                    }
+                                  },
+                                  "required": [
+                                    "kind"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "times": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "time": {
+                                    "type": "string"
+                                  },
+                                  "weekdays": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number"
+                                    }
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "timezone": {
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "call_received"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "conversation_assigned"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "conversation_inactive"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {
+                            "inactivity_seconds": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "conversation_opened"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "first_message_received"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "message_received"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "message_sent"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "team_message_unanswered"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {
+                            "inactivity_seconds": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "outbound_message_sent"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "assignee_changed"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "conversation_opening"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
                 }
+              },
+              "condition": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/WorkflowV2DraftCondition"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "flow": {
+                "type": "object",
+                "properties": {
+                  "entry": {
+                    "type": "string"
+                  },
+                  "steps": {
+                    "type": "array",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "end"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "text": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "send_message"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "template": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "next": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "kind": {
+                                  "type": "string",
+                                  "const": "send_whatsapp_template"
+                                },
+                                "channel_id": {
+                                  "type": "string"
+                                },
+                                "template_id": {
+                                  "type": "string"
+                                },
+                                "template_name": {
+                                  "type": "string"
+                                },
+                                "language": {
+                                  "type": "string"
+                                },
+                                "header_media": {
+                                  "type": "object",
+                                  "properties": {
+                                    "file_name": {
+                                      "type": "string"
+                                    },
+                                    "mime_type": {
+                                      "type": "string"
+                                    },
+                                    "size": {
+                                      "type": "number"
+                                    },
+                                    "attachment_id": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{64}$"
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                },
+                                "parameters": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string"
+                                  },
+                                  "additionalProperties": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "appointment_start",
+                                          "branch_name",
+                                          "customer_first_name"
+                                        ]
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "text": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      }
+                                    ]
+                                  }
+                                }
+                              },
+                              "additionalProperties": false
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "send_whatsapp_template"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "text": {
+                              "type": "string"
+                            },
+                            "answer_key": {
+                              "type": "string"
+                            },
+                            "choices": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "label": {
+                                    "type": "string"
+                                  },
+                                  "next": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "timeout_seconds": {
+                              "type": "number"
+                            },
+                            "on_invalid": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "on_timeout": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "ask_question"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "branches": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "condition": {
+                                    "$ref": "#/components/schemas/WorkflowV2DraftCondition"
+                                  },
+                                  "next": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "decision"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "seconds": {
+                              "type": "number"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "wait"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "user_id": {
+                              "type": "string"
+                            },
+                            "user_ids": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "assign_user"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "agent_id": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "assign_agent"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "only_if_opened_by_send": {
+                              "type": "boolean"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "close_conversation"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "agent_id": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "turn_on_ai"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "turn_off_ai"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "agent_id": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "answer_call"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "text": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "decline_call"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  }
+                },
+                "additionalProperties": false
               }
             },
+            "required": [
+              "format",
+              "triggers"
+            ],
             "additionalProperties": false
           }
-        },
-        "additionalProperties": false
+        ]
       },
       "WorkflowDraftCopy": {
         "type": "object",
@@ -32420,6 +34050,32 @@
           "number",
           "status"
         ]
+      },
+      "WorkflowPublicationStatus": {
+        "type": "object",
+        "properties": {
+          "head_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "paused"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "head_id",
+          "status",
+          "id"
+        ],
+        "additionalProperties": false
       },
       "WorkflowMutation": {
         "anyOf": [
@@ -39947,6 +41603,548 @@
           }
         ]
       },
+      "WorkflowV2DraftConditionInput": {
+        "anyOf": [
+          {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ]
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "trigger_kind"
+                  },
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ]
+                  },
+                  "field": {
+                    "type": "string",
+                    "const": "previous_conversation_status"
+                  },
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "open",
+                        "closed"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "compare"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": [
+                      "is",
+                      "is_not"
+                    ]
+                  },
+                  "field": {
+                    "type": "string",
+                    "enum": [
+                      "previous_assignee_kind",
+                      "new_assignee_kind"
+                    ]
+                  },
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "person",
+                        "agent",
+                        "nobody"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "kind",
+                  "field"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "all",
+                  "any"
+                ]
+              },
+              "conditions": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/WorkflowV2DraftConditionInput"
+                }
+              }
+            },
+            "required": [
+              "kind"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "ai"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not"
+                ]
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "on",
+                    "off"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "assignee"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not"
+                ]
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "agent"
+                        },
+                        "agent_id": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "person"
+                        },
+                        "user_id": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "nobody"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "channel"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not"
+                ]
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "conversation_status"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not"
+                ]
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "open",
+                    "closed"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "message_type"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not"
+                ]
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "text",
+                    "button",
+                    "image",
+                    "audio",
+                    "video",
+                    "document",
+                    "location",
+                    "sticker",
+                    "other"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "message_sender"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not"
+                ]
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "person",
+                    "ai",
+                    "automation",
+                    "broadcast",
+                    "external_app"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "message_first"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not"
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "time"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "within",
+                  "outside"
+                ]
+              },
+              "business_hours": {
+                "type": "object",
+                "properties": {
+                  "timezone": {
+                    "type": "string"
+                  },
+                  "closed_dates": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "days": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string",
+                      "enum": [
+                        "monday",
+                        "tuesday",
+                        "wednesday",
+                        "thursday",
+                        "friday",
+                        "saturday",
+                        "sunday"
+                      ]
+                    },
+                    "additionalProperties": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "start": {
+                            "type": "string"
+                          },
+                          "end": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    }
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "variable"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not",
+                  "contains",
+                  "not_contains",
+                  "exists",
+                  "not_exists"
+                ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "message_text"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "contains",
+                  "not_contains"
+                ]
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
       "WorkflowDraftConditionInput": {
         "anyOf": [
           {
@@ -40775,79 +42973,957 @@
         ]
       },
       "WorkflowDraftDocumentInput": {
-        "type": "object",
-        "properties": {
-          "trigger": {
-            "type": "string",
-            "enum": [
-              "call_received",
-              "conversation_assigned",
-              "conversation_inactive",
-              "conversation_opened",
-              "first_message_received",
-              "message_received",
-              "message_sent",
-              "schedule",
-              "team_message_unanswered"
-            ]
-          },
-          "condition": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/WorkflowDraftConditionInput"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "inactivity_seconds": {
-            "type": "number"
-          },
-          "schedule": {
+        "anyOf": [
+          {
             "type": "object",
             "properties": {
-              "timezone": {
-                "type": "string"
+              "trigger": {
+                "type": "string",
+                "enum": [
+                  "call_received",
+                  "conversation_assigned",
+                  "conversation_inactive",
+                  "conversation_opened",
+                  "first_message_received",
+                  "message_received",
+                  "message_sent",
+                  "schedule",
+                  "team_message_unanswered"
+                ]
               },
-              "times": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "time": {
-                      "type": "string"
-                    },
-                    "weekdays": {
-                      "type": "array",
-                      "items": {
-                        "type": "number"
-                      }
-                    }
+              "condition": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/WorkflowDraftConditionInput"
                   },
-                  "additionalProperties": false
-                }
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "inactivity_seconds": {
+                "type": "number"
+              },
+              "schedule": {
+                "type": "object",
+                "properties": {
+                  "timezone": {
+                    "type": "string"
+                  },
+                  "times": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "time": {
+                          "type": "string"
+                        },
+                        "weekdays": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          }
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "additionalProperties": false
+              },
+              "flow": {
+                "type": "object",
+                "properties": {
+                  "entry": {
+                    "type": "string"
+                  },
+                  "steps": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/WorkflowDraftStepInput"
+                    }
+                  }
+                },
+                "additionalProperties": false
               }
             },
             "additionalProperties": false
           },
-          "flow": {
+          {
             "type": "object",
             "properties": {
-              "entry": {
-                "type": "string"
+              "format": {
+                "type": "number",
+                "const": 2
               },
-              "steps": {
+              "triggers": {
+                "minItems": 1,
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/WorkflowDraftStepInput"
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "schedule"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {
+                            "audience": {
+                              "anyOf": [
+                                {
+                                  "anyOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "kind": {
+                                          "type": "string",
+                                          "const": "conversations"
+                                        }
+                                      },
+                                      "required": [
+                                        "kind"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "kind": {
+                                          "type": "string",
+                                          "const": "conversations"
+                                        },
+                                        "selection": {
+                                          "type": "string",
+                                          "const": "all"
+                                        }
+                                      },
+                                      "required": [
+                                        "kind",
+                                        "selection"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "kind": {
+                                          "type": "string",
+                                          "const": "conversations"
+                                        },
+                                        "selection": {
+                                          "type": "string",
+                                          "const": "matching"
+                                        },
+                                        "condition": {
+                                          "$ref": "#/components/schemas/WorkflowV2DraftConditionInput"
+                                        }
+                                      },
+                                      "required": [
+                                        "kind",
+                                        "selection"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "connector"
+                                    },
+                                    "source_id": {
+                                      "type": "string"
+                                    },
+                                    "parameters": {
+                                      "type": "object",
+                                      "propertyNames": {
+                                        "type": "string"
+                                      },
+                                      "additionalProperties": {}
+                                    }
+                                  },
+                                  "required": [
+                                    "kind"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "times": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "time": {
+                                    "type": "string"
+                                  },
+                                  "weekdays": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number"
+                                    }
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "timezone": {
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "call_received"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "conversation_assigned"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "conversation_inactive"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {
+                            "inactivity_seconds": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "conversation_opened"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "first_message_received"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "message_received"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "message_sent"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "team_message_unanswered"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {
+                            "inactivity_seconds": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "outbound_message_sent"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "assignee_changed"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "conversation_opening"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
                 }
+              },
+              "condition": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/WorkflowV2DraftConditionInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "flow": {
+                "type": "object",
+                "properties": {
+                  "entry": {
+                    "type": "string"
+                  },
+                  "steps": {
+                    "type": "array",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "end"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "text": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "send_message"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "template": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "next": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "kind": {
+                                  "type": "string",
+                                  "const": "send_whatsapp_template"
+                                },
+                                "channel_id": {
+                                  "type": "string"
+                                },
+                                "template_id": {
+                                  "type": "string"
+                                },
+                                "template_name": {
+                                  "type": "string"
+                                },
+                                "language": {
+                                  "type": "string"
+                                },
+                                "header_media": {
+                                  "type": "object",
+                                  "properties": {
+                                    "file_name": {
+                                      "type": "string"
+                                    },
+                                    "mime_type": {
+                                      "type": "string"
+                                    },
+                                    "size": {
+                                      "type": "number"
+                                    },
+                                    "attachment_id": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{64}$"
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                },
+                                "parameters": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string"
+                                  },
+                                  "additionalProperties": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "appointment_start",
+                                          "branch_name",
+                                          "customer_first_name"
+                                        ]
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "text": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      }
+                                    ]
+                                  }
+                                }
+                              },
+                              "additionalProperties": false
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "send_whatsapp_template"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "text": {
+                              "type": "string"
+                            },
+                            "answer_key": {
+                              "type": "string"
+                            },
+                            "choices": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "label": {
+                                    "type": "string"
+                                  },
+                                  "next": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "timeout_seconds": {
+                              "type": "number"
+                            },
+                            "on_invalid": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "on_timeout": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "ask_question"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "branches": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "condition": {
+                                    "$ref": "#/components/schemas/WorkflowV2DraftConditionInput"
+                                  },
+                                  "next": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "decision"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "seconds": {
+                              "type": "number"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "wait"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "user_id": {
+                              "type": "string"
+                            },
+                            "user_ids": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "assign_user"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "agent_id": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "assign_agent"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "only_if_opened_by_send": {
+                              "type": "boolean"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "close_conversation"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "agent_id": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "turn_on_ai"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "turn_off_ai"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "agent_id": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "answer_call"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "text": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "decline_call"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  }
+                },
+                "additionalProperties": false
               }
             },
+            "required": [
+              "format",
+              "triggers"
+            ],
             "additionalProperties": false
           }
-        },
-        "additionalProperties": false
+        ]
       },
       "WorkflowExpectedDraftInput": {
         "type": "object",
@@ -40964,6 +44040,27 @@
         },
         "required": [
           "expected"
+        ],
+        "additionalProperties": false
+      },
+      "WorkflowPublicationStatusInput": {
+        "type": "object",
+        "properties": {
+          "head_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "paused"
+            ]
+          }
+        },
+        "required": [
+          "head_id",
+          "status"
         ],
         "additionalProperties": false
       }

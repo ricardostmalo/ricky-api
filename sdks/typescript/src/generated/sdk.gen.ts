@@ -2,7 +2,7 @@
 
 import { client } from './client.gen.js';
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client/index.js';
-import type { ActivateWorkflowData, ActivateWorkflowErrors, ActivateWorkflowResponses, AddContactNoteData, AddContactNoteErrors, AddContactNoteResponses, ArchiveAgentData, ArchiveAgentErrors, ArchiveAgentResponses, AssignConversationAgentData, AssignConversationAgentErrors, AssignConversationAgentResponses, AssignConversationData, AssignConversationErrors, AssignConversationResponses, AssignConversationsData, AssignConversationsErrors, AssignConversationsResponses, CancelBroadcastData, CancelBroadcastErrors, CancelBroadcastResponses, ChangeContactsTagsData, ChangeContactsTagsErrors, ChangeContactsTagsResponses, ChangeConversationTagsData, ChangeConversationTagsErrors, ChangeConversationTagsResponses, CloseConversationData, CloseConversationErrors, CloseConversationResponses, CompleteKnowledgeFileData, CompleteKnowledgeFileErrors, CompleteKnowledgeFileResponses, CompleteKnowledgeLocationPhotoData, CompleteKnowledgeLocationPhotoErrors, CompleteKnowledgeLocationPhotoResponses, CompleteProfilePhotoUploadData, CompleteProfilePhotoUploadErrors, CompleteProfilePhotoUploadResponses, CompleteTemplateMediaUploadData, CompleteTemplateMediaUploadErrors, CompleteTemplateMediaUploadResponses, CreateAgentData, CreateAgentErrors, CreateAgentResponses, CreateBroadcastData, CreateBroadcastErrors, CreateBroadcastResponses, CreateContactData, CreateContactErrors, CreateContactFieldData, CreateContactFieldErrors, CreateContactFieldResponses, CreateContactResponses, CreateKnowledgeContactData, CreateKnowledgeContactErrors, CreateKnowledgeContactResponses, CreateKnowledgeFileData, CreateKnowledgeFileErrors, CreateKnowledgeFileResponses, CreateKnowledgeLocationData, CreateKnowledgeLocationErrors, CreateKnowledgeLocationPhotoData, CreateKnowledgeLocationPhotoErrors, CreateKnowledgeLocationPhotoResponses, CreateKnowledgeLocationResponses, CreateProfilePhotoUploadData, CreateProfilePhotoUploadErrors, CreateProfilePhotoUploadResponses, CreateQuickReplyData, CreateQuickReplyErrors, CreateQuickReplyResponses, CreateTagData, CreateTagErrors, CreateTagResponses, CreateTemplateData, CreateTemplateErrors, CreateTemplateMediaUploadData, CreateTemplateMediaUploadErrors, CreateTemplateMediaUploadResponses, CreateTemplateResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, CreateWorkflowData, CreateWorkflowDraftData, CreateWorkflowDraftErrors, CreateWorkflowDraftResponses, CreateWorkflowErrors, CreateWorkflowResponses, DeleteContactFieldData, DeleteContactFieldErrors, DeleteContactFieldResponses, DeleteKnowledgeContactData, DeleteKnowledgeContactErrors, DeleteKnowledgeContactResponses, DeleteKnowledgeFileData, DeleteKnowledgeFileErrors, DeleteKnowledgeFileResponses, DeleteKnowledgeLocationData, DeleteKnowledgeLocationErrors, DeleteKnowledgeLocationPhotoData, DeleteKnowledgeLocationPhotoErrors, DeleteKnowledgeLocationPhotoResponses, DeleteKnowledgeLocationResponses, DeleteQuickReplyData, DeleteQuickReplyErrors, DeleteQuickReplyResponses, DeleteTagData, DeleteTagErrors, DeleteTagResponses, DeleteTemplateData, DeleteTemplateErrors, DeleteTemplateResponses, DeleteWorkflowData, DeleteWorkflowDraftData, DeleteWorkflowDraftErrors, DeleteWorkflowDraftResponses, DeleteWorkflowErrors, DeleteWorkflowResponses, DisableWebhookData, DisableWebhookErrors, DisableWebhookResponses, FetchMessageMediaData, FetchMessageMediaErrors, FetchMessageMediaResponses, GetAdsReportData, GetAdsReportErrors, GetAdsReportResponses, GetAgentData, GetAgentErrors, GetAgentOptionsData, GetAgentOptionsErrors, GetAgentOptionsResponses, GetAgentResponses, GetBroadcastData, GetBroadcastErrors, GetBroadcastResponses, GetBroadcastsReportData, GetBroadcastsReportErrors, GetBroadcastsReportResponses, GetContactData, GetContactErrors, GetContactResponses, GetConversationData, GetConversationErrors, GetConversationResponses, GetConversationsReportData, GetConversationsReportErrors, GetConversationsReportResponses, GetDashboardReportData, GetDashboardReportErrors, GetDashboardReportResponses, GetGoogleAdsCampaignReportData, GetGoogleAdsCampaignReportErrors, GetGoogleAdsCampaignReportResponses, GetKnowledgeContactData, GetKnowledgeContactErrors, GetKnowledgeContactResponses, GetKnowledgeFileData, GetKnowledgeFileErrors, GetKnowledgeFileReadingData, GetKnowledgeFileReadingErrors, GetKnowledgeFileReadingResponses, GetKnowledgeFileResponses, GetKnowledgeLocationData, GetKnowledgeLocationErrors, GetKnowledgeLocationResponses, GetMessageData, GetMessageErrors, GetMessageResponses, GetMessagesReportData, GetMessagesReportErrors, GetMessagesReportResponses, GetMetaAdsInsightsData, GetMetaAdsInsightsErrors, GetMetaAdsInsightsResponses, GetQuickReplyData, GetQuickReplyErrors, GetQuickReplyResponses, GetResolutionsReportData, GetResolutionsReportErrors, GetResolutionsReportResponses, GetResponsesReportData, GetResponsesReportErrors, GetResponsesReportResponses, GetSendData, GetSendErrors, GetSendResponses, GetTeamReportData, GetTeamReportErrors, GetTeamReportResponses, GetTemplateData, GetTemplateErrors, GetTemplateFieldMappingsData, GetTemplateFieldMappingsErrors, GetTemplateFieldMappingsResponses, GetTemplateResponses, GetWhatsAppNumberData, GetWhatsAppNumberErrors, GetWhatsAppNumberResponses, GetWorkflowData, GetWorkflowDraftData, GetWorkflowDraftErrors, GetWorkflowDraftResponses, GetWorkflowErrors, GetWorkflowReminderHistoryData, GetWorkflowReminderHistoryErrors, GetWorkflowReminderHistoryResponses, GetWorkflowResponses, GetWorkflowRunData, GetWorkflowRunErrors, GetWorkflowRunResponses, GetWorkflowVersionData, GetWorkflowVersionErrors, GetWorkflowVersionResponses, ListAdConversationsData, ListAdConversationsErrors, ListAdConversationsResponses, ListAgentsData, ListAgentsErrors, ListAgentsResponses, ListBroadcastRecipientsData, ListBroadcastRecipientsErrors, ListBroadcastRecipientsResponses, ListBroadcastsData, ListBroadcastsErrors, ListBroadcastsResponses, ListChannelsData, ListChannelsErrors, ListChannelsResponses, ListContactFieldsData, ListContactFieldsErrors, ListContactFieldsResponses, ListContactsData, ListContactsErrors, ListContactsResponses, ListConversationsData, ListConversationsErrors, ListConversationsResponses, ListKnowledgeContactsData, ListKnowledgeContactsErrors, ListKnowledgeContactsResponses, ListKnowledgeFilesData, ListKnowledgeFilesErrors, ListKnowledgeFilesResponses, ListKnowledgeLocationsData, ListKnowledgeLocationsErrors, ListKnowledgeLocationsResponses, ListMembersData, ListMembersErrors, ListMembersResponses, ListMessagesData, ListMessagesErrors, ListMessagesResponses, ListMetaAdsAdSetsData, ListMetaAdsAdSetsErrors, ListMetaAdsAdSetsResponses, ListMetaAdsCampaignsData, ListMetaAdsCampaignsErrors, ListMetaAdsCampaignsResponses, ListMetaAdsData, ListMetaAdsErrors, ListMetaAdsResponses, ListQuickRepliesData, ListQuickRepliesErrors, ListQuickRepliesResponses, ListTagsData, ListTagsErrors, ListTagsResponses, ListTemplatesData, ListTemplatesErrors, ListTemplatesResponses, ListWebhookDeliveriesData, ListWebhookDeliveriesErrors, ListWebhookDeliveriesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, ListWhatsAppNumbersData, ListWhatsAppNumbersErrors, ListWhatsAppNumbersResponses, ListWorkflowDraftsData, ListWorkflowDraftsErrors, ListWorkflowDraftsResponses, ListWorkflowExecutionsData, ListWorkflowExecutionsErrors, ListWorkflowExecutionsResponses, ListWorkflowReminderStatesData, ListWorkflowReminderStatesErrors, ListWorkflowReminderStatesResponses, ListWorkflowRunsData, ListWorkflowRunsErrors, ListWorkflowRunsResponses, ListWorkflowRunStepsData, ListWorkflowRunStepsErrors, ListWorkflowRunStepsResponses, ListWorkflowRunSummariesData, ListWorkflowRunSummariesErrors, ListWorkflowRunSummariesResponses, ListWorkflowsData, ListWorkflowsErrors, ListWorkflowsResponses, ListWorkflowVersionsData, ListWorkflowVersionsErrors, ListWorkflowVersionsResponses, MarkConversationReadData, MarkConversationReadErrors, MarkConversationReadResponses, MarkConversationUnreadData, MarkConversationUnreadErrors, MarkConversationUnreadResponses, PauseWorkflowData, PauseWorkflowErrors, PauseWorkflowResponses, PreviewBroadcastAudienceData, PreviewBroadcastAudienceErrors, PreviewBroadcastAudienceResponses, PreviewWorkflowRemindersData, PreviewWorkflowRemindersErrors, PreviewWorkflowRemindersResponses, PublishWorkflowData, PublishWorkflowErrors, PublishWorkflowResponses, RefreshWhatsAppNumberData, RefreshWhatsAppNumberErrors, RefreshWhatsAppNumberResponses, RenameWorkflowDraftData, RenameWorkflowDraftErrors, RenameWorkflowDraftResponses, ReopenConversationData, ReopenConversationErrors, ReopenConversationResponses, ReplaceTemplateFieldMappingsData, ReplaceTemplateFieldMappingsErrors, ReplaceTemplateFieldMappingsResponses, RequestWhatsAppDisplayNameData, RequestWhatsAppDisplayNameErrors, RequestWhatsAppDisplayNameResponses, ResolveConversationHandoffData, ResolveConversationHandoffErrors, ResolveConversationHandoffResponses, RestoreWorkflowVersionToDraftData, RestoreWorkflowVersionToDraftErrors, RestoreWorkflowVersionToDraftResponses, RetryWebhookDeliveryData, RetryWebhookDeliveryErrors, RetryWebhookDeliveryResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SaveWorkflowDraftData, SaveWorkflowDraftErrors, SaveWorkflowDraftResponses, SearchConversationsData, SearchConversationsErrors, SearchConversationsResponses, SearchMessagesData, SearchMessagesErrors, SearchMessagesResponses, SendMessageData, SendMessageErrors, SendMessageResponses, StartConversationData, StartConversationErrors, StartConversationResponses, TestWebhookData, TestWebhookErrors, TestWebhookResponses, UpdateAgentData, UpdateAgentErrors, UpdateAgentResponses, UpdateContactData, UpdateContactErrors, UpdateContactResponses, UpdateKnowledgeContactData, UpdateKnowledgeContactErrors, UpdateKnowledgeContactResponses, UpdateKnowledgeFileData, UpdateKnowledgeFileErrors, UpdateKnowledgeFileResponses, UpdateKnowledgeLocationData, UpdateKnowledgeLocationErrors, UpdateKnowledgeLocationResponses, UpdateQuickReplyData, UpdateQuickReplyErrors, UpdateQuickReplyResponses, UpdateTagData, UpdateTagErrors, UpdateTagResponses, UpdateTemplateData, UpdateTemplateErrors, UpdateTemplateResponses, UpdateWhatsAppBusinessProfileData, UpdateWhatsAppBusinessProfileErrors, UpdateWhatsAppBusinessProfileResponses, UpdateWhatsAppNumberData, UpdateWhatsAppNumberErrors, UpdateWhatsAppNumberResponses, UpdateWorkflowData, UpdateWorkflowErrors, UpdateWorkflowResponses, UploadWorkflowHeaderMediaData, UploadWorkflowHeaderMediaErrors, UploadWorkflowHeaderMediaResponses, ValidateTemplateData, ValidateTemplateErrors, ValidateTemplateResponses } from './types.gen.js';
+import type { ActivateWorkflowData, ActivateWorkflowErrors, ActivateWorkflowResponses, AddContactNoteData, AddContactNoteErrors, AddContactNoteResponses, ArchiveAgentData, ArchiveAgentErrors, ArchiveAgentResponses, AssignConversationAgentData, AssignConversationAgentErrors, AssignConversationAgentResponses, AssignConversationData, AssignConversationErrors, AssignConversationResponses, AssignConversationsData, AssignConversationsErrors, AssignConversationsResponses, CancelBroadcastData, CancelBroadcastErrors, CancelBroadcastResponses, ChangeContactsTagsData, ChangeContactsTagsErrors, ChangeContactsTagsResponses, ChangeConversationTagsData, ChangeConversationTagsErrors, ChangeConversationTagsResponses, CloseConversationData, CloseConversationErrors, CloseConversationResponses, CompleteKnowledgeFileData, CompleteKnowledgeFileErrors, CompleteKnowledgeFileResponses, CompleteKnowledgeLocationPhotoData, CompleteKnowledgeLocationPhotoErrors, CompleteKnowledgeLocationPhotoResponses, CompleteProfilePhotoUploadData, CompleteProfilePhotoUploadErrors, CompleteProfilePhotoUploadResponses, CompleteTemplateMediaUploadData, CompleteTemplateMediaUploadErrors, CompleteTemplateMediaUploadResponses, CreateAgentData, CreateAgentErrors, CreateAgentResponses, CreateBroadcastData, CreateBroadcastErrors, CreateBroadcastResponses, CreateContactData, CreateContactErrors, CreateContactFieldData, CreateContactFieldErrors, CreateContactFieldResponses, CreateContactResponses, CreateKnowledgeContactData, CreateKnowledgeContactErrors, CreateKnowledgeContactResponses, CreateKnowledgeFileData, CreateKnowledgeFileErrors, CreateKnowledgeFileResponses, CreateKnowledgeLocationData, CreateKnowledgeLocationErrors, CreateKnowledgeLocationPhotoData, CreateKnowledgeLocationPhotoErrors, CreateKnowledgeLocationPhotoResponses, CreateKnowledgeLocationResponses, CreateProfilePhotoUploadData, CreateProfilePhotoUploadErrors, CreateProfilePhotoUploadResponses, CreateQuickReplyData, CreateQuickReplyErrors, CreateQuickReplyResponses, CreateTagData, CreateTagErrors, CreateTagResponses, CreateTemplateData, CreateTemplateErrors, CreateTemplateMediaUploadData, CreateTemplateMediaUploadErrors, CreateTemplateMediaUploadResponses, CreateTemplateResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, CreateWorkflowData, CreateWorkflowDraftData, CreateWorkflowDraftErrors, CreateWorkflowDraftResponses, CreateWorkflowErrors, CreateWorkflowResponses, DeleteContactFieldData, DeleteContactFieldErrors, DeleteContactFieldResponses, DeleteKnowledgeContactData, DeleteKnowledgeContactErrors, DeleteKnowledgeContactResponses, DeleteKnowledgeFileData, DeleteKnowledgeFileErrors, DeleteKnowledgeFileResponses, DeleteKnowledgeLocationData, DeleteKnowledgeLocationErrors, DeleteKnowledgeLocationPhotoData, DeleteKnowledgeLocationPhotoErrors, DeleteKnowledgeLocationPhotoResponses, DeleteKnowledgeLocationResponses, DeleteQuickReplyData, DeleteQuickReplyErrors, DeleteQuickReplyResponses, DeleteTagData, DeleteTagErrors, DeleteTagResponses, DeleteTemplateData, DeleteTemplateErrors, DeleteTemplateResponses, DeleteWorkflowData, DeleteWorkflowDraftData, DeleteWorkflowDraftErrors, DeleteWorkflowDraftResponses, DeleteWorkflowErrors, DeleteWorkflowResponses, DisableWebhookData, DisableWebhookErrors, DisableWebhookResponses, FetchMessageMediaData, FetchMessageMediaErrors, FetchMessageMediaResponses, GetAdsReportData, GetAdsReportErrors, GetAdsReportResponses, GetAgentData, GetAgentErrors, GetAgentOptionsData, GetAgentOptionsErrors, GetAgentOptionsResponses, GetAgentResponses, GetBroadcastData, GetBroadcastErrors, GetBroadcastResponses, GetBroadcastsReportData, GetBroadcastsReportErrors, GetBroadcastsReportResponses, GetContactData, GetContactErrors, GetContactResponses, GetConversationData, GetConversationErrors, GetConversationResponses, GetConversationsReportData, GetConversationsReportErrors, GetConversationsReportResponses, GetDashboardReportData, GetDashboardReportErrors, GetDashboardReportResponses, GetGoogleAdsCampaignReportData, GetGoogleAdsCampaignReportErrors, GetGoogleAdsCampaignReportResponses, GetKnowledgeContactData, GetKnowledgeContactErrors, GetKnowledgeContactResponses, GetKnowledgeFileData, GetKnowledgeFileErrors, GetKnowledgeFileReadingData, GetKnowledgeFileReadingErrors, GetKnowledgeFileReadingResponses, GetKnowledgeFileResponses, GetKnowledgeLocationData, GetKnowledgeLocationErrors, GetKnowledgeLocationResponses, GetMessageData, GetMessageErrors, GetMessageResponses, GetMessagesReportData, GetMessagesReportErrors, GetMessagesReportResponses, GetMetaAdsInsightsData, GetMetaAdsInsightsErrors, GetMetaAdsInsightsResponses, GetQuickReplyData, GetQuickReplyErrors, GetQuickReplyResponses, GetResolutionsReportData, GetResolutionsReportErrors, GetResolutionsReportResponses, GetResponsesReportData, GetResponsesReportErrors, GetResponsesReportResponses, GetSendData, GetSendErrors, GetSendResponses, GetTeamReportData, GetTeamReportErrors, GetTeamReportResponses, GetTemplateData, GetTemplateErrors, GetTemplateFieldMappingsData, GetTemplateFieldMappingsErrors, GetTemplateFieldMappingsResponses, GetTemplateResponses, GetWhatsAppNumberData, GetWhatsAppNumberErrors, GetWhatsAppNumberResponses, GetWorkflowData, GetWorkflowDraftData, GetWorkflowDraftErrors, GetWorkflowDraftResponses, GetWorkflowErrors, GetWorkflowReminderHistoryData, GetWorkflowReminderHistoryErrors, GetWorkflowReminderHistoryResponses, GetWorkflowResponses, GetWorkflowRunData, GetWorkflowRunErrors, GetWorkflowRunResponses, GetWorkflowVersionData, GetWorkflowVersionErrors, GetWorkflowVersionResponses, ListAdConversationsData, ListAdConversationsErrors, ListAdConversationsResponses, ListAgentsData, ListAgentsErrors, ListAgentsResponses, ListBroadcastRecipientsData, ListBroadcastRecipientsErrors, ListBroadcastRecipientsResponses, ListBroadcastsData, ListBroadcastsErrors, ListBroadcastsResponses, ListChannelsData, ListChannelsErrors, ListChannelsResponses, ListContactFieldsData, ListContactFieldsErrors, ListContactFieldsResponses, ListContactsData, ListContactsErrors, ListContactsResponses, ListConversationsData, ListConversationsErrors, ListConversationsResponses, ListKnowledgeContactsData, ListKnowledgeContactsErrors, ListKnowledgeContactsResponses, ListKnowledgeFilesData, ListKnowledgeFilesErrors, ListKnowledgeFilesResponses, ListKnowledgeLocationsData, ListKnowledgeLocationsErrors, ListKnowledgeLocationsResponses, ListMembersData, ListMembersErrors, ListMembersResponses, ListMessagesData, ListMessagesErrors, ListMessagesResponses, ListMetaAdsAdSetsData, ListMetaAdsAdSetsErrors, ListMetaAdsAdSetsResponses, ListMetaAdsCampaignsData, ListMetaAdsCampaignsErrors, ListMetaAdsCampaignsResponses, ListMetaAdsData, ListMetaAdsErrors, ListMetaAdsResponses, ListQuickRepliesData, ListQuickRepliesErrors, ListQuickRepliesResponses, ListTagsData, ListTagsErrors, ListTagsResponses, ListTemplatesData, ListTemplatesErrors, ListTemplatesResponses, ListWebhookDeliveriesData, ListWebhookDeliveriesErrors, ListWebhookDeliveriesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, ListWhatsAppNumbersData, ListWhatsAppNumbersErrors, ListWhatsAppNumbersResponses, ListWorkflowDraftsData, ListWorkflowDraftsErrors, ListWorkflowDraftsResponses, ListWorkflowExecutionsData, ListWorkflowExecutionsErrors, ListWorkflowExecutionsResponses, ListWorkflowReminderStatesData, ListWorkflowReminderStatesErrors, ListWorkflowReminderStatesResponses, ListWorkflowRunsData, ListWorkflowRunsErrors, ListWorkflowRunsResponses, ListWorkflowRunStepsData, ListWorkflowRunStepsErrors, ListWorkflowRunStepsResponses, ListWorkflowRunSummariesData, ListWorkflowRunSummariesErrors, ListWorkflowRunSummariesResponses, ListWorkflowsData, ListWorkflowsErrors, ListWorkflowsResponses, ListWorkflowVersionsData, ListWorkflowVersionsErrors, ListWorkflowVersionsResponses, MarkConversationReadData, MarkConversationReadErrors, MarkConversationReadResponses, MarkConversationUnreadData, MarkConversationUnreadErrors, MarkConversationUnreadResponses, PauseWorkflowData, PauseWorkflowErrors, PauseWorkflowResponses, PreviewBroadcastAudienceData, PreviewBroadcastAudienceErrors, PreviewBroadcastAudienceResponses, PreviewWorkflowRemindersData, PreviewWorkflowRemindersErrors, PreviewWorkflowRemindersResponses, PublishWorkflowData, PublishWorkflowErrors, PublishWorkflowResponses, RefreshWhatsAppNumberData, RefreshWhatsAppNumberErrors, RefreshWhatsAppNumberResponses, RenameWorkflowDraftData, RenameWorkflowDraftErrors, RenameWorkflowDraftResponses, ReopenConversationData, ReopenConversationErrors, ReopenConversationResponses, ReplaceTemplateFieldMappingsData, ReplaceTemplateFieldMappingsErrors, ReplaceTemplateFieldMappingsResponses, RequestWhatsAppDisplayNameData, RequestWhatsAppDisplayNameErrors, RequestWhatsAppDisplayNameResponses, ResolveConversationHandoffData, ResolveConversationHandoffErrors, ResolveConversationHandoffResponses, RestoreWorkflowVersionToDraftData, RestoreWorkflowVersionToDraftErrors, RestoreWorkflowVersionToDraftResponses, RetryWebhookDeliveryData, RetryWebhookDeliveryErrors, RetryWebhookDeliveryResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SaveWorkflowDraftData, SaveWorkflowDraftErrors, SaveWorkflowDraftResponses, SearchConversationsData, SearchConversationsErrors, SearchConversationsResponses, SearchMessagesData, SearchMessagesErrors, SearchMessagesResponses, SendMessageData, SendMessageErrors, SendMessageResponses, SetWorkflowPublicationStatusData, SetWorkflowPublicationStatusErrors, SetWorkflowPublicationStatusResponses, StartConversationData, StartConversationErrors, StartConversationResponses, TestWebhookData, TestWebhookErrors, TestWebhookResponses, UpdateAgentData, UpdateAgentErrors, UpdateAgentResponses, UpdateContactData, UpdateContactErrors, UpdateContactResponses, UpdateKnowledgeContactData, UpdateKnowledgeContactErrors, UpdateKnowledgeContactResponses, UpdateKnowledgeFileData, UpdateKnowledgeFileErrors, UpdateKnowledgeFileResponses, UpdateKnowledgeLocationData, UpdateKnowledgeLocationErrors, UpdateKnowledgeLocationResponses, UpdateQuickReplyData, UpdateQuickReplyErrors, UpdateQuickReplyResponses, UpdateTagData, UpdateTagErrors, UpdateTagResponses, UpdateTemplateData, UpdateTemplateErrors, UpdateTemplateResponses, UpdateWhatsAppBusinessProfileData, UpdateWhatsAppBusinessProfileErrors, UpdateWhatsAppBusinessProfileResponses, UpdateWhatsAppNumberData, UpdateWhatsAppNumberErrors, UpdateWhatsAppNumberResponses, UpdateWorkflowData, UpdateWorkflowErrors, UpdateWorkflowResponses, UploadWorkflowHeaderMediaData, UploadWorkflowHeaderMediaErrors, UploadWorkflowHeaderMediaResponses, ValidateTemplateData, ValidateTemplateErrors, ValidateTemplateResponses } from './types.gen.js';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -20,7 +20,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 
 class HeyApiClient {
     protected client: Client;
-    
+
     constructor(args?: {
         client?: Client;
     }) {
@@ -30,9 +30,9 @@ class HeyApiClient {
 
 class HeyApiRegistry<T> {
     private readonly defaultKey = 'default';
-    
+
     private readonly instances: Map<string, T> = new Map();
-    
+
     get(key?: string): T {
         const instance = this.instances.get(key ?? this.defaultKey);
         if (!instance) {
@@ -40,7 +40,7 @@ class HeyApiRegistry<T> {
         }
         return instance;
     }
-    
+
     set(value: T, key?: string): void {
         this.instances.set(key ?? this.defaultKey, value);
     }
@@ -48,7 +48,7 @@ class HeyApiRegistry<T> {
 
 export class RickyApi extends HeyApiClient {
     public static readonly __registry: HeyApiRegistry<RickyApi> = new HeyApiRegistry<RickyApi>();
-    
+
     constructor(args?: {
         client?: Client;
         key?: string;
@@ -56,7 +56,7 @@ export class RickyApi extends HeyApiClient {
         super(args);
         RickyApi.__registry.set(this, args?.key);
     }
-    
+
     /**
      * List contacts
      *
@@ -72,7 +72,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Create a contact
      *
@@ -92,7 +92,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Get a contact
      *
@@ -108,7 +108,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Update a contact
      *
@@ -128,7 +128,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Add a note to a contact
      *
@@ -148,7 +148,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * List contact fields
      *
@@ -164,7 +164,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Create a contact field
      *
@@ -184,7 +184,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * List conversations
      *
@@ -200,7 +200,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Start a conversation
      *
@@ -220,7 +220,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Get a conversation
      *
@@ -236,7 +236,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Assign a conversation
      *
@@ -256,7 +256,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Close a conversation
      *
@@ -276,7 +276,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Reopen a conversation
      *
@@ -292,7 +292,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List messages
      *
@@ -308,7 +308,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Send a message
      *
@@ -328,7 +328,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Get a message
      *
@@ -344,7 +344,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get a send
      *
@@ -360,7 +360,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List channels
      *
@@ -376,7 +376,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List members
      *
@@ -392,7 +392,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List tags
      *
@@ -408,7 +408,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Create a tag
      *
@@ -428,7 +428,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * List webhooks
      *
@@ -444,7 +444,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Create a webhook
      *
@@ -464,7 +464,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Disable a webhook
      *
@@ -480,7 +480,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Send a test event
      *
@@ -496,7 +496,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Rotate the signing secret
      *
@@ -516,7 +516,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * List deliveries
      *
@@ -532,7 +532,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Retry a delivery
      *
@@ -548,7 +548,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List workflows
      *
@@ -564,7 +564,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Create a workflow
      *
@@ -584,7 +584,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Delete a workflow
      *
@@ -600,7 +600,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get a workflow
      *
@@ -616,7 +616,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Update a workflow
      *
@@ -636,7 +636,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Activate a workflow
      *
@@ -652,7 +652,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Pause a workflow
      *
@@ -668,7 +668,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List executions
      *
@@ -684,7 +684,27 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
+    /**
+     * Change native workflow status
+     *
+     * Activates or pauses the named published version without publishing a draft. A changed head returns a conflict.
+     *
+     * Scope: `workflows:write`.
+     */
+    public setWorkflowPublicationStatus<ThrowOnError extends boolean = true>(options: Options<SetWorkflowPublicationStatusData, ThrowOnError>): RequestResult<SetWorkflowPublicationStatusResponses, SetWorkflowPublicationStatusErrors, ThrowOnError, 'data'> {
+        return (options.client ?? this.client).post<SetWorkflowPublicationStatusResponses, SetWorkflowPublicationStatusErrors, ThrowOnError, 'data'>({
+            responseStyle: 'data',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/workflows/{workflow_id}/publication/status',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+
     /**
      * List editable workflows
      *
@@ -700,11 +720,11 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Create a shared draft
      *
-     * Creates a canvas draft. The name and definition may be empty. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete.
+     * Creates a canvas draft. The name and definition may be empty. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete. Format 2 documents require enrollment for this organization.
      *
      * Scope: `workflows:write`.
      */
@@ -720,7 +740,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Read the working copy
      *
@@ -736,11 +756,11 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Save a shared draft
      *
-     * Replaces the partial definition, up to 256 KiB and 32 levels. Copy the observed revision, head and candidate token. After reviewing a conflict, overwrite adopts the observed head. Saving never publishes. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete.
+     * Replaces the partial definition, up to 256 KiB and 32 levels. Copy the observed revision, head and candidate token. After reviewing a conflict, overwrite adopts the observed head. Saving never publishes. Steps need a unique id and a supported kind. Connect every step to the entry using exits that the step can take. All targets must exist. Conditions need a kind and comparisons need a field. Other values may be incomplete. Format 2 documents require enrollment for this organization.
      *
      * Scope: `workflows:write`.
      */
@@ -756,7 +776,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Delete an unpublished identity
      *
@@ -772,7 +792,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Rename a workflow identity
      *
@@ -792,7 +812,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Publish a workflow revision
      *
@@ -812,7 +832,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * List published versions
      *
@@ -828,7 +848,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Read a published version
      *
@@ -844,7 +864,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Restore a version to the draft
      *
@@ -864,7 +884,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * List workflow runs
      *
@@ -880,7 +900,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Read a workflow run
      *
@@ -896,7 +916,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List workflow run steps
      *
@@ -912,7 +932,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List workflow run summaries
      *
@@ -928,7 +948,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Set the header file of a scheduled workflow
      *
@@ -948,7 +968,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Preview appointment reminders
      *
@@ -964,7 +984,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get appointment reminder history
      *
@@ -980,7 +1000,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List the Odoo appointment states
      *
@@ -996,7 +1016,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get the live dashboard
      *
@@ -1012,7 +1032,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get the conversations report
      *
@@ -1028,7 +1048,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get the messages report
      *
@@ -1044,7 +1064,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get the responses report
      *
@@ -1060,7 +1080,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get the resolutions report
      *
@@ -1076,7 +1096,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get the team report
      *
@@ -1092,7 +1112,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get the broadcasts report
      *
@@ -1108,7 +1128,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get the ads report
      *
@@ -1124,7 +1144,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List Meta ad campaigns
      *
@@ -1140,7 +1160,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List Meta ad sets
      *
@@ -1156,7 +1176,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List Meta ads
      *
@@ -1172,7 +1192,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get Meta ads insights
      *
@@ -1188,7 +1208,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List the conversations ads brought
      *
@@ -1204,7 +1224,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get Google Ads campaign results
      *
@@ -1220,7 +1240,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List agents
      *
@@ -1236,7 +1256,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Create an agent
      *
@@ -1256,7 +1276,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Archive an agent
      *
@@ -1272,7 +1292,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get an agent
      *
@@ -1288,7 +1308,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Update an agent
      *
@@ -1308,7 +1328,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Get agent options
      *
@@ -1324,7 +1344,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Set the AI agent of a conversation
      *
@@ -1344,7 +1364,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * List locations
      *
@@ -1360,7 +1380,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Create a location
      *
@@ -1380,7 +1400,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Delete a location
      *
@@ -1396,7 +1416,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get a location
      *
@@ -1412,7 +1432,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Update a location
      *
@@ -1432,7 +1452,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Remove a location photo
      *
@@ -1448,7 +1468,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Upload a location photo
      *
@@ -1468,7 +1488,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Complete a photo upload
      *
@@ -1484,7 +1504,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List directory contacts
      *
@@ -1500,7 +1520,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Create a directory contact
      *
@@ -1520,7 +1540,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Delete a directory contact
      *
@@ -1536,7 +1556,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get a directory contact
      *
@@ -1552,7 +1572,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Update a directory contact
      *
@@ -1572,7 +1592,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * List files
      *
@@ -1588,7 +1608,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Upload a file
      *
@@ -1608,7 +1628,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Complete an upload
      *
@@ -1628,7 +1648,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Delete a file
      *
@@ -1644,7 +1664,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get a file
      *
@@ -1660,7 +1680,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Update a file
      *
@@ -1680,7 +1700,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Read what Ricky read
      *
@@ -1696,7 +1716,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Change tags on many contacts
      *
@@ -1716,7 +1736,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Delete a contact field
      *
@@ -1732,7 +1752,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Delete a tag
      *
@@ -1748,7 +1768,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Update a tag
      *
@@ -1768,7 +1788,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Search conversations
      *
@@ -1784,7 +1804,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Change the tags of a conversation's contact
      *
@@ -1804,7 +1824,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Mark a conversation unread
      *
@@ -1820,7 +1840,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Mark a conversation read
      *
@@ -1836,7 +1856,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Search messages
      *
@@ -1852,7 +1872,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List quick replies
      *
@@ -1868,7 +1888,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Create a quick reply
      *
@@ -1888,7 +1908,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Delete a quick reply
      *
@@ -1904,7 +1924,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get a quick reply
      *
@@ -1920,7 +1940,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Update a quick reply
      *
@@ -1940,7 +1960,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * List templates
      *
@@ -1956,7 +1976,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Create a template
      *
@@ -1976,7 +1996,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Delete a template
      *
@@ -1992,7 +2012,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get a template
      *
@@ -2008,7 +2028,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Edit a template
      *
@@ -2028,7 +2048,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Validate a template draft
      *
@@ -2048,7 +2068,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * List WhatsApp numbers
      *
@@ -2064,7 +2084,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Get a WhatsApp number
      *
@@ -2080,7 +2100,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Update a WhatsApp number
      *
@@ -2100,7 +2120,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Upload a header sample
      *
@@ -2120,7 +2140,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Complete a header sample
      *
@@ -2140,7 +2160,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Get the field mappings of a template
      *
@@ -2156,7 +2176,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Set the field mappings of a template
      *
@@ -2176,7 +2196,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Edit a business profile
      *
@@ -2196,7 +2216,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Upload a profile photo
      *
@@ -2216,7 +2236,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Complete a profile photo
      *
@@ -2236,7 +2256,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Request a display name change
      *
@@ -2256,7 +2276,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Refresh a WhatsApp number
      *
@@ -2272,7 +2292,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List broadcasts
      *
@@ -2288,7 +2308,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Create a broadcast
      *
@@ -2308,7 +2328,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Get a broadcast
      *
@@ -2324,7 +2344,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Cancel a scheduled broadcast
      *
@@ -2340,7 +2360,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * List broadcast recipients
      *
@@ -2356,7 +2376,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Assign many conversations
      *
@@ -2376,7 +2396,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Resolve a handoff
      *
@@ -2396,7 +2416,7 @@ export class RickyApi extends HeyApiClient {
             }
         });
     }
-    
+
     /**
      * Fetch a message's file
      *
@@ -2412,7 +2432,7 @@ export class RickyApi extends HeyApiClient {
             ...options
         });
     }
-    
+
     /**
      * Preview a broadcast audience
      *

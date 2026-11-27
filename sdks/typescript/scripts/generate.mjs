@@ -30,6 +30,10 @@ await createClient({
   ],
 });
 
+// The SDK printer indents empty lines between generated methods.
+const sdkPath = resolve(output, 'sdk.gen.ts');
+writeFileSync(sdkPath, readFileSync(sdkPath, 'utf8').replace(/^[\t ]+$/gm, ''));
+
 // Writes that accept an Idempotency-Key: the client adds one when the caller
 // did not, and retries only requests that carry one (or are reads).
 const document = JSON.parse(readFileSync(spec, 'utf8'));
