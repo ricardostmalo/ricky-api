@@ -23,6 +23,7 @@ We recommend sending it with every message send. These operations accept it:
 | [Create a tag](https://getricky.ai/en/docs/api/reference/catalogs/create-tag) | `POST /tags` | `tags:write` or, on older keys, `contacts:write` |
 | [Create a workflow](https://getricky.ai/en/docs/api/reference/workflows/create-workflow) | `POST /workflows` | `workflows:write` |
 | [Update a workflow](https://getricky.ai/en/docs/api/reference/workflows/update-workflow) | `PATCH /workflows/{workflow_id}` | `workflows:write` |
+| [Change native workflow status](https://getricky.ai/en/docs/api/reference/workflows/set-workflow-publication-status) | `POST /workflows/{workflow_id}/publication/status` | `workflows:write` |
 | [Create a shared draft](https://getricky.ai/en/docs/api/reference/workflows/create-workflow-draft) | `POST /workflow-drafts` | `workflows:write` |
 | [Save a shared draft](https://getricky.ai/en/docs/api/reference/workflows/save-workflow-draft) | `PUT /workflows/{workflow_id}/draft` | `workflows:write` |
 | [Rename a workflow identity](https://getricky.ai/en/docs/api/reference/workflows/rename-workflow-draft) | `PATCH /workflow-drafts/{workflow_id}` | `workflows:write` |

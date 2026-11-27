@@ -116,6 +116,7 @@ The table below is generated from the API contract: it is the exact list of oper
 | [Activate a workflow](https://getricky.ai/en/docs/api/reference/workflows/activate-workflow) | `POST /workflows/{workflow_id}/activate` | `workflows:write` |
 | [Pause a workflow](https://getricky.ai/en/docs/api/reference/workflows/pause-workflow) | `POST /workflows/{workflow_id}/pause` | `workflows:write` |
 | [List executions](https://getricky.ai/en/docs/api/reference/workflows/list-workflow-executions) | `GET /workflows/{workflow_id}/executions` | `workflows:read` |
+| [Change native workflow status](https://getricky.ai/en/docs/api/reference/workflows/set-workflow-publication-status) | `POST /workflows/{workflow_id}/publication/status` | `workflows:write` |
 | [List editable workflows](https://getricky.ai/en/docs/api/reference/workflows/list-workflow-drafts) | `GET /workflow-drafts` | `workflows:read` |
 | [Create a shared draft](https://getricky.ai/en/docs/api/reference/workflows/create-workflow-draft) | `POST /workflow-drafts` | `workflows:write` |
 | [Read the working copy](https://getricky.ai/en/docs/api/reference/workflows/get-workflow-draft) | `GET /workflows/{workflow_id}/draft` | `workflows:read` |

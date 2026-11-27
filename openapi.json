@@ -29850,10 +29850,9 @@
                                         "description": "Step ID: letters, digits, `_` or `-`, up to 64."
                                       },
                                       "name": {
+                                        "description": "Optional branch name, unique within the decision. The editor numbers unnamed branches. The fallback names “Si no”, “Otherwise”, “If none match”, “Si ninguna coincide” are reserved. Comparison ignores case and surrounding whitespace.",
                                         "type": "string",
-                                        "minLength": 1,
-                                        "maxLength": 40,
-                                        "description": "Branch name, unique in the decision."
+                                        "maxLength": 40
                                       },
                                       "condition": {
                                         "$ref": "#/components/schemas/Condition"
@@ -29874,7 +29873,6 @@
                                     },
                                     "required": [
                                       "id",
-                                      "name",
                                       "condition",
                                       "next"
                                     ]
@@ -38805,10 +38803,9 @@
                                     "description": "Step ID: letters, digits, `_` or `-`, up to 64."
                                   },
                                   "name": {
+                                    "description": "Optional branch name, unique within the decision. The editor numbers unnamed branches. The fallback names “Si no”, “Otherwise”, “If none match”, “Si ninguna coincide” are reserved. Comparison ignores case and surrounding whitespace.",
                                     "type": "string",
-                                    "minLength": 1,
-                                    "maxLength": 40,
-                                    "description": "Branch name, unique in the decision."
+                                    "maxLength": 40
                                   },
                                   "condition": {
                                     "$ref": "#/components/schemas/ConditionInput"
@@ -38829,7 +38826,6 @@
                                 },
                                 "required": [
                                   "id",
-                                  "name",
                                   "condition",
                                   "next"
                                 ],
@@ -39881,10 +39877,9 @@
                                     "description": "Step ID: letters, digits, `_` or `-`, up to 64."
                                   },
                                   "name": {
+                                    "description": "Optional branch name, unique within the decision. The editor numbers unnamed branches. The fallback names “Si no”, “Otherwise”, “If none match”, “Si ninguna coincide” are reserved. Comparison ignores case and surrounding whitespace.",
                                     "type": "string",
-                                    "minLength": 1,
-                                    "maxLength": 40,
-                                    "description": "Branch name, unique in the decision."
+                                    "maxLength": 40
                                   },
                                   "condition": {
                                     "$ref": "#/components/schemas/ConditionInput"
@@ -39905,7 +39900,6 @@
                                 },
                                 "required": [
                                   "id",
-                                  "name",
                                   "condition",
                                   "next"
                                 ],

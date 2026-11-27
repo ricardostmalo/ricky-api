@@ -116,6 +116,7 @@ La tabla siguiente sale del contrato de la API: es la lista exacta de operacione
 | [Activar un workflow](https://getricky.ai/docs/api/reference/workflows/activate-workflow) | `POST /workflows/{workflow_id}/activate` | `workflows:write` |
 | [Pausar un workflow](https://getricky.ai/docs/api/reference/workflows/pause-workflow) | `POST /workflows/{workflow_id}/pause` | `workflows:write` |
 | [Listar ejecuciones](https://getricky.ai/docs/api/reference/workflows/list-workflow-executions) | `GET /workflows/{workflow_id}/executions` | `workflows:read` |
+| [Cambiar el estado del workflow de formato 2](https://getricky.ai/docs/api/reference/workflows/set-workflow-publication-status) | `POST /workflows/{workflow_id}/publication/status` | `workflows:write` |
 | [Listar workflows editables](https://getricky.ai/docs/api/reference/workflows/list-workflow-drafts) | `GET /workflow-drafts` | `workflows:read` |
 | [Crear un borrador compartido](https://getricky.ai/docs/api/reference/workflows/create-workflow-draft) | `POST /workflow-drafts` | `workflows:write` |
 | [Leer la copia de trabajo](https://getricky.ai/docs/api/reference/workflows/get-workflow-draft) | `GET /workflows/{workflow_id}/draft` | `workflows:read` |

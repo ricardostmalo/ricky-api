@@ -8708,9 +8708,9 @@ class WorkflowDefinitionFlowSteps3Branch(TypedDict):
     """
     Step ID: letters, digits, `_` or `-`, up to 64.
     """
-    name: str
+    name: NotRequired[str]
     """
-    Branch name, unique in the decision.
+    Optional branch name, unique within the decision. The editor numbers unnamed branches. The fallback names “Si no”, “Otherwise”, “If none match”, “Si ninguna coincide” are reserved. Comparison ignores case and surrounding whitespace.
     """
     condition: Condition
     next: Optional[str]
@@ -8999,9 +8999,9 @@ class CreateWorkflowDefinitionFlowSteps2Branch(TypedDict, closed=True):
     """
     Step ID: letters, digits, `_` or `-`, up to 64.
     """
-    name: str
+    name: NotRequired[str]
     """
-    Branch name, unique in the decision.
+    Optional branch name, unique within the decision. The editor numbers unnamed branches. The fallback names “Si no”, “Otherwise”, “If none match”, “Si ninguna coincide” are reserved. Comparison ignores case and surrounding whitespace.
     """
     condition: ConditionInput
     next: Optional[str]
@@ -9109,9 +9109,9 @@ class UpdateWorkflowDefinitionFlowSteps2Branch(TypedDict, closed=True):
     """
     Step ID: letters, digits, `_` or `-`, up to 64.
     """
-    name: str
+    name: NotRequired[str]
     """
-    Branch name, unique in the decision.
+    Optional branch name, unique within the decision. The editor numbers unnamed branches. The fallback names “Si no”, “Otherwise”, “If none match”, “Si ninguna coincide” are reserved. Comparison ignores case and surrounding whitespace.
     """
     condition: ConditionInput
     next: Optional[str]

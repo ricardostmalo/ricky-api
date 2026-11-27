@@ -23,6 +23,7 @@ Recomendamos enviarla en todo envío de mensajes. Estas operaciones la aceptan:
 | [Crear una etiqueta](https://getricky.ai/docs/api/reference/catalogs/create-tag) | `POST /tags` | `tags:write` o, en claves anteriores, `contacts:write` |
 | [Crear un workflow](https://getricky.ai/docs/api/reference/workflows/create-workflow) | `POST /workflows` | `workflows:write` |
 | [Actualizar un workflow](https://getricky.ai/docs/api/reference/workflows/update-workflow) | `PATCH /workflows/{workflow_id}` | `workflows:write` |
+| [Cambiar el estado del workflow de formato 2](https://getricky.ai/docs/api/reference/workflows/set-workflow-publication-status) | `POST /workflows/{workflow_id}/publication/status` | `workflows:write` |
 | [Crear un borrador compartido](https://getricky.ai/docs/api/reference/workflows/create-workflow-draft) | `POST /workflow-drafts` | `workflows:write` |
 | [Guardar un borrador compartido](https://getricky.ai/docs/api/reference/workflows/save-workflow-draft) | `PUT /workflows/{workflow_id}/draft` | `workflows:write` |
 | [Renombrar un workflow](https://getricky.ai/docs/api/reference/workflows/rename-workflow-draft) | `PATCH /workflow-drafts/{workflow_id}` | `workflows:write` |

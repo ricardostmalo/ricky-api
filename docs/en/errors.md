@@ -32,6 +32,7 @@ The table is generated from the API contract. Each reference page lists the code
 
 | Code | HTTP | Meaning |
 | --- | --- | --- |
+| `requires_newer_api` | 409 | Use the workflow operation named in the message to work with this definition. |
 | `invalid_input` | 400 | A parameter or body field is invalid; `param` names it when known. |
 | `invalid_json` | 400 | The body is not valid JSON. |
 | `unauthorized` | 401 | The `Authorization` header is missing, malformed, expired or revoked. |

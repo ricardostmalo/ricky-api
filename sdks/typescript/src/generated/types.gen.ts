@@ -3652,9 +3652,9 @@ export type Workflow = {
                      */
                     id: string;
                     /**
-                     * Branch name, unique in the decision.
+                     * Optional branch name, unique within the decision. The editor numbers unnamed branches. The fallback names “Si no”, “Otherwise”, “If none match”, “Si ninguna coincide” are reserved. Comparison ignores case and surrounding whitespace.
                      */
-                    name: string;
+                    name?: string;
                     condition: Condition;
                     /**
                      * Step to run when this branch is the first whose condition holds.
@@ -6227,9 +6227,9 @@ export type CreateWorkflow = {
                      */
                     id: string;
                     /**
-                     * Branch name, unique in the decision.
+                     * Optional branch name, unique within the decision. The editor numbers unnamed branches. The fallback names “Si no”, “Otherwise”, “If none match”, “Si ninguna coincide” are reserved. Comparison ignores case and surrounding whitespace.
                      */
-                    name: string;
+                    name?: string;
                     condition: ConditionInput;
                     /**
                      * Step to run when this branch is the first whose condition holds.
@@ -6600,9 +6600,9 @@ export type UpdateWorkflow = {
                      */
                     id: string;
                     /**
-                     * Branch name, unique in the decision.
+                     * Optional branch name, unique within the decision. The editor numbers unnamed branches. The fallback names “Si no”, “Otherwise”, “If none match”, “Si ninguna coincide” are reserved. Comparison ignores case and surrounding whitespace.
                      */
-                    name: string;
+                    name?: string;
                     condition: ConditionInput;
                     /**
                      * Step to run when this branch is the first whose condition holds.

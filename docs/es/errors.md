@@ -32,6 +32,7 @@ La tabla sale del contrato de la API. Cada página de la referencia lista los c�
 
 | Código | HTTP | Significado |
 | --- | --- | --- |
+| `requires_newer_api` | 409 | Usa la operación indicada en el mensaje para trabajar con esta definición. |
 | `invalid_input` | 400 | Un parámetro o un campo del cuerpo no es válido; `param` lo nombra cuando se conoce. |
 | `invalid_json` | 400 | El cuerpo no es JSON válido. |
 | `unauthorized` | 401 | Falta la cabecera `Authorization`, está mal formada, o la clave venció o fue revocada. |
