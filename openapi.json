@@ -33603,6 +33603,190 @@
                             "kind"
                           ],
                           "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "tag_id": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "add_contact_tag"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "tag_id": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "remove_contact_tag"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "field_definition_id": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "change": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "set"
+                                    },
+                                    "value": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string"
+                                        },
+                                        {
+                                          "type": "number"
+                                        },
+                                        {
+                                          "type": "boolean"
+                                        },
+                                        {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "kind"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "clear"
+                                    }
+                                  },
+                                  "required": [
+                                    "kind"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "set_contact_field"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "clear_assignee"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "text": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "add_internal_note"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
                         }
                       ]
                     }
@@ -34173,6 +34357,10 @@
             "enum": [
               "queued",
               "already_queued",
+              "added",
+              "removed",
+              "set",
+              "cleared",
               "conversation_missing",
               "message_missing",
               "already_closed",
@@ -34489,6 +34677,10 @@
                                   "enum": [
                                     "queued",
                                     "already_queued",
+                                    "added",
+                                    "removed",
+                                    "set",
+                                    "cleared",
                                     "conversation_missing",
                                     "message_missing",
                                     "already_closed",
@@ -43890,6 +44082,190 @@
                             "kind": {
                               "type": "string",
                               "const": "decline_call"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "tag_id": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "add_contact_tag"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "tag_id": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "remove_contact_tag"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "field_definition_id": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "change": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "set"
+                                    },
+                                    "value": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string"
+                                        },
+                                        {
+                                          "type": "number"
+                                        },
+                                        {
+                                          "type": "boolean"
+                                        },
+                                        {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "kind"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "clear"
+                                    }
+                                  },
+                                  "required": [
+                                    "kind"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "set_contact_field"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "clear_assignee"
+                            },
+                            "next": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "text": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "add_internal_note"
                             },
                             "next": {
                               "type": [

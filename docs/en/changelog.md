@@ -6,6 +6,10 @@ URL: https://getricky.ai/en/docs/api/changelog
 
 This page records changes to the API. A breaking change only ships in a new path version and is announced here.
 
+## November 26, 2026
+
+The `name` of a `decision` branch is optional. The editor numbers unnamed branches in the order they are checked. Publication reserves the fallback labels “Si no”, “Otherwise”, “If none match” and “Si ninguna coincide”, ignoring case and surrounding whitespace.
+
 ## November 24, 2026
 
 **Conditions, `schedule` and `decision`.** A conversation workflow has a single `condition` that decides whether each occurrence of the trigger runs it: a comparison (`kind: "compare"`, with `field`, `operator` and its value in `values`, `value`, `business_hours` or `name`) or an `all` or `any` group of conditions, three levels deep at most. The channel (`channel`), the hours (`time`), who has the conversation (`assignee`: `person` with `user_id`, `agent` with `agent_id`, or `nobody`), its status (`conversation_status`), the AI (`ai`), the first message (`message_first`), the message type (`message_type`), its text (`message_text`) and its sender (`message_sender`) are comparisons. Without a `channel` comparison, the workflow runs on every channel, including channels connected later. The `schedule` trigger replaces `at_time`: it runs at one or more times (`schedule.times`, each with `time` and `weekdays`) in the `schedule.timezone` zone, and its `condition` needs an `assignee` `is` comparison. The `decision` step replaces `branch`: it checks 1 to 10 branches in order (`branches`, each with `id`, `name`, `condition` and `next`), goes on through the first whose condition holds and, when none holds, through its `next`. A branch can also compare a saved answer with `variable`. See [Workflows](./workflows.md#conditions).

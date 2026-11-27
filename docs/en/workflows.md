@@ -190,7 +190,7 @@ A workflow's messages are free-form text. So they only arrive inside the channel
 
 A `decision` step picks the route of the run:
 
-* `branches`: 1 to 10 branches, in the order Ricky checks them. Each branch has `id`, `name` (up to 40 characters, different for each branch of the step), `condition` and `next`.
+* `branches`: 1 to 10 branches, in the order Ricky checks them. Each branch has `id`, `condition` and `next`. An optional `name` can contain up to 40 characters and must be unique within the decision. The editor numbers unnamed branches. Publication reserves the fallback labels “Si no”, “Otherwise”, “If none match” and “Si ninguna coincide”, ignoring case and surrounding whitespace.
 * `next`: the step to run when no branch holds. The editor calls it «Otherwise». `null` ends the flow.
 
 Ricky goes on through the first branch whose condition holds and does not check the rest. A branch's condition is read when the run reaches the step, with the data of that moment: the conversation (`assignee`, `conversation_status`, `ai`, `channel`), the time (`time`) and the saved answers (`variable`). A branch does not read the message that started the workflow: `message_first`, `message_type`, `message_text` and `message_sender` only go in the trigger's `condition`.

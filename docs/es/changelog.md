@@ -6,6 +6,10 @@ URL: https://getricky.ai/docs/api/changelog
 
 Esta página registra los cambios de la API. Un cambio incompatible solo llega en una versión nueva de la ruta y se anuncia aquí.
 
+## 26 de noviembre de 2026
+
+El campo `name` de una rama de `decision` es opcional. El editor numera las ramas sin nombre en el orden en que se revisan. Al publicar se reservan los nombres de la salida de respaldo «Si no», «Otherwise», «If none match» y «Si ninguna coincide». Se ignoran las mayúsculas y los espacios al principio y al final.
+
 ## 24 de noviembre de 2026
 
 **Condiciones, `schedule` y `decision`.** Un workflow de conversación tiene una sola `condition` que decide si cada ocurrencia del disparador lo ejecuta: una comparación (`kind: "compare"`, con `field`, `operator` y su valor en `values`, `value`, `business_hours` o `name`) o un grupo `all` o `any` de condiciones, hasta tres niveles. El canal (`channel`), el horario (`time`), quién tiene la conversación (`assignee`: `person` con `user_id`, `agent` con `agent_id`, o `nobody`), su estado (`conversation_status`), la IA (`ai`), el primer mensaje (`message_first`), el tipo de mensaje (`message_type`), su texto (`message_text`) y su remitente (`message_sender`) son comparaciones. Sin una comparación `channel`, el workflow corre en todos los canales, también en los que se conecten después. El disparador `schedule` reemplaza a `at_time`: corre a una o más horas (`schedule.times`, cada una con `time` y `weekdays`) en la zona `schedule.timezone`, y su `condition` necesita una comparación `assignee` `is`. El paso `decision` reemplaza a `branch`: revisa en orden de 1 a 10 ramas (`branches`, cada una con `id`, `name`, `condition` y `next`), sigue por la primera cuya condición se cumple y, si ninguna se cumple, por su `next`. Una rama también puede comparar una respuesta guardada con `variable`. Consulta [Workflows](./workflows.md#condiciones).

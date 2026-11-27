@@ -190,7 +190,7 @@ Los mensajes de un workflow son texto libre. Por eso solo llegan dentro de la ve
 
 Un paso `decision` elige el camino de la ejecución:
 
-* `branches`: de 1 a 10 ramas, en el orden en que Ricky las revisa. Cada rama tiene `id`, `name` (hasta 40 caracteres, distinto en cada rama del paso), `condition` y `next`.
+* `branches`: de 1 a 10 ramas, en el orden en que Ricky las revisa. Cada rama tiene `id`, `condition` y `next`. El campo opcional `name` admite hasta 40 caracteres y debe ser único dentro de la decisión. El editor numera las ramas sin nombre. Al publicar se reservan los nombres de la salida de respaldo «Si no», «Otherwise», «If none match» y «Si ninguna coincide». Se ignoran las mayúsculas y los espacios al principio y al final.
 * `next`: el paso que sigue cuando ninguna rama se cumple. En el editor se llama «Si no». `null` termina el flujo.
 
 Ricky sigue por la primera rama cuya condición se cumple y no revisa las demás. La condición de una rama se lee cuando la ejecución llega al paso, con los datos de ese momento: la conversación (`assignee`, `conversation_status`, `ai`, `channel`), la hora (`time`) y las respuestas guardadas (`variable`). Una rama no lee el mensaje que arrancó el workflow: `message_first`, `message_type`, `message_text` y `message_sender` solo van en la `condition` del disparador.

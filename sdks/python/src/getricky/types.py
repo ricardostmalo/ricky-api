@@ -5105,6 +5105,50 @@ class WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps12(TypedDict, closed=T
     next: NotRequired[Optional[str]]
 
 
+class WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps13(TypedDict, closed=True):
+    tag_id: NotRequired[str]
+    id: str
+    kind: Literal["add_contact_tag"]
+    next: NotRequired[Optional[str]]
+
+
+class WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps14(TypedDict, closed=True):
+    tag_id: NotRequired[str]
+    id: str
+    kind: Literal["remove_contact_tag"]
+    next: NotRequired[Optional[str]]
+
+
+class WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps15Change(TypedDict, closed=True):
+    kind: Literal["set"]
+    value: NotRequired[Union[str, float, bool, List[str]]]
+
+
+class WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps15Change1(TypedDict, closed=True):
+    kind: Literal["clear"]
+
+
+class WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps15(TypedDict, closed=True):
+    field_definition_id: NotRequired[str]
+    change: NotRequired[Union[WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps15Change, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps15Change1]]
+    id: str
+    kind: Literal["set_contact_field"]
+    next: NotRequired[Optional[str]]
+
+
+class WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps16(TypedDict, closed=True):
+    id: str
+    kind: Literal["clear_assignee"]
+    next: NotRequired[Optional[str]]
+
+
+class WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps17(TypedDict, closed=True):
+    text: NotRequired[str]
+    id: str
+    kind: Literal["add_internal_note"]
+    next: NotRequired[Optional[str]]
+
+
 class WorkflowDraftSummary(TypedDict):
     id: str
     name: str
@@ -5211,7 +5255,7 @@ class WorkflowRunCoverage(TypedDict):
 
 
 class WorkflowEffectSummary(TypedDict):
-    status: NotRequired[Literal["queued", "already_queued", "conversation_missing", "message_missing", "already_closed", "not_opened_by_send", "message_after_send", "closed", "unchanged", "changed", "applied", "already_on", "already_off", "assigned_to_agent"]]
+    status: NotRequired[Literal["queued", "already_queued", "added", "removed", "set", "cleared", "conversation_missing", "message_missing", "already_closed", "not_opened_by_send", "message_after_send", "closed", "unchanged", "changed", "applied", "already_on", "already_off", "assigned_to_agent"]]
     """
     Observed effect result. Absent when the visit did not record it.
     """
@@ -5233,7 +5277,7 @@ class WorkflowRunLastStep(TypedDict):
 class WorkflowRunBatchMemberResult(TypedDict):
     step_id: Optional[str]
     kind: Optional[str]
-    effect_status: Optional[Literal["queued", "already_queued", "conversation_missing", "message_missing", "already_closed", "not_opened_by_send", "message_after_send", "closed", "unchanged", "changed", "applied", "already_on", "already_off", "assigned_to_agent"]]
+    effect_status: Optional[Literal["queued", "already_queued", "added", "removed", "set", "cleared", "conversation_missing", "message_missing", "already_closed", "not_opened_by_send", "message_after_send", "closed", "unchanged", "changed", "applied", "already_on", "already_off", "assigned_to_agent"]]
     run_status: Literal["queued", "running", "waiting", "retrying", "completed", "skipped", "failed", "cancelled"]
     members: int
 
@@ -8654,6 +8698,50 @@ class WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps12(TypedDict
     next: NotRequired[Optional[str]]
 
 
+class WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps13(TypedDict, closed=True):
+    tag_id: NotRequired[str]
+    id: str
+    kind: Literal["add_contact_tag"]
+    next: NotRequired[Optional[str]]
+
+
+class WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps14(TypedDict, closed=True):
+    tag_id: NotRequired[str]
+    id: str
+    kind: Literal["remove_contact_tag"]
+    next: NotRequired[Optional[str]]
+
+
+class WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps15Change(TypedDict, closed=True):
+    kind: Literal["set"]
+    value: NotRequired[Union[str, float, bool, List[str]]]
+
+
+class WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps15Change1(TypedDict, closed=True):
+    kind: Literal["clear"]
+
+
+class WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps15(TypedDict, closed=True):
+    field_definition_id: NotRequired[str]
+    change: NotRequired[Union[WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps15Change, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps15Change1]]
+    id: str
+    kind: Literal["set_contact_field"]
+    next: NotRequired[Optional[str]]
+
+
+class WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps16(TypedDict, closed=True):
+    id: str
+    kind: Literal["clear_assignee"]
+    next: NotRequired[Optional[str]]
+
+
+class WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps17(TypedDict, closed=True):
+    text: NotRequired[str]
+    id: str
+    kind: Literal["add_internal_note"]
+    next: NotRequired[Optional[str]]
+
+
 class WorkflowExpectedDraftInput(TypedDict, closed=True):
     revision: Optional[str]
     head_id: Optional[str]
@@ -8920,7 +9008,7 @@ class WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps4(TypedDict, closed=Tr
 
 class WorkflowDraftDocumentWorkflowDraftDocument1Flow(TypedDict, closed=True):
     entry: NotRequired[str]
-    steps: NotRequired[List[Union[WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps1, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps2, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps3, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps4, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps5, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps6, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps7, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps8, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps9, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps10, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps11, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps12]]]
+    steps: NotRequired[List[Union[WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps1, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps2, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps3, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps4, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps5, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps6, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps7, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps8, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps9, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps10, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps11, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps12, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps13, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps14, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps15, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps16, WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps17]]]
 
 
 class WorkflowDraftDocumentWorkflowDraftDocument1(TypedDict, closed=True):
@@ -9332,7 +9420,7 @@ class WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps4(TypedDict,
 
 class WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Flow(TypedDict, closed=True):
     entry: NotRequired[str]
-    steps: NotRequired[List[Union[WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps1, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps2, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps3, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps4, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps5, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps6, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps7, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps8, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps9, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps10, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps11, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps12]]]
+    steps: NotRequired[List[Union[WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps1, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps2, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps3, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps4, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps5, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps6, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps7, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps8, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps9, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps10, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps11, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps12, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps13, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps14, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps15, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps16, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps17]]]
 
 
 class WorkflowDraftDocumentInputWorkflowDraftDocumentInput1(TypedDict, closed=True):
