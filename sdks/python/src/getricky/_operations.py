@@ -744,7 +744,7 @@ class SyncOperations:
     ) -> Resource[Workflow]:
         """Create a workflow.
 
-        Creates a conversation workflow as a `draft`; it runs nothing until you activate it. Ricky checks the flow with the rules of the workflow editor, and that its channels, members and agents belong to the organization.
+        Creates a conversation workflow as a `draft`; it runs nothing until you activate it. Ricky checks the flow with the rules of the workflow editor, and that its channels, members and agents belong to the organization. Each step must have a unique non-empty id and a supported kind. Every step must be reachable from the entry using configured exits. Every target must exist. Conditions need a kind and comparisons need a field.
 
         Scope: `workflows:write`.
 
@@ -784,7 +784,7 @@ class SyncOperations:
     ) -> Resource[Workflow]:
         """Update a workflow.
 
-        Changes the name, replaces the definition, or both, and keeps the status. An active workflow must still be able to run the new definition. A scheduled workflow only accepts a new name.
+        Changes the name, replaces the definition, or both, and keeps the status. An active workflow must still be able to run the new definition. A scheduled workflow only accepts a new name. Each step must have a unique non-empty id and a supported kind. Every step must be reachable from the entry using configured exits. Every target must exist. Conditions need a kind and comparisons need a field.
 
         Scope: `workflows:write`.
 
@@ -3675,7 +3675,7 @@ class AsyncOperations:
     ) -> Resource[Workflow]:
         """Create a workflow.
 
-        Creates a conversation workflow as a `draft`; it runs nothing until you activate it. Ricky checks the flow with the rules of the workflow editor, and that its channels, members and agents belong to the organization.
+        Creates a conversation workflow as a `draft`; it runs nothing until you activate it. Ricky checks the flow with the rules of the workflow editor, and that its channels, members and agents belong to the organization. Each step must have a unique non-empty id and a supported kind. Every step must be reachable from the entry using configured exits. Every target must exist. Conditions need a kind and comparisons need a field.
 
         Scope: `workflows:write`.
 
@@ -3715,7 +3715,7 @@ class AsyncOperations:
     ) -> Resource[Workflow]:
         """Update a workflow.
 
-        Changes the name, replaces the definition, or both, and keeps the status. An active workflow must still be able to run the new definition. A scheduled workflow only accepts a new name.
+        Changes the name, replaces the definition, or both, and keeps the status. An active workflow must still be able to run the new definition. A scheduled workflow only accepts a new name. Each step must have a unique non-empty id and a supported kind. Every step must be reachable from the entry using configured exits. Every target must exist. Conditions need a kind and comparisons need a field.
 
         Scope: `workflows:write`.
 
