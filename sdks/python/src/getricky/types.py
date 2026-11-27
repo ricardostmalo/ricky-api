@@ -4710,6 +4710,22 @@ class WorkflowV2DraftConditionWorkflowV2DraftCondition13(TypedDict, closed=True)
     value: NotRequired[str]
 
 
+class WorkflowV2DraftConditionWorkflowV2DraftCondition14(TypedDict, closed=True):
+    kind: Literal["compare"]
+    field: Literal["contact_tag"]
+    operator: NotRequired[Literal["is", "is_not"]]
+    tag_id: NotRequired[str]
+
+
+class WorkflowV2DraftConditionWorkflowV2DraftCondition15(TypedDict, closed=True):
+    kind: Literal["compare"]
+    field: Literal["contact_field"]
+    operator: NotRequired[Literal["is", "is_not", "contains", "not_contains", "exists", "not_exists", "greater_than", "not_greater_than", "less_than", "not_less_than", "before", "not_before", "after", "not_after"]]
+    value: NotRequired[Union[str, float, bool]]
+    field_definition_id: NotRequired[str]
+    field_type: NotRequired[Literal["text", "long_text", "number", "date", "boolean", "select", "multi_select"]]
+
+
 class WorkflowDraftConditionWorkflowDraftCondition1(TypedDict, closed=True):
     kind: Literal["compare"]
     field: Literal["ai"]
@@ -8303,6 +8319,22 @@ class WorkflowV2DraftConditionInputWorkflowV2DraftConditionInput13(TypedDict, cl
     value: NotRequired[str]
 
 
+class WorkflowV2DraftConditionInputWorkflowV2DraftConditionInput14(TypedDict, closed=True):
+    kind: Literal["compare"]
+    field: Literal["contact_tag"]
+    operator: NotRequired[Literal["is", "is_not"]]
+    tag_id: NotRequired[str]
+
+
+class WorkflowV2DraftConditionInputWorkflowV2DraftConditionInput15(TypedDict, closed=True):
+    kind: Literal["compare"]
+    field: Literal["contact_field"]
+    operator: NotRequired[Literal["is", "is_not", "contains", "not_contains", "exists", "not_exists", "greater_than", "not_greater_than", "less_than", "not_less_than", "before", "not_before", "after", "not_after"]]
+    value: NotRequired[Union[str, float, bool]]
+    field_definition_id: NotRequired[str]
+    field_type: NotRequired[Literal["text", "long_text", "number", "date", "boolean", "select", "multi_select"]]
+
+
 class WorkflowDraftConditionInputWorkflowDraftConditionInput1(TypedDict, closed=True):
     kind: Literal["compare"]
     field: Literal["ai"]
@@ -8912,6 +8944,8 @@ WorkflowV2DraftCondition: TypeAlias = Union[
     WorkflowV2DraftConditionWorkflowV2DraftCondition11,
     WorkflowV2DraftConditionWorkflowV2DraftCondition12,
     WorkflowV2DraftConditionWorkflowV2DraftCondition13,
+    WorkflowV2DraftConditionWorkflowV2DraftCondition14,
+    WorkflowV2DraftConditionWorkflowV2DraftCondition15,
 ]
 
 
@@ -9324,6 +9358,8 @@ WorkflowV2DraftConditionInput: TypeAlias = Union[
     WorkflowV2DraftConditionInputWorkflowV2DraftConditionInput11,
     WorkflowV2DraftConditionInputWorkflowV2DraftConditionInput12,
     WorkflowV2DraftConditionInputWorkflowV2DraftConditionInput13,
+    WorkflowV2DraftConditionInputWorkflowV2DraftConditionInput14,
+    WorkflowV2DraftConditionInputWorkflowV2DraftConditionInput15,
 ]
 
 

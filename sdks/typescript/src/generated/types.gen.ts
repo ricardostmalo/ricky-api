@@ -4229,6 +4229,18 @@ export type WorkflowV2DraftCondition = {
     field: 'message_text';
     operator?: 'contains' | 'not_contains';
     value?: string;
+} | {
+    kind: 'compare';
+    field: 'contact_tag';
+    operator?: 'is' | 'is_not';
+    tag_id?: string;
+} | {
+    kind: 'compare';
+    field: 'contact_field';
+    operator?: 'is' | 'is_not' | 'contains' | 'not_contains' | 'exists' | 'not_exists' | 'greater_than' | 'not_greater_than' | 'less_than' | 'not_less_than' | 'before' | 'not_before' | 'after' | 'not_after';
+    value?: string | number | boolean;
+    field_definition_id?: string;
+    field_type?: 'text' | 'long_text' | 'number' | 'date' | 'boolean' | 'select' | 'multi_select';
 };
 
 export type WorkflowDraftCondition = {
@@ -7318,6 +7330,18 @@ export type WorkflowV2DraftConditionInput = {
     field: 'message_text';
     operator?: 'contains' | 'not_contains';
     value?: string;
+} | {
+    kind: 'compare';
+    field: 'contact_tag';
+    operator?: 'is' | 'is_not';
+    tag_id?: string;
+} | {
+    kind: 'compare';
+    field: 'contact_field';
+    operator?: 'is' | 'is_not' | 'contains' | 'not_contains' | 'exists' | 'not_exists' | 'greater_than' | 'not_greater_than' | 'less_than' | 'not_less_than' | 'before' | 'not_before' | 'after' | 'not_after';
+    value?: string | number | boolean;
+    field_definition_id?: string;
+    field_type?: 'text' | 'long_text' | 'number' | 'date' | 'boolean' | 'select' | 'multi_select';
 };
 
 export type WorkflowDraftConditionInput = {

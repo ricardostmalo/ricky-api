@@ -31836,6 +31836,95 @@
               "field"
             ],
             "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "contact_tag"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not"
+                ]
+              },
+              "tag_id": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "contact_field"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not",
+                  "contains",
+                  "not_contains",
+                  "exists",
+                  "not_exists",
+                  "greater_than",
+                  "not_greater_than",
+                  "less_than",
+                  "not_less_than",
+                  "before",
+                  "not_before",
+                  "after",
+                  "not_after"
+                ]
+              },
+              "value": {
+                "type": [
+                  "string",
+                  "number",
+                  "boolean"
+                ]
+              },
+              "field_definition_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "field_type": {
+                "type": "string",
+                "enum": [
+                  "text",
+                  "long_text",
+                  "number",
+                  "date",
+                  "boolean",
+                  "select",
+                  "multi_select"
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
           }
         ]
       },
@@ -42321,6 +42410,95 @@
               },
               "value": {
                 "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "contact_tag"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not"
+                ]
+              },
+              "tag_id": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "required": [
+              "kind",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "compare"
+              },
+              "field": {
+                "type": "string",
+                "const": "contact_field"
+              },
+              "operator": {
+                "type": "string",
+                "enum": [
+                  "is",
+                  "is_not",
+                  "contains",
+                  "not_contains",
+                  "exists",
+                  "not_exists",
+                  "greater_than",
+                  "not_greater_than",
+                  "less_than",
+                  "not_less_than",
+                  "before",
+                  "not_before",
+                  "after",
+                  "not_after"
+                ]
+              },
+              "value": {
+                "type": [
+                  "string",
+                  "number",
+                  "boolean"
+                ]
+              },
+              "field_definition_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "field_type": {
+                "type": "string",
+                "enum": [
+                  "text",
+                  "long_text",
+                  "number",
+                  "date",
+                  "boolean",
+                  "select",
+                  "multi_select"
+                ]
               }
             },
             "required": [
