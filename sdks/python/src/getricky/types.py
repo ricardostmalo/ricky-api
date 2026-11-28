@@ -5281,7 +5281,7 @@ class WorkflowRunCoverage(TypedDict):
 
 
 class WorkflowEffectSummary(TypedDict):
-    status: NotRequired[Literal["queued", "already_queued", "added", "removed", "set", "cleared", "conversation_missing", "message_missing", "already_closed", "not_opened_by_send", "message_after_send", "closed", "unchanged", "changed", "applied", "already_on", "already_off", "assigned_to_agent", "answered", "declined", "missed", "failed"]]
+    status: NotRequired[Literal["queued", "already_queued", "added", "removed", "set", "cleared", "conversation_missing", "message_missing", "already_closed", "not_opened_by_send", "message_after_send", "closed", "unchanged", "changed", "applied", "already_on", "already_off", "assigned_to_agent"]]
     """
     Observed effect result. Absent when the visit did not record it.
     """
@@ -5303,7 +5303,7 @@ class WorkflowRunLastStep(TypedDict):
 class WorkflowRunBatchMemberResult(TypedDict):
     step_id: Optional[str]
     kind: Optional[str]
-    effect_status: Optional[Literal["queued", "already_queued", "added", "removed", "set", "cleared", "conversation_missing", "message_missing", "already_closed", "not_opened_by_send", "message_after_send", "closed", "unchanged", "changed", "applied", "already_on", "already_off", "assigned_to_agent", "answered", "declined", "missed", "failed"]]
+    effect_status: Optional[Literal["queued", "already_queued", "added", "removed", "set", "cleared", "conversation_missing", "message_missing", "already_closed", "not_opened_by_send", "message_after_send", "closed", "unchanged", "changed", "applied", "already_on", "already_off", "assigned_to_agent"]]
     run_status: Literal["queued", "running", "waiting", "retrying", "completed", "skipped", "failed", "cancelled"]
     provider_receipt: NotRequired[Optional[Literal["accepted", "delivered", "read", "failed"]]]
     """
