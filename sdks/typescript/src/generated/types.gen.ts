@@ -4496,6 +4496,11 @@ export type WorkflowDraftDocument = {
         config: {
             [key: string]: never;
         };
+    } | {
+        kind: 'conversation_closed';
+        config: {
+            [key: string]: never;
+        };
     }>;
     condition?: WorkflowV2DraftCondition | null;
     flow?: {
@@ -7595,6 +7600,11 @@ export type WorkflowDraftDocumentInput = {
         };
     } | {
         kind: 'conversation_opening';
+        config: {
+            [key: string]: never;
+        };
+    } | {
+        kind: 'conversation_closed';
         config: {
             [key: string]: never;
         };

@@ -6,6 +6,10 @@ URL: https://getricky.ai/en/docs/api/changelog
 
 This page records changes to the API. A breaking change only ships in a new path version and is announced here.
 
+## November 27, 2026
+
+Creating or replacing a complete conversation workflow through REST, the assistant or MCP now checks the same graph rules as draft saves. Give every step a unique non-empty id and a supported kind. Connect all steps from the entry using exits the configured step can take. Every target must exist, every condition must have a kind, and every comparison must name its field. The first violation returns `invalid_input` with its path. A rejected replacement preserves the current definition. A deprecated `branch` step is checked as the `decision` it becomes.
+
 ## November 26, 2026
 
 The `name` of a `decision` branch is optional. The editor numbers unnamed branches in the order they are checked. Publication reserves the fallback labels “Si no”, “Otherwise”, “If none match” and “Si ninguna coincide”, ignoring case and surrounding whitespace.

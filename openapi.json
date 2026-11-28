@@ -33192,6 +33192,25 @@
                         "config"
                       ],
                       "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "conversation_closed"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
                     }
                   ]
                 }
@@ -43767,6 +43786,25 @@
                         "kind": {
                           "type": "string",
                           "const": "conversation_opening"
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "config"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "conversation_closed"
                         },
                         "config": {
                           "type": "object",

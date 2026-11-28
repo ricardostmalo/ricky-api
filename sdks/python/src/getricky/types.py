@@ -5008,6 +5008,11 @@ class WorkflowDraftDocumentWorkflowDraftDocument1Triggers11(TypedDict, closed=Tr
     config: Dict[str, Any]
 
 
+class WorkflowDraftDocumentWorkflowDraftDocument1Triggers12(TypedDict, closed=True):
+    kind: Literal["conversation_closed"]
+    config: Dict[str, Any]
+
+
 class WorkflowDraftDocumentWorkflowDraftDocument1FlowSteps(TypedDict, closed=True):
     id: str
     kind: Literal["end"]
@@ -8618,6 +8623,11 @@ class WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers11(TypedDict,
     config: Dict[str, Any]
 
 
+class WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers12(TypedDict, closed=True):
+    kind: Literal["conversation_closed"]
+    config: Dict[str, Any]
+
+
 class WorkflowDraftDocumentInputWorkflowDraftDocumentInput1FlowSteps(TypedDict, closed=True):
     id: str
     kind: Literal["end"]
@@ -9052,7 +9062,7 @@ class WorkflowDraftDocumentWorkflowDraftDocument1Flow(TypedDict, closed=True):
 
 class WorkflowDraftDocumentWorkflowDraftDocument1(TypedDict, closed=True):
     format: Literal[2]
-    triggers: List[Union[WorkflowDraftDocumentWorkflowDraftDocument1Triggers, WorkflowDraftDocumentWorkflowDraftDocument1Triggers1, WorkflowDraftDocumentWorkflowDraftDocument1Triggers2, WorkflowDraftDocumentWorkflowDraftDocument1Triggers3, WorkflowDraftDocumentWorkflowDraftDocument1Triggers4, WorkflowDraftDocumentWorkflowDraftDocument1Triggers5, WorkflowDraftDocumentWorkflowDraftDocument1Triggers6, WorkflowDraftDocumentWorkflowDraftDocument1Triggers7, WorkflowDraftDocumentWorkflowDraftDocument1Triggers8, WorkflowDraftDocumentWorkflowDraftDocument1Triggers9, WorkflowDraftDocumentWorkflowDraftDocument1Triggers10, WorkflowDraftDocumentWorkflowDraftDocument1Triggers11]]
+    triggers: List[Union[WorkflowDraftDocumentWorkflowDraftDocument1Triggers, WorkflowDraftDocumentWorkflowDraftDocument1Triggers1, WorkflowDraftDocumentWorkflowDraftDocument1Triggers2, WorkflowDraftDocumentWorkflowDraftDocument1Triggers3, WorkflowDraftDocumentWorkflowDraftDocument1Triggers4, WorkflowDraftDocumentWorkflowDraftDocument1Triggers5, WorkflowDraftDocumentWorkflowDraftDocument1Triggers6, WorkflowDraftDocumentWorkflowDraftDocument1Triggers7, WorkflowDraftDocumentWorkflowDraftDocument1Triggers8, WorkflowDraftDocumentWorkflowDraftDocument1Triggers9, WorkflowDraftDocumentWorkflowDraftDocument1Triggers10, WorkflowDraftDocumentWorkflowDraftDocument1Triggers11, WorkflowDraftDocumentWorkflowDraftDocument1Triggers12]]
     condition: NotRequired[Optional[WorkflowV2DraftCondition]]
     flow: NotRequired[WorkflowDraftDocumentWorkflowDraftDocument1Flow]
 
@@ -9466,7 +9476,7 @@ class WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Flow(TypedDict, close
 
 class WorkflowDraftDocumentInputWorkflowDraftDocumentInput1(TypedDict, closed=True):
     format: Literal[2]
-    triggers: List[Union[WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers1, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers2, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers3, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers4, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers5, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers6, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers7, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers8, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers9, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers10, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers11]]
+    triggers: List[Union[WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers1, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers2, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers3, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers4, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers5, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers6, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers7, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers8, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers9, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers10, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers11, WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Triggers12]]
     condition: NotRequired[Optional[WorkflowV2DraftConditionInput]]
     flow: NotRequired[WorkflowDraftDocumentInputWorkflowDraftDocumentInput1Flow]
 

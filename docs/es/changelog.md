@@ -6,6 +6,10 @@ URL: https://getricky.ai/docs/api/changelog
 
 Esta página registra los cambios de la API. Un cambio incompatible solo llega en una versión nueva de la ruta y se anuncia aquí.
 
+## 27 de noviembre de 2026
+
+Al crear o reemplazar un workflow de conversación completo por REST, el asistente o MCP, se comprueban las mismas reglas del grafo que al guardar un borrador. Cada paso necesita un id único no vacío y un tipo admitido. Conecta todos los pasos desde la entrada por salidas que el paso pueda tomar. Todos los destinos deben existir, cada condición debe tener un tipo y cada comparación debe indicar su campo. La primera infracción devuelve `invalid_input` con su ruta. Un reemplazo rechazado conserva la definición vigente. Un paso `branch`, obsoleto, se comprueba como la `decision` en la que se convierte.
+
 ## 26 de noviembre de 2026
 
 El campo `name` de una rama de `decision` es opcional. El editor numera las ramas sin nombre en el orden en que se revisan. Al publicar se reservan los nombres de la salida de respaldo «Si no», «Otherwise», «If none match» y «Si ninguna coincide». Se ignoran las mayúsculas y los espacios al principio y al final.
