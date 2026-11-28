@@ -4812,6 +4812,10 @@ export type WorkflowRun = {
             kind: string | null;
             effect_status: 'queued' | 'already_queued' | 'added' | 'removed' | 'set' | 'cleared' | 'conversation_missing' | 'message_missing' | 'already_closed' | 'not_opened_by_send' | 'message_after_send' | 'closed' | 'unchanged' | 'changed' | 'applied' | 'already_on' | 'already_off' | 'assigned_to_agent' | null;
             run_status: 'queued' | 'running' | 'waiting' | 'retrying' | 'completed' | 'skipped' | 'failed' | 'cancelled';
+            /**
+             * Current receipt from a provider correlation that names this send. Null means unknown.
+             */
+            provider_receipt?: 'accepted' | 'delivered' | 'read' | 'failed' | null;
             members: number;
         }> | null;
     } | null;
@@ -10893,6 +10897,14 @@ export type ListWorkflowRunsData = {
         conversation_id?: string;
         version_id?: string;
         batch_run_id?: string;
+        /**
+         * Lists the individual runs (single runs and batch members) that failed at or after this instant, members of a batch still in progress included.
+         */
+        failed_since?: string;
+        /**
+         * With failed_since: only failures before this instant.
+         */
+        failed_until?: string;
     };
     url: '/workflows/{workflow_id}/runs';
 };

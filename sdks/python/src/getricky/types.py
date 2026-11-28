@@ -5305,6 +5305,10 @@ class WorkflowRunBatchMemberResult(TypedDict):
     kind: Optional[str]
     effect_status: Optional[Literal["queued", "already_queued", "added", "removed", "set", "cleared", "conversation_missing", "message_missing", "already_closed", "not_opened_by_send", "message_after_send", "closed", "unchanged", "changed", "applied", "already_on", "already_off", "assigned_to_agent"]]
     run_status: Literal["queued", "running", "waiting", "retrying", "completed", "skipped", "failed", "cancelled"]
+    provider_receipt: NotRequired[Optional[Literal["accepted", "delivered", "read", "failed"]]]
+    """
+    Current receipt from a provider correlation that names this send. Null means unknown.
+    """
     members: int
 
 

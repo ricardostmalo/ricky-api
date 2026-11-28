@@ -1137,6 +1137,8 @@ class SyncOperations:
         conversation_id: Optional[str] = None,
         version_id: Optional[str] = None,
         batch_run_id: Optional[str] = None,
+        failed_since: Optional[str] = None,
+        failed_until: Optional[str] = None,
     ) -> Resource[WorkflowRunPage]:
         """List workflow runs.
 
@@ -1147,12 +1149,14 @@ class SyncOperations:
         Args:
             page_size: Items per page.
             cursor: `next_cursor` from the previous page. Use it unchanged.
+            failed_since: Lists the individual runs (single runs and batch members) that failed at or after this instant, members of a batch still in progress included.
+            failed_until: With failed_since: only failures before this instant.
         """
         return cast(Resource[WorkflowRunPage], self._request(
             "GET",
             "/workflows/{workflow_id}/runs",
             path_parameters={"workflow_id": workflow_id},
-            query={"page_size": page_size, "cursor": cursor, "finished_since": finished_since, "finished_until": finished_until, "since": since, "until": until, "status": status, "conversation_id": conversation_id, "version_id": version_id, "batch_run_id": batch_run_id},
+            query={"page_size": page_size, "cursor": cursor, "finished_since": finished_since, "finished_until": finished_until, "since": since, "until": until, "status": status, "conversation_id": conversation_id, "version_id": version_id, "batch_run_id": batch_run_id, "failed_since": failed_since, "failed_until": failed_until},
         ))
 
     def get_workflow_run(
@@ -4068,6 +4072,8 @@ class AsyncOperations:
         conversation_id: Optional[str] = None,
         version_id: Optional[str] = None,
         batch_run_id: Optional[str] = None,
+        failed_since: Optional[str] = None,
+        failed_until: Optional[str] = None,
     ) -> Resource[WorkflowRunPage]:
         """List workflow runs.
 
@@ -4078,12 +4084,14 @@ class AsyncOperations:
         Args:
             page_size: Items per page.
             cursor: `next_cursor` from the previous page. Use it unchanged.
+            failed_since: Lists the individual runs (single runs and batch members) that failed at or after this instant, members of a batch still in progress included.
+            failed_until: With failed_since: only failures before this instant.
         """
         return cast(Resource[WorkflowRunPage], await self._request(
             "GET",
             "/workflows/{workflow_id}/runs",
             path_parameters={"workflow_id": workflow_id},
-            query={"page_size": page_size, "cursor": cursor, "finished_since": finished_since, "finished_until": finished_until, "since": since, "until": until, "status": status, "conversation_id": conversation_id, "version_id": version_id, "batch_run_id": batch_run_id},
+            query={"page_size": page_size, "cursor": cursor, "finished_since": finished_since, "finished_until": finished_until, "since": since, "until": until, "status": status, "conversation_id": conversation_id, "version_id": version_id, "batch_run_id": batch_run_id, "failed_since": failed_since, "failed_until": failed_until},
         ))
 
     async def get_workflow_run(
