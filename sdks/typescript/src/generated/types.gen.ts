@@ -4761,7 +4761,7 @@ export type WorkflowEffectSummary = {
     /**
      * Observed effect result. Absent when the visit did not record it.
      */
-    status?: 'queued' | 'already_queued' | 'added' | 'removed' | 'set' | 'cleared' | 'conversation_missing' | 'message_missing' | 'already_closed' | 'not_opened_by_send' | 'message_after_send' | 'closed' | 'unchanged' | 'changed' | 'applied' | 'already_on' | 'already_off' | 'assigned_to_agent';
+    status?: 'queued' | 'already_queued' | 'added' | 'removed' | 'set' | 'cleared' | 'conversation_missing' | 'message_missing' | 'already_closed' | 'not_opened_by_send' | 'message_after_send' | 'closed' | 'unchanged' | 'changed' | 'applied' | 'already_on' | 'already_off' | 'assigned_to_agent' | 'answered' | 'declined' | 'missed' | 'failed';
     assignee_id?: string;
     resume?: 'answer' | 'choice' | 'timeout' | 'invalid' | 'accepted' | 'elapsed';
     deadline?: string;
@@ -4810,7 +4810,7 @@ export type WorkflowRun = {
         member_results: Array<{
             step_id: string | null;
             kind: string | null;
-            effect_status: 'queued' | 'already_queued' | 'added' | 'removed' | 'set' | 'cleared' | 'conversation_missing' | 'message_missing' | 'already_closed' | 'not_opened_by_send' | 'message_after_send' | 'closed' | 'unchanged' | 'changed' | 'applied' | 'already_on' | 'already_off' | 'assigned_to_agent' | null;
+            effect_status: 'queued' | 'already_queued' | 'added' | 'removed' | 'set' | 'cleared' | 'conversation_missing' | 'message_missing' | 'already_closed' | 'not_opened_by_send' | 'message_after_send' | 'closed' | 'unchanged' | 'changed' | 'applied' | 'already_on' | 'already_off' | 'assigned_to_agent' | 'answered' | 'declined' | 'missed' | 'failed' | null;
             run_status: 'queued' | 'running' | 'waiting' | 'retrying' | 'completed' | 'skipped' | 'failed' | 'cancelled';
             /**
              * Current receipt from a provider correlation that names this send. Null means unknown.

@@ -34516,7 +34516,11 @@
               "applied",
               "already_on",
               "already_off",
-              "assigned_to_agent"
+              "assigned_to_agent",
+              "answered",
+              "declined",
+              "missed",
+              "failed"
             ]
           },
           "assignee_id": {
@@ -34836,7 +34840,11 @@
                                     "applied",
                                     "already_on",
                                     "already_off",
-                                    "assigned_to_agent"
+                                    "assigned_to_agent",
+                                    "answered",
+                                    "declined",
+                                    "missed",
+                                    "failed"
                                   ]
                                 },
                                 {
